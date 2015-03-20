@@ -32,6 +32,8 @@
 	"user-stats-title": "统计",
 	"user-friends-title": "朋友",
 	"user-foes-title": "仇敌",
+	"user-profile-points": "$1经验",
+	"user-board-login-message" : "你需要登录才能发送信息。",
 	"other-info-movies": "电影",
 	"other-info-tv": "电视",
 	"other-info-music": "音乐",

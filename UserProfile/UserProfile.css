@@ -33,15 +33,15 @@
 	padding: 0px 0px 0px 0px !important;
 }
 
-#user-page-left {
+/*#user-page-left {
 	width: 35%;
 	float: left;
-}
+}*/
 
-#user-page-right {
+/*#user-page-right {
 	float: right;
 	width: 60%;
-}
+}*/
 
 #user-page-left h2, #user-page-right h2 {
 	border-bottom: 1px solid #dcdcdc;
@@ -102,27 +102,40 @@
 }
 
 /* Profile Top */
-#profile-top {
+/*#profile-top {
 	background-color: #fff;
 	border-bottom: 1px solid #D4DFD7;
 	padding: 10px 0px;
 	margin: 0px 0px 20px 0px;
 	position: relative;
 }
+*/
+.pagetitle h1 {
+	display:none;
+}
 
 #profile-title-container {
 	padding: 0px 0px 6px 6px;
 }
 
-#profile-title {
+/*#profile-title {
 	float: left;
 	font-size: 2em;
 	line-height: 26px;
 	font-weight: bold;
 	margin: 0px 15px 0px 0px;
+}*/
+#points-level{
+	display: inline-block;
+	margin: 4px 8px -5px 0px;
+	width: 200px;
 }
-
-#points-level {
+#honorific-level {
+	display: inline-block;
+	margin: 4px 0px 0px 0px;
+	font-size: 16px;
+}
+/*#points-level {
 	float: left;
 	font-size: 11px;
 	background-color: #CC0000;
@@ -130,14 +143,15 @@
 	margin: 4px 8px 0px 0px;
 	text-align: center;
 }
-
-#honorific-level {
+*/
+/*#honorific-level {
 	float: left;
 	margin: 4px 0px 0px 0px;
 	font-size: 12px;
-}
+}*/
 
 #honorific-level a {
+	color: #fff;
 	text-decoration: none;
 }
 
@@ -522,7 +536,7 @@
 
 /* Update Profile */
 .profile-info {
-	background-color: #fff;
+	background-color: transparent;
 	padding: 25px 0px;
 }
 

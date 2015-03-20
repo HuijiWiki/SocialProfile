@@ -972,6 +972,17 @@ class UserLevel {
 	public function getLevelMinimum() {
 		return $this->levels[$this->level_name];
 	}
+	public function getLevelProgress() {
+		global $wgUserLevels;
+		$this->levels = $wgUserLevels;
+		if ( ( $this->level_number ) != count( $this->levels ) ) {
+			$margin = $this->levels[$this->next_level_name]-$this->levels[$this->level_name];
+			$progress = round(($this->points - $this->levels[$this->level_name])/$margin, 2, PHP_ROUND_HALF_UP);
+			return $progress;
+		}else{
+			return 1;
+		}
+	}
 }
 
 /**
