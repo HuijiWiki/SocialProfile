@@ -64,7 +64,7 @@ class UserBoard {
 	}
 
 	/**
-	 * Sends an email to a user if someone wrote on their board
+	 * Sends an email/echo to a user if someone wrote on their board.
 	 *
 	 * @param $user_id_to Integer: user ID of the reciever
 	 * @param $user_from Mixed: the user name of the person who wrote the board message
@@ -72,6 +72,8 @@ class UserBoard {
 	public function sendBoardNotificationEmail( $user_id_to, $user_from ) {
 		$user = User::newFromId( $user_id_to );
 		$user->loadFromId();
+
+		$agent = User::newFromName($user_from);
 
 		// Send email if user's email is confirmed and s/he's opted in to recieving social notifications
 		if ( $user->isEmailConfirmed() && $user->getIntOption( 'notifymessage', 1 ) ) {
@@ -84,7 +86,6 @@ class UserBoard {
 				htmlspecialchars( $board_link->getFullURL() ),
 				htmlspecialchars( $update_profile_link->getFullURL() )
 			)->text();
-
 			// The email contains HTML, so actually send it out as such, too.
 			// That's why this no longer uses User::sendMail().
 			// @see https://bugzilla.wikimedia.org/show_bug.cgi?id=68045
@@ -93,6 +94,15 @@ class UserBoard {
 				wfMessage( 'emailsender' )->inContentLanguage()->text() );
 			$to = new MailAddress( $user );
 			UserMailer::send( $to, $sender, $subject, $body, null, 'text/html; charset=UTF-8' );
+
+			//send an echo notification
+			EchoEvent::create( array(
+			     'type' => 'board-msg',
+			     'extra' => array(
+			         'board-user-id' => $user_id_to,  
+			     ),
+			     'agent' => $agent,
+			) );
 		}
 	}
 
@@ -521,4 +531,90 @@ class UserBoard {
 		}
 		return $timeStr;
 	}
+
+	/**
+	* Used to pass Echo your definition for the notification category and the 
+	* notification itself (as well as any custom icons).
+	* 
+    *
+	*@see https://www.mediawiki.org/wiki/Echo_%28Notifications%29/Developer_guide
+	*/
+	public static function onBeforeCreateEchoEvent( &$notifications, &$notificationCategories, &$icons ) {
+        $notificationCategories['board-msg'] = array(
+            'priority' => 3,
+            'tooltip' => 'echo-pref-tooltip-board-msg',
+        );
+        $notifications['board-msg'] = array(
+            'category' => 'board-msg',
+            'group' => 'positive',
+            'formatter-class' => 'EchoBasicFormatter',
+            'title-message' => 'notification-board',
+            'title-params' => array( 'agent', '', '' ),
+            'flyout-message' => 'notification-board-flyout',
+            'flyout-params' => array( 'agent', '', '' ),
+            'payload' => array( 'summary' ),
+            'email-subject-message' => 'notification-board-email-subject',
+            'email-subject-params' => array( 'agent' ),
+            'email-body-message' => 'notification-board-email-body',
+            'email-body-params' => array( 'agent', '', '', 'email-footer' ),
+            'email-body-batch-message' => 'notification-board-email-batch-body',
+            'email-body-batch-params' => array( 'agent', '' ),
+            'icon' => 'talk',
+        );
+        return true;
+    }
+
+
+	/**
+	* Used to define who gets the notifications (for example, the user who performed the edit)
+	* 
+    *
+	*@see https://www.mediawiki.org/wiki/Echo_%28Notifications%29/Developer_guide
+	*/
+	public static function onEchoGetDefaultNotifiedUsers( $event, &$users ) {
+	 	switch ( $event->getType() ) {
+	 		case 'board-msg':
+	 			$extra = $event->getExtra();
+	 			if ( !$extra || !isset( $extra['board-user-id'] ) ) {
+	 				break;
+	 			}
+	 			$recipientId = $extra['board-user-id'];
+	 			$recipient = User::newFromId( $recipientId );
+	 			$users[$recipientId] = $recipient;
+	 			break;
+	 	}
+	 	return true;
+	}
+
 }
+// class EchoBoardFormatter extends EchoBasicFormatter {
+//     /**
+//      * @param $event EchoEvent
+//      * @param $param
+//      * @param $message Message
+//      * @param $user User
+//      */
+//     protected function processParam( $event, $param, $message, $user ) {
+//         if ( $param === 'agent' ) {
+//             $eventData = $event->getExtra();
+//             if ( !isset( $eventData['revid'] ) ) {
+//                 $message->params( '' );
+//                 return;
+//             }
+//             $this->setTitleLink(
+//                 $event,
+//                 $message,
+//                 array(
+//                     'class' => 'mw-echo-diff',
+//                     'linkText' => wfMessage( 'notification-thanks-diff-link' )->text(),
+//                     'param' => array(
+//                         'oldid' => $eventData['revid'],
+//                         'diff' => 'prev',
+//                     )
+//                 )
+//             );
+//         } else {
+//             parent::processParam( $event, $param, $message, $user );
+//         }
+//     }
+// }
