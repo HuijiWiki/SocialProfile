@@ -95,13 +95,17 @@ class UserBoard {
 			$to = new MailAddress( $user );
 			UserMailer::send( $to, $sender, $subject, $body, null, 'text/html; charset=UTF-8' );
 
-			//send an echo notification
+			// send an echo notification
+			$username = $user->getName();
 			EchoEvent::create( array(
 			     'type' => 'board-msg',
 			     'extra' => array(
 			         'board-user-id' => $user_id_to,  
+			         'board-user' => $username,
+			         'board-user-conv' => $user_from,
 			     ),
 			     'agent' => $agent,
+			     'title' => $board_link,
 			) );
 		}
 	}
@@ -547,19 +551,19 @@ class UserBoard {
         $notifications['board-msg'] = array(
             'category' => 'board-msg',
             'group' => 'positive',
-            'formatter-class' => 'EchoBasicFormatter',
+            'formatter-class' => 'EchoBoardFormatter',
             'title-message' => 'notification-board',
-            'title-params' => array( 'agent', '', '' ),
+            'title-params' => array( 'agent', 'b2b', 'main-title-text' ),
             'flyout-message' => 'notification-board-flyout',
-            'flyout-params' => array( 'agent', '', '' ),
+            'flyout-params' => array( 'agent', 'b2b', 'main-title-text' ),
             'payload' => array( 'summary' ),
             'email-subject-message' => 'notification-board-email-subject',
             'email-subject-params' => array( 'agent' ),
             'email-body-message' => 'notification-board-email-body',
-            'email-body-params' => array( 'agent', '', '', 'email-footer' ),
+            'email-body-params' => array( 'agent', 'b2b', 'main-title-text', 'email-footer' ),
             'email-body-batch-message' => 'notification-board-email-batch-body',
-            'email-body-batch-params' => array( 'agent', '' ),
-            'icon' => 'talk',
+            'email-body-batch-params' => array( 'agent', 'main-title-text' ),
+            'icon' => 'edit-user-talk',
         );
         return true;
     }
@@ -587,34 +591,34 @@ class UserBoard {
 	}
 
 }
-// class EchoBoardFormatter extends EchoBasicFormatter {
-//     /**
-//      * @param $event EchoEvent
-//      * @param $param
-//      * @param $message Message
-//      * @param $user User
-//      */
-//     protected function processParam( $event, $param, $message, $user ) {
-//         if ( $param === 'agent' ) {
-//             $eventData = $event->getExtra();
-//             if ( !isset( $eventData['revid'] ) ) {
-//                 $message->params( '' );
-//                 return;
-//             }
-//             $this->setTitleLink(
-//                 $event,
-//                 $message,
-//                 array(
-//                     'class' => 'mw-echo-diff',
-//                     'linkText' => wfMessage( 'notification-thanks-diff-link' )->text(),
-//                     'param' => array(
-//                         'oldid' => $eventData['revid'],
-//                         'diff' => 'prev',
-//                     )
-//                 )
-//             );
-//         } else {
-//             parent::processParam( $event, $param, $message, $user );
-//         }
-//     }
-// }
+class EchoBoardFormatter extends EchoCommentFormatter {
+   /**
+     * @param $event EchoEvent
+     * @param $param
+     * @param $message Message
+     * @param $user User
+     */
+    protected function processParam( $event, $param, $message, $user ) {
+        if ( $param === 'b2b' ) {
+            $eventData = $event->getExtra();
+            if ( !isset( $eventData['board-user']) || !isset( $eventData['board-user-conv'] ) ) {
+                $message->params( '' );
+                return;
+            }
+            $this->setTitleLink(
+                $event,
+                $message,
+                array(
+                    'class' => 'mw-echo-board-msg',
+                    'linkText' => wfMessage( 'notification-board-msg-link' )->text(),
+                    'param' => array(
+                        'user' => $eventData['board-user'],
+                        'conv' => $eventData['board-user-conv'],
+                    )
+                )
+            );
+        } else {
+            parent::processParam( $event, $param, $message, $user );
+        }
+    }
+}
