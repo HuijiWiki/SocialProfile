@@ -4,5 +4,7 @@
 			"Liuxinyu970226"
 		]
 	},
-	"socialprofile-desc": "用于MediaWiki的社交工具设置"
+	"socialprofile-desc": "用于MediaWiki的社交工具设置",
+	"notification-advancement": "恭喜您晋升$2。",
+	"notification-advancement-flyout": "恭喜您晋升$2。"
 }

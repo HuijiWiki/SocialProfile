@@ -108,29 +108,122 @@ class UserSystemMessage {
 	public function sendAdvancementNotificationEmail( $userIdTo, $level ) {
 		$user = User::newFromId( $userIdTo );
 		$user->loadFromDatabase();
-		if ( $user->isEmailConfirmed() && $user->getIntOption( 'notifyhonorifics', 1 ) ) {
-			$updateProfileLink = SpecialPage::getTitleFor( 'UpdateProfile' );
-			$subject = wfMessage( 'level-advance-subject', $level )->text();
-			if ( trim( $user->getRealName() ) ) {
-				$name = $user->getRealName();
-			} else {
-				$name = $user->getName();
-			}
-			$body = wfMessage( 'level-advance-body',
-				$name,
-				$level,
-				$updateProfileLink->getFullURL()
-			)->text();
 
-			// The email contains HTML, so actually send it out as such, too.
-			// That's why this no longer uses User::sendMail().
-			// @see https://bugzilla.wikimedia.org/show_bug.cgi?id=68045
-			global $wgPasswordSender;
-			$sender = new MailAddress( $wgPasswordSender,
-				wfMessage( 'emailsender' )->inContentLanguage()->text() );
-			$to = new MailAddress( $user );
-			UserMailer::send( $to, $sender, $subject, $body, null, 'text/html; charset=UTF-8' );
-		}
+		// send echo notification
+		
+		$userpage = $user->getUserPage();
+		EchoEvent::create( array(
+		     'type' => 'advancement',
+		     'extra' => array(
+		         'advancement-user-id' => $userIdTo,  
+		         'new-level' => $level,
+		     ),
+		     'title' => $userpage,
+		) );
+		// if ( $user->isEmailConfirmed() && $user->getIntOption( 'notifyhonorifics', 1 ) ) {
+		// 	$updateProfileLink = SpecialPage::getTitleFor( 'UpdateProfile' );
+		// 	$subject = wfMessage( 'level-advance-subject', $level )->text();
+		// 	if ( trim( $user->getRealName() ) ) {
+		// 		$name = $user->getRealName();
+		// 	} else {
+		// 		$name = $user->getName();
+		// 	}
+		// 	$body = wfMessage( 'level-advance-body',
+		// 		$name,
+		// 		$level,
+		// 		$updateProfileLink->getFullURL()
+		// 	)->text();
+
+		// 	// The email contains HTML, so actually send it out as such, too.
+		// 	// That's why this no longer uses User::sendMail().
+		// 	// @see https://bugzilla.wikimedia.org/show_bug.cgi?id=68045
+		// 	global $wgPasswordSender;
+		// 	$sender = new MailAddress( $wgPasswordSender,
+		// 		wfMessage( 'emailsender' )->inContentLanguage()->text() );
+		// 	$to = new MailAddress( $user );
+		// 	UserMailer::send( $to, $sender, $subject, $body, null, 'text/html; charset=UTF-8' );
+		// }
 	}
 
+	/**
+	* Used to pass Echo your definition for the notification category and the 
+	* notification itself (as well as any custom icons).
+	* 
+    *
+	*@see https://www.mediawiki.org/wiki/Echo_%28Notifications%29/Developer_guide
+	*/
+	public static function onBeforeCreateEchoEvent( &$notifications, &$notificationCategories, &$icons ) {
+        $notificationCategories['advancement'] = array(
+            'priority' => 3,
+            'tooltip' => 'echo-pref-tooltip-advancement',
+        );
+        $notifications['advancement'] = array(
+            'category' => 'advancement',
+            'group' => 'positive',
+            'formatter-class' => 'EchoAdvancementFormatter',
+            'title-message' => 'notification-advancement',
+            'title-params' => array( 'lvl-text', 'lvl', 'main-title-text' ),
+            'flyout-message' => 'notification-advancement-flyout',
+            'flyout-params' => array( 'lvl-text', 'lvl', 'main-title-text' ),
+            'payload' => array( 'summary' ),
+            'email-subject-message' => 'notification-advancement-email-subject',
+            'email-subject-params' => array( 'lvl-text' ),
+            'email-body-message' => 'notification-advancement-email-body',
+            'email-body-params' => array( 'lvl-text', 'lvl', 'main-title-text', 'email-footer' ),
+            'email-body-batch-message' => 'notification-advancement-email-batch-body',
+            'email-body-batch-params' => array( 'lvl-text', 'main-title-text' ),
+            'icon' => 'feature',
+        );
+        return true;
+    }
+
+
+	/**
+	* Used to define who gets the notifications (for example, the user who performed the edit)
+	* 
+    *
+	*@see https://www.mediawiki.org/wiki/Echo_%28Notifications%29/Developer_guide
+	*/
+	public static function onEchoGetDefaultNotifiedUsers( $event, &$users ) {
+	 	switch ( $event->getType() ) {
+	 		case 'advancement':
+	 			$extra = $event->getExtra();
+	 			if ( !$extra || !isset( $extra['advancement-user-id'] ) ) {
+	 				break;
+	 			}
+	 			$recipientId = $extra['advancement-user-id'];
+	 			$recipient = User::newFromId( $recipientId );
+	 			$users[$recipientId] = $recipient;
+	 			break;
+	 	}
+	 	return true;
+	}
+
+}
+class EchoAdvancementFormatter extends EchoCommentFormatter {
+   /**
+     * @param $event EchoEvent
+     * @param $param
+     * @param $message Message
+     * @param $user User
+     */
+    protected function processParam( $event, $param, $message, $user ) {
+        if ( $param === 'lvl' ) {
+            $eventData = $event->getExtra();
+            if ( !isset( $eventData['new-level']) ) {
+                $message->params( '' );
+                return;
+            }
+            $this->setTitleLink(
+                $event,
+                $message,
+                array(
+                    'class' => 'mw-echo-advancement',
+                    'linkText' => $eventData['new-level'],
+                )
+            );
+        } else {
+            parent::processParam( $event, $param, $message, $user );
+        }
+    }
 }

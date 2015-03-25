@@ -438,9 +438,9 @@ class UserSystemGifts {
 	*@see https://www.mediawiki.org/wiki/Echo_%28Notifications%29/Developer_guide
 	*/
 	public static function onBeforeCreateEchoEvent( &$notifications, &$notificationCategories, &$icons ) {
-        $notificationCategories['system-gift-recieve'] = array(
+        $notificationCategories['system-gift-receive'] = array(
             'priority' => 3,
-            'tooltip' => 'echo-pref-tooltip-system-gift-recieve',
+            'tooltip' => 'echo-pref-tooltip-system-gift-receive',
         );
         $notifications['system-gift-receive'] = array(
             'category' => 'system-gift-receive',
