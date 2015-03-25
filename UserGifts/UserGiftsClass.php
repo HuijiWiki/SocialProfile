@@ -478,7 +478,7 @@ class UserGifts {
             'email-subject-params' => array( 'agent' ),
             'email-body-message' => 'notification-gift-email-body',
             'email-body-params' => array( 'agent', 'giftview', 'main-title-text', 'email-footer' ),
-            'email-body-batch-message' => 'notification-board-email-batch-body',
+            'email-body-batch-message' => 'notification-system-gift-email-batch-body',
             'email-body-batch-params' => array( 'agent', 'main-title-text' ),
             'icon' => 'gratitude',
         );
