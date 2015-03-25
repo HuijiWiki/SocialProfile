@@ -20,6 +20,6 @@
 	"userboard_nomessages": "没有信息。",
 	"userboard_sendbutton": "发送",
 	"notification-board": "$1在$3给你$2了。",
-	"notification-board-flyout": "$1在$3给你$2了。",
-	"notification-board-msg-link": "留言"
+	"notification-board-flyout": "$1在$3给你留言了。$2",
+	"notification-board-msg-link": "查看对话"
 }

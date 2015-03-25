@@ -59,7 +59,7 @@ class UserGifts {
 	}
 
 	/**
-	 * Sends the notification about a new gift to the user who received the
+	 * Sends the (echo) notification about a new gift to the user who received the
 	 * gift, if the user wants notifications about new gifts and their e-mail
 	 * is confirmed.
 	 *
@@ -73,37 +73,50 @@ class UserGifts {
 		$user = User::newFromId( $user_id_to );
 		$user->loadFromDatabase();
 
-		if ( $user->isEmailConfirmed() && $user->getIntOption( 'notifygift', 1 ) ) {
-			$giftsLink = SpecialPage::getTitleFor( 'ViewGifts' );
-			$updateProfileLink = SpecialPage::getTitleFor( 'UpdateProfile' );
+		//send an echo notification
+		$agent = User::newFromName($user_from);
+		$giftsLink = SpecialPage::getTitleFor( 'ViewGift' );
+		EchoEvent::create( array(
+		     'type' => 'gift-receive',
+		     'extra' => array(
+		         'gift-user-id' => $user_id_to,  
+		         'gift-id' => $gift_id,
+		     ),
+		     'agent' => $agent,
+		     'title' => $giftsLink,
+		) );
 
-			if ( trim( $user->getRealName() ) ) {
-				$name = $user->getRealName();
-			} else {
-				$name = $user->getName();
-			}
+		// if ( $user->isEmailConfirmed() && $user->getIntOption( 'notifygift', 1 ) ) {
+		// 	$giftsLink = SpecialPage::getTitleFor( 'ViewGifts' );
+		// 	$updateProfileLink = SpecialPage::getTitleFor( 'UpdateProfile' );
 
-			$subject = wfMessage( 'gift_received_subject',
-				$user_from,
-				$gift['gift_name']
-			)->parse();
-			$body = wfMessage( 'gift_received_body',
-				$name,
-				$user_from,
-				$gift['gift_name'],
-				$giftsLink->getFullURL(),
-				$updateProfileLink->getFullURL()
-			)->parse();
+		// 	if ( trim( $user->getRealName() ) ) {
+		// 		$name = $user->getRealName();
+		// 	} else {
+		// 		$name = $user->getName();
+		// 	}
 
-			// The email contains HTML, so actually send it out as such, too.
-			// That's why this no longer uses User::sendMail().
-			// @see https://bugzilla.wikimedia.org/show_bug.cgi?id=68045
-			global $wgPasswordSender;
-			$sender = new MailAddress( $wgPasswordSender,
-				wfMessage( 'emailsender' )->inContentLanguage()->text() );
-			$to = new MailAddress( $user );
-			UserMailer::send( $to, $sender, $subject, $body, null, 'text/html; charset=UTF-8' );
-		}
+		// 	$subject = wfMessage( 'gift_received_subject',
+		// 		$user_from,
+		// 		$gift['gift_name']
+		// 	)->parse();
+		// 	$body = wfMessage( 'gift_received_body',
+		// 		$name,
+		// 		$user_from,
+		// 		$gift['gift_name'],
+		// 		$giftsLink->getFullURL(),
+		// 		$updateProfileLink->getFullURL()
+		// 	)->parse();
+
+		// 	// The email contains HTML, so actually send it out as such, too.
+		// 	// That's why this no longer uses User::sendMail().
+		// 	// @see https://bugzilla.wikimedia.org/show_bug.cgi?id=68045
+		// 	global $wgPasswordSender;
+		// 	$sender = new MailAddress( $wgPasswordSender,
+		// 		wfMessage( 'emailsender' )->inContentLanguage()->text() );
+		// 	$to = new MailAddress( $user );
+		// 	UserMailer::send( $to, $sender, $subject, $body, null, 'text/html; charset=UTF-8' );
+		// }
 	}
 
 	public function clearAllUserGiftStatus() {
@@ -439,4 +452,90 @@ class UserGifts {
 
 		return $giftCount;
 	}
+
+	/**
+	* Used to pass Echo your definition for the notification category and the 
+	* notification itself (as well as any custom icons).
+	* 
+    *
+	*@see https://www.mediawiki.org/wiki/Echo_%28Notifications%29/Developer_guide
+	*/
+	public static function onBeforeCreateEchoEvent( &$notifications, &$notificationCategories, &$icons ) {
+        $notificationCategories['gift-recieve'] = array(
+            'priority' => 3,
+            'tooltip' => 'echo-pref-tooltip-gift-recieve',
+        );
+        $notifications['gift-receive'] = array(
+            'category' => 'gift-receive',
+            'group' => 'positive',
+            'formatter-class' => 'EchoGiftFormatter',
+            'title-message' => 'notification-gift',
+            'title-params' => array( 'agent', 'giftview', 'main-title-text' ),
+            'flyout-message' => 'notification-gift-flyout',
+            'flyout-params' => array( 'agent', 'giftview', 'main-title-text' ),
+            'payload' => array( 'summary' ),
+            'email-subject-message' => 'notification-gift-email-subject',
+            'email-subject-params' => array( 'agent' ),
+            'email-body-message' => 'notification-gift-email-body',
+            'email-body-params' => array( 'agent', 'giftview', 'main-title-text', 'email-footer' ),
+            'email-body-batch-message' => 'notification-board-email-batch-body',
+            'email-body-batch-params' => array( 'agent', 'main-title-text' ),
+            'icon' => 'gratitude',
+        );
+        return true;
+    }
+
+
+	/**
+	* Used to define who gets the notifications (for example, the user who performed the edit)
+	* 
+    *
+	*@see https://www.mediawiki.org/wiki/Echo_%28Notifications%29/Developer_guide
+	*/
+	public static function onEchoGetDefaultNotifiedUsers( $event, &$users ) {
+	 	switch ( $event->getType() ) {
+	 		case 'gift-receive':
+	 			$extra = $event->getExtra();
+	 			if ( !$extra || !isset( $extra['gift-user-id'] ) ) {
+	 				break;
+	 			}
+	 			$recipientId = $extra['gift-user-id'];
+	 			$recipient = User::newFromId( $recipientId );
+	 			$users[$recipientId] = $recipient;
+	 			break;
+	 	}
+	 	return true;
+	}
+
 }
+class EchoGiftFormatter extends EchoCommentFormatter {
+   /**
+     * @param $event EchoEvent
+     * @param $param
+     * @param $message Message
+     * @param $user User
+     */
+    protected function processParam( $event, $param, $message, $user ) {
+        if ( $param === 'giftview' ) {
+            $eventData = $event->getExtra();
+            if ( !isset( $eventData['gift-id']) ) {
+                $message->params( '' );
+                return;
+            }
+            $this->setTitleLink(
+                $event,
+                $message,
+                array(
+                    'class' => 'mw-echo-gift-view',
+                    'linkText' => wfMessage( 'notification-gift-view-link' )->text(),
+                    'param' => array(
+                        'gift_id' => $eventData['gift-id'],
+                    )
+                )
+            );
+        } else {
+            parent::processParam( $event, $param, $message, $user );
+        }
+    }
+}
+

@@ -46,5 +46,8 @@
 	"g-uploadsuccess": "上载成功",
 	"g-viewgiftlist": "检视礼物清单",
 	"g-your-profile": "您的个人资料",
-	"right-giftadmin": "创建新的和编辑现有的礼物"
+	"right-giftadmin": "创建新的和编辑现有的礼物",
+	"notification-gift": "$1送给您了一个礼物。$2",
+	"notification-gift-flyout": "$1送给您了一个礼物。$2",
+	"notification-gift-view-link": "查看礼物"
 }

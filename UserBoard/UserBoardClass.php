@@ -64,7 +64,7 @@ class UserBoard {
 	}
 
 	/**
-	 * Sends an email/echo to a user if someone wrote on their board.
+	 * Sends an <s>email</s>/echo to a user if someone wrote on their board.
 	 *
 	 * @param $user_id_to Integer: user ID of the reciever
 	 * @param $user_from Mixed: the user name of the person who wrote the board message
@@ -75,39 +75,41 @@ class UserBoard {
 
 		$agent = User::newFromName($user_from);
 
-		// Send email if user's email is confirmed and s/he's opted in to recieving social notifications
-		if ( $user->isEmailConfirmed() && $user->getIntOption( 'notifymessage', 1 ) ) {
-			$board_link = SpecialPage::getTitleFor( 'UserBoard' );
-			$update_profile_link = SpecialPage::getTitleFor( 'UpdateProfile' );
-			$subject = wfMessage( 'message_received_subject', $user_from )->parse();
-			$body = wfMessage( 'message_received_body',
-				$user->getName(),
-				$user_from,
-				htmlspecialchars( $board_link->getFullURL() ),
-				htmlspecialchars( $update_profile_link->getFullURL() )
-			)->text();
-			// The email contains HTML, so actually send it out as such, too.
-			// That's why this no longer uses User::sendMail().
-			// @see https://bugzilla.wikimedia.org/show_bug.cgi?id=68045
-			global $wgPasswordSender;
-			$sender = new MailAddress( $wgPasswordSender,
-				wfMessage( 'emailsender' )->inContentLanguage()->text() );
-			$to = new MailAddress( $user );
-			UserMailer::send( $to, $sender, $subject, $body, null, 'text/html; charset=UTF-8' );
+		// send an echo notification
+		$board_link = SpecialPage::getTitleFor( 'UserBoard' );
+		$username = $user->getName();
+		EchoEvent::create( array(
+		     'type' => 'board-msg',
+		     'extra' => array(
+		         'board-user-id' => $user_id_to,  
+		         'board-user' => $username,
+		         'board-user-conv' => $user_from,
+		     ),
+		     'agent' => $agent,
+		     'title' => $board_link,
+		) );
 
-			// send an echo notification
-			$username = $user->getName();
-			EchoEvent::create( array(
-			     'type' => 'board-msg',
-			     'extra' => array(
-			         'board-user-id' => $user_id_to,  
-			         'board-user' => $username,
-			         'board-user-conv' => $user_from,
-			     ),
-			     'agent' => $agent,
-			     'title' => $board_link,
-			) );
-		}
+		// // Send email if user's email is confirmed and s/he's opted in to recieving social notifications
+		// if ( $user->isEmailConfirmed() && $user->getIntOption( 'notifymessage', 1 ) ) {
+		// 	$board_link = SpecialPage::getTitleFor( 'UserBoard' );
+		// 	$update_profile_link = SpecialPage::getTitleFor( 'UpdateProfile' );
+		// 	$subject = wfMessage( 'message_received_subject', $user_from )->parse();
+		// 	$body = wfMessage( 'message_received_body',
+		// 		$user->getName(),
+		// 		$user_from,
+		// 		htmlspecialchars( $board_link->getFullURL() ),
+		// 		htmlspecialchars( $update_profile_link->getFullURL() )
+		// 	)->text();
+		// 	// The email contains HTML, so actually send it out as such, too.
+		// 	// That's why this no longer uses User::sendMail().
+		// 	// @see https://bugzilla.wikimedia.org/show_bug.cgi?id=68045
+		// 	global $wgPasswordSender;
+		// 	$sender = new MailAddress( $wgPasswordSender,
+		// 		wfMessage( 'emailsender' )->inContentLanguage()->text() );
+		// 	$to = new MailAddress( $user );
+		// 	UserMailer::send( $to, $sender, $subject, $body, null, 'text/html; charset=UTF-8' );
+
+		// }
 	}
 
 	/**
@@ -563,7 +565,7 @@ class UserBoard {
             'email-body-params' => array( 'agent', 'b2b', 'main-title-text', 'email-footer' ),
             'email-body-batch-message' => 'notification-board-email-batch-body',
             'email-body-batch-params' => array( 'agent', 'main-title-text' ),
-            'icon' => 'edit-user-talk',
+            'icon' => 'chat',
         );
         return true;
     }
