@@ -110,7 +110,6 @@ class UserSystemMessage {
 		$user->loadFromDatabase();
 
 		// send echo notification
-		
 		$userpage = $user->getUserPage();
 		EchoEvent::create( array(
 		     'type' => 'advancement',
@@ -162,17 +161,17 @@ class UserSystemMessage {
             'group' => 'positive',
             'formatter-class' => 'EchoAdvancementFormatter',
             'title-message' => 'notification-advancement',
-            'title-params' => array( 'lvl-text', 'lvl', 'main-title-text' ),
+            'title-params' => array( 'title', 'lvl', 'main-title-text' ),
             'flyout-message' => 'notification-advancement-flyout',
-            'flyout-params' => array( 'lvl-text', 'lvl', 'main-title-text' ),
+            'flyout-params' => array( 'title', 'lvl', 'main-title-text' ),
             'payload' => array( 'summary' ),
             'email-subject-message' => 'notification-advancement-email-subject',
-            'email-subject-params' => array( 'lvl-text' ),
+            'email-subject-params' => array( 'title' ),
             'email-body-message' => 'notification-advancement-email-body',
-            'email-body-params' => array( 'lvl-text', 'lvl', 'main-title-text', 'email-footer' ),
+            'email-body-params' => array( 'title', 'lvl', 'main-title-text', 'email-footer' ),
             'email-body-batch-message' => 'notification-advancement-email-batch-body',
-            'email-body-batch-params' => array( 'lvl-text', 'main-title-text' ),
-            'icon' => 'feature',
+            'email-body-batch-params' => array( 'title', 'main-title-text' ),
+            'icon' => 'featured',
         );
         return true;
     }
