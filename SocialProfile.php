@@ -87,6 +87,7 @@ $wgSpecialPages['ViewRelationships'] = 'SpecialViewRelationships';
 // Necessary AJAX functions
 require_once( "$IP/extensions/SocialProfile/UserBoard/UserBoard_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/UserRelationship/Relationship_AjaxFunctions.php" );
+require_once( "$IP/extensions/SocialProfile/UserSiteFollows/UserSiteFollows_AjaxFunctions.php" );
 
 // What to display on social profile pages by default?
 $wgUserProfileDisplay['board'] = true;
@@ -276,6 +277,13 @@ $wgResourceModules['ext.socialprofile.userstats.css'] = array(
 	'localBasePath' => __DIR__ . '/UserStats',
 	'remoteExtPath' => 'SocialProfile/UserStats',
 	'position' => 'top' // just in case
+);
+
+// UserRelationship
+$wgResourceModules['ext.socialprofile.usersitefollows.js'] = array(
+	'scripts' => 'UserSiteFollows.js',
+	'localBasePath' => __DIR__ . '/UserSiteFollows',
+	'remoteExtPath' => 'SocialProfile/UserSiteFollows',
 );
 
 // End ResourceLoader stuff
