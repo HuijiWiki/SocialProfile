@@ -279,7 +279,7 @@ $wgResourceModules['ext.socialprofile.userstats.css'] = array(
 	'position' => 'top' // just in case
 );
 
-// UserRelationship
+// UserSiteFollows
 $wgResourceModules['ext.socialprofile.usersitefollows.js'] = array(
 	'scripts' => 'UserSiteFollows.js',
 	'localBasePath' => __DIR__ . '/UserSiteFollows',

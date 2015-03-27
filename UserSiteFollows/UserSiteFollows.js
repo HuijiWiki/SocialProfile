@@ -4,7 +4,8 @@
  */
 
 function requestResponse( response, username, servername, action ) {
-	//TODO Serve waiting message.
+
+	//TODO: add waiting message.
 	//TODO: validate wgUserName.
 	if (!action){
 		jQuery.post(
@@ -38,11 +39,12 @@ function requestResponse( response, username, servername, action ) {
 }
 
 jQuery( document ).ready( function() {
-
+	// These works should be done in skin beforehand:
+	//TODO: $out->addModules( 'ext.socialprofile.userrelationship.js' ); (put this on skin)
 	//TODO: Check if user is logged in.
 	//TODO: if user is logged in, check if user has followed site.
 	jQuery( '#user-site-follow' ).on( 'click', function() {
-		//TODO: Check if user is logged in.
+		//TODO: Check if user is logged in, if not prompt login form.
 
 		requestResponse(
 			jQuery( this ).data( 'response' ),
