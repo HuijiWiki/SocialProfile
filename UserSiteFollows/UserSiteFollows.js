@@ -1,31 +1,55 @@
 /**
- * JavaScript for UserRelationship
- * Used on Special:ViewRelationshipRequests
+ * JavaScript for UserSiteFollow
+ * Used on Sidebar.
  */
-function requestResponse( response, id ) {
-	document.getElementById( 'request_action_' + id ).style.display = 'none';
-	document.getElementById( 'request_action_' + id ).style.visibility = 'hidden';
 
-	jQuery.post(
-		mw.util.wikiScript(), {
-			action: 'ajax',
-			rs: 'wfRelationshipRequestResponse',
-			rsargs: [response, id]
-		},
-		function( data ) {
-			document.getElementById( 'request_action_' + id ).innerHTML = data;
-			jQuery( '#request_action_' + id ).fadeIn( 2000 );
-			document.getElementById( 'request_action_' + id ).style.display = 'block';
-			document.getElementById( 'request_action_' + id ).style.visibility = 'visible';
-		}
-	);
+function requestResponse( response, username, servername, action ) {
+	//TODO Serve waiting message.
+	//TODO: validate wgUserName.
+	if (!action){
+		jQuery.post(
+			mw.util.wikiScript(), {
+				action: 'ajax',
+				rs: 'wfUserSiteFollowsResponse',
+				rsargs: [response, username, servername]
+			},
+			function( data ) {
+				if (data !== 'fail'){
+					jQuery( '#user-site-follow').innerHTML = data;
+					jQuery( '#user-site-follow').addClass('unfollow');
+				}
+			}
+		);
+	} else {
+		jQuery.post(
+			mw.util.wikiScript(), {
+				action: 'ajax',
+				rs: 'wfUserSiteUnfollowsResponse',
+				rsargs: [response, username, servername]
+			},
+			function( data ) {
+				if (data !== 'fail'){
+					jQuery( '#user-site-follow').innerHTML = data;
+					jQuery( '#user-site-follow').removeClass('unfollow');				
+				}
+			}
+		);		
+	}
 }
 
 jQuery( document ).ready( function() {
-	jQuery( 'div.relationship-buttons input[type="button"]' ).on( 'click', function() {
+
+	//TODO: Check if user is logged in.
+	//TODO: if user is logged in, check if user has followed site.
+	jQuery( '#user-site-follow' ).on( 'click', function() {
+		//TODO: Check if user is logged in.
+
 		requestResponse(
 			jQuery( this ).data( 'response' ),
-			jQuery( this ).parent().parent().attr( 'id' ).replace( /request_action_/, '' )
+			mw.config.get('wgUserName'),
+			mw.config.get('wgServer'),
+			jQuery( '#user-site-follow' ).hasClass('unfollow')
 		);
 	} );
+
 } );

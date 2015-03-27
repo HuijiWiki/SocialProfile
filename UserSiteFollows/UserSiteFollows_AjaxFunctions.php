@@ -3,39 +3,31 @@
  * AJAX functions used by UserSiteFollow extension.
  */
 
-$wgAjaxExportList[] = 'wfSiteFollowResponse';
-function wfSiteFollowRequestResponse( $response, $requestId ) {
+$wgAjaxExportList[] = 'wfUserSiteFollowsResponse';
+$wgAjaxExportList[] = 'wfUserSiteUnfollowsResponse';
+function wfUserSiteFollowsResponse(  $response, $username, $servername ) {
 	global $wgUser;
 	$out = '';
 
-	$rel = new UserRelationship( $wgUser->getName() );
-	if ( $rel->verifyRelationshipRequest( $requestId ) == true ) {
-		$request = $rel->getRequest( $requestId );
-		$user_name_from = $request[0]['user_name_from'];
-		$user_id_from = User::idFromName( $user_name_from );
-		$rel_type = strtolower( $request[0]['type'] );
+	$usf = new UserSiteFollow( $wgUser->getName() );
+	if ( $username === $wgUser ){
+		$usf->addUserSiteFollow($wgUser, $servername);
+		$out = '已关注'; //TODO: use wfMessage instead of hard code
+	}else{
+		$out = 'fail';
+	}
+	return $out;
+}
+function wfUserSiteUnfollowsResponse( $response, $username, $servername ) {
+	global $wgUser, $wgSitename;
+	$out = '';
 
-		$response = ( isset( $_POST['response' ] ) ) ? $_POST['response'] : $response;
-		$rel->updateRelationshipRequestStatus( $requestId, intval( $response ) );
-
-		$avatar = new wAvatar( $user_id_from, 'l' );
-		$avatar_img = $avatar->getAvatarURL();
-
-		if ( $response == 1 ) {
-			$rel->addRelationship( $requestId );
-			$out .= "<div class=\"relationship-action red-text\">
-				{$avatar_img}" .
-					wfMessage( "ur-requests-added-message-{$rel_type}", $user_name_from )->escaped() .
-				'<div class="cleared"></div>
-			</div>';
-		} else {
-			$out .= "<div class=\"relationship-action red-text\">
-				{$avatar_img}" .
-					wfMessage( "ur-requests-reject-message-{$rel_type}", $user_name_from )->escaped() .
-				'<div class="cleared"></div>
-			</div>';
-		}
-		$rel->deleteRequest( $requestId );
+	$usf = new UserSiteFollow( $wgUser->getName() );
+	if ( $username === $wgUser ){
+		$usf->deleteUserSiteFollow($wgUser, $servername);
+		$out = '关注'.$wgSitename; //TODO: use wfMessage instead of hard code
+	}else{
+		$out = 'fail';
 	}
 
 	return $out;
