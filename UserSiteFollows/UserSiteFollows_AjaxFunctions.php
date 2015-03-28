@@ -5,30 +5,29 @@
 
 $wgAjaxExportList[] = 'wfUserSiteFollowsResponse';
 $wgAjaxExportList[] = 'wfUserSiteUnfollowsResponse';
-function wfUserSiteFollowsResponse(  $response, $username, $servername ) {
+function wfUserSiteFollowsResponse( $username, $servername ) {
 	global $wgUser;
-	$out = '';
+	$out = 'fail';
 
-	$usf = new UserSiteFollow( $wgUser->getName() );
-	if ( $username === $wgUser ){
-		$usf->addUserSiteFollow($wgUser, $servername);
-		$out = '已关注'; //TODO: use wfMessage instead of hard code
-	}else{
-		$out = 'fail';
+	$usf = new UserSiteFollow();
+	if ( $username === $wgUser->getName() ){
+		if ($usf->addUserSiteFollow($wgUser, $servername)){
+			$out = '已关注';
+		}
 	}
+		 //TODO: use wfMessage instead of hard code
 	return $out;
 }
-function wfUserSiteUnfollowsResponse( $response, $username, $servername ) {
+function wfUserSiteUnfollowsResponse( $username, $servername ) {
 	global $wgUser, $wgSitename;
-	$out = '';
+	$out = 'fail';
 
-	$usf = new UserSiteFollow( $wgUser->getName() );
-	if ( $username === $wgUser ){
-		$usf->deleteUserSiteFollow($wgUser, $servername);
-		$out = '关注'.$wgSitename; //TODO: use wfMessage instead of hard code
-	}else{
-		$out = 'fail';
+	$usf = new UserSiteFollow();
+	if ( $username === $wgUser->getName() ){
+		if ($usf->deleteUserSiteFollow($wgUser, $servername)){
+			$out = '关注'.$wgSitename;
+		}
+		 //TODO: use wfMessage instead of hard code
 	}
-
 	return $out;
 }

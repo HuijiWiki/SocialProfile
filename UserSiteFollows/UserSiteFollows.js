@@ -3,7 +3,7 @@
  * Used on Sidebar.
  */
 
-function requestResponse( response, username, servername, action ) {
+function requestResponse( username, servername, action ) {
 
 	//TODO: add waiting message.
 	//TODO: validate wgUserName.
@@ -12,11 +12,11 @@ function requestResponse( response, username, servername, action ) {
 			mw.util.wikiScript(), {
 				action: 'ajax',
 				rs: 'wfUserSiteFollowsResponse',
-				rsargs: [response, username, servername]
+				rsargs: [username, servername]
 			},
 			function( data ) {
 				if (data !== 'fail'){
-					jQuery( '#user-site-follow').innerHTML = data;
+					jQuery( '#user-site-follow').html(data);
 					jQuery( '#user-site-follow').addClass('unfollow');
 				}
 			}
@@ -26,11 +26,11 @@ function requestResponse( response, username, servername, action ) {
 			mw.util.wikiScript(), {
 				action: 'ajax',
 				rs: 'wfUserSiteUnfollowsResponse',
-				rsargs: [response, username, servername]
+				rsargs: [username, servername]
 			},
 			function( data ) {
 				if (data !== 'fail'){
-					jQuery( '#user-site-follow').innerHTML = data;
+					jQuery( '#user-site-follow').html(data);
 					jQuery( '#user-site-follow').removeClass('unfollow');				
 				}
 			}
@@ -45,9 +45,10 @@ jQuery( document ).ready( function() {
 	//TODO: if user is logged in, check if user has followed site.
 	jQuery( '#user-site-follow' ).on( 'click', function() {
 		//TODO: Check if user is logged in, if not prompt login form.
-
+		if (mw.config.get('wgUserName') == null){
+			window.location.href = "/wiki/Special:Login";
+		}
 		requestResponse(
-			jQuery( this ).data( 'response' ),
 			mw.config.get('wgUserName'),
 			mw.config.get('wgServer'),
 			jQuery( '#user-site-follow' ).hasClass('unfollow')
