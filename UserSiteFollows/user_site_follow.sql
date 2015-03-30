@@ -6,8 +6,3 @@ CREATE TABLE /*_*/user_site_follow(
 `f_date` datetime default NULL
 )/*$wgDBTableOptions*/;
 CREATE INDEX if_wiki_domain ON /*_*/user_site_follow (`f_wiki_domain`);
-CREATE TABLE /*_*/user_site_follow_count(
-`f_wiki_domain` varchar(255) NOT NULL default '',
-`f_wiki_count` int(11) NOT NULL default '0'
-)/*$wgDBTableOptions*/;
-CREATE INDEX /*i*/f_wiki_domain ON /*_*/user_site_follow_count (`f_wiki_domain`);
