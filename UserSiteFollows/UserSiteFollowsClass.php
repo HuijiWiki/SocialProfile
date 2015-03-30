@@ -28,7 +28,7 @@ class UserSiteFollow{
 			), __METHOD__
 		);
 		$followId = $dbw->insertId();
-		$this->incFollowCount( $huijiPrefix );
+		$this->incFollowCount( $user, $huijiPrefix );
 		$stats = new UserStatsTrack( $user->getId(), $user->getName() );
 		$stats->incStatField( 'friend' );
 		// Notify Siteadmin maybe?
@@ -52,7 +52,7 @@ class UserSiteFollow{
 		);
 		$stats = new UserStatsTrack( $user->getId(), $user->getName() );
 		$stats->decStatField( 'friend' );
-		$this->decFollowCount( $huijiPrefix );
+		$this->decFollowCount( $user, $huijiPrefix );
 		return true;
 
 	}
@@ -126,6 +126,77 @@ class UserSiteFollow{
 			return $data;
 		}
 	}
+
+	/**
+	 * Get the amount of site; first tries cache,
+	 * and if that fails, fetches the count from the database.
+	 *
+	 * @param $user User:object
+	 * @return Integer
+	 */
+	static function getUserCount ( $user ){
+		$data = self::getUserCountCache( $user );
+		if ( $data != '' ) {
+			if ( $data == -1 ) {
+				$data = 0;
+			}
+			$count = $data;
+		} else {
+			$count = self::getUserCountDB( $user );
+		}
+
+		return $count;
+	}
+	/**
+	 * Get the amount of site followers from the
+	 * database and cache it.
+	 *
+	 * @param $user User Object:
+	 * @return Integer
+	 */
+	static function getUserCountDB( $user ) {
+		global $wgMemc;
+
+		wfDebug( "Got user followed sites count (prefix={$user}) from DB\n" );
+
+		$key = wfMemcKey( 'user_site_follow', 'user_count', $user->getName() );
+		$dbr = wfGetDB( DB_SLAVE );
+		$userCount = 0;
+
+		$s = $dbr->selectRow(
+			'user_site_follow',
+			array( 'COUNT(*) AS count' ),
+			array(
+				'f_user_id' => $user->getId()
+			),
+			__METHOD__
+		);
+
+		if ( $s !== false ) {
+			$userCount = $s->count;
+		}
+
+		$wgMemc->set( $key, $userCount );
+		return $userCount;
+	}
+
+	/**
+	 * Get the amount of site followers from cache.
+	 *
+	 * @param $user User Object: 
+	 * 
+	 * @return Integer
+	 */
+	static function getUserCountCache( $user ) {
+		global $wgMemc;
+		$key = wfMemcKey( 'user_site_follow', 'user_count', $user->getName() );
+		$data = $wgMemc->get( $key );
+		if ( $data != '' ) {
+			wfDebug( "Got user count of $data ( User = {$user} ) from cache\n" );
+			return $data;
+		}
+	}
+
 	/**
 	* @param $user User Object
 	* @param $huijiPrefix string: same as wgHuijiPrefix
@@ -149,10 +220,13 @@ class UserSiteFollow{
 	 * Increase the amount of follewers for the site.
 	 *
 	 * @param $huijiPrefix string: which site
+	 * @param $user User object: which user
 	 */
-	private function incFollowCount($huijiPrefix){
+	private function incFollowCount($user, $huijiPrefix){
 		global $wgMemc;
 		$key = wfMemcKey( 'user_site_follow', 'follow_count', $huijiPrefix );
+		$wgMemc->incr( $key );
+		$key = wfMemcKey( 'user_site_follow', 'user_count', $user->getName() );
 		$wgMemc->incr( $key );
 	}
 	/**
@@ -160,10 +234,12 @@ class UserSiteFollow{
 	 *
 	 * @param $huijiPrefix string: which site
 	 */
-	private function decFollowCount($huijiPrefix){
+	private function decFollowCount($user, $huijiPrefix){
 		global $wgMemc;
 		$key = wfMemcKey( 'user_site_follow', 'follow_count', $huijiPrefix );
 		$wgMemc->decr( $key );
+		$key = wfMemcKey( 'user_site_follow', 'user_count', $user->getName() );
+		$wgMemc->decr( $key );	
 	}
 	
 

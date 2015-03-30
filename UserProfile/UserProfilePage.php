@@ -847,17 +847,8 @@ class UserProfilePage extends Article {
 		$output = '';
 
 		if ( $this->isOwner() ) {
-			$toggle_title = SpecialPage::getTitleFor( 'ToggleUserPage' );
-			// Cast it to an int because PHP is stupid.
-			if ( (int) $profile_data['user_page_type'] == 1 ) {
-				$toggleMessage = wfMessage( 'user-type-toggle-old' )->escaped();
-			} else {
-				$toggleMessage = wfMessage( 'user-type-toggle-new' )->escaped();
-			}
-			$output .= '<div id="profile-toggle-button">
-				<a href="' . htmlspecialchars( $toggle_title->getFullURL() ) . '" rel="nofollow">' .
-					$toggleMessage . '</a>
-			</div>';
+
+			$output .= '<button id="user-follow" class="mw-ui-button mw-ui-progressive">关注'.$user_name.'</button>';
 		}
 
 		$output .= '<div id="profile-right">';
@@ -880,8 +871,8 @@ class UserProfilePage extends Article {
 								'user-profile-points',
 								$wgLang->formatNum( $stats_data['points'] )
 							)->escaped().'</span>
-						
 						</div>
+
 					</div>';
 		}
 		$output .= '<div class="cleared"></div>
