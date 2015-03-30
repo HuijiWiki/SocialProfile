@@ -18,6 +18,9 @@ function requestResponse( username, servername, action ) {
 				if (data !== 'fail'){
 					jQuery( '#user-site-follow').html(data);
 					jQuery( '#user-site-follow').addClass('unfollow');
+					var count = jQuery( '#site-follower-count').html();
+					count = parseInt(count)+1;
+					jQuery( '#site-follower-count').html(count.toString());
 				}
 			}
 		);
@@ -31,7 +34,14 @@ function requestResponse( username, servername, action ) {
 			function( data ) {
 				if (data !== 'fail'){
 					jQuery( '#user-site-follow').html(data);
-					jQuery( '#user-site-follow').removeClass('unfollow');				
+					jQuery( '#user-site-follow').removeClass('unfollow');	
+					var count = jQuery( '#site-follower-count').html();
+					count = parseInt(count)-1;
+					if (count >= 0){
+						jQuery( '#site-follower-count').html(count.toString());	
+					}else{
+						jQuery( '#site-follower-count').html(0);	
+					}		
 				}
 			}
 		);		
