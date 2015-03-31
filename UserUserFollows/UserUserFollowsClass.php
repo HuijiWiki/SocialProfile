@@ -2,24 +2,24 @@
 /**
  * This Class manages the User and Site follows.
  */
-class UserSiteFollow{
+class UserUserFollow{
 	function __construct( ) {
 
 	}
 
 	/** add a user follow site action to the database.
 	 *
-	 *  @param $user User object: the user_name who initiates the follow
-	 *  @param $huijiPrefix string: the wiki to be followed, use prefix as identifier.
-	 *	@return bool: true if successfully followed
+	 *  @param $follower User object: the user who initiates the follow
+	 *  @param $followee User object: the user to be followed
+	 *	@return mixed: false if unsuccessful, id if successful
 	 */
-	public function addUserSiteFollow($user, $huijiPrefix){
-		if ( $this->checkUserSiteFollow( $user, $huijiPrefix ) !== false ){
+	public function addUserUserFollow($follower, $followee){
+		if ( $this->checkUserUserFollow( $user, $huijiPrefix ) !== false ){
 			return 0;
 		}
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->insert(
-			'user_site_follow',
+			'user_user_follow',
 			array(
 				'f_user_id' => $user->getId(),
 				'f_user_name' => $user->getName(),

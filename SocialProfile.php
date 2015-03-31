@@ -65,6 +65,7 @@ $wgAutoloadClasses['TopUsersPoints'] = __DIR__ . '/UserStats/TopUsers.php';
 $wgAutoloadClasses['wAvatar'] = __DIR__ . '/UserProfile/AvatarClass.php';
 $wgAutoloadClasses['AvatarParserFunction'] = __DIR__ . '/UserProfile/AvatarParserFunction.php';
 $wgAutoloadClasses['UserSiteFollow'] = __DIR__ . '/UserSiteFollows/UserSiteFollowsClass.php';
+$wgAutoloadClasses['UserUserFollow'] = __DIR__ . '/UserSiteFollows/UserUserFollowsClass.php';
 // New special pages
 $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
 $wgSpecialPages['EditProfile'] = 'SpecialEditProfile';
@@ -88,6 +89,7 @@ $wgSpecialPages['ViewRelationships'] = 'SpecialViewRelationships';
 require_once( "$IP/extensions/SocialProfile/UserBoard/UserBoard_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/UserRelationship/Relationship_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/UserSiteFollows/UserSiteFollows_AjaxFunctions.php" );
+require_once( "$IP/extensions/SocialProfile/UserUserFollows/UserUserFollows_AjaxFunctions.php" );
 
 // What to display on social profile pages by default?
 $wgUserProfileDisplay['board'] = true;
@@ -284,6 +286,13 @@ $wgResourceModules['ext.socialprofile.usersitefollows.js'] = array(
 	'scripts' => 'UserSiteFollows.js',
 	'localBasePath' => __DIR__ . '/UserSiteFollows',
 	'remoteExtPath' => 'SocialProfile/UserSiteFollows',
+);
+
+// UserUserFollows
+$wgResourceModules['ext.socialprofile.useruserfollows.js'] = array(
+	'scripts' => 'UserUserFollows.js',
+	'localBasePath' => __DIR__ . '/UserUserFollows',
+	'remoteExtPath' => 'SocialProfile/UserUserFollows',
 );
 
 // End ResourceLoader stuff

@@ -848,7 +848,7 @@ class UserProfilePage extends Article {
 
 		if ( $this->isOwner() ) {
 
-			$output .= '<button id="user-follow" class="mw-ui-button mw-ui-progressive">关注'.$user_name.'</button>';
+			$output .= '<button id="user-user-follow" class="mw-ui-button mw-ui-progressive">关注'.$user_name.'</button>';
 		}
 
 		$output .= '<div id="profile-right">';
