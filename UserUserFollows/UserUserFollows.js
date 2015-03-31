@@ -3,7 +3,7 @@
  * Used on Sidebar.
  */
 
-function requestResponse( username, servername, action ) {
+function requestResponse( follower, followee, action ) {
 
 	//TODO: add waiting message.
 	//TODO: validate wgUserName.
@@ -12,7 +12,7 @@ function requestResponse( username, servername, action ) {
 			mw.util.wikiScript(), {
 				action: 'ajax',
 				rs: 'wfUserUserFollowsResponse',
-				rsargs: [username, servername]
+				rsargs: [follower, followee]
 			},
 			function( data ) {
 				if (data !== 'fail'){
@@ -29,7 +29,7 @@ function requestResponse( username, servername, action ) {
 			mw.util.wikiScript(), {
 				action: 'ajax',
 				rs: 'wfUserUserUnfollowsResponse',
-				rsargs: [username, servername]
+				rsargs: [follower, followee]
 			},
 			function( data ) {
 				if (data !== 'fail'){

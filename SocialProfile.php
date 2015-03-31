@@ -65,7 +65,7 @@ $wgAutoloadClasses['TopUsersPoints'] = __DIR__ . '/UserStats/TopUsers.php';
 $wgAutoloadClasses['wAvatar'] = __DIR__ . '/UserProfile/AvatarClass.php';
 $wgAutoloadClasses['AvatarParserFunction'] = __DIR__ . '/UserProfile/AvatarParserFunction.php';
 $wgAutoloadClasses['UserSiteFollow'] = __DIR__ . '/UserSiteFollows/UserSiteFollowsClass.php';
-$wgAutoloadClasses['UserUserFollow'] = __DIR__ . '/UserSiteFollows/UserUserFollowsClass.php';
+$wgAutoloadClasses['UserUserFollow'] = __DIR__ . '/UserUserFollows/UserUserFollowsClass.php';
 // New special pages
 $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
 $wgSpecialPages['EditProfile'] = 'SpecialEditProfile';

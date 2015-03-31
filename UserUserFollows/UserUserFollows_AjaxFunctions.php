@@ -5,24 +5,24 @@
 
 $wgAjaxExportList[] = 'wfUserUserFollowsResponse';
 $wgAjaxExportList[] = 'wfUserUserUnfollowsResponse';
-function wfUserSiteFollowsResponse( $follower, $followee ) {
+function wfUserUserFollowsResponse( $follower, $followee ) {
 	global $wgUser;
 	$out = 'fail';
 
-	$usf = new UserUserFollow();
+	$uuf = new UserUserFollow();
 	if ( $follower === $wgUser->getName() && $followee !== $follower){
-		if ($usf->addUserSiteFollow($wgUser, User::newFromName($followee))） >= 0){
+		if ($uuf->addUserUserFollow($wgUser, User::newFromName($followee)) >= 0){
 			$out = '已关注';
 		}
 	}
 		 //TODO: use wfMessage instead of hard code
 	return $out;
 }
-function wfUserSiteUnfollowsResponse( $follower, $followee ) {
+function wfUserUserUnfollowsResponse( $follower, $followee ) {
 	global $wgUser;
 	$out = 'fail';
 
-	$usf = new UserUserFollow();
+	$uuf = new UserUserFollow();
 	if ( $username === $wgUser->getName() && $followee !== $follower){
 		if ($usf->deleteUserSiteFollow($wgUser, User::newFromName($followee))){
 			$out = '关注'.$wgSitename;
