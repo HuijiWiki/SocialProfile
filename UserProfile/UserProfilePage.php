@@ -806,7 +806,7 @@ class UserProfilePage extends Article {
 	 * @param $user_name String: user name
 	 */
 	function getProfileTop( $user_id, $user_name ) {
-		global $wgUser, $wgLang;
+		global $wgOut, $wgUser, $wgLang;
 		global $wgUserLevels;
 
 		$stats = new UserStats( $user_id, $user_name );
@@ -846,9 +846,9 @@ class UserProfilePage extends Article {
 		wfDebug( 'profile type: ' . $profile_data['user_page_type'] . "\n" );
 		$output = '';
 
-		if ( $this->isOwner() ) {
-
+		if ( !$this->isOwner() ) {
 			$output .= '<button id="user-user-follow" class="mw-ui-button mw-ui-progressive">关注'.$user_name.'</button>';
+			$wgOut->addModules( 'ext.socialprofile.useruserfollows.js' );
 		}
 
 		$output .= '<div id="profile-right">';
