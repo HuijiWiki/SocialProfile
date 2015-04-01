@@ -128,7 +128,7 @@ class UserSiteFollow{
 	}
 
 	/**
-	 * Get the amount of site; first tries cache,
+	 * Get the amount of users following the site; first tries cache,
 	 * and if that fails, fetches the count from the database.
 	 *
 	 * @param $user User:object
