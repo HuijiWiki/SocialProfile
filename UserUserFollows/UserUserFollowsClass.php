@@ -57,9 +57,6 @@ class UserUserFollow{
 		if ($follower == null || $followee == null ){
 			return false;
 		}
-		// if ( $this->checkUserUserFollow( $follower, $followee ) == false ){
-		// 	return true;
-		// }
 
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->delete(
@@ -80,7 +77,7 @@ class UserUserFollow{
 	 * Get the amount of followers of a certain user; first tries cache,
 	 * and if that fails, fetches the count from the database.
 	 *
-	 * @param $user User object: Whose follower count do you what
+	 * @param $user User object: Whose follower count
 	 * @return Integer
 	 */
 	static function getFollowingCount ( $user ){
@@ -93,7 +90,6 @@ class UserUserFollow{
 		} else {
 			$count = self::getFollowingCountDB( $user );
 		}
-
 		return $count;
 	}
 	/**
@@ -116,7 +112,7 @@ class UserUserFollow{
 			'user_user_follow',
 			array( 'COUNT(*) AS count' ),
 			array(
-				'f_user_target_id' => $user->getId()
+				'f_target_user_id' => $user->getId()
 			),
 			__METHOD__
 		);
@@ -135,12 +131,78 @@ class UserUserFollow{
 	 * @param $user User object: Whose follower count do you what
 	 * @return Integer
 	 */
-	static function getfollowingCountCache( $user ) {
+	static function getFollowingCountCache( $user ) {
 		global $wgMemc;
 		$key = wfMemcKey( 'user_user_follow', 'user_following_count', $user->getName() );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
-			wfDebug( "Got site count of $data ( user = {$user->getName()} ) from cache\n" );
+			wfDebug( "Got user following count of $data ( user = {$user} ) from cache\n" );
+			return $data;
+		}
+	}	/**
+	 * Get the amount of followers of a certain user; first tries cache,
+	 * and if that fails, fetches the count from the database.
+	 *
+	 * @param $user User object: Whose follower count
+	 * @return Integer
+	 */
+	static function getFollowedCount ( $user ){
+		$data = self::getFollowedCountCache( $user );
+		if ( $data != '' ) {
+			if ( $data == -1 ) {
+				$data = 0;
+			}
+			$count = $data;
+		} else {
+			$count = self::getFollowedCountDB( $user );
+		}
+		return $count;
+	}
+	/**
+	 * Get the amount of users following current user from the
+	 * database and cache it.
+	 *
+	 * @param $user User object: Whose follower count do you what
+	 * @return Integer
+	 */
+	static function getFollowedCountDB( $user ) {
+		global $wgMemc;
+
+		wfDebug( "Got user followed count (user={$user}) from DB\n" );
+
+		$key = wfMemcKey( 'user_user_follow', 'user_followed_count', $user->getName() );
+		$dbr = wfGetDB( DB_SLAVE );
+		$followedCount = 0;
+
+		$s = $dbr->selectRow(
+			'user_user_follow',
+			array( 'COUNT(*) AS count' ),
+			array(
+				'f_user_id' => $user->getId()
+			),
+			__METHOD__
+		);
+
+		if ( $s !== false ) {
+			$followedCount = $s->count;
+		}
+
+		$wgMemc->set( $key, $followedCount );
+		return $followedCount;
+	}
+
+	/**
+	 * Get the amount of user following the current user from cache.
+	 *
+	 * @param $user User object: Whose follower count do you what
+	 * @return Integer
+	 */
+	static function getFollowedCountCache( $user ) {
+		global $wgMemc;
+		$key = wfMemcKey( 'user_user_follow', 'user_followed_count', $user->getName() );
+		$data = $wgMemc->get( $key );
+		if ( $data != '' ) {
+			wfDebug( "Got user followed count of $data ( user = {$user} ) from cache\n" );
 			return $data;
 		}
 	}

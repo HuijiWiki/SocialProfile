@@ -882,6 +882,7 @@ class UserProfilePage extends Article {
 					</div>';
 		}
 		$output .= '<div class="cleared"></div>
+					<div><p><span id="user-following-count">'.UserUserFollow::getFollowingCount(User::newFromName($user)).'</span>人关注|关注了<span id="user-following-count">'.UserUserFollow::getFollowedCount(User::newFromName($user)).'</span>人</p></div>
 			
 			<div class="profile-actions">';
 

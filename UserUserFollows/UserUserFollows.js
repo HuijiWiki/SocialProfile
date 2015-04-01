@@ -18,9 +18,9 @@ function requestResponse( follower, followee, action ) {
 				if (data !== 'fail'){
 					jQuery( '#user-user-follow').html(data);
 					jQuery( '#user-user-follow').addClass('unfollow');
-					var count = jQuery( '#user-follower-count').html();
+					var count = jQuery( '#user-following-count').html();
 					count = parseInt(count)+1;
-					jQuery( '#user-follower-count').html(count.toString());
+					jQuery( '#user-following-count').html(count.toString());
 				}
 			}
 		);
@@ -35,12 +35,12 @@ function requestResponse( follower, followee, action ) {
 				if (data !== 'fail'){
 					jQuery( '#user-user-follow').html(data);
 					jQuery( '#user-user-follow').removeClass('unfollow');	
-					var count = jQuery( '#user-follower-count').html();
+					var count = jQuery( '#user-following-count').html();
 					count = parseInt(count)-1;
 					if (count >= 0){
-						jQuery( '#user-follower-count').html(count.toString());	
+						jQuery( '#user-following-count').html(count.toString());	
 					}else{
-						jQuery( '#user-follower-count').html(0);	
+						jQuery( '#user-following-count').html(0);	
 					}		
 				}
 			}
