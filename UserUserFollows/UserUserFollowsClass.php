@@ -14,115 +14,133 @@ class UserUserFollow{
 	 *	@return mixed: false if unsuccessful, id if successful
 	 */
 	public function addUserUserFollow($follower, $followee){
-		if ( $this->checkUserUserFollow( $user, $huijiPrefix ) !== false ){
+
+		if ($follower == null || $followee == null ){
+			return false;
+		}
+		if ($follower == $followee){
+			return false;
+		}
+		if ( $this->checkUserUserFollow( $follower, $followee ) !== false ){
 			return 0;
 		}
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->insert(
 			'user_user_follow',
 			array(
-				'f_user_id' => $user->getId(),
-				'f_user_name' => $user->getName(),
-				'f_wiki_domain' => $huijiPrefix,
+				'f_user_id' => $follower->getId(),
+				'f_user_name' => $follower->getName(),
+				'f_target_user_id' => $followee->getId(),
+				'f_target_user_name' => $followee->getName(),
 				'f_date' => date( 'Y-m-d H:i:s' )
 			), __METHOD__
 		);
 		$followId = $dbw->insertId();
-		$this->incFollowCount( $huijiPrefix );
-		$stats = new UserStatsTrack( $user->getId(), $user->getName() );
-		$stats->incStatField( 'friend' );
-		// Notify Siteadmin maybe?
+		$this->incFollowCount( $follower, $followee );
+		$stats = new UserStatsTrack( $follower->getId(), $follower->getName() );
+		$stats->incStatField( 'friend' ); //use friend record to count the number of people followed.
+		$stats = new UserStatsTrack( $followee->getId(), $followee->getName() );
+		$stats->incStatField( 'foe' ); // use foe record to count the number of people following.
+		// TODO: Notify the followee?
 		return $followId;
 
 	}
 
 	/**
-	 * Remove a follower from site and clear caches afterwards.
+	 * Remove a follower from followee
 	 *
 	 * @param $user1 User object: user to be removed
 	 * @param $user2 string: site prefix
+	 * @return bool: true if successfully deleted
 	 */
-	public function deleteUserSiteFollow($user, $huijiPrefix){
+	public function deleteUserUserFollow($follower, $followee){
+		if ($follower == null || $followee == null ){
+			return false;
+		}
+		// if ( $this->checkUserUserFollow( $follower, $followee ) == false ){
+		// 	return true;
+		// }
 
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->delete(
-			'user_site_follow',
-			array( 'f_user_id' => $user->getId(), 'f_wiki_domain' => $huijiPrefix ),
+			'user_user_follow',
+			array( 'f_user_id' => $follower->getId(), 'f_target_user_id' => $followee->getId() ),
 			__METHOD__
 		);
-		$stats = new UserStatsTrack( $user->getId(), $user->getName() );
-		$stats->decStatField( 'friend' );
-		$this->decFollowCount( $huijiPrefix );
+		$this->decFollowCount( $follower, $followee );
+		$stats = new UserStatsTrack( $follower->getId(), $follower->getName() );
+		$stats->decStatField( 'friend' ); //use friend record to count the number of people followed.
+		$stats = new UserStatsTrack( $followee->getId(), $followee->getName() );
+		$stats->decStatField( 'foe' ); // use foe record to count the number of people following.
 		return true;
 
 	}
 
 	/**
-	 * Get the amount of site; first tries cache,
+	 * Get the amount of followers of a certain user; first tries cache,
 	 * and if that fails, fetches the count from the database.
 	 *
-	 * @param $huijiPrefix String: the site
+	 * @param $user User object: Whose follower count do you what
 	 * @return Integer
 	 */
-	static function getSiteCount ( $huijiPrefix ){
-		$data = self::getSiteCountCache( $huijiPrefix );
+	static function getFollowingCount ( $user ){
+		$data = self::getFollowingCountCache( $user );
 		if ( $data != '' ) {
 			if ( $data == -1 ) {
 				$data = 0;
 			}
 			$count = $data;
 		} else {
-			$count = self::getSiteCountDB( $huijiPrefix );
+			$count = self::getFollowingCountDB( $user );
 		}
 
 		return $count;
 	}
 	/**
-	 * Get the amount of site followers from the
+	 * Get the amount of users following current user from the
 	 * database and cache it.
 	 *
-	 * @param $HuijiPrefix String:
+	 * @param $user User object: Whose follower count do you what
 	 * @return Integer
 	 */
-	static function getSiteCountDB( $huijiPrefix ) {
+	static function getFollowingCountDB( $user ) {
 		global $wgMemc;
 
-		wfDebug( "Got site followers count (prefix={$huijiPrefix}) from DB\n" );
+		wfDebug( "Got user followers count (user={$user}) from DB\n" );
 
-		$key = wfMemcKey( 'user_site_follow', 'follow_count', $huijiPrefix );
+		$key = wfMemcKey( 'user_user_follow', 'user_following_count', $user->getName() );
 		$dbr = wfGetDB( DB_SLAVE );
-		$siteCount = 0;
+		$followingCount = 0;
 
 		$s = $dbr->selectRow(
-			'user_site_follow',
+			'user_user_follow',
 			array( 'COUNT(*) AS count' ),
 			array(
-				'f_wiki_domain' => $huijiPrefix
+				'f_user_target_id' => $user->getId()
 			),
 			__METHOD__
 		);
 
 		if ( $s !== false ) {
-			$siteCount = $s->count;
+			$followingCount = $s->count;
 		}
 
-		$wgMemc->set( $key, $siteCount );
-		return $siteCount;
+		$wgMemc->set( $key, $followingCount );
+		return $followingCount;
 	}
 
 	/**
-	 * Get the amount of site followers from cache.
+	 * Get the amount of user following the current user from cache.
 	 *
-	 * @param $huijiPrefix string: 
-	 * 
+	 * @param $user User object: Whose follower count do you what
 	 * @return Integer
 	 */
-	static function getSiteCountCache( $huijiPrefix ) {
+	static function getfollowingCountCache( $user ) {
 		global $wgMemc;
-		$key = wfMemcKey( 'user_site_follow', 'follow_count', $huijiPrefix );
+		$key = wfMemcKey( 'user_user_follow', 'user_following_count', $user->getName() );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
-			wfDebug( "Got site count of $data ( prefix = {$huijiPrefix} ) from cache\n" );
+			wfDebug( "Got site count of $data ( user = {$user->getName()} ) from cache\n" );
 			return $data;
 		}
 	}
@@ -131,12 +149,12 @@ class UserUserFollow{
 	* @param $huijiPrefix string: same as wgHuijiPrefix
 	* @return Mixed: integer or boolean false
 	*/
-	public function checkUserSiteFollow($user, $huijiPrefix){
+	public function checkUserUserFollow($follower, $followee){
 		$dbr = wfGetDB( DB_SLAVE );
 		$s = $dbr->selectRow(			
-			'user_site_follow',
+			'user_user_follow',
 			array( 'f_id' ),
-			array( 'f_user_id' => $user->getId(), 'f_wiki_domain' => $huijiPrefix ),
+			array( 'f_user_id' => $follower->getId(), 'f_target_user_id' => $followee->getId() ),
 			__METHOD__
 		);
 		if ($s !== false){
@@ -146,23 +164,29 @@ class UserUserFollow{
 		}
 	}
 	/**
-	 * Increase the amount of follewers for the site.
+	 * Increase the amount of following and followed count.
 	 *
-	 * @param $huijiPrefix string: which site
+	 *  @param $follower User object: the user who initiates the follow
+	 *  @param $followee User object: the user to be followed
 	 */
-	private function incFollowCount($huijiPrefix){
+	private function incFollowCount($follower, $followee){
 		global $wgMemc;
-		$key = wfMemcKey( 'user_site_follow', 'follow_count', $huijiPrefix );
+		$key = wfMemcKey( 'user_user_follow', 'user_following_count', $followee->getName() );
+		$wgMemc->incr( $key );
+		$key = wfMemcKey( 'user_user_follow', 'user_followed_count', $follower->getName() );
 		$wgMemc->incr( $key );
 	}
 	/**
 	 * Decrease the amount of follewers for the site.
 	 *
-	 * @param $huijiPrefix string: which site
+	 *  @param $follower User object: the user who initiates the follow
+	 *  @param $followee User object: the user to be followed
 	 */
-	private function decFollowCount($huijiPrefix){
+	private function decFollowCount($follower, $followee){
 		global $wgMemc;
-		$key = wfMemcKey( 'user_site_follow', 'follow_count', $huijiPrefix );
+		$key = wfMemcKey( 'user_user_follow', 'user_following_count', $followee->getName() );
+		$wgMemc->decr( $key );
+		$key = wfMemcKey( 'user_user_follow', 'user_followed_count', $follower->getName() );
 		$wgMemc->decr( $key );
 	}
 	

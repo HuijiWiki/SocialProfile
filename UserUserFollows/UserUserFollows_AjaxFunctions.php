@@ -11,7 +11,7 @@ function wfUserUserFollowsResponse( $follower, $followee ) {
 
 	$uuf = new UserUserFollow();
 	if ( $follower === $wgUser->getName() && $followee !== $follower){
-		if ($uuf->addUserUserFollow($wgUser, User::newFromName($followee)) >= 0){
+		if ($uuf->addUserUserFollow($wgUser, User::newFromName($followee)) !== false){
 			$out = '已关注';
 		}
 	}
@@ -23,9 +23,9 @@ function wfUserUserUnfollowsResponse( $follower, $followee ) {
 	$out = 'fail';
 
 	$uuf = new UserUserFollow();
-	if ( $username === $wgUser->getName() && $followee !== $follower){
-		if ($usf->deleteUserSiteFollow($wgUser, User::newFromName($followee))){
-			$out = '关注'.$wgSitename;
+	if ( $follower === $wgUser->getName() && $followee !== $follower){
+		if ($uuf->deleteUserUserFollow($wgUser, User::newFromName($followee))){
+			$out = '关注'.$followee;
 		}
 		 //TODO: use wfMessage instead of hard code
 	}

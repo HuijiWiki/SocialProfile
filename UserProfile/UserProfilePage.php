@@ -846,8 +846,14 @@ class UserProfilePage extends Article {
 		wfDebug( 'profile type: ' . $profile_data['user_page_type'] . "\n" );
 		$output = '';
 
+		$uuf = new UserUserFollow();
+		$following = $uuf->checkUserUserFollow($wgUser, User::newFromId($user_id));
 		if ( !$this->isOwner() ) {
-			$output .= '<button id="user-user-follow" class="mw-ui-button mw-ui-progressive">关注'.$user_name.'</button>';
+			if (!$following ){
+				$output .= '<button id="user-user-follow" class="mw-ui-button mw-ui-progressive">关注'.$user_name.'</button>';
+			}else{
+				$output .= '<button id="user-user-follow" class="mw-ui-button mw-ui-progressive unfollow">已关注</button>';
+			}
 			$wgOut->addModules( 'ext.socialprofile.useruserfollows.js' );
 		}
 
