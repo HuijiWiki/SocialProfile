@@ -81,10 +81,44 @@ class UserProfilePage extends Article {
 			return '';
 		}
 
-		$wgOut->addHTML( '<div id="profile-top" class="jumbotron">' );
+		$wgOut->addHTML( '<div class="profile-page"><div id="profile-top" class="jumbotron row">' );
 		$wgOut->addHTML( $this->getProfileTop( $this->user_id, $this->user_name ) );
-		$wgOut->addHTML( '<div class="cleared"></div></div>' );
-
+        $wgOut->addHTML('
+            <div class="col-md-6 profile-top-right">
+                <div class="profile-top-right-top">
+                    <div><h4>兴趣</h4></div>
+                    <ul>
+                        <li>电脑游戏</li>
+                        <li>奇幻文学</li>
+                        <li>桌游</li>
+                    </ul>
+                </div>
+                <div class="profile-top-right-bottom">
+                    <ul>
+                        <li>冰与火之歌中文维基</li>
+                        <li>魔戒中文维基</li>
+                        <li>炉石传说中文维基</li>
+                    </ul>
+                    <a>点击查看详细</a>
+                    <div>
+                        <p>收到:<span class="glyphicon glyphicon-heart" aria-hidden="true"></span><span>56</span>感谢</p>
+                        <ul class="profile-interactive btn-group">
+                            <li><a><span class="glyphicon glyphicon-plus"></span>关注</a></li>
+                            <li><a><span class="glyphicon glyphicon-envelope"></span>私信</a></li>
+                            <li class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-align-justify"></span></li>
+                            <ul class="dropdown-menu" role="menu">
+                                        <li><a href="#">推荐给朋友</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">加入黑名单</a></li>
+                                        <li><a href="#">举报</a></li>
+                                        <li><a href="#">贡献</a></li>
+                            </ul>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        ');
+        $wgOut->addHTML( '<div class="cleared"></div></div>');
 		// User does not want social profile for User:user_name, so we just
 		// show header + page content
 		if (
@@ -141,7 +175,7 @@ class UserProfilePage extends Article {
 			wfDebug( __METHOD__ . ": UserProfileEndRight messed up profile!\n" );
 		}
 
-		$wgOut->addHTML( '</div><div class="cleared"></div>' );
+		$wgOut->addHTML( '</div><div class="cleared"></div></div>' );
 	}
 
 	function getUserStatsRow( $label, $value ) {
@@ -857,15 +891,68 @@ class UserProfilePage extends Article {
 			$wgOut->addModules( 'ext.socialprofile.useruserfollows.js' );
 		}
 
-		$output .= '<div id="profile-right">';
+		$output .= '<div id="profile-right" class="col-md-6">';
 
 		$output .= '<div id="profile-title-container">
 				<h1 id="profile-title">
-				<div id="profile-image">' . $avatar->getAvatarURL() .'</div>' .
+				<div id="profile-image">' .($this->isOwner()? ('<div class="profile-image-container">'.$avatar->getOwnerAvatarURL().'</div>'): $avatar->getAvatarURL()) .'</div>' .
 					$user_name .
 				'</h1></div>';
+        $output .='<div class="modal fade upload-model-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                              <h4 class="modal-title" id="gridSystemModalLabel">Modal title</h4>
+                            </div>
+                            <div class="modal-body">
+                              <div class="container-fluid">
+                                <div class="row">
+                                  <div class="col-md-4">.col-md-4</div>
+                                  <div class="col-md-4 col-md-offset-4">.col-md-4 .col-md-offset-4</div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-md-3 col-md-offset-3">.col-md-3 .col-md-offset-3</div>
+                                  <div class="col-md-2 col-md-offset-4">.col-md-2 .col-md-offset-4</div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-md-6 col-md-offset-3">.col-md-6 .col-md-offset-3</div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-sm-9">
+                                    Level 1: .col-sm-9
+                                    <div class="row">
+                                      <div class="col-xs-8 col-sm-6">
+                                        Level 2: .col-xs-8 .col-sm-6
+                                      </div>
+                                      <div class="col-xs-4 col-sm-6">
+                                        Level 2: .col-xs-4 .col-sm-6
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                              <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                      </div>
+                    </div>';
 		// Show the user's level and the amount of points they have if
 		// UserLevels has been configured
+        $output .='<div>
+					    <ul class="user-follow-msg">
+					        <li><h5>编辑</h5><span>9999</span></li>
+					        <li><h4>|</h4></li>
+					        <li><h5>关注</h5><span id="user-followed-count">'.UserUserFollow::getFollowedCount(User::newFromName($user)).'</span></li>
+					        <li><h4>|</h4></li>
+					        <li><h5>被关注</h5><span id="user-following-count">'.UserUserFollow::getFollowingCount(User::newFromName($user)).'</span></li>
+                        </ul>
+                        <div class="cleared"></div>
+                    </div>
+                    <!--<span id="user-site-count">'.UserSiteFollow::getUserCount(User::newFromName($user)).'</span>个站点。-->';
 		if ( $wgUserLevels ) {
 			$progress = $user_level->getLevelProgress()*100;
 			$output .= '<div id="honorific-level" class="label label-info">
@@ -881,10 +968,7 @@ class UserProfilePage extends Article {
 
 					</div>';
 		}
-		$output .= '<div class="cleared"></div>
-					<div><p><span id="user-following-count">'.UserUserFollow::getFollowingCount(User::newFromName($user)).'</span>人关注|关注了<span id="user-following-count">'.UserUserFollow::getFollowedCount(User::newFromName($user)).'</span>人</p></div>
-			
-			<div class="profile-actions">';
+		$output .= '<div class="profile-actions">';
 
 		if ( $this->isOwner() ) {
 			$output .= $wgLang->pipeList( array(
@@ -925,8 +1009,8 @@ class UserProfilePage extends Article {
 				wfMessage( 'user-send-gift' )->escaped() . '</a>';
 			$output .= wfMessage( 'pipe-separator' )->escaped();
 		}
-
 		$output .= '<a href="' . htmlspecialchars( $contributions->getFullURL() ) . '" rel="nofollow">' . wfMessage( 'user-contributions' )->escaped() . '</a> ';
+        $output .='<div class="user-autograph"><span>不安分的某某某</span></div>';
 
 		// Links to User:user_name from User_profile:
 		// if ( $this->getTitle()->getNamespace() == NS_USER_PROFILE && $this->profile_data['user_id'] && $this->profile_data['user_page_type'] == 0 ) {

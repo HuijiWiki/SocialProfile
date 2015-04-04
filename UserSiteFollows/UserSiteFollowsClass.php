@@ -228,6 +228,7 @@ class UserSiteFollow{
 		$wgMemc->incr( $key );
 		$key = wfMemcKey( 'user_site_follow', 'user_count', $user->getName() );
 		$wgMemc->incr( $key );
+		$wgMemc->delete( wfMemcKey( 'user_site_follow', 'top_followed', $user->getName() ) );
 	}
 	/**
 	 * Decrease the amount of follewers for the site.
@@ -240,6 +241,111 @@ class UserSiteFollow{
 		$wgMemc->decr( $key );
 		$key = wfMemcKey( 'user_site_follow', 'user_count', $user->getName() );
 		$wgMemc->decr( $key );	
+		$wgMemc->delete( wfMemcKey( 'user_site_follow', 'top_followed', $user->getName() ) );
+	}
+		
+
+	/**
+	 * Get 3 recently followed wiki site.
+	 * 
+	 * @param $user User object, whose info we want.
+	 * @return array the array of the top followed site.
+	 */
+	public function getTopFollowedSites( $user ){
+		$data = self::getTopFollowedSitesCache( $user );
+		if ( $data != '' ) {
+			if ( $data == -1 ) {
+				$data = 0;
+			}
+			$sites = $data;
+		} else {
+			$sites = self::getTopFollowedSitesDB( $user );
+		}
+		return $sites;
+		
+	}
+	/**
+	 * Get the top followed site from the
+	 * database and cache it.
+	 *
+	 * @param $user User Object:
+	 * @return array
+	 */
+	static function getTopFollowedSitesDB( $user ) {
+		global $wgMemc;
+
+		wfDebug( "Got user followed sites count (prefix={$user}) from DB\n" );
+
+		$key = wfMemcKey( 'user_site_follow', 'top_followed', $user->getName() );
+		$dbr = wfGetDB( DB_SLAVE );
+		$topFollowed = array();
+
+		$s = $dbr->select(
+			'user_site_follow',
+			array( 'f_wiki_domain' ),
+			array(
+				'f_user_id' => $user->getId()
+			),
+			__METHOD__,
+			array( 
+				'ORDER BY' => 'f_date DESC',
+				'LIMIT' => '3'
+			)
+		);
+		foreach( $s as $row ){
+			$prefix = $row->f_wiki_domain;
+			$siteName = HuijiPrefix::prefixToSiteName($prefix);
+			$topFollowed[$prefix] = $siteName;
+		}
+
+		$wgMemc->set( $key, $topFollowed );
+		return $topFollowed;
+	}
+	/**
+	 * Get top followed site from cache.
+	 *
+	 * @param $user User Object: 
+	 * 
+	 * @return array
+	 */
+	static function getTopFollowedSitesCache( $user ) {
+		global $wgMemc;
+		$key = wfMemcKey( 'user_site_follow', 'top_followed', $user->getName() );
+		$data = $wgMemc->get( $key );
+		if ( $data != '' ) {
+			wfDebug( "Got top followed $data ( User = {$user} ) from cache\n" );
+			return $data;
+		}
+	}
+	/**
+	 * Get full list of followed sites from the
+	 * database and cache it.
+	 *
+	 * @param $user User Object:
+	 * @return array
+	 */
+	static function getFullFollowedSitesDB( $user ) {
+		global $wgMemc;
+		$dbr = wfGetDB( DB_SLAVE );
+		$Followed = array();
+
+		$s = $dbr->select(
+			'user_site_follow',
+			array( 'f_wiki_domain' ),
+			array(
+				'f_user_id' => $user->getId()
+			),
+			__METHOD__,
+			array( 
+				'ORDER BY' => 'f_date DESC',
+			)
+		);
+		foreach( $s as $row ){
+			$prefix = $row->f_wiki_domain;
+			$siteName = HuijiPrefix::prefixToSiteName($prefix);
+			$followed[$prefix] = $siteName;
+		}
+		return $followed;
 	}
 	
 

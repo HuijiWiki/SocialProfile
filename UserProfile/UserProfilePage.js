@@ -134,4 +134,15 @@ jQuery( document ).ready( function() {
 	jQuery( 'span.user-board-red a' ).on( 'click', function() {
 		UserProfilePage.deleteMessage( jQuery( this ).data( 'message-id' ) );
 	} );
+
+    //Upload img
+    $("#profile-image img").mouseover(function(event){
+        var wrap = "<div class='upload-img'>上传头像</div>"
+        $("#profile-image").append(wrap);
+        event.stopPropagation();
+    });
+    $("#profile-image img").mouseout(function(event){
+        $("#profile-image .upload-img").remove();
+        event.stopPropagation();
+    });
 } );
