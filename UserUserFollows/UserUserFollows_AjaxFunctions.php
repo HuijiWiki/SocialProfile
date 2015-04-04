@@ -2,41 +2,42 @@
 /**
  * AJAX functions used by UserSiteFollow extension.
  */
-
+require_once('../UserError.php');
 $wgAjaxExportList[] = 'wfUserUserFollowsResponse';
 $wgAjaxExportList[] = 'wfUserUserUnfollowsResponse';
 function wfUserUserFollowsResponse( $follower, $followee ) {
 	global $wgUser;
-	$out = 'fail';
+
+	$out = UserError::ERROR_UNKNOWN;
 
 	// This feature is only available for logged-in users.
 	if ( !$user->isLoggedIn() ) {
-		$out = '请登录';
+		$out = UserError::ERROR_NOT_LOGGED_IN;
 		return $out;
 	}
 
 	// No need to allow blocked users to access this page, they could abuse it, y'know.
 	if ( $user->isBlocked() ) {
-		$out = '您被封禁中';
+		$out = UserError::ERROR_BLOCKED;
 		return $out;
 	}
 
 	// Database operations require write mode
 	if ( wfReadOnly() ) {
-		$out = '数据库已锁定';
+		$out = UserError::ERROR_READ_ONLY;
 		return $out;
 	}
 
 	// Are we even allowed to do this?
 	if ( !$user->isAllowed( 'edit' ) ) {
-		$out = '请验证邮箱';
+		$out = UserError::ERROR_NOT_ALLOWED;
 		return $out;
 	}
 
 	$uuf = new UserUserFollow();
 	if ( $follower === $wgUser->getName() && $followee !== $follower){
 		if ($uuf->addUserUserFollow($wgUser, User::newFromName($followee)) !== false){
-			$out = '取消关注';
+			$out = UserError::SUCCESS;
 		}
 	}
 		 //TODO: use wfMessage instead of hard code
@@ -44,36 +45,36 @@ function wfUserUserFollowsResponse( $follower, $followee ) {
 }
 function wfUserUserUnfollowsResponse( $follower, $followee ) {
 	global $wgUser;
-	$out = 'fail';
+	$out = UserError::ERROR_UNKNOWN;
 
 	// This feature is only available for logged-in users.
 	if ( !$user->isLoggedIn() ) {
-		$out = '请登录';
+		$out = UserError::ERROR_NOT_LOGGED_IN;
 		return $out;
 	}
 
 	// No need to allow blocked users to access this page, they could abuse it, y'know.
 	if ( $user->isBlocked() ) {
-		$out = '您被封禁中';
+		$out = UserError::ERROR_BLOCKED;
 		return $out;
 	}
 
 	// Database operations require write mode
 	if ( wfReadOnly() ) {
-		$out = '数据库已锁定';
+		$out = UserError::ERROR_READ_ONLY;
 		return $out;
 	}
 
 	// Are we even allowed to do this?
 	if ( !$user->isAllowed( 'edit' ) ) {
-		$out = '请验证邮箱';
+		$out = UserError::ERROR_NOT_ALLOWED;
 		return $out;
 	}
 
 	$uuf = new UserUserFollow();
 	if ( $follower === $wgUser->getName() && $followee !== $follower){
 		if ($uuf->deleteUserUserFollow($wgUser, User::newFromName($followee))){
-			$out = '关注'.$followee;
+			$out = UserError::SUCCESS;
 		}
 		 //TODO: use wfMessage instead of hard code
 	}

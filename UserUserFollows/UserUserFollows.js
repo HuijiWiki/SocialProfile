@@ -15,7 +15,7 @@ function requestResponse( follower, followee, action ) {
 				rsargs: [follower, followee]
 			},
 			function( data ) {
-				if (data !== 'fail'){
+				if (data == 0){
 					jQuery( '#user-user-follow').html(data);
 					jQuery( '#user-user-follow').addClass('unfollow');
 					var count = jQuery( '#user-following-count').html();
@@ -32,7 +32,7 @@ function requestResponse( follower, followee, action ) {
 				rsargs: [follower, followee]
 			},
 			function( data ) {
-				if (data !== 'fail'){
+				if (data == 0){
 					jQuery( '#user-user-follow').html(data);
 					jQuery( '#user-user-follow').removeClass('unfollow');	
 					var count = jQuery( '#user-following-count').html();
