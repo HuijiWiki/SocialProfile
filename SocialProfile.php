@@ -68,6 +68,7 @@ $wgAutoloadClasses['AvatarParserFunction'] = __DIR__ . '/UserProfile/AvatarParse
 $wgAutoloadClasses['UserSiteFollow'] = __DIR__ . '/UserSiteFollows/UserSiteFollowsClass.php';
 $wgAutoloadClasses['UserUserFollow'] = __DIR__ . '/UserUserFollows/UserUserFollowsClass.php';
 $wgAutoloadClasses['HuijiPrefix'] = __DIR__ . '/HuijiPrefixClass.php';
+$wgAutoloadClasses['UserError'] = __DIR__ . '/UserErrorClass.php';
 // New special pages
 $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
 $wgSpecialPages['EditProfile'] = 'SpecialEditProfile';

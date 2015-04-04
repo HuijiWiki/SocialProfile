@@ -2,7 +2,6 @@
 /**
  * AJAX functions used by UserSiteFollow extension.
  */
-require_once('../UserError.php');
 $wgAjaxExportList[] = 'wfUserUserFollowsResponse';
 $wgAjaxExportList[] = 'wfUserUserUnfollowsResponse';
 function wfUserUserFollowsResponse( $follower, $followee ) {
@@ -11,13 +10,13 @@ function wfUserUserFollowsResponse( $follower, $followee ) {
 	$out = UserError::ERROR_UNKNOWN;
 
 	// This feature is only available for logged-in users.
-	if ( !$user->isLoggedIn() ) {
+	if ( !$wgUser->isLoggedIn() ) {
 		$out = UserError::ERROR_NOT_LOGGED_IN;
 		return $out;
 	}
 
 	// No need to allow blocked users to access this page, they could abuse it, y'know.
-	if ( $user->isBlocked() ) {
+	if ( $wgUser->isBlocked() ) {
 		$out = UserError::ERROR_BLOCKED;
 		return $out;
 	}
@@ -29,7 +28,7 @@ function wfUserUserFollowsResponse( $follower, $followee ) {
 	}
 
 	// Are we even allowed to do this?
-	if ( !$user->isAllowed( 'edit' ) ) {
+	if ( !$wgUser->isAllowed( 'edit' ) ) {
 		$out = UserError::ERROR_NOT_ALLOWED;
 		return $out;
 	}
@@ -48,13 +47,13 @@ function wfUserUserUnfollowsResponse( $follower, $followee ) {
 	$out = UserError::ERROR_UNKNOWN;
 
 	// This feature is only available for logged-in users.
-	if ( !$user->isLoggedIn() ) {
+	if ( !$wgUser->isLoggedIn() ) {
 		$out = UserError::ERROR_NOT_LOGGED_IN;
 		return $out;
 	}
 
 	// No need to allow blocked users to access this page, they could abuse it, y'know.
-	if ( $user->isBlocked() ) {
+	if ( $wgUser->isBlocked() ) {
 		$out = UserError::ERROR_BLOCKED;
 		return $out;
 	}
@@ -66,7 +65,7 @@ function wfUserUserUnfollowsResponse( $follower, $followee ) {
 	}
 
 	// Are we even allowed to do this?
-	if ( !$user->isAllowed( 'edit' ) ) {
+	if ( !$wgUser->isAllowed( 'edit' ) ) {
 		$out = UserError::ERROR_NOT_ALLOWED;
 		return $out;
 	}

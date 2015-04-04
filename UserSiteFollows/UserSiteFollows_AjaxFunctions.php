@@ -2,22 +2,22 @@
 /**
  * AJAX functions used by UserSiteFollow extension.
  */
-require_once('../UserError.php');
 $wgAjaxExportList[] = 'wfUserSiteFollowsResponse';
 $wgAjaxExportList[] = 'wfUserSiteUnfollowsResponse';
 function wfUserSiteFollowsResponse( $username, $servername ) {
 	global $wgUser, $wgServer, $wgHuijiPrefix;
+	return 1;
 
 	$out = UserError::ERROR_UNKNOWN;
 
 	// This feature is only available for logged-in users.
-	if ( !$user->isLoggedIn() ) {
+	if ( !$wgUser->isLoggedIn() ) {
 		$out = UserError::ERROR_NOT_LOGGED_IN;
 		return $out;
 	}
 
 	// No need to allow blocked users to access this page, they could abuse it, y'know.
-	if ( $user->isBlocked() ) {
+	if ( $wgUser->isBlocked() ) {
 		$out = UserError::ERROR_BLOCKED;
 		return $out;
 	}
@@ -29,7 +29,7 @@ function wfUserSiteFollowsResponse( $username, $servername ) {
 	}
 
 	// Are we even allowed to do this?
-	if ( !$user->isAllowed( 'edit' ) ) {
+	if ( !$wgUser->isAllowed( 'edit' ) ) {
 		$out = UserError::ERROR_NOT_ALLOWED;
 		return $out;
 	}
@@ -40,22 +40,20 @@ function wfUserSiteFollowsResponse( $username, $servername ) {
 			$out = UserError::SUCCESS;
 		}
 	}
-		 //TODO: use wfMessage instead of hard code
 	return $out;
 }
 function wfUserSiteUnfollowsResponse( $username, $servername ) {
 	global $wgUser, $wgSitename, $wgServer, $wgHuijiPrefix;
-
 	$out = UserError::ERROR_UNKNOWN;
 
 	// This feature is only available for logged-in users.
-	if ( !$user->isLoggedIn() ) {
+	if ( !$wgUser->isLoggedIn() ) {
 		$out = UserError::ERROR_NOT_LOGGED_IN;
 		return $out;
 	}
 
 	// No need to allow blocked users to access this page, they could abuse it, y'know.
-	if ( $user->isBlocked() ) {
+	if ( $wgUser->isBlocked() ) {
 		$out = UserError::ERROR_BLOCKED;
 		return $out;
 	}
@@ -67,7 +65,7 @@ function wfUserSiteUnfollowsResponse( $username, $servername ) {
 	}
 
 	// Are we even allowed to do this?
-	if ( !$user->isAllowed( 'edit' ) ) {
+	if ( !$wgUser->isAllowed( 'edit' ) ) {
 		$out = UserError::ERROR_NOT_ALLOWED;
 		return $out;
 	}
