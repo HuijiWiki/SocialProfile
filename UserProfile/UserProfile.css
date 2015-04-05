@@ -736,13 +736,16 @@
     color:#999;
     position: relative;
 }
-.form-location.edit-on,.form-autograph.edit-on{
+.form-location.edit-on,.form-autograph.edit-on,.form-date.edit-on{
     color:#428bca;
     cursor: pointer;
 }
 .form-container span{
     margin-right: 20px;
     cursor: default;
+}
+span.span-color{
+    color: #e0e0e0;
 }
 .form-sex{
     color: #666;
@@ -777,6 +780,10 @@
     margin: 0 20px;
     font-size: 18px;
     color:#e0e0e0;
+}
+.input-date.form-control{
+    width: 30%;
+    display: inline-block;
 }
 @media screen and (min-width: 1366px){
     .profile-page{

@@ -147,32 +147,42 @@ jQuery( document ).ready( function() {
     $(".form-change").click(function(){
         var location = $(".form-location").text();
         var autograph = $(".form-autograph").text();
+        var birthday =$(".form-date").text();
+        var birthdaydata =$(".form-date").attr('data-birthday');
         var msg = '<form class="form-edit"><input type="text" class="input-location form-control">' +
-            '<span>|</span><input type="radio" name="sex" class="sex-man" value="♂">男<input type="radio" name="sex"  class="sex-woman" value="♀">女' +
+            '<span>|</span><input type="date" name="user_date" class="input-date form-control"><span>|</span>' +
+            '<input type="radio" name="sex" class="sex-man" value="♂" data-male="male">男<input type="radio" name="sex"  class="sex-woman" value="♀" data-male="female">女' +
             '<textarea class="form-textarea form-control"></textarea>' +
             '<botton type="submit" class="btn btn-info form-submit">确定</botton></form>'
         $(".profile-actions").append(msg);
-        if(autograph=="填写个人签名"){
+        if(autograph=="填写个人状态"){
             autograph = '';
-            $(".form-textarea").attr("placeholder","个人签名");
+            $(".form-textarea").attr("placeholder","个人状态");
         }
         if(location=="填写居住地") {
             location = '';
             $(".input-location").attr("placeholder", "居住地");
+        }
+        if(birthday=="填写生日"){
+            birthday = '';
+        }else{
+            $(".input-date").val(birthdaydata);
         }
         if($(".form-sex").text()=="♂"){
             $(".sex-man").attr("checked","checked")
         }else{
             $(".sex-woman").attr("checked","checked")
         }
-        $(".form-textarea").text(autograph);
-        $(".input-location").attr("value",location);
+        $(".form-textarea").val(autograph);
+        $(".input-location").val(location);
         $(".form-container").hide();
     });
     $(".profile-actions").on("click",".form-submit",function(){
         var location = $(".input-location").val();
         var autograph = $(".form-textarea").val();
+        var birthday = $(".input-date").val();
         var sex = $('.form-edit input:radio:checked').val();
+        var gender = $('.form-edit input:radio:checked').data('male');
         $(".form-container").show();
         if(location==''){
             $(".form-location").text("填写居住地").addClass("edit-on");
@@ -182,21 +192,48 @@ jQuery( document ).ready( function() {
             //$(".edit-on").removeEventListener('click',editer);
         }
         if(autograph==''){
-            $(".form-autograph").text("填写个人签名").addClass("edit-on");
+            $(".form-autograph").text("填写个人状态").addClass("edit-on");
         }else{
             $(".form-autograph").text(autograph).removeClass("edit-on");
+        }
+        if(birthday==''){
+            $(".form-date").text("填写生日").addClass("edit-on");
+        }else{
+            var age = ages(birthday);
+            $(".form-date").attr('data-birthday',birthday);
+            console.log($(".form-date").data('birthday'));
+            $(".form-date").text(age).removeClass("edit-on");
         }
         $(".form-sex").text(sex);
         $(".form-edit").remove();
         var username = mw.config.get('wgUserName');
         $.post(
-            mw.Util.wikiScript(),{
+            mw.util.wikiScript(),{
                 action:'ajax',
                 rs:'wfUpdateUserStatus',
-                rsargs:[username,sex,province,location,birthday,status]
+                rsargs:[username,gender,'',location,birthday,status]
+            },
+            function( data ) {
+                var res = $.parseJSON(data);
+                if( res.success ){
+                    alert ( res.message );
+                }else{
+                    alert ( res.message );
+                }
             }
         )
     });
 
-
+    function   ages(str)
+    {
+        var   r   =   str.match(/^(\d{1,4})(-|\/)(\d{1,2})\2(\d{1,2})$/);
+        if(r==null)return   false;
+        var   d=   new   Date(r[1],   r[3]-1,   r[4]);
+        if   (d.getFullYear()==r[1]&&(d.getMonth()+1)==r[3]&&d.getDate()==r[4])
+        {
+            var   Y   =   new   Date().getFullYear();
+            return((Y-r[1])+"岁");
+        }
+        return("输入的日期格式错误！");
+    }
 } );

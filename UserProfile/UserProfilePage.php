@@ -1010,8 +1010,8 @@ class UserProfilePage extends Article {
 			$output .= wfMessage( 'pipe-separator' )->escaped();
 		}
 		$output .= '<a href="' . htmlspecialchars( $contributions->getFullURL() ) . '" rel="nofollow">' . wfMessage( 'user-contributions' )->escaped() . '</a> ';
-        $output .='<div class="form-container"><div class="form-msg"><span class="form-location edit-on" data-toggle="yes">填写居住地</span><span>|</span><span class="form-sex">♂</span></div>';
-        $output .='<div class="user-autograph"><span class="form-autograph edit-on" data-toggle="yes">填写个人签名</span><span class="glyphicon glyphicon-pencil form-change">修改</span></div></div>';
+        $output .='<div class="form-container"><div class="form-msg"><span class="form-location edit-on" data-toggle="yes">填写居住地</span><span class="span-color">|</span><span class="form-date edit-on" data-birthday=" ">填写生日</span><span class="span-color">|</span><span class="form-sex">♂</span></div>';
+        $output .='<div class="user-autograph"><span class="form-autograph edit-on" data-toggle="yes">填写个人状态</span><span class="glyphicon glyphicon-pencil form-change">修改</span></div></div>';
 
 		// Links to User:user_name from User_profile:
 		// if ( $this->getTitle()->getNamespace() == NS_USER_PROFILE && $this->profile_data['user_id'] && $this->profile_data['user_page_type'] == 0 ) {

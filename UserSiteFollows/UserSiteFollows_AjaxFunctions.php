@@ -8,36 +8,36 @@ function wfUserSiteFollowsResponse( $username, $servername ) {
 	
 	global $wgUser, $wgServer, $wgHuijiPrefix;
 
-	$out = UserError::getJson(UserError::ERROR_UNKNOWN);
+	$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_UNKNOWN);
 
 	// This feature is only available for logged-in users.
 	if ( !$wgUser->isLoggedIn() ) {
-		$out = UserError::getJson(UserError::ERROR_NOT_LOGGED_IN);
+		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NOT_LOGGED_IN);
 		return $out;
 	}
 
 	// No need to allow blocked users to access this page, they could abuse it, y'know.
 	if ( $wgUser->isBlocked() ) {
-		$out = UserError::getJson(UserError::ERROR_BLOCKED);
+		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_BLOCKED);
 		return $out;
 	}
 
 	// Database operations require write mode
 	if ( wfReadOnly() ) {
-		$out = UserError::getJson(UserError::ERROR_READ_ONLY);
+		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_READ_ONLY);
 		return $out;
 	}
 
 	// Are we even allowed to do this?
 	if ( !$wgUser->isAllowed( 'edit' ) ) {
-		$out = UserError::getJson(UserError::ERROR_NOT_ALLOWED);
+		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NOT_ALLOWED);
 		return $out;
 	}
 
 	$usf = new UserSiteFollow();
 	if ( $username === $wgUser->getName() && $servername === $wgServer){
 		if ($usf->addUserSiteFollow($wgUser, $wgHuijiPrefix) >= 0){
-			$out = UserError::getJson(UserError::SUCCESS);
+			$out = ResponseGenerator::getJson(ResponseGenerator::SUCCESS);
 		}
 	}
 	return $out;
@@ -45,36 +45,35 @@ function wfUserSiteFollowsResponse( $username, $servername ) {
 function wfUserSiteUnfollowsResponse( $username, $servername ) {
 	global $wgUser, $wgSitename, $wgServer, $wgHuijiPrefix;
 
-	$out = UserError::getJson(UserError::ERROR_UNKNOWN);
-	return '1';
+	$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_UNKNOWN);
 	// This feature is only available for logged-in users.
 	if ( !$wgUser->isLoggedIn() ) {
-		$out = UserError::getJson(UserError::ERROR_NOT_LOGGED_IN);
+		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NOT_LOGGED_IN);
 		return $out;
 	}
 
 	// No need to allow blocked users to access this page, they could abuse it, y'know.
 	if ( $wgUser->isBlocked() ) {
-		$out = UserError::getJson(UserError::ERROR_BLOCKED);
+		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_BLOCKED);
 		return $out;
 	}
 
 	// Database operations require write mode
 	if ( wfReadOnly() ) {
-		$out = UserError::getJson(UserError::ERROR_READ_ONLY);
+		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_READ_ONLY);
 		return $out;
 	}
 
 	// Are we even allowed to do this?
 	if ( !$wgUser->isAllowed( 'edit' ) ) {
-		$out = UserError::getJson(UserError::ERROR_NOT_ALLOWED);
+		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NOT_ALLOWED);
 		return $out;
 	}
 
 	$usf = new UserSiteFollow();
 	if ( $username === $wgUser->getName() && $servername === $wgServer){
 		if ($usf->deleteUserSiteFollow($wgUser, $wgHuijiPrefix)){
-			$out = UserError::getJson(UserError::SUCCESS);
+			$out = ResponseGenerator::getJson(ResponseGenerator::SUCCESS);
 		}
 	}
 	return $out;

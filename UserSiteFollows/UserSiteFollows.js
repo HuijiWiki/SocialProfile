@@ -15,12 +15,15 @@ function requestResponse( username, servername, action ) {
 				rsargs: [username, servername]
 			},
 			function( data ) {
-				if (data == '成功' ){
-					jQuery( '#user-site-follow').html(data);
+				var res = jQuery.parseJSON(data);
+				if (res.success){
+					jQuery( '#user-site-follow').html('取消关注');
 					jQuery( '#user-site-follow').addClass('unfollow');
 					var count = jQuery( '#site-follower-count').html();
 					count = parseInt(count)+1;
-					jQuery( '#site-follower-count').html(count.toString());
+					jQuery( '#site-follower-count').html(count.toString());					
+				}else{
+					alert(res.message);
 				}
 			}
 		);
@@ -32,8 +35,9 @@ function requestResponse( username, servername, action ) {
 				rsargs: [username, servername]
 			},
 			function( data ) {
-				if (data == '成功' ){
-					jQuery( '#user-site-follow').html(data);
+				var res = jQuery.parseJSON(data);
+				if ( res.success ){
+					jQuery( '#user-site-follow').html('关注'+mw.config.get('wgSiteName'));
 					jQuery( '#user-site-follow').removeClass('unfollow');	
 					var count = jQuery( '#site-follower-count').html();
 					count = parseInt(count)-1;
@@ -42,6 +46,8 @@ function requestResponse( username, servername, action ) {
 					}else{
 						jQuery( '#site-follower-count').html(0);	
 					}		
+				}else{
+					alert(res.message);
 				}
 			}
 		);		
