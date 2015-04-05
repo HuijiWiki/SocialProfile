@@ -67,8 +67,9 @@ $wgAutoloadClasses['wAvatar'] = __DIR__ . '/UserProfile/AvatarClass.php';
 $wgAutoloadClasses['AvatarParserFunction'] = __DIR__ . '/UserProfile/AvatarParserFunction.php';
 $wgAutoloadClasses['UserSiteFollow'] = __DIR__ . '/UserSiteFollows/UserSiteFollowsClass.php';
 $wgAutoloadClasses['UserUserFollow'] = __DIR__ . '/UserUserFollows/UserUserFollowsClass.php';
+$wgAutoloadClasses['UserStatus'] = __DIR__ . '/UserStatus/UserStatusClass.php';
 $wgAutoloadClasses['HuijiPrefix'] = __DIR__ . '/HuijiPrefixClass.php';
-$wgAutoloadClasses['UserError'] = __DIR__ . '/UserErrorClass.php';
+$wgAutoloadClasses['ResponseGenerator'] = __DIR__ . '/ResponseGeneratorClass.php';
 // New special pages
 $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
 $wgSpecialPages['EditProfile'] = 'SpecialEditProfile';
@@ -93,6 +94,7 @@ require_once( "$IP/extensions/SocialProfile/UserBoard/UserBoard_AjaxFunctions.ph
 require_once( "$IP/extensions/SocialProfile/UserRelationship/Relationship_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/UserSiteFollows/UserSiteFollows_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/UserUserFollows/UserUserFollows_AjaxFunctions.php" );
+require_once( "$IP/extensions/SocialProfile/UserStatus/UserStatus_AjaxFunctions.php" );
 
 // What to display on social profile pages by default?
 $wgUserProfileDisplay['board'] = true;

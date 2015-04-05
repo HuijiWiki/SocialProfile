@@ -15,7 +15,7 @@ function requestResponse( username, servername, action ) {
 				rsargs: [username, servername]
 			},
 			function( data ) {
-				if (data == 0){
+				if (data == '成功' ){
 					jQuery( '#user-site-follow').html(data);
 					jQuery( '#user-site-follow').addClass('unfollow');
 					var count = jQuery( '#site-follower-count').html();
@@ -32,7 +32,7 @@ function requestResponse( username, servername, action ) {
 				rsargs: [username, servername]
 			},
 			function( data ) {
-				if (data == 0){
+				if (data == '成功' ){
 					jQuery( '#user-site-follow').html(data);
 					jQuery( '#user-site-follow').removeClass('unfollow');	
 					var count = jQuery( '#site-follower-count').html();

@@ -731,6 +731,53 @@
 .user-autograph{
     margin-top: 10px;
 }
+.form-container{
+    padding-top: 10px;
+    color:#999;
+    position: relative;
+}
+.form-location.edit-on,.form-autograph.edit-on{
+    color:#428bca;
+    cursor: pointer;
+}
+.form-container span{
+    margin-right: 20px;
+    cursor: default;
+}
+.form-sex{
+    color: #666;
+}
+.form-container .form-change{
+    font-size: 12px;
+    color:#999;
+    display: none!important;
+    cursor: pointer;
+}
+.form-container:hover .form-change{
+    display: inline-block!important;
+}
+.input-location.form-control{
+    width: 30%;
+    display: inline-block;
+}
+.sex-man,.sex-woman{
+    display:inline-block;
+}
+.form-submit{
+    float: right;
+}
+.btn.form-submit{
+    background-color: #09c;
+    margin-top: 5px;
+}
+.form-edit{
+    color: #000;
+ }
+.form-edit span{
+    margin: 0 20px;
+    font-size: 18px;
+    color:#e0e0e0;
+}
 @media screen and (min-width: 1366px){
     .profile-page{
         width: 1200px;
@@ -818,7 +865,7 @@
     margin-top: 10px;
     font-size: 12px;
 }
-.upload-img{
+.upload-img-wrap{
     font-size: 14px;
     background: #000;
     opacity: 8;

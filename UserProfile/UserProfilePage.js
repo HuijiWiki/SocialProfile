@@ -136,13 +136,67 @@ jQuery( document ).ready( function() {
 	} );
 
     //Upload img
-    $("#profile-image img").mouseover(function(event){
-        var wrap = "<div class='upload-img'>上传头像</div>"
-        $("#profile-image").append(wrap);
-        event.stopPropagation();
+    $(".profile-image-container").on('mouseenter',function(){
+        var wrap = "<div class='upload-img-wrap'>上传头像</div>"
+        $(this).append(wrap);
     });
-    $("#profile-image img").mouseout(function(event){
-        $("#profile-image .upload-img").remove();
-        event.stopPropagation();
+    $(".profile-image-container").on('mouseleave',function(){
+        $(".profile-image-container .upload-img-wrap").remove();
     });
+    //修改个人资料
+    $(".form-change").click(function(){
+        var location = $(".form-location").text();
+        var autograph = $(".form-autograph").text();
+        var msg = '<form class="form-edit"><input type="text" class="input-location form-control">' +
+            '<span>|</span><input type="radio" name="sex" class="sex-man" value="♂">男<input type="radio" name="sex"  class="sex-woman" value="♀">女' +
+            '<textarea class="form-textarea form-control"></textarea>' +
+            '<botton type="submit" class="btn btn-info form-submit">确定</botton></form>'
+        $(".profile-actions").append(msg);
+        if(autograph=="填写个人签名"){
+            autograph = '';
+            $(".form-textarea").attr("placeholder","个人签名");
+        }
+        if(location=="填写居住地") {
+            location = '';
+            $(".input-location").attr("placeholder", "居住地");
+        }
+        if($(".form-sex").text()=="♂"){
+            $(".sex-man").attr("checked","checked")
+        }else{
+            $(".sex-woman").attr("checked","checked")
+        }
+        $(".form-textarea").text(autograph);
+        $(".input-location").attr("value",location);
+        $(".form-container").hide();
+    });
+    $(".profile-actions").on("click",".form-submit",function(){
+        var location = $(".input-location").val();
+        var autograph = $(".form-textarea").val();
+        var sex = $('.form-edit input:radio:checked').val();
+        $(".form-container").show();
+        if(location==''){
+            $(".form-location").text("填写居住地").addClass("edit-on");
+            //$(".edit-on").addEventListener('click',editer);
+        }else{
+            $(".form-location").text(location).removeClass("edit-on");
+            //$(".edit-on").removeEventListener('click',editer);
+        }
+        if(autograph==''){
+            $(".form-autograph").text("填写个人签名").addClass("edit-on");
+        }else{
+            $(".form-autograph").text(autograph).removeClass("edit-on");
+        }
+        $(".form-sex").text(sex);
+        $(".form-edit").remove();
+        var username = mw.config.get('wgUserName');
+        $.post(
+            mw.Util.wikiScript(),{
+                action:'ajax',
+                rs:'wfUpdateUserStatus',
+                rsargs:[username,sex,province,location,birthday,status]
+            }
+        )
+    });
+
+
 } );

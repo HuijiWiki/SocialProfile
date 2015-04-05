@@ -14,6 +14,7 @@ class UserSiteFollow{
 	 *	@return bool: true if successfully followed
 	 */
 	public function addUserSiteFollow($user, $huijiPrefix){
+		global $wgMemc;
 		if ( $this->checkUserSiteFollow( $user, $huijiPrefix ) !== false ){
 			return 0;
 		}
@@ -31,6 +32,12 @@ class UserSiteFollow{
 		$this->incFollowCount( $user, $huijiPrefix );
 		$stats = new UserStatsTrack( $user->getId(), $user->getName() );
 		$stats->incStatField( 'friend' );
+
+		//store result in cache
+		if ($followId > 0){
+			$key = wfMemcKey( 'user_site_follow', 'check_follow', $user->getName(), $huijiPrefix );
+			$wgMemc->set($key, true);			
+		}
 		// Notify Siteadmin maybe?
 		return $followId;
 
@@ -43,6 +50,7 @@ class UserSiteFollow{
 	 * @param $user2 string: site prefix
 	 */
 	public function deleteUserSiteFollow($user, $huijiPrefix){
+		global $wgMemc;
 
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->delete(
@@ -53,6 +61,10 @@ class UserSiteFollow{
 		$stats = new UserStatsTrack( $user->getId(), $user->getName() );
 		$stats->decStatField( 'friend' );
 		$this->decFollowCount( $user, $huijiPrefix );
+
+		//store result in cache
+		$key = wfMemcKey( 'user_site_follow', 'check_follow', $user->getName(), $huijiPrefix );
+		$wgMemc->set($key, false);
 		return true;
 
 	}
@@ -200,21 +212,34 @@ class UserSiteFollow{
 	/**
 	* @param $user User Object
 	* @param $huijiPrefix string: same as wgHuijiPrefix
-	* @return Mixed: integer or boolean false
+	* @return bool: true if they are indeed paired.
 	*/
 	public function checkUserSiteFollow($user, $huijiPrefix){
-		$dbr = wfGetDB( DB_SLAVE );
-		$s = $dbr->selectRow(			
-			'user_site_follow',
-			array( 'f_id' ),
-			array( 'f_user_id' => $user->getId(), 'f_wiki_domain' => $huijiPrefix ),
-			__METHOD__
-		);
-		if ($s !== false){
-			return $s->f_id;
-		}else {
-			return false;
+
+		global $wgMemc;
+		$key = wfMemcKey( 'user_site_follow', 'check_follow', $user->getName(), $huijiPrefix );
+		$data = $wgMemc->get( $key );
+		if ( $data != '' ) {
+			wfDebug( "Got user count of $data ( User = {$user} ) from cache\n" );
+			return $data;
+		} else{
+			$dbr = wfGetDB( DB_SLAVE );
+			$s = $dbr->selectRow(			
+				'user_site_follow',
+				array( 'f_id' ),
+				array( 'f_user_id' => $user->getId(), 'f_wiki_domain' => $huijiPrefix ),
+				__METHOD__
+			);
+			if ($s !== false){
+				$wgMemc->set($key, true);
+				return true;
+			}else {
+				$wgMemc->set($key, false);
+				return false;
+			}
+
 		}
+
 	}
 	/**
 	 * Increase the amount of follewers for the site.
@@ -254,14 +279,10 @@ class UserSiteFollow{
 	public function getTopFollowedSites( $user ){
 		$data = self::getTopFollowedSitesCache( $user );
 		if ( $data != '' ) {
-			if ( $data == -1 ) {
-				$data = 0;
-			}
-			$sites = $data;
+			return $data;
 		} else {
-			$sites = self::getTopFollowedSitesDB( $user );
+			return self::getTopFollowedSitesDB( $user );
 		}
-		return $sites;
 		
 	}
 	/**
