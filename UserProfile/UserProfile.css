@@ -906,9 +906,47 @@ span.span-color{
         /*margin-left: 30px;*/
     /*}*/
 /*}*/
-@media screen and (max-width: 566px){
+@media screen and (max-width:566px){
+    .profile-page{
+        margin-left: -35px;
+        margin-right: -35px;
+    }
+    #profile-top.row{
+        margin-left: 1px;
+        margin-right: 1px;
+    }
+    #user-page-left.col-md-6{
+        padding-left: 1px;
+        padding-right: 1px;
+    }
+    #user-page-right.col-md-6{
+        padding-left: 1px;
+        padding-right: 1px;
+    }
+}
+@media screen and (min-width:320px) and (max-width:461px){
+    .user-follow-msg span{
+        font-size: 12px;
+    }
+    .user-follow-msg li{
+        margin-right:4px;
+    }
+    #profile-image{
+        margin-right: 0;
+    }
+    span.span-color{
+        margin-right: 15px;
+    }
+    .profile-top-right-bottom>a {
+        top: 30px;
+    }
+    .profile-interactive {
+        padding-left: 0;
+    }
+    .profile-top-right {
+        padding-left: 15px!important;
+    }
     #profile-right {
         margin-left:auto;
-    }
     }
 }

@@ -32,8 +32,8 @@ function wfUpdateUserStatus( $username, $gender, $province, $city, $birthday, $s
 	}
 
 	if ( $username === $wgUser->getName() ){
-		$us = new UserStatus();
-		if ($us->setAll($wgUser, $gender, $province, $city, $birthday, $status)){
+		$us = new UserStatus($wgUser);
+		if ($us->setAll($gender, $province, $city, $birthday, $status)){
 			$out = ResponseGenerator::getJson(ResponseGenerator::SUCCESS);
 		}
 	}

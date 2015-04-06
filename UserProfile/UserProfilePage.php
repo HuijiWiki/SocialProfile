@@ -132,7 +132,7 @@ class UserProfilePage extends Article {
 		}
 
 		// Left side
-		$wgOut->addHTML( '<div id="user-page-left" class="col-md-6 clearfix">' );
+		$wgOut->addHTML( '<div id="user-page-left" class="col-md-6">' );
 
 		if ( !wfRunHooks( 'UserProfileBeginLeft', array( &$this ) ) ) {
 			wfDebug( __METHOD__ . ": UserProfileBeginLeft messed up profile!\n" );
@@ -156,7 +156,7 @@ class UserProfilePage extends Article {
 		wfDebug( "profile start right\n" );
 
 		// Right side
-		$wgOut->addHTML( '<div id="user-page-right" class="col-md-6 clearfix">' );
+		$wgOut->addHTML( '<div id="user-page-right" class="col-md-6">' );
 
 		if ( !wfRunHooks( 'UserProfileBeginRight', array( &$this ) ) ) {
 			wfDebug( __METHOD__ . ": UserProfileBeginRight messed up profile!\n" );

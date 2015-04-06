@@ -236,4 +236,29 @@ jQuery( document ).ready( function() {
         }
         return("输入的日期格式错误！");
     }
+    function isTongKu(a,b,c){
+        var d = a+" like "+b;
+        var e = b+" like "+a;
+        var f = c+" like "+a;
+        d = true;
+        e = false;
+        f = true;
+        if(couhe == true) {
+            if (choise == true) {
+                if (f == true) {
+                    console.log(" tong ku ");
+                } else {
+                    //说明c dont't like a;
+                    console.log("two sb")
+                }
+            } else {
+                console.log("let's code");
+            }
+        }
+    }
+    var couhe = "jalon like moumou";
+    var choise = "jalon choose moumou"
+    couhe = true;
+    choise = true;
+    isTongKu("jalon","beibei","moumou");
 } );

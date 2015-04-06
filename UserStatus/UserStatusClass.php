@@ -3,65 +3,72 @@
  * This Class manages the User and Site follows.
  */
 class UserStatus{
-	function __construct( ) {
+	private $user;
 
-	} 
-	public function getGender($user){
-		$data = self::getAllCache( $user );
+	/** 
+	 * Construct a UserStatus with giver user
+	 * @param $aUser User Object
+	 */
+	public function __construct($aUser){
+		$this->user = $aUser;
+	}
+
+	public function getGender(){
+		$data = $this->getAllCache( );
 		if ($data != ''){
-			$all = json_decode($data, true);
+			$all = json_decode($data);
 		} else {
-			$data = self::getAllDB( $user );
-			$all = json_decode($data, true);
+			$data = $this->getAllDB( );
+			$all = json_decode($data);
 		}
 		return $all['gender'];
 	}  
-	public function getProvince($user){
-		$data = self::getAllCache( $user );
+	public function getProvince(){
+		$data = $this->getAllCache( );
 		if ($data != ''){
 			$all = json_decode($data, true);
 		} else {
-			$data = self::getAllDB( $user );
+			$data = $this->getAllDB( );
 			$all = json_decode($data, true);
 		}
 		return $all['province'];
 	}  
-	public function getCity($user){
-		$data = self::getAllCache( $user );
+	public function getCity(){
+		$data = $this->getAllCache();
 		if ($data != ''){
 			$all = json_decode($data, true);
 		} else {
-			$data = self::getAllDB( $user );
+			$data = $this->getAllDB( );
 			$all = json_decode($data, true);
 		}
 		return $all['city'];
 	}  
-	public function getCity($user){
-		$data = self::getAllCache( $user );
+	public function getBirthday(){
+		$data = $this->getAllCache();
 		if ($data != ''){
 			$all = json_decode($data, true);
 		} else {
-			$data = self::getAllDB( $user );
+			$data = $this->getAllDB();
 			$all = json_decode($data, true);
 		}
 		return $all['birthday'];
 	}  
-	public function getStatus($user){
-		$data = self::getAllCache( $user );
+	public function getStatus(){
+		$data = $this->getAllCache();
 		if ($data != ''){
 			$all = json_decode($data, true);
 		} else {
-			$data = self::getAllDB( $user );
+			$data = $this->getAllDB( );
 			$all = json_decode($data, true);
 		}
 		return $all['status'];
 	}  
-	public function getAll($user){
-		$data = self::getAllCache( $user );
+	public function getAll(){
+		$data = $this->getAllCache( );
 		if ( $data != '' ) {
 			return $data;
 		} else {
-			return self::getAllDB( $user );
+			return $this->getAllDB( );
 		}
 	}
     /**
@@ -70,11 +77,11 @@ class UserStatus{
      * 
      * @return data String a json string contains requested info.
      */
-	public function getAllDB($user){
+	public function getAllDB(){
 		global $wgMemc;
-		$key = wfMemcKey( 'user_profile', 'get_all', $user->getName() );
+		$key = wfMemcKey( 'user_profile', 'get_all', $this->user->getName() );
 
-		$gender = $user->getOption('gender');
+		$gender = $this->user->getOption('gender');
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->selectRow(
 			'user_profile',
@@ -85,12 +92,12 @@ class UserStatus{
 				'up_about'
 			),
 			array(
-				'up_user_id' => $user->getId(),
+				'up_user_id' => $this->user->getId(),
 			),
 			__METHOD__
 		);
 		$data = '{"name":"'
-			.$user->getName()
+			.$this->user->getName()
 			.'","gender":"'
 			.$gender
 			.'","province":"'
@@ -112,12 +119,12 @@ class UserStatus{
      * 
      * @return data String a json string contains requested info.
      */
-	public function getAllCache($user){
+	public function getAllCache(){
 		global $wgMemc;
-		$key = wfMemcKey( 'user_profile', 'get_all', $user );
+		$key = wfMemcKey( 'user_profile', 'get_all', $this->user->getName() );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
-			wfDebug( "Got user bio and status $data ( user = {$user} ) from cache\n" );
+			wfDebug( "Got user bio and status $data ( user = {$this->user} ) from cache\n" );
 			return $data;
 		}		
 	}
@@ -127,28 +134,30 @@ class UserStatus{
      * @param others String.
      * @return true if success.
      */
-	public function setAll($user, $gender, $province, $city, $birthday, $status){
+	public function setAll($gender, $province, $city, $birthday, $status){
 		global $wgMemc;
-		$key = wfMemcKey( 'user_profile', 'get_all', $user->getName() );
-		$user->setOption('gender', $gender);
+		$key = wfMemcKey( 'user_profile', 'get_all', $this->user->getName() );
+		$this->user->setOption('gender', $gender);
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->upsert(
 			'user_profile',
 			array(
-				'up_user_id' => $user->getId(),
+				'up_user_id' => $this->user->getId(),
 				'up_location_state' => $province,
 				'up_location_city' => $city,
 				'up_birthday' => $birthday,
 				'up_about' => $status,
+				'up_date' => date( 'Y-m-d H:i:s' ),
 			),
 			array(
-				'up_user_id' => $user->getId(),
+				'up_user_id' => $this->user->getId(),
 			),
 			array(
 				'up_location_state' => $province,
 				'up_location_city' => $city,
 				'up_birthday' => $birthday,
 				'up_about' => $status,
+				'up_date' => date( 'Y-m-d H:i:s' ),
 			),			
 			__METHOD__
 		);

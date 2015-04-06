@@ -24,6 +24,9 @@ class UserActivity {
 	private $show_system_messages = 1;
 	private $show_messages_sent = 1;
 	private $show_network_updates = 0;
+	private $show_user_follow_site = 1;
+	private $show_user_follow_user = 1;
+	private $show_user_update_status = 1;
 
 	/**
 	 * Constructor
@@ -158,6 +161,93 @@ class UserActivity {
 		}
 	}
 
+
+	/**
+	 * Get users from user follow table and set them in the
+	 * appropriate class member variables.
+	 */
+	private function setUserFollowSite() {
+		$dbr = wfGetDB( DB_SLAVE );
+
+		$where = array();
+
+		if ( !empty( $this->rel_type ) ) {
+			$users = $dbr->select(
+				'user_relationship',
+				'r_user_id_relation',
+				array(
+					'r_user_id' => $this->user_id,
+					'r_type' => $this->rel_type
+				),
+				__METHOD__
+			);
+			$userArray = array();
+			foreach ( $users as $user ) {
+				$userArray[] = $user;
+			}
+			$userIDs = implode( ',', $userArray );
+			if ( !empty( $userIDs ) ) {
+				$where[] = "f_user_id IN ($userIDs)";
+			}
+		}
+
+		if ( !empty( $this->show_current_user ) ) {
+			$where['f_user_id'] = $this->user_id;
+		}
+
+		$res = $dbr->select(
+			'user_site_follow',
+			array(
+				'UNIX_TIMESTAMP(f_date) AS item_date', 'f_id',
+				'f_user_id', 'f_user_name', 'f_wiki_domain'
+			),
+			$where,
+			__METHOD__,
+			array(
+				'ORDER BY' => 'f_id DESC',
+				'LIMIT' => $this->item_max,
+				'OFFSET' => 0
+			)
+		);
+
+		foreach ( $res as $row ) {
+			// Special pages aren't editable, so ignore them
+			// And blocking a vandal should not be counted as editing said
+			// vandal's user page...
+			if ( $row->rc_namespace == NS_SPECIAL || $row->rc_log_action != null ) {
+				continue;
+			}
+			$title = Title::makeTitle( $row->rc_namespace, $row->rc_title );
+			$this->items_grouped['edit'][$title->getPrefixedText()]['users'][$row->rc_user_text][] = array(
+				'id' => 0,
+				'type' => 'edit',
+				'timestamp' => $row->item_date,
+				'pagetitle' => $row->rc_title,
+				'namespace' => $row->rc_namespace,
+				'username' => $row->rc_user_text,
+				'userid' => $row->rc_user,
+				'comment' => $this->fixItemComment( $row->rc_comment ),
+				'minor' => $row->rc_minor,
+				'new' => $row->rc_new
+			);
+
+			// set last timestamp
+			$this->items_grouped['edit'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
+
+			$this->items[] = array(
+				'id' => 0,
+				'type' => 'edit',
+				'timestamp' => ( $row->item_date ),
+				'pagetitle' => $row->rc_title,
+				'namespace' => $row->rc_namespace,
+				'username' => $row->rc_user_text,
+				'userid' => $row->rc_user,
+				'comment' => $this->fixItemComment( $row->rc_comment ),
+				'minor' => $row->rc_minor,
+				'new' => $row->rc_new
+			);
+		}
+	}
 	/**
 	 * Get recent votes from the Vote table (provided by VoteNY extension) and
 	 * set them in the appropriate class member variables.
