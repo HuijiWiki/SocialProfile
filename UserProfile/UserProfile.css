@@ -785,6 +785,12 @@ span.span-color{
     width: 30%;
     display: inline-block;
 }
+.form-textarea.form-control{
+    width: 90%;
+}
+.form-submit{
+    margin-right: 10%;
+}
 @media screen and (min-width: 1366px){
     .profile-page{
         width: 1200px;
@@ -906,6 +912,11 @@ span.span-color{
         /*margin-left: 30px;*/
     /*}*/
 /*}*/
+@media screen and (max-width:1200px){
+    .form-edit span {
+        margin: 0 5px;
+    }
+}
 @media screen and (max-width:566px){
     .profile-page{
         margin-left: -35px;
@@ -922,6 +933,21 @@ span.span-color{
     #user-page-right.col-md-6{
         padding-left: 1px;
         padding-right: 1px;
+    }
+    .profile-top-right {
+        padding-left: 15px!important;
+    }
+    #profile-right {
+        margin-left:auto;
+    }
+    .form-edit span {
+        display: none;
+    }
+    .input-location.form-control{
+        margin-right: 10px;
+    }
+    .input-date.form-control{
+        margin-right: 10px;
     }
 }
 @media screen and (min-width:320px) and (max-width:461px){
@@ -947,6 +973,21 @@ span.span-color{
         padding-left: 15px!important;
     }
     #profile-right {
-        margin-left:auto;
+        padding-left: 15px;
+    }
+    .profile-top-right-bottom>a {
+        position: static;
+    }
+    .input-location.form-control{
+        width: 100%;
+    }
+    .input-date.form-control{
+        width:100%;
+    }
+    .form-textarea.form-control{
+        width: 100%;
+    }
+    .form-submit{
+        margin-right: auto;
     }
 }

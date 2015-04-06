@@ -101,7 +101,6 @@ class UserProfilePage extends Article {
                     </ul>
                     <a>点击查看详细</a>
                     <div>
-                        <p>收到:<span class="glyphicon glyphicon-heart" aria-hidden="true"></span><span>56</span>感谢</p>
                         <ul class="profile-interactive btn-group">
                             <li><a><span class="glyphicon glyphicon-plus"></span>关注</a></li>
                             <li><a><span class="glyphicon glyphicon-envelope"></span>私信</a></li>

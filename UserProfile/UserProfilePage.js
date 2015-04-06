@@ -151,7 +151,8 @@ jQuery( document ).ready( function() {
         var birthdaydata =$(".form-date").attr('data-birthday');
         var msg = '<form class="form-edit"><input type="text" class="input-location form-control">' +
             '<span>|</span><input type="date" name="user_date" class="input-date form-control"><span>|</span>' +
-            '<input type="radio" name="sex" class="sex-man" value="♂" data-male="male">男<input type="radio" name="sex"  class="sex-woman" value="♀" data-male="female">女' +
+            '<input type="radio" name="sex" class="sex-man" value="♂" data-male="male">男<input type="radio" name="sex" ' +
+            ' class="sex-woman" value="♀" data-male="female">女' +
             '<textarea class="form-textarea form-control"></textarea>' +
             '<botton type="submit" class="btn btn-info form-submit">确定</botton></form>'
         $(".profile-actions").append(msg);

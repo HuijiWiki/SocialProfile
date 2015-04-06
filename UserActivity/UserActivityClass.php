@@ -129,6 +129,10 @@ class UserActivity {
 			if ( $row->rc_namespace == NS_SPECIAL || $row->rc_log_action != null ) {
 				continue;
 			}
+			// Topics need some hack in title
+			if ( $row->rc_namespace == NS_TOPIC){
+				//TODO change something!
+			}
 			$title = Title::makeTitle( $row->rc_namespace, $row->rc_title );
 			$this->items_grouped['edit'][$title->getPrefixedText()]['users'][$row->rc_user_text][] = array(
 				'id' => 0,
