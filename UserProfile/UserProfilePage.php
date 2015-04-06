@@ -952,7 +952,7 @@ class UserProfilePage extends Article {
                         </ul>
                         <div class="cleared"></div>
                     </div>
-                    <!--<span id="user-site-count">'.UserSiteFollow::getUserCount(User::newFromName($user)).'</span>个站点。-->';
+                    <!--<span id="user-site-count">'.'</span>个站点。-->';
 		if ( $wgUserLevels ) {
 			$progress = $user_level->getLevelProgress()*100;
 			$output .= '<div id="honorific-level" class="label label-info">
@@ -1010,7 +1010,9 @@ class UserProfilePage extends Article {
 			$output .= wfMessage( 'pipe-separator' )->escaped();
 		}
 		$output .= '<a href="' . htmlspecialchars( $contributions->getFullURL() ) . '" rel="nofollow">' . wfMessage( 'user-contributions' )->escaped() . '</a> ';
-        $output .='<div class="form-container"><div class="form-msg"><span class="form-location edit-on" data-toggle="yes">填写居住地</span>
+		$us = new UserStatus($wgUser);
+		$city = $us->getCity();
+        $output .='<div class="form-container"><div class="form-msg"><span class="form-location edit-on" data-toggle="yes">'.($city == null?'填写地点':$city).'</span>
                     <span class="span-color">|</span><span class="form-date edit-on" data-birthday=" ">填写生日</span>
                     <span class="span-color">|</span><span class="form-sex">♂</span></div>';
         $output .='<div class="user-autograph"><span class="form-autograph edit-on" data-toggle="yes">填写个人状态</span>

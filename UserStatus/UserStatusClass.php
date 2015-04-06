@@ -16,10 +16,10 @@ class UserStatus{
 	public function getGender(){
 		$data = $this->getAllCache( );
 		if ($data != ''){
-			$all = json_decode($data);
+			$all = json_decode($data, true);
 		} else {
 			$data = $this->getAllDB( );
-			$all = json_decode($data);
+			$all = json_decode($data, true);
 		}
 		return $all['gender'];
 	}  
