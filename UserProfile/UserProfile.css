@@ -884,6 +884,31 @@ span.span-color{
     line-height: 30px;
     text-align: center;
 }
-@media screen and (max-width: 1365px) {
-
+@media screen and (max-width: 992px) {
+    .profile-top-right{
+        border-left: none;
+        border-top:1px solid #e0e0e0;
+        margin-top:25px;
+        padding-top:25px;
+    }
+    #profile-right{
+        margin-bottom: 15px;
+        margin-left: 40px;
+        /*margin-left:100px;*/
+    }
+}
+/*@media screen and (max-width: 767px) {*/
+    /*#profile-right,.profile-top-right{*/
+        /*float: none;*/
+        /*margin-left: auto;*/
+    /*}*/
+    /*#profile-right{*/
+        /*margin-left: 30px;*/
+    /*}*/
+/*}*/
+@media screen and (max-width: 566px){
+    #profile-right {
+        margin-left:auto;
+    }
+    }
 }

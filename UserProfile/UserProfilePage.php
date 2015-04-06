@@ -84,7 +84,7 @@ class UserProfilePage extends Article {
 		$wgOut->addHTML( '<div class="profile-page"><div id="profile-top" class="jumbotron row">' );
 		$wgOut->addHTML( $this->getProfileTop( $this->user_id, $this->user_name ) );
         $wgOut->addHTML('
-            <div class="col-md-6 profile-top-right">
+            <div class="col-md-6 col-sm-12 col-xs-12 profile-top-right">
                 <div class="profile-top-right-top">
                     <div><h4>兴趣</h4></div>
                     <ul>
@@ -891,7 +891,7 @@ class UserProfilePage extends Article {
 			$wgOut->addModules( 'ext.socialprofile.useruserfollows.js' );
 		}
 
-		$output .= '<div id="profile-right" class="col-md-6">';
+		$output .= '<div id="profile-right" class="col-md-6 col-sm-12 col-xs-12">';
 
 		$output .= '<div id="profile-title-container">
 				<h1 id="profile-title">
@@ -1010,8 +1010,11 @@ class UserProfilePage extends Article {
 			$output .= wfMessage( 'pipe-separator' )->escaped();
 		}
 		$output .= '<a href="' . htmlspecialchars( $contributions->getFullURL() ) . '" rel="nofollow">' . wfMessage( 'user-contributions' )->escaped() . '</a> ';
-        $output .='<div class="form-container"><div class="form-msg"><span class="form-location edit-on" data-toggle="yes">填写居住地</span><span class="span-color">|</span><span class="form-date edit-on" data-birthday=" ">填写生日</span><span class="span-color">|</span><span class="form-sex">♂</span></div>';
-        $output .='<div class="user-autograph"><span class="form-autograph edit-on" data-toggle="yes">填写个人状态</span><span class="glyphicon glyphicon-pencil form-change">修改</span></div></div>';
+        $output .='<div class="form-container"><div class="form-msg"><span class="form-location edit-on" data-toggle="yes">填写居住地</span>
+                    <span class="span-color">|</span><span class="form-date edit-on" data-birthday=" ">填写生日</span>
+                    <span class="span-color">|</span><span class="form-sex">♂</span></div>';
+        $output .='<div class="user-autograph"><span class="form-autograph edit-on" data-toggle="yes">填写个人状态</span>
+                    <span class="glyphicon glyphicon-pencil form-change">修改</span></div></div>';
 
 		// Links to User:user_name from User_profile:
 		// if ( $this->getTitle()->getNamespace() == NS_USER_PROFILE && $this->profile_data['user_id'] && $this->profile_data['user_page_type'] == 0 ) {
