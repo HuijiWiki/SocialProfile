@@ -80,6 +80,26 @@ class UserProfilePage extends Article {
 			parent::view();
 			return '';
 		}
+		$staff = '';
+		$bureaucrat = '';
+		$sysop = '';
+		$rollback = '';
+		$autoconfirmed = '';
+		if (in_array( 'staff', $this->user->getEffectiveGroups())){
+			$staff = '<li>职员</li> ';
+		}
+		if (in_array( 'bureaucrat', $this->user->getEffectiveGroups())){
+			$bureaucrat = '<li>行政员</li> ';
+		}
+		if (in_array( 'sysop', $this->user->getEffectiveGroups())){
+			$sysop = '<li>管理员</li> ';
+		}
+		if (in_array( 'rollback', $this->user->getEffectiveGroups())){
+			$rollback = '<li>回退员</li> ';
+		}
+		if (in_array( 'autoconfirmed', $this->user->getEffectiveGroups())){
+			$autoconfirmed = '<li>自动确认用户</li> ';
+		}
 		$usf = new UserSiteFollow();
 		$uuf = new UserUserFollow();
 		$topFollowedSites = $usf->getTopFollowedSites( $this->user );
@@ -94,20 +114,20 @@ class UserProfilePage extends Article {
 		if ($this->isOwner()){
 			$target = SpecialPage::getTitleFor('ViewRelationships');
 			$query = array('user' => $this->user_name);
-			$button1 = '<li>'.Linker::LinkKnown($target, '<i class="fa fa-users"></i>朋友', array(), $query).'</li>';
+			$button1 = '<li>'.Linker::LinkKnown($target, '<i class="fa fa-users"></i>朋友', array(), $query).'</li> ';
 		} elseif ($uuf->checkUserUserFollow($wgUser, $this->user) ){
-			$button1 = '<li id="user-user-follow" class="unfollow"><a><i class="fa fa-minus-square-o"></i>取关</a></li>';
+			$button1 = '<li id="user-user-follow" class="unfollow"><a><i class="fa fa-minus-square-o"></i>取关</a></li> ';
 		} else {
-			$button1 = '<li id="user-user-follow"><i class="fa fa-user-plus"></i>关注</li>';
+			$button1 = '<li id="user-user-follow"><i class="fa fa-plus-square-o"></i></i>关注</li> ';
 		}
 		if ($this->isOwner()){
-			$target = SpecialPage::getTitleFor('ViewGift');
+			$target = SpecialPage::getTitleFor('ViewGifts');
 			$query = array('user' => $this->user_name);
-			$button2 = '<li>'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>礼物</a>', array(), $query).'</li>';
+			$button2 = '<li>'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>礼物</a>', array(), $query).'</li> ';
 		} else {
 			$target = SpecialPage::getTitleFor( 'GiveGift' );
 			$query = array('user' => $this->user_name);
-			$button2 = '<li>'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>赠送</a>', array(), $query).'</li>';
+			$button2 = '<li>'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>赠送</a>', array(), $query).'</li> ';
 		}
 		$wgOut->addModuleScripts( 'ext.socialprofile.useruserfollows.js' );
 
@@ -116,12 +136,10 @@ class UserProfilePage extends Article {
         $wgOut->addHTML('
             <div class="col-md-6 col-sm-12 col-xs-12 profile-top-right">
                 <div class="profile-top-right-top">
-                    <div><h4>兴趣</h4></div>
-                    <ul>
-                        <li>电脑游戏</li>
-                        <li>奇幻文学</li>
-                        <li>桌游</li>
-                    </ul>
+                    <div><h4>在本wiki</h4></div>
+                    <ul>'.
+                    $staff.$bureaucrat.$sysop.$rollback.$autoconfirmed
+                    .'</ul>
                 </div>
                 <div class="profile-top-right-bottom">
                     <ul>

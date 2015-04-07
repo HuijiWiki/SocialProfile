@@ -24,6 +24,7 @@ function requestResponse( follower, followee, action ) {
 					jQuery( '#user-following-count').html(count.toString());
 				}else{
 					alert(res.message);
+					jQuery( '#user-user-follow').html('<i class="fa fa-plus-square-o"></i>关注');
 				}
 			}
 		);
@@ -37,7 +38,7 @@ function requestResponse( follower, followee, action ) {
 			function( data ) {
 				var res = jQuery.parseJSON(data);
 				if (res.success){
-					jQuery( '#user-user-follow').html('<i class="fa fa-user-plus"></i>关注');
+					jQuery( '#user-user-follow').html('<i class="fa fa-plus-square-o"></i>关注');
 					jQuery( '#user-user-follow').removeClass('unfollow');	
 					var count = jQuery( '#user-following-count').html();
 					count = parseInt(count)-1;
@@ -48,6 +49,7 @@ function requestResponse( follower, followee, action ) {
 					}		
 				}else{
 					alert(res.message);
+					jQuery( '#user-user-follow').html('<i class="fa fa-minus-square-o">取关');
 				}
 			}
 		);		
@@ -65,6 +67,7 @@ jQuery( document ).ready( function() {
 			window.location.href = "/wiki/Special:Login";
 			return;
 		}
+		jQuery( '#user-user-follow').html('<i class="fa fa-spinner fa-pulse"></i>');
 		requestResponse(
 			mw.config.get('wgUserName'),
 			mw.config.get('wgTitle'),
