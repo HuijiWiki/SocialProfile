@@ -17,7 +17,7 @@ function requestResponse( follower, followee, action ) {
 			function( data ) {
 				var res = jQuery.parseJSON(data);
 				if (res.success){
-					jQuery( '#user-user-follow').html('<span class="glyphicon glyphicon-plus"></span>关注</a>');
+					jQuery( '#user-user-follow').html('<i class="fa fa-minus-square-o">取关');
 					jQuery( '#user-user-follow').addClass('unfollow');
 					var count = jQuery( '#user-following-count').html();
 					count = parseInt(count)+1;
@@ -37,7 +37,7 @@ function requestResponse( follower, followee, action ) {
 			function( data ) {
 				var res = jQuery.parseJSON(data);
 				if (res.success){
-					jQuery( '#user-user-follow').html('取消关注');
+					jQuery( '#user-user-follow').html('<i class="fa fa-user-plus"></i>关注');
 					jQuery( '#user-user-follow').removeClass('unfollow');	
 					var count = jQuery( '#user-following-count').html();
 					count = parseInt(count)-1;

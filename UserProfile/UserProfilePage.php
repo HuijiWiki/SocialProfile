@@ -71,7 +71,7 @@ class UserProfilePage extends Article {
 	}
 
 	function view() {
-		global $wgOut;
+		global $wgOut, $wgUser;
 
 		$wgOut->setPageTitle( $this->mTitle->getPrefixedText() );
 
@@ -81,15 +81,34 @@ class UserProfilePage extends Article {
 			return '';
 		}
 		$usf = new UserSiteFollow();
+		$uuf = new UserUserFollow();
 		$topFollowedSites = $usf->getTopFollowedSites( $this->user );
 		$tfsUrl = array();
 		$tfsName = array();
 		foreach( $topFollowedSites as $key => $value ){
-			$tfsUrl[] = 'http://'.$key.'huiji.wiki';
+			$tfsUrl[] = 'http://'.$key.'.huiji.wiki';
 			$tfsName[] = $value;
 		}
 		$userCount = UserSiteFollow::getUserCount($this->user);
 
+		if ($this->isOwner()){
+			$target = SpecialPage::getTitleFor('ViewRelationships');
+			$query = array('user' => $this->user_name);
+			$button1 = '<li>'.Linker::LinkKnown($target, '<i class="fa fa-users"></i>朋友', array(), $query).'</li>';
+		} elseif ($uuf->checkUserUserFollow($wgUser, $this->user) ){
+			$button1 = '<li id="user-user-follow" class="unfollow"><a><i class="fa fa-minus-square-o"></i>取关</a></li>';
+		} else {
+			$button1 = '<li id="user-user-follow"><i class="fa fa-user-plus"></i>关注</li>';
+		}
+		if ($this->isOwner()){
+			$target = SpecialPage::getTitleFor('ViewGift');
+			$query = array('user' => $this->user_name);
+			$button2 = '<li>'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>礼物</a>', array(), $query).'</li>';
+		} else {
+			$target = SpecialPage::getTitleFor( 'GiveGift' );
+			$query = array('user' => $this->user_name);
+			$button2 = '<li>'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>赠送</a>', array(), $query).'</li>';
+		}
 		$wgOut->addModuleScripts( 'ext.socialprofile.useruserfollows.js' );
 
 		$wgOut->addHTML( '<div class="profile-page"><div id="profile-top" class="jumbotron row">' );
@@ -112,10 +131,9 @@ class UserProfilePage extends Article {
                     </ul>'
                     .($userCount>3?'<a>点击查看全部'.$userCount.'个wiki</a>':'').
                     '<div>
-                        <ul class="profile-interactive btn-group">
-                            <li id="user-user-follow"><a><span class="glyphicon glyphicon-plus"></span>关注</a></li>
-                            <li><a><span class="glyphicon glyphicon-envelope"></span>私信</a></li>
-                            <li class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-align-justify"></span></li>
+                        <ul class="profile-interactive btn-group">'.
+                            $button1.$button2.
+                            '<li class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-align-justify"></span></li>
                             <ul class="dropdown-menu" role="menu">
                                         <li><a href="#">推荐给朋友</a></li>
                                         <li class="divider"></li>
@@ -890,16 +908,16 @@ class UserProfilePage extends Article {
 		wfDebug( 'profile type: ' . $profile_data['user_page_type'] . "\n" );
 		$output = '';
 
-		$uuf = new UserUserFollow();
-		$following = $uuf->checkUserUserFollow($wgUser, User::newFromId($user_id));
-		if ( !$this->isOwner() ) {
-			if (!$following ){
-				$output .= '<button id="user-user-follow" class="mw-ui-button mw-ui-progressive">关注'.$user_name.'</button>';
-			}else{
-				$output .= '<button id="user-user-follow" class="mw-ui-button mw-ui-progressive unfollow">已关注</button>';
-			}
-			$wgOut->addModules( 'ext.socialprofile.useruserfollows.js' );
-		}
+		// $uuf = new UserUserFollow();
+		// $following = $uuf->checkUserUserFollow($wgUser, User::newFromId($user_id));
+		// if ( !$this->isOwner() ) {
+		// 	if (!$following ){
+		// 		$output .= '<button id="user-user-follow" class="mw-ui-button mw-ui-progressive">关注'.$user_name.'</button>';
+		// 	}else{
+		// 		$output .= '<button id="user-user-follow" class="mw-ui-button mw-ui-progressive unfollow">已关注</button>';
+		// 	}
+		// 	$wgOut->addModules( 'ext.socialprofile.useruserfollows.js' );
+		// }
 
 		$output .= '<div id="profile-right" class="col-md-6 col-sm-12 col-xs-12">';
 
