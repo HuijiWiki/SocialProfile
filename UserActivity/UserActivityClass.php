@@ -215,40 +215,17 @@ class UserActivity {
 		);
 
 		foreach ( $res as $row ) {
-			// Special pages aren't editable, so ignore them
-			// And blocking a vandal should not be counted as editing said
-			// vandal's user page...
-			if ( $row->rc_namespace == NS_SPECIAL || $row->rc_log_action != null ) {
-				continue;
-			}
-			$title = Title::makeTitle( $row->rc_namespace, $row->rc_title );
-			$this->items_grouped['edit'][$title->getPrefixedText()]['users'][$row->rc_user_text][] = array(
-				'id' => 0,
-				'type' => 'edit',
-				'timestamp' => $row->item_date,
-				'pagetitle' => $row->rc_title,
-				'namespace' => $row->rc_namespace,
-				'username' => $row->rc_user_text,
-				'userid' => $row->rc_user,
-				'comment' => $this->fixItemComment( $row->rc_comment ),
-				'minor' => $row->rc_minor,
-				'new' => $row->rc_new
-			);
-
-			// set last timestamp
-			$this->items_grouped['edit'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
-
 			$this->items[] = array(
 				'id' => 0,
-				'type' => 'edit',
+				'type' => 'user_site_follow',
 				'timestamp' => ( $row->item_date ),
-				'pagetitle' => $row->rc_title,
-				'namespace' => $row->rc_namespace,
-				'username' => $row->rc_user_text,
-				'userid' => $row->rc_user,
-				'comment' => $this->fixItemComment( $row->rc_comment ),
-				'minor' => $row->rc_minor,
-				'new' => $row->rc_new
+				'pagetitle' => '',
+				'namespace' => '',
+				'username' => $row->f_user_name,
+				'userid' => $row->f_user_id,
+				'comment' => HuijiPrefix::prefixToSiteName($row->f_wiki_domain),
+				'minor' => 0,
+				'new' => '0'
 			);
 		}
 	}

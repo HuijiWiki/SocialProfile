@@ -80,6 +80,17 @@ class UserProfilePage extends Article {
 			parent::view();
 			return '';
 		}
+		$usf = new UserSiteFollow();
+		$topFollowedSites = $usf->getTopFollowedSites( $this->user );
+		$tfsUrl = array();
+		$tfsName = array();
+		foreach( $topFollowedSites as $key => $value ){
+			$tfsUrl[] = 'http://'.$key.'huiji.wiki';
+			$tfsName[] = $value;
+		}
+		$userCount = UserSiteFollow::getUserCount($this->user);
+
+		$wgOut->addModuleScripts( 'ext.socialprofile.useruserfollows.js' );
 
 		$wgOut->addHTML( '<div class="profile-page"><div id="profile-top" class="jumbotron row">' );
 		$wgOut->addHTML( $this->getProfileTop( $this->user_id, $this->user_name ) );
@@ -95,14 +106,14 @@ class UserProfilePage extends Article {
                 </div>
                 <div class="profile-top-right-bottom">
                     <ul>
-                        <li>冰与火之歌中文维基</li>
-                        <li>魔戒中文维基</li>
-                        <li>炉石传说中文维基</li>
-                    </ul>
-                    <a>点击查看详细</a>
-                    <div>
+                        <li><a href="'.$tfsUrl[0].'">'.$tfsName[0].'</a></li>
+                        <li><a href="'.$tfsUrl[1].'">'.$tfsName[1].'</a></li>
+                        <li><a href="'.$tfsUrl[2].'">'.$tfsName[2].'</a></li>
+                    </ul>'
+                    .($userCount>3?'<a>点击查看全部'.$userCount.'个wiki</a>':'').
+                    '<div>
                         <ul class="profile-interactive btn-group">
-                            <li><a><span class="glyphicon glyphicon-plus"></span>关注</a></li>
+                            <li id="user-user-follow"><a><span class="glyphicon glyphicon-plus"></span>关注</a></li>
                             <li><a><span class="glyphicon glyphicon-envelope"></span>私信</a></li>
                             <li class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-align-justify"></span></li>
                             <ul class="dropdown-menu" role="menu">

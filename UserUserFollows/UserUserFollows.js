@@ -15,12 +15,15 @@ function requestResponse( follower, followee, action ) {
 				rsargs: [follower, followee]
 			},
 			function( data ) {
-				if (data == 0){
-					jQuery( '#user-user-follow').html(data);
+				var res = jQuery.parseJSON(data);
+				if (res.success){
+					jQuery( '#user-user-follow').html('<span class="glyphicon glyphicon-plus"></span>关注</a>');
 					jQuery( '#user-user-follow').addClass('unfollow');
 					var count = jQuery( '#user-following-count').html();
 					count = parseInt(count)+1;
 					jQuery( '#user-following-count').html(count.toString());
+				}else{
+					alert(res.message);
 				}
 			}
 		);
@@ -32,8 +35,9 @@ function requestResponse( follower, followee, action ) {
 				rsargs: [follower, followee]
 			},
 			function( data ) {
-				if (data == 0){
-					jQuery( '#user-user-follow').html(data);
+				var res = jQuery.parseJSON(data);
+				if (res.success){
+					jQuery( '#user-user-follow').html('取消关注');
 					jQuery( '#user-user-follow').removeClass('unfollow');	
 					var count = jQuery( '#user-following-count').html();
 					count = parseInt(count)-1;
@@ -42,6 +46,8 @@ function requestResponse( follower, followee, action ) {
 					}else{
 						jQuery( '#user-following-count').html(0);	
 					}		
+				}else{
+					alert(res.message);
 				}
 			}
 		);		
@@ -53,10 +59,11 @@ jQuery( document ).ready( function() {
 	//TODO: $out->addModules( 'ext.socialprofile.userrelationship.js' ); (put this on skin)
 	//TODO: Check if user is logged in.
 	//TODO: if user is logged in, check if user has followed site.
-	jQuery( '#user-user-follow' ).on( 'click', function() {
+	jQuery( 'li#user-user-follow' ).on( 'click', function() {
 		//TODO: Check if user is logged in, if not prompt login form.
 		if (mw.config.get('wgUserName') == null){
 			window.location.href = "/wiki/Special:Login";
+			return;
 		}
 		requestResponse(
 			mw.config.get('wgUserName'),

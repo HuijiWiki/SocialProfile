@@ -37,7 +37,7 @@ function requestResponse( username, servername, action ) {
 			function( data ) {
 				var res = jQuery.parseJSON(data);
 				if ( res.success ){
-					jQuery( '#user-site-follow').html('关注'+mw.config.get('wgSiteName'));
+					jQuery( '#user-site-follow').html('<span class="glyphicon glyphicon-plus"></span>关注</a>');
 					jQuery( '#user-site-follow').removeClass('unfollow');	
 					var count = jQuery( '#site-follower-count').html();
 					count = parseInt(count)-1;
