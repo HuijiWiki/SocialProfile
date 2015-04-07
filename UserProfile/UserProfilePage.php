@@ -129,6 +129,30 @@ class UserProfilePage extends Article {
 			$query = array('user' => $this->user_name);
 			$button2 = '<li>'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>赠送</a>', array(), $query).'</li> ';
 		}
+		$watchlist = SpecialPage::getTitleFor( 'Watchlist' );
+		$contributions = SpecialPage::getTitleFor( 'Contributions' );
+		$send_message = SpecialPage::getTitleFor( 'UserBoard' );
+		$user_safe = urlencode( $this->user );
+		$right = SpecialPage::getTitleFor('UserRights');
+		$block = SpecialPage::getTitleFor('Block');
+		$sendMessageLink = '';
+		$watchlistLink = '';
+		$blockLink = '';
+		$rightLink = '';
+		if ($wgUser->isLoggedIn()){
+			if (!$this->isOwner()){
+				$sendMessageLink = '<li><a href="' . htmlspecialchars( $send_message->getFullURL( 'user=' . $wgUser->getName() . '&conv=' . $user_safe  ) ) . '" rel="nofollow">' .
+			 			wfMessage( 'user-send-message' )->escaped() . '</a></li>';
+				if ($wgUser->isAllowed('block')){
+					$blockLink = '<li><a href="' . htmlspecialchars( $block->getFullURL( 'user='. $user_safe ) ). '" rel="nofollow">封禁用户</a></li>';	
+					$rightLink = '<li><a href="' . htmlspecialchars( $right->getFullURL( 'user='. $user_safe ) ). '" rel="nofollow">调整权限</a></li>';				
+				}
+			}else{
+				$watchlistLink = '<li><a href="' . htmlspecialchars( $watchlist->getFullURL() ) . '">' . wfMessage( 'user-watchlist' )->escaped() . '</a></li>';
+			}
+
+		} 
+
 		$wgOut->addModuleScripts( 'ext.socialprofile.useruserfollows.js' );
 
 		$wgOut->addHTML( '<div class="profile-page"><div id="profile-top" class="jumbotron row">' );
@@ -153,17 +177,58 @@ class UserProfilePage extends Article {
                             $button1.$button2.
                             '<li class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-align-justify"></span></li>
                             <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#">推荐给朋友</a></li>
+                                        '.$sendMessageLink.' 
+                                        '.$blockLink.' 
+                                        '.$rightLink.' 
                                         <li class="divider"></li>
-                                        <li><a href="#">加入黑名单</a></li>
-                                        <li><a href="#">举报</a></li>
-                                        <li><a href="#">贡献</a></li>
+                                        '.$watchlistLink.' 
+                                        <li><a href="' . htmlspecialchars( $contributions->getFullURL('user='. $user_safe  )) . '" rel="nofollow">' . wfMessage( 'user-contributions' )->escaped() . '</a></li>
                             </ul>
                         </ul>
                     </div>
                 </div>
             </div>
         ');
+		// if ( $this->isOwner() ) {
+		// 	$output .= $wgLang->pipeList( array(
+		// 		'<a href="' . htmlspecialchars( $update_profile->getFullURL() ) . '">' . wfMessage( 'user-edit-profile' )->escaped() . '</a>',
+		// 		'<a href="' . htmlspecialchars( $upload_avatar->getFullURL() ) . '">' . wfMessage( 'user-upload-avatar' )->escaped() . '</a>',
+		// 		'<a href="' . htmlspecialchars( $watchlist->getFullURL() ) . '">' . wfMessage( 'user-watchlist' )->escaped() . '</a>',
+		// 		''
+		// 	) );
+		// } elseif ( $wgUser->isLoggedIn() ) {
+		// 	if ( $relationship == false ) {
+		// 		$output .= $wgLang->pipeList( array(
+		// 			'<a href="' . htmlspecialchars( $add_relationship->getFullURL( 'user=' . $user_safe . '&rel_type=1' ) ) . '" rel="nofollow">' . wfMessage( 'user-add-friend' )->escaped() . '</a>',
+		// 			'<a href="' . htmlspecialchars( $add_relationship->getFullURL( 'user=' . $user_safe . '&rel_type=2' ) ) . '" rel="nofollow">' . wfMessage( 'user-add-foe' )->escaped() . '</a>',
+		// 			''
+		// 		) );
+		// 	} else {
+		// 		if ( $relationship == 1 ) {
+		// 			$output .= $wgLang->pipeList( array(
+		// 				'<a href="' . htmlspecialchars( $remove_relationship->getFullURL( 'user=' . $user_safe ) ) . '">' . wfMessage( 'user-remove-friend' )->escaped() . '</a>',
+		// 				''
+		// 			) );
+		// 		}
+		// 		if ( $relationship == 2 ) {
+		// 			$output .= $wgLang->pipeList( array(
+		// 				'<a href="' . htmlspecialchars( $remove_relationship->getFullURL( 'user=' . $user_safe ) ) . '">' . wfMessage( 'user-remove-foe' )->escaped() . '</a>',
+		// 				''
+		// 			) );
+		// 		}
+		// 	}
+
+		// 	global $wgUserBoard;
+		// 	if ( $wgUserBoard ) {
+		// 		$output .= '<a href="' . htmlspecialchars( $send_message->getFullURL( 'user=' . $wgUser->getName() . '&conv=' . $user_safe ) ) . '" rel="nofollow">' .
+		// 			wfMessage( 'user-send-message' )->escaped() . '</a>';
+		// 		$output .= wfMessage( 'pipe-separator' )->escaped();
+		// 	}
+		// 	$output .= '<a href="' . htmlspecialchars( $give_gift->getFullURL( 'user=' . $user_safe ) ) . '" rel="nofollow">' .
+		// 		wfMessage( 'user-send-gift' )->escaped() . '</a>';
+		// 	$output .= wfMessage( 'pipe-separator' )->escaped();
+		// }
+		// $output .= '<a href="' . htmlspecialchars( $contributions->getFullURL() ) . '" rel="nofollow">' . wfMessage( 'user-contributions' )->escaped() . '</a> ';
         $wgOut->addHTML( '<div class="cleared"></div></div>');
 		// User does not want social profile for User:user_name, so we just
 		// show header + page content
@@ -1016,46 +1081,7 @@ class UserProfilePage extends Article {
 		}
 		$output .= '<div class="profile-actions">';
 
-		if ( $this->isOwner() ) {
-			$output .= $wgLang->pipeList( array(
-				'<a href="' . htmlspecialchars( $update_profile->getFullURL() ) . '">' . wfMessage( 'user-edit-profile' )->escaped() . '</a>',
-				'<a href="' . htmlspecialchars( $upload_avatar->getFullURL() ) . '">' . wfMessage( 'user-upload-avatar' )->escaped() . '</a>',
-				'<a href="' . htmlspecialchars( $watchlist->getFullURL() ) . '">' . wfMessage( 'user-watchlist' )->escaped() . '</a>',
-				''
-			) );
-		} elseif ( $wgUser->isLoggedIn() ) {
-			if ( $relationship == false ) {
-				$output .= $wgLang->pipeList( array(
-					'<a href="' . htmlspecialchars( $add_relationship->getFullURL( 'user=' . $user_safe . '&rel_type=1' ) ) . '" rel="nofollow">' . wfMessage( 'user-add-friend' )->escaped() . '</a>',
-					'<a href="' . htmlspecialchars( $add_relationship->getFullURL( 'user=' . $user_safe . '&rel_type=2' ) ) . '" rel="nofollow">' . wfMessage( 'user-add-foe' )->escaped() . '</a>',
-					''
-				) );
-			} else {
-				if ( $relationship == 1 ) {
-					$output .= $wgLang->pipeList( array(
-						'<a href="' . htmlspecialchars( $remove_relationship->getFullURL( 'user=' . $user_safe ) ) . '">' . wfMessage( 'user-remove-friend' )->escaped() . '</a>',
-						''
-					) );
-				}
-				if ( $relationship == 2 ) {
-					$output .= $wgLang->pipeList( array(
-						'<a href="' . htmlspecialchars( $remove_relationship->getFullURL( 'user=' . $user_safe ) ) . '">' . wfMessage( 'user-remove-foe' )->escaped() . '</a>',
-						''
-					) );
-				}
-			}
 
-			global $wgUserBoard;
-			if ( $wgUserBoard ) {
-				$output .= '<a href="' . htmlspecialchars( $send_message->getFullURL( 'user=' . $wgUser->getName() . '&conv=' . $user_safe ) ) . '" rel="nofollow">' .
-					wfMessage( 'user-send-message' )->escaped() . '</a>';
-				$output .= wfMessage( 'pipe-separator' )->escaped();
-			}
-			$output .= '<a href="' . htmlspecialchars( $give_gift->getFullURL( 'user=' . $user_safe ) ) . '" rel="nofollow">' .
-				wfMessage( 'user-send-gift' )->escaped() . '</a>';
-			$output .= wfMessage( 'pipe-separator' )->escaped();
-		}
-		$output .= '<a href="' . htmlspecialchars( $contributions->getFullURL() ) . '" rel="nofollow">' . wfMessage( 'user-contributions' )->escaped() . '</a> ';
 		$us = new UserStatus($this->user);
 		$city = $us->getCity();
 		$birthday = $us->getBirthday();
@@ -1068,12 +1094,7 @@ class UserProfilePage extends Article {
 		} else {
 			$genderIcon = '未知';
 		}
-
-		if ($this->isOwner()){
-
-		}
-		
-        $output .='<div class="form-container owner"><div class="form-msg"><span class="form-location '.($city == ''?'edit-on':'').'" data-toggle="yes">'.($city == ''?'填写居住地':$city).'</span>
+        $output .='<div class="form-container '.($this->isOwner()?'owner':'').'"><div class="form-msg"><span class="form-location '.($city == ''?'edit-on':'').'" data-toggle="yes">'.($city == ''?'填写居住地':$city).'</span>
                     <span class="span-color">|</span><span class="form-date '.($birthday == '0000-00-00'?'edit-on':'').'" data-birthday="'.($birthday == '0000-00-00'?'':$birthday).'">'.($birthday == '0000-00-00'?'填写生日':'').'</span>
                     <span class="span-color">|</span><span class="form-sex">'.$genderIcon.'</span></div>';
         $output .='<div class="user-autograph"><span class="form-autograph '.($status == ''?'edit-on':'').'" data-toggle="yes">'.($status == ''?'填写个人状态':$status).'</span>

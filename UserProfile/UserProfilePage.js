@@ -207,7 +207,7 @@ jQuery( document ).ready( function() {
         }
         $(".form-sex").text(sex);
         $(".form-edit").remove();
-        var username = mw.config.get('wgUserName');
+        var username = mw.config.get('wgTitle');
         $.post(
             mw.util.wikiScript(),{
                 action:'ajax',
