@@ -183,7 +183,7 @@ jQuery( document ).ready( function() {
         var autograph = $(".form-textarea").val();
         var birthday = $(".input-date").val();
         var sex = $('.form-edit input:radio:checked').val();
-        var gender = $('.form-edit input:radio:checked').data('male');
+        var gender = (sex == '男'?'male':'female');
         $(".form-container").show();
         if(location==''){
             $(".form-location").text("填写居住地").addClass("edit-on");
@@ -212,7 +212,7 @@ jQuery( document ).ready( function() {
             mw.util.wikiScript(),{
                 action:'ajax',
                 rs:'wfUpdateUserStatus',
-                rsargs:[username,gender,'',location,birthday,status]
+                rsargs:[username,gender,'',location,birthday,autograph]
             },
             function( data ) {
                 var res = $.parseJSON(data);

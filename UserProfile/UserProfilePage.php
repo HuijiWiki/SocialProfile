@@ -990,7 +990,7 @@ class UserProfilePage extends Article {
 		// UserLevels has been configured
         $output .='<div>
 					    <ul class="user-follow-msg">
-					        <li><h5>编辑</h5><span>9999</span></li>
+					        <li><h5>编辑</h5><span>'.$stats_data['edits'].'</span></li>
 					        <li><h4>|</h4></li>
 					        <li><h5>关注</h5><span id="user-followed-count">'.UserUserFollow::getFollowedCount(User::newFromName($user)).'</span></li>
 					        <li><h4>|</h4></li>
@@ -1056,12 +1056,27 @@ class UserProfilePage extends Article {
 			$output .= wfMessage( 'pipe-separator' )->escaped();
 		}
 		$output .= '<a href="' . htmlspecialchars( $contributions->getFullURL() ) . '" rel="nofollow">' . wfMessage( 'user-contributions' )->escaped() . '</a> ';
-		$us = new UserStatus($wgUser);
+		$us = new UserStatus($this->user);
 		$city = $us->getCity();
-        $output .='<div class="form-container"><div class="form-msg"><span class="form-location edit-on" data-toggle="yes">'.($city == null?'填写地点':$city).'</span>
-                    <span class="span-color">|</span><span class="form-date edit-on" data-birthday=" ">填写生日</span>
-                    <span class="span-color">|</span><span class="form-sex">♂</span></div>';
-        $output .='<div class="user-autograph"><span class="form-autograph edit-on" data-toggle="yes">填写个人状态</span>
+		$birthday = $us->getBirthday();
+		$status = $us->getStatus();
+		$gender = $us->getGender();
+		if ($gender == 'male'){
+			$gederIcon = '♂';
+		} elseif ($gender == 'female'){
+			$genderIcon = '♀';
+		} else {
+			$genderIcon = '未知';
+		}
+
+		if ($this->isOwner()){
+
+		}
+		
+        $output .='<div class="form-container owner"><div class="form-msg"><span class="form-location '.($city == ''?'edit-on':'').'" data-toggle="yes">'.($city == ''?'填写居住地':$city).'</span>
+                    <span class="span-color">|</span><span class="form-date '.($birthday == '0000-00-00'?'edit-on':'').'" data-birthday="'.($birthday == '0000-00-00'?'':$birthday).'">'.($birthday == '0000-00-00'?'填写生日':'').'</span>
+                    <span class="span-color">|</span><span class="form-sex">'.$genderIcon.'</span></div>';
+        $output .='<div class="user-autograph"><span class="form-autograph '.($status == ''?'edit-on':'').'" data-toggle="yes">'.($status == ''?'填写个人状态':$status).'</span>
                     <span class="glyphicon glyphicon-pencil form-change">修改</span></div></div>';
 
 		// Links to User:user_name from User_profile:

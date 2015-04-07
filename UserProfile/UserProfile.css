@@ -756,7 +756,7 @@ span.span-color{
     display: none!important;
     cursor: pointer;
 }
-.form-container:hover .form-change{
+.form-container.owner:hover .form-change{
     display: inline-block!important;
 }
 .input-location.form-control{
