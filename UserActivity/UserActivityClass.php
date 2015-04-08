@@ -229,6 +229,70 @@ class UserActivity {
 			);
 		}
 	}
+
+	/**
+	 * Get users from user follow table and set them in the
+	 * appropriate class member variables.
+	 */
+	private function setUserFollow() {
+		$dbr = wfGetDB( DB_SLAVE );
+
+		$where = array();
+
+		if ( !empty( $this->rel_type ) ) {
+			$users = $dbr->select(
+				'user_relationship',
+				'r_user_id_relation',
+				array(
+					'r_user_id' => $this->user_id,
+					'r_type' => $this->rel_type
+				),
+				__METHOD__
+			);
+			$userArray = array();
+			foreach ( $users as $user ) {
+				$userArray[] = $user;
+			}
+			$userIDs = implode( ',', $userArray );
+			if ( !empty( $userIDs ) ) {
+				$where[] = "f_user_id IN ($userIDs)";
+			}
+		}
+
+		if ( !empty( $this->show_current_user ) ) {
+			$where['f_user_id'] = $this->user_id;
+		}
+
+		$res = $dbr->select(
+			'user_site_follow',
+			array(
+				'UNIX_TIMESTAMP(f_date) AS item_date', 'f_id',
+				'f_user_id', 'f_user_name', 'f_target_user_name'
+			),
+			$where,
+			__METHOD__,
+			array(
+				'ORDER BY' => 'f_id DESC',
+				'LIMIT' => $this->item_max,
+				'OFFSET' => 0
+			)
+		);
+
+		foreach ( $res as $row ) {
+			$this->items[] = array(
+				'id' => 0,
+				'type' => 'user_site_follow',
+				'timestamp' => ( $row->item_date ),
+				'pagetitle' => '',
+				'namespace' => '',
+				'username' => $row->f_user_name,
+				'userid' => $row->f_user_id,
+				'comment' => $row->f_target_user_name,
+				'minor' => 0,
+				'new' => '0'
+			);
+		}
+	}
 	/**
 	 * Get recent votes from the Vote table (provided by VoteNY extension) and
 	 * set them in the appropriate class member variables.
