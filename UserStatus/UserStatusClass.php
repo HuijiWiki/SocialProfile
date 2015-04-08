@@ -137,7 +137,13 @@ class UserStatus{
 	public function setAll($gender, $province, $city, $birthday, $status){
 		global $wgMemc;
 		$key = wfMemcKey( 'user_profile', 'get_all', $this->user->getName() );
-		$this->user->setOption('gender', $gender);
+		if ($gender = 'male'){
+			$this->user->setOption('gender', male);
+		} elseif ($gender = 'female'){
+			$this->user->setOption('gender', female);
+		} else {
+			$this->user->setOption('gender', unknown);
+		}
 		$this->user->saveSettings();
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->upsert(

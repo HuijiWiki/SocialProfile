@@ -1047,17 +1047,17 @@ class UserProfilePage extends Article {
 		$birthday = $us->getBirthday();
 		$status = $us->getStatus();
 		$gender = $us->getGender();
-		if ($gender == 'male'){
+		if ($gender == male){
 			$gederIcon = '♂';
-		} elseif ($gender == 'female'){
+		} elseif ($gender == female){
 			$genderIcon = '♀';
 		} else {
-			$genderIcon = '未知';
+			$genderIcon = '♂/♀';
 		}
-        $output .='<div class="form-container '.($this->isOwner()?'owner':'').'"><div class="form-msg"><span class="form-location '.($city == ''?'edit-on':'').'" data-toggle="yes">'.($city == ''?'填写居住地':$city).'</span>
-                    <span class="span-color">|</span><span class="form-date '.($birthday == '0000-00-00'?'edit-on':'').'" data-birthday="'.($birthday == '0000-00-00'?'':$birthday).'">'.($birthday == '0000-00-00'?'填写生日':'').'</span>
+        $output .='<div class="form-container '.($this->isOwner()?'owner':'').'"><div class="form-msg"><span class="form-location '.($city == ''?'edit-on':'').'" data-toggle="yes">'.($city == ''?($this->isOwner()?'填写居住地':'居住地未公开'):$city).'</span>
+                    <span class="span-color">|</span><span class="form-date '.($birthday == ''?'edit-on':'').'" data-birthday="'.($birthday == ''?'':$birthday).'">'.($birthday == ''?($this->isOwner()?'填写生日':'生日未公开'):'').'</span>
                     <span class="span-color">|</span><span class="form-sex">'.$genderIcon.'</span></div>';
-        $output .='<div class="user-autograph"><span class="form-autograph '.($status == ''?'edit-on':'').'" data-toggle="yes">'.($status == ''?'填写个人状态':$status).'</span>
+        $output .='<div class="user-autograph"><span class="form-autograph '.($status == ''?'edit-on':'').'" data-toggle="yes">'.($status == ''?($this->isOwner()?'填写个人状态':'这个人很懒，什么都没有写...'):$status).'</span>
                     <span class="glyphicon glyphicon-pencil form-change">修改</span></div></div>';
 
 		// Links to User:user_name from User_profile:
