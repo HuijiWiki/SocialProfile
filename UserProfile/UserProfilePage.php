@@ -154,7 +154,7 @@ class UserProfilePage extends Article {
 		} 
 
 		$wgOut->addModuleScripts( 'ext.socialprofile.useruserfollows.js' );
-
+		$wgOut->addHTML($wgAjaxExportList);
 		$wgOut->addHTML( '<div class="profile-page"><div id="profile-top" class="jumbotron row">' );
 		$wgOut->addHTML( $this->getProfileTop( $this->user_id, $this->user_name ) );
         $wgOut->addHTML('

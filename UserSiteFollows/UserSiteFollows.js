@@ -3,7 +3,7 @@
  * Used on Sidebar.
  */
 
-function requestResponse( username, servername, action ) {
+function requestUserSiteFollowsResponse( username, servername, action ) {
 
 	//TODO: add waiting message.
 	//TODO: validate wgUserName.
@@ -11,7 +11,7 @@ function requestResponse( username, servername, action ) {
 		jQuery.post(
 			mw.util.wikiScript(), {
 				action: 'ajax',
-				rs: 'wfUserSiteFollowsResponse',
+				rs: 'wfUserSiteFollowResponse',
 				rsargs: [username, servername]
 			},
 			function( data ) {
@@ -31,7 +31,7 @@ function requestResponse( username, servername, action ) {
 		jQuery.post(
 			mw.util.wikiScript(), {
 				action: 'ajax',
-				rs: 'wfUserSiteUnfollowsResponse',
+				rs: 'wfUserSiteUnfollowResponse',
 				rsargs: [username, servername]
 			},
 			function( data ) {
@@ -64,7 +64,7 @@ jQuery( document ).ready( function() {
 		if (mw.config.get('wgUserName') == null){
 			window.location.href = "/wiki/Special:Login";
 		}
-		requestResponse(
+		requestUserSiteFollowsResponse(
 			mw.config.get('wgUserName'),
 			mw.config.get('wgServer'),
 			jQuery( '#user-site-follow' ).hasClass('unfollow')

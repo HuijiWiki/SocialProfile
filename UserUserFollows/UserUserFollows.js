@@ -3,7 +3,7 @@
  * Used on Sidebar.
  */
 
-function requestResponse( follower, followee, action ) {
+function requestUserUserFollowsResponse( follower, followee, action ) {
 
 	//TODO: add waiting message.
 	//TODO: validate wgUserName.
@@ -68,7 +68,7 @@ jQuery( document ).ready( function() {
 			return;
 		}
 		jQuery( '#user-user-follow').html('<i class="fa fa-spinner fa-pulse"></i>');
-		requestResponse(
+		requestUserUserFollowsResponse(
 			mw.config.get('wgUserName'),
 			mw.config.get('wgTitle'),
 			jQuery( '#user-user-follow' ).hasClass('unfollow')
