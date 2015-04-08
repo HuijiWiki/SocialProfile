@@ -189,46 +189,6 @@ class UserProfilePage extends Article {
                 </div>
             </div>
         ');
-		// if ( $this->isOwner() ) {
-		// 	$output .= $wgLang->pipeList( array(
-		// 		'<a href="' . htmlspecialchars( $update_profile->getFullURL() ) . '">' . wfMessage( 'user-edit-profile' )->escaped() . '</a>',
-		// 		'<a href="' . htmlspecialchars( $upload_avatar->getFullURL() ) . '">' . wfMessage( 'user-upload-avatar' )->escaped() . '</a>',
-		// 		'<a href="' . htmlspecialchars( $watchlist->getFullURL() ) . '">' . wfMessage( 'user-watchlist' )->escaped() . '</a>',
-		// 		''
-		// 	) );
-		// } elseif ( $wgUser->isLoggedIn() ) {
-		// 	if ( $relationship == false ) {
-		// 		$output .= $wgLang->pipeList( array(
-		// 			'<a href="' . htmlspecialchars( $add_relationship->getFullURL( 'user=' . $user_safe . '&rel_type=1' ) ) . '" rel="nofollow">' . wfMessage( 'user-add-friend' )->escaped() . '</a>',
-		// 			'<a href="' . htmlspecialchars( $add_relationship->getFullURL( 'user=' . $user_safe . '&rel_type=2' ) ) . '" rel="nofollow">' . wfMessage( 'user-add-foe' )->escaped() . '</a>',
-		// 			''
-		// 		) );
-		// 	} else {
-		// 		if ( $relationship == 1 ) {
-		// 			$output .= $wgLang->pipeList( array(
-		// 				'<a href="' . htmlspecialchars( $remove_relationship->getFullURL( 'user=' . $user_safe ) ) . '">' . wfMessage( 'user-remove-friend' )->escaped() . '</a>',
-		// 				''
-		// 			) );
-		// 		}
-		// 		if ( $relationship == 2 ) {
-		// 			$output .= $wgLang->pipeList( array(
-		// 				'<a href="' . htmlspecialchars( $remove_relationship->getFullURL( 'user=' . $user_safe ) ) . '">' . wfMessage( 'user-remove-foe' )->escaped() . '</a>',
-		// 				''
-		// 			) );
-		// 		}
-		// 	}
-
-		// 	global $wgUserBoard;
-		// 	if ( $wgUserBoard ) {
-		// 		$output .= '<a href="' . htmlspecialchars( $send_message->getFullURL( 'user=' . $wgUser->getName() . '&conv=' . $user_safe ) ) . '" rel="nofollow">' .
-		// 			wfMessage( 'user-send-message' )->escaped() . '</a>';
-		// 		$output .= wfMessage( 'pipe-separator' )->escaped();
-		// 	}
-		// 	$output .= '<a href="' . htmlspecialchars( $give_gift->getFullURL( 'user=' . $user_safe ) ) . '" rel="nofollow">' .
-		// 		wfMessage( 'user-send-gift' )->escaped() . '</a>';
-		// 	$output .= wfMessage( 'pipe-separator' )->escaped();
-		// }
-		// $output .= '<a href="' . htmlspecialchars( $contributions->getFullURL() ) . '" rel="nofollow">' . wfMessage( 'user-contributions' )->escaped() . '</a> ';
         $wgOut->addHTML( '<div class="cleared"></div></div>');
 		// User does not want social profile for User:user_name, so we just
 		// show header + page content

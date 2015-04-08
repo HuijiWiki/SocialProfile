@@ -183,6 +183,12 @@ jQuery( document ).ready( function() {
         var autograph = $(".form-textarea").val();
         var birthday = $(".input-date").val();
         var sex = $('.form-edit input:radio:checked').val();
+        var gender = 'unknown';
+        if (sex == '男'){
+            gender = 'male';
+        }else{
+            gender = 'female';
+        }
         var gender = (sex == '男'?'male':'female');
         $(".form-container").show();
         if(location==''){

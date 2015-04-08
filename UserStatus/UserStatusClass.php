@@ -138,6 +138,7 @@ class UserStatus{
 		global $wgMemc;
 		$key = wfMemcKey( 'user_profile', 'get_all', $this->user->getName() );
 		$this->user->setOption('gender', $gender);
+		$this->user->saveSettings();
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->upsert(
 			'user_profile',

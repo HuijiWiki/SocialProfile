@@ -12,5 +12,5 @@
 	"socialprofile-error-blocked":"您已被封禁",
 	"socialprofile-error-read_only":"维基数据库处于只读模式",
 	"socialprofile-error-not-allowed":"您是否还没有验证邮箱？",
-	"socialprofile-error-unknown":"发生未知错误"
+	"socialprofile-error-unknown":"请刷新页面重试"
 }
