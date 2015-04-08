@@ -1047,9 +1047,9 @@ class UserProfilePage extends Article {
 		$birthday = $us->getBirthday();
 		$status = $us->getStatus();
 		$gender = $us->getGender();
-		if ($gender == male){
-			$gederIcon = '♂';
-		} elseif ($gender == female){
+		if ($gender == 'male'){
+			$genderIcon = '♂';
+		} elseif ($gender == 'female'){
 			$genderIcon = '♀';
 		} else {
 			$genderIcon = '♂/♀';
