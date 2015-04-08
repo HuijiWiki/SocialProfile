@@ -11,7 +11,7 @@ function requestUserSiteFollowsResponse( username, servername, action ) {
 		jQuery.post(
 			mw.util.wikiScript(), {
 				action: 'ajax',
-				rs: 'wfUserSiteFollowResponse',
+				rs: 'wfUserSiteFollowsResponse',
 				rsargs: [username, servername]
 			},
 			function( data ) {
@@ -31,7 +31,7 @@ function requestUserSiteFollowsResponse( username, servername, action ) {
 		jQuery.post(
 			mw.util.wikiScript(), {
 				action: 'ajax',
-				rs: 'wfUserSiteUnfollowResponse',
+				rs: 'wfUserSiteUnfollowsResponse',
 				rsargs: [username, servername]
 			},
 			function( data ) {
