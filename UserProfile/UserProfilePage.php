@@ -232,9 +232,9 @@ class UserProfilePage extends Article {
 		if ( !wfRunHooks( 'UserProfileBeginRight', array( &$this ) ) ) {
 			wfDebug( __METHOD__ . ": UserProfileBeginRight messed up profile!\n" );
 		}
-
+		$wgOut->addHTML( $this->getEditingActivity( $this->user_name ) );
 		$wgOut->addHTML( $this->getPersonalInfo( $this->user_id, $this->user_name ) );
-		$wgOut->addHTML( $this->getActivity( $this->user_name ) );
+		$wgOut->addHTML( $this->getNonEditingActivity( $this->user_name ) );
 		// Hook for BlogPage
 		if ( !wfRunHooks( 'UserProfileRightSideAfterActivity', array( $this ) ) ) {
 			wfDebug( __METHOD__ . ": UserProfileRightSideAfterActivity hook messed up profile!\n" );
@@ -1220,7 +1220,7 @@ class UserProfilePage extends Article {
 	 *
 	 * @param $user_name String: name of the user whose activity we want to fetch
 	 */
-	function getActivity( $user_name ) {
+	function getNonEditingActivity( $user_name ) {
 		global $wgUser, $wgUserProfileDisplay, $wgExtensionAssetsPath, $wgUploadPath;
 
 		// If not enabled in site settings, don't display
@@ -1234,7 +1234,8 @@ class UserProfilePage extends Article {
 		$rel = new UserActivity( $user_name, 'user', $limit );
 		$rel->setActivityToggle( 'show_votes', 0 );
 		$rel->setActivityToggle( 'show_gifts_sent', 1 );
-
+		$rel->setActivityToggle( 'show_edits', 0 );
+		$rel->setActivityToggle( 'show_comments', 0 );
 		/**
 		 * Get all relationship activity
 		 */
@@ -1244,6 +1245,199 @@ class UserProfilePage extends Article {
 			$output .= '<div class="panel panel-default"><div class="user-section-heading panel-heading">
 				<div class="user-section-title">' .
 					wfMessage( 'user-recent-activity-title' )->escaped() .
+				'</div>
+				<div class="user-section-actions">
+					<div class="action-right">
+					</div>
+					<div class="cleared"></div>
+				</div>
+			</div>
+			<div class="cleared"></div>
+			<div class="panel-body">';
+
+			$x = 1;
+
+			if ( count( $activity ) < $limit ) {
+				$style_limit = count( $activity );
+			} else {
+				$style_limit = $limit;
+			}
+
+			foreach ( $activity as $item ) {
+				$item_html = '';
+				$title = Title::makeTitle( $item['namespace'], $item['pagetitle'] );
+				$user_title = Title::makeTitle( NS_USER, $item['username'] );
+				$user_title_2 = Title::makeTitle( NS_USER, $item['comment'] );
+
+				if ( $user_title_2 ) {
+					$user_link_2 = '<a href="' . htmlspecialchars( $user_title_2->getFullURL() ) .
+						'" rel="nofollow">' . $item['comment'] . '</a>';
+				}
+
+				$comment_url = '';
+				if ( $item['type'] == 'comment' ) {
+					$comment_url = "#comment-{$item['id']}";
+				}
+
+				$page_link = '<b><a href="' . htmlspecialchars( $title->getFullURL() ) .
+					"{$comment_url}\">" . $title->getPrefixedText() . '</a></b> ';
+				$b = new UserBoard(); // Easier than porting the time-related functions here
+				$item_time = '<span class="item-small">' .
+					wfMessage( 'user-time-ago', $b->getTimeAgo( $item['timestamp'] ) )->escaped() .
+				'</span>';
+
+				if ( $x < $style_limit ) {
+					$item_html .= '<div class="activity-item">
+						<img src="' . $wgExtensionAssetsPath . '/SocialProfile/images/' .
+							UserActivity::getTypeIcon( $item['type'] ) . '" alt="" border="0" />';
+				} else {
+					$item_html .= '<div class="activity-item-bottom">
+						<img src="' . $wgExtensionAssetsPath . '/SocialProfile/images/' .
+							UserActivity::getTypeIcon( $item['type'] ) . '" alt="" border="0" />';
+				}
+
+				$viewGift = SpecialPage::getTitleFor( 'ViewGift' );
+
+				switch( $item['type'] ) {
+					case 'edit':
+						$item_html .= wfMessage( 'user-recent-activity-edit' )->escaped() . " {$page_link} {$item_time}
+							<div class=\"item\">";
+						if ( $item['comment'] ) {
+							$item_html .= "\"{$item['comment']}\"";
+						}
+						$item_html .= '</div>';
+						break;
+					case 'vote':
+						$item_html .= wfMessage( 'user-recent-activity-vote' )->escaped() . " {$page_link} {$item_time}";
+						break;
+					case 'comment':
+						$item_html .= wfMessage( 'user-recent-activity-comment' )->escaped() . " {$page_link} {$item_time}
+							<div class=\"item\">
+								\"{$item['comment']}\"
+							</div>";
+						break;
+					case 'gift-sent':
+						$gift_image = "<img src=\"{$wgUploadPath}/awards/" .
+							Gifts::getGiftImage( $item['namespace'], 'm' ) .
+							'" border="0" alt="" />';
+						$item_html .= wfMessage( 'user-recent-activity-gift-sent' )->escaped() . " {$user_link_2} {$item_time}
+						<div class=\"item\">
+							<a href=\"" . htmlspecialchars( $viewGift->getFullURL( "gift_id={$item['id']}" ) ) . "\" rel=\"nofollow\">
+								{$gift_image}
+								{$item['pagetitle']}
+							</a>
+						</div>";
+						break;
+					case 'gift-rec':
+						$gift_image = "<img src=\"{$wgUploadPath}/awards/" .
+							Gifts::getGiftImage( $item['namespace'], 'm' ) .
+							'" border="0" alt="" />';
+						$item_html .= wfMessage( 'user-recent-activity-gift-rec' )->escaped() . " {$user_link_2} {$item_time}</span>
+								<div class=\"item\">
+									<a href=\"" . htmlspecialchars( $viewGift->getFullURL( "gift_id={$item['id']}" ) ) . "\" rel=\"nofollow\">
+										{$gift_image}
+										{$item['pagetitle']}
+									</a>
+								</div>";
+						break;
+					case 'system_gift':
+						$gift_image = "<img src=\"{$wgUploadPath}/awards/" .
+							SystemGifts::getGiftImage( $item['namespace'], 'm' ) .
+							'" border="0" alt="" />';
+						$viewSystemGift = SpecialPage::getTitleFor( 'ViewSystemGift' );
+						$item_html .= wfMessage( 'user-recent-system-gift' )->escaped() . " {$item_time}
+								<div class=\"user-home-item-gift\">
+									<a href=\"" . htmlspecialchars( $viewSystemGift->getFullURL( "gift_id={$item['id']}" ) ) . "\" rel=\"nofollow\">
+										{$gift_image}
+										{$item['pagetitle']}
+									</a>
+								</div>";
+						break;
+					case 'friend':
+						$item_html .= wfMessage( 'user-recent-activity-friend' )->escaped() .
+							" <b>{$user_link_2}</b> {$item_time}";
+						break;
+					case 'foe':
+						$item_html .= wfMessage( 'user-recent-activity-foe' )->escaped() .
+							" <b>{$user_link_2}</b> {$item_time}";
+						break;
+					case 'system_message':
+						$item_html .= "{$item['comment']} {$item_time}";
+						break;
+					case 'user_message':
+						$item_html .= wfMessage( 'user-recent-activity-user-message' )->escaped() .
+							" <b><a href=\"" . UserBoard::getUserBoardURL( $user_title_2->getText() ) .
+								"\" rel=\"nofollow\">{$item['comment']}</a></b>  {$item_time}
+								<div class=\"item\">
+								\"{$item['namespace']}\"
+								</div>";
+						break;
+					case 'network_update':
+						$network_image = SportsTeams::getLogo( $item['sport_id'], $item['team_id'], 's' );
+						$item_html .= wfMessage( 'user-recent-activity-network-update' )->escaped() .
+								'<div class="item">
+									<a href="' . SportsTeams::getNetworkURL( $item['sport_id'], $item['team_id'] ) .
+									"\" rel=\"nofollow\">{$network_image} \"{$item['comment']}\"</a>
+								</div>";
+						break;
+					}
+
+					$item_html .= '</div>';
+
+					if ( $x <= $limit ) {
+						$items_html_type['all'][] = $item_html;
+					}
+					$items_html_type[$item['type']][] = $item_html;
+
+				$x++;
+			}
+
+			$by_type = '';
+			foreach ( $items_html_type['all'] as $item ) {
+				$by_type .= $item;
+			}
+			$output .= "<div id=\"recent-all\">$by_type</div></div></div>";
+		}
+
+		return $output;
+	}
+	/**
+	 * Gets the recent social activity for a given user.
+	 *
+	 * @param $user_name String: name of the user whose activity we want to fetch
+	 */
+	function getEditingActivity( $user_name ) {
+		global $wgUser, $wgUserProfileDisplay, $wgExtensionAssetsPath, $wgUploadPath;
+
+		// If not enabled in site settings, don't display
+		if ( $wgUserProfileDisplay['activity'] == false ) {
+			return '';
+		}
+
+		$output = '';
+
+		$limit = 8;
+		$rel = new UserActivity( $user_name, 'user', $limit );
+		$rel->setActivityToggle( 'show_votes', 0 );
+		$rel->setActivityToggle( 'show_edits', 1 );
+		$rel->setActivityToggle( 'show_comments', 1);		
+		$rel->setActivityToggle( 'show_relationships', 0);
+		$rel->setActivityToggle( 'show_system_gifts ', 0);
+		$rel->setActivityToggle( 'show_system_messages', 0);
+		$rel->setActivityToggle( 'show_messages_sent', 0);
+		$rel->setActivityToggle( 'show_user_user_follows', 0);
+		$rel->setActivityToggle( 'show_user_site_follows', 0);		
+		$rel->setActivityToggle( 'show_user_update_status', 0);
+		$rel->setActivityToggle( 'show_gifts_sent', 0);		
+		$rel->setActivityToggle( 'show_gifts_rec', 0);		/**
+		 * Get all relationship activity
+		 */
+		$activity = $rel->getActivityList();
+
+		if ( $activity ) {
+			$output .= '<div class="panel panel-default"><div class="user-section-heading panel-heading">
+				<div class="user-section-title">' .
+					wfMessage( 'user-recent-local-activity-title' )->escaped() .
 				'</div>
 				<div class="user-section-actions">
 					<div class="action-right">

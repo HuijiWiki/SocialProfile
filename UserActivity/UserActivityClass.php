@@ -24,8 +24,8 @@ class UserActivity {
 	private $show_system_messages = 1;
 	private $show_messages_sent = 1;
 	private $show_network_updates = 0;
-	private $show_user_follow_site = 1;
-	private $show_user_follow_user = 1;
+	private $show_user_user_follows = 1;
+	private $show_user_site_follows = 1;
 	private $show_user_update_status = 1;
 
 	/**
@@ -170,7 +170,7 @@ class UserActivity {
 	 * Get users from user follow table and set them in the
 	 * appropriate class member variables.
 	 */
-	private function setUserFollowSite() {
+	private function setUserSiteFollows() {
 		$dbr = wfGetDB( DB_SLAVE );
 
 		$where = array();
@@ -234,7 +234,7 @@ class UserActivity {
 	 * Get users from user follow table and set them in the
 	 * appropriate class member variables.
 	 */
-	private function setUserFollow() {
+	private function setUserUserFollows() {
 		$dbr = wfGetDB( DB_SLAVE );
 
 		$where = array();
@@ -1126,6 +1126,16 @@ class UserActivity {
 	public function getNetworkUpdates() {
 		$this->setNetworkUpdates();
 		return $this->items;
+	}	
+
+	public function getUserUserFollows() {
+		$this->setNetworkUpdates();
+		return $this->items;
+	}	
+
+	public function getUserSiteFollows() {
+		$this->setNetworkUpdates();
+		return $this->items;
 	}
 
 	public function getActivityList() {
@@ -1158,8 +1168,13 @@ class UserActivity {
 		}
 		if ( $this->show_network_updates ) {
 			$this->getNetworkUpdates();
+		}		
+		if ( $this->show_user_user_follows ) {
+			$this->getUserUserFollows();
+		}		
+		if ( $this->show_user_site_follows ) {
+			$this->getUserSiteFollows();
 		}
-
 		if ( $this->items ) {
 			usort( $this->items, array( 'UserActivity', 'sortItems' ) );
 		}

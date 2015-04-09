@@ -149,6 +149,7 @@ jQuery( document ).ready( function() {
         var autograph = $(".form-autograph").text();
         var birthday =$(".form-date").text();
         var birthdaydata =$(".form-date").attr('data-birthday');
+        var sex = $(".form-sex").text();
         var msg = '<form class="form-edit"><input type="text" class="input-location form-control">' +
             '<span>|</span><input type="date" name="user_date" class="input-date form-control"><span>|</span>' +
             '<input type="radio" name="sex" class="sex-man" value="♂" data-male="male">男<input type="radio" name="sex" ' +
@@ -169,9 +170,9 @@ jQuery( document ).ready( function() {
         }else{
             $(".input-date").val(birthdaydata);
         }
-        if($(".form-sex").text()=="♂"){
+        if(sex=="♂"){
             $(".sex-man").attr("checked","checked")
-        }else{
+        }else if(sex=="♀"){
             $(".sex-woman").attr("checked","checked")
         }
         $(".form-textarea").val(autograph);
@@ -183,13 +184,14 @@ jQuery( document ).ready( function() {
         var autograph = $(".form-textarea").val();
         var birthday = $(".input-date").val();
         var sex = $('.form-edit input:radio:checked').val();
-        var gender = 'unknown';
+        var gender = '';
         if (sex == '男'){
             gender = 'male';
-        }else{
+        }else if(sex == '女'){
             gender = 'female';
+        }else{
+            gender = 'unknown';
         }
-        var gender = (sex == '男'?'male':'female');
         $(".form-container").show();
         if(location==''){
             $(".form-location").text("填写居住地").addClass("edit-on");
@@ -243,29 +245,4 @@ jQuery( document ).ready( function() {
         }
         return("输入的日期格式错误！");
     }
-    function isTongKu(a,b,c){
-        var d = a+" like "+b;
-        var e = b+" like "+a;
-        var f = c+" like "+a;
-        d = true;
-        e = false;
-        f = true;
-        if(couhe == true) {
-            if (choise == true) {
-                if (f == true) {
-                    console.log(" tong ku ");
-                } else {
-                    //说明c dont't like a;
-                    console.log("two sb")
-                }
-            } else {
-                console.log("let's code");
-            }
-        }
-    }
-    var couhe = "jalon like moumou";
-    var choise = "jalon choose moumou"
-    couhe = true;
-    choise = true;
-    isTongKu("jalon","beibei","moumou");
 } );
