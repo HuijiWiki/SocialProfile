@@ -79,7 +79,7 @@ class UserStatus{
      */
 	public function getAllDB(){
 		global $wgMemc;
-		$key = wfMemcKey( 'user_profile', 'get_all', $this->user->getName() );
+		$key = wfForeignMemcKey('huiji','', 'user_profile', 'get_all', $this->user->getName() );
 
 		$gender = $this->user->getOption('gender');
 		$dbr = wfGetDB( DB_SLAVE );
@@ -121,7 +121,7 @@ class UserStatus{
      */
 	public function getAllCache(){
 		global $wgMemc;
-		$key = wfMemcKey( 'user_profile', 'get_all', $this->user->getName() );
+		$key = wfForeignMemcKey('huiji','', 'user_profile', 'get_all', $this->user->getName() );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
 			wfDebug( "Got user bio and status $data ( user = {$this->user} ) from cache\n" );
@@ -136,7 +136,7 @@ class UserStatus{
      */
 	public function setAll($gender, $province, $city, $birthday, $status){
 		global $wgMemc;
-		$key = wfMemcKey( 'user_profile', 'get_all', $this->user->getName() );
+		$key = wfForeignMemcKey('huiji','', 'user_profile', 'get_all', $this->user->getName() );
 		if ($gender == 'male'){
 			$this->user->setOption('gender', 'male');
 		} elseif ($gender == 'female'){

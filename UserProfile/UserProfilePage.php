@@ -170,9 +170,9 @@ class UserProfilePage extends Article {
                         <li><a href="'.$tfsUrl[0].'">'.$tfsName[0].'</a></li>
                         <li><a href="'.$tfsUrl[1].'">'.$tfsName[1].'</a></li>
                         <li><a href="'.$tfsUrl[2].'">'.$tfsName[2].'</a></li>
-                    </ul>'
-                    .($userCount>3?'<a>点击查看全部'.$userCount.'个wiki</a>':'').
-                    '<div>
+                    </ul>
+                    <a>查看全部'.$userCount.'个wiki</a>
+                    <div>
                         <ul class="profile-interactive btn-group">'.
                             $button1.$button2.
                             '<li class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-align-justify"></span></li>
@@ -969,7 +969,7 @@ class UserProfilePage extends Article {
 				<div id="profile-image">' .($this->isOwner()? ('<div class="profile-image-container">'.$avatar->getOwnerAvatarURL().'</div>'): $avatar->getAvatarURL()) .'</div>' .
 					$user_name .
 				'</h1></div>';
-        $output .='<div class="modal fade upload-model-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        $output .='<div class="modal fade upload-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                       <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                           <div class="modal-header">

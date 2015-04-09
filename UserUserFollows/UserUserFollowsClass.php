@@ -113,7 +113,7 @@ class UserUserFollow{
 
 		wfDebug( "Got user followers count (user={$user}) from DB\n" );
 
-		$key = wfMemcKey( 'user_user_follow', 'user_following_count', $user->getName() );
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_following_count', $user->getName() );
 		$dbr = wfGetDB( DB_SLAVE );
 		$followingCount = 0;
 
@@ -142,7 +142,7 @@ class UserUserFollow{
 	 */
 	static function getFollowingCountCache( $user ) {
 		global $wgMemc;
-		$key = wfMemcKey( 'user_user_follow', 'user_following_count', $user->getName() );
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_following_count', $user->getName() );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
 			wfDebug( "Got user following count of $data ( user = {$user} ) from cache\n" );
@@ -179,7 +179,7 @@ class UserUserFollow{
 
 		wfDebug( "Got user followed count (user={$user}) from DB\n" );
 
-		$key = wfMemcKey( 'user_user_follow', 'user_followed_count', $user->getName() );
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_followed_count', $user->getName() );
 		$dbr = wfGetDB( DB_SLAVE );
 		$followedCount = 0;
 
@@ -208,7 +208,7 @@ class UserUserFollow{
 	 */
 	static function getFollowedCountCache( $user ) {
 		global $wgMemc;
-		$key = wfMemcKey( 'user_user_follow', 'user_followed_count', $user->getName() );
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_followed_count', $user->getName() );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
 			wfDebug( "Got user followed count of $data ( user = {$user} ) from cache\n" );
@@ -242,9 +242,9 @@ class UserUserFollow{
 	 */
 	private function incFollowCount($follower, $followee){
 		global $wgMemc;
-		$key = wfMemcKey( 'user_user_follow', 'user_following_count', $followee->getName() );
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_following_count', $followee->getName() );
 		$wgMemc->incr( $key );
-		$key = wfMemcKey( 'user_user_follow', 'user_followed_count', $follower->getName() );
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_followed_count', $follower->getName() );
 		$wgMemc->incr( $key );
 	}
 	/**
@@ -255,9 +255,9 @@ class UserUserFollow{
 	 */
 	private function decFollowCount($follower, $followee){
 		global $wgMemc;
-		$key = wfMemcKey( 'user_user_follow', 'user_following_count', $followee->getName() );
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_following_count', $followee->getName() );
 		$wgMemc->decr( $key );
-		$key = wfMemcKey( 'user_user_follow', 'user_followed_count', $follower->getName() );
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_followed_count', $follower->getName() );
 		$wgMemc->decr( $key );
 	}
 	

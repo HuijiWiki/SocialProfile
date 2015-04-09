@@ -82,7 +82,7 @@ class wAvatar {
             'alt' => 'avatar',
             'border' => '0',
             'data-toggle' => 'modal',
-            'data-target' => '.upload-model-lg'
+            'data-target' => '.upload-modal-lg'
         );
         $params = array_merge( $extraParams, $defaultParams );
 

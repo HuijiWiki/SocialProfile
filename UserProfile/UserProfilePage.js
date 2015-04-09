@@ -137,7 +137,7 @@ jQuery( document ).ready( function() {
 
     //Upload img
     $(".profile-image-container").on('mouseenter',function(){
-        var wrap = "<div class='upload-img-wrap'>上传头像</div>"
+        var wrap = "<div class='upload-img-wrap' data-target=".upload-modal-lg">上传头像</div>"
         $(this).append(wrap);
     });
     $(".profile-image-container").on('mouseleave',function(){
