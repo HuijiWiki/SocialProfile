@@ -221,6 +221,8 @@ class UserUserFollow{
 	* @return Mixed: integer or boolean false
 	*/
 	public function checkUserUserFollow($follower, $followee){
+		//TODO: We are not caching the result for now. 
+		//But if we have a performance hit, this is where to go.
 		$dbr = wfGetDB( DB_SLAVE );
 		$s = $dbr->selectRow(			
 			'user_user_follow',
@@ -233,6 +235,59 @@ class UserUserFollow{
 		}else {
 			return false;
 		}
+	}
+
+	/**
+	 * Get the Follower or Following list for the current user.
+	 *
+	 * @param $type Integer: 1 for followers, 2 (or anything else but 1) for Followings
+	 * @param $limit Integer: used as the LIMIT in the SQL query
+	 * @param $page Integer: if greater than 0, will be used to calculate the
+	 *                       OFFSET for the SQL query
+	 * @return Array: array of follower/following information
+	 */
+	public function getFollowList( $type = 0, $limit = 0, $page = 0 ) {
+		$dbr = wfGetDB( DB_SLAVE );
+
+		$where = array();
+		$options = array();
+		if ($type = 1) {
+			$where['f_target_user_id'] = $this->user->getId();
+		} else {
+			$where['f_user_id'] = $this->user->getId();
+		}
+		
+		if ( $limit > 0 ) {
+			$limitvalue = 0;
+			if ( $page ) {
+				$limitvalue = $page * $limit - ( $limit );
+			}
+			$options['LIMIT'] = $limit;
+			$options['OFFSET'] = $limitvalue;
+		}
+		$res = $dbr->select(
+			'user_user_follow',
+			array(
+				'f_id', 'f_user_id', 'f_user_name', 'f_target_user_id',
+				'f_target_user_name', 'f_date'
+			),
+			$where,
+			__METHOD__,
+			$options
+		);
+
+		$requests = array();
+		foreach ( $res as $row ) {
+			$requests[] = array(
+				'id' => $row->f_id,
+				'timestamp' => ( $row->f_date ),
+				'user_id' => ( $type == 1? $row->f_user_id : $row->f_target_user_id),
+				'user_name' => ( $type == 1? $row->f_user_name : $row->f_target_user_name),
+				'type' => $type
+			);
+		}
+
+		return $requests;
 	}
 	/**
 	 * Increase the amount of following and followed count.

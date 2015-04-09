@@ -160,7 +160,7 @@ class UserProfilePage extends Article {
         $wgOut->addHTML('
             <div class="col-md-6 col-sm-12 col-xs-12 profile-top-right">
                 <div class="profile-top-right-top">
-                    <div><h4>在本wiki</h4></div>
+                    <div><h4><img src="/resources/assets/huiji_logo_blue.png" width="25"></img>在本wiki</h4></div>
                     <ul>'.
                     $staff.$bureaucrat.$sysop.$rollback.$autoconfirmed
                     .'</ul>
@@ -217,6 +217,7 @@ class UserProfilePage extends Article {
 		$wgOut->addHTML( $this->getInterests( $this->user_name ) );
 		$wgOut->addHTML( $this->getFanBoxes( $this->user_name ) );
 		$wgOut->addHTML( $this->getUserStats( $this->user_id, $this->user_name ) );
+        $wgOut->addHTML( $this->getEditingActivity( $this->user_name ) );
 
 		if ( !wfRunHooks( 'UserProfileEndLeft', array( &$this ) ) ) {
 			wfDebug( __METHOD__ . ": UserProfileEndLeft messed up profile!\n" );
@@ -232,7 +233,6 @@ class UserProfilePage extends Article {
 		if ( !wfRunHooks( 'UserProfileBeginRight', array( &$this ) ) ) {
 			wfDebug( __METHOD__ . ": UserProfileBeginRight messed up profile!\n" );
 		}
-		$wgOut->addHTML( $this->getEditingActivity( $this->user_name ) );
 		$wgOut->addHTML( $this->getPersonalInfo( $this->user_id, $this->user_name ) );
 		$wgOut->addHTML( $this->getNonEditingActivity( $this->user_name ) );
 		// Hook for BlogPage
@@ -969,7 +969,7 @@ class UserProfilePage extends Article {
 				<div id="profile-image">' .($this->isOwner()? ('<div class="profile-image-container">'.$avatar->getOwnerAvatarURL().'</div>'): $avatar->getAvatarURL()) .'</div>' .
 					$user_name .
 				'</h1></div>';
-        $output .='<div class="modal fade upload-model-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        $output .='<div class="modal fade upload-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                       <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                           <div class="modal-header">
@@ -1427,7 +1427,7 @@ class UserProfilePage extends Article {
 		$rel->setActivityToggle( 'show_edits', 1 );
 		$rel->setActivityToggle( 'show_comments', 1);		
 		$rel->setActivityToggle( 'show_relationships', 0);
-		$rel->setActivityToggle( 'show_system_gifts ', 0);
+		$rel->setActivityToggle( 'show_system_gifts', 0);
 		$rel->setActivityToggle( 'show_system_messages', 0);
 		$rel->setActivityToggle( 'show_messages_sent', 0);
 		$rel->setActivityToggle( 'show_user_user_follows', 0);

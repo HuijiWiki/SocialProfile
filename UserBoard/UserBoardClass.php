@@ -409,20 +409,18 @@ class UserBoard {
 
 				$sender = htmlspecialchars( $user->getFullURL() );
 				$output .= "<div class=\"user-board-message\">
-					<div class=\"user-board-message-from\">
-					<a href=\"{$sender}\" title=\"{$message['user_name_from']}\">{$message['user_name_from']}</a> {$message_type_label}
-					</div>
-					<div class=\"user-board-message-time\">" .
-						wfMessage( 'userboard_posted_ago', $this->getTimeAgo( $message['timestamp'] ) )->parse() .
-					"</div>
 					<div class=\"user-board-message-content\">
 						<div class=\"user-board-message-image\">
 							<a href=\"{$sender}\" title=\"{$message['user_name_from']}\">{$avatar->getAvatarURL()}</a>
 						</div>
-						<div class=\"user-board-message-body\">
-							{$message_text}
-						</div>
+						<a href=\"{$sender}\" title=\"{$message['user_name_from']}\">{$message['user_name_from']}</a> {$message_type_label}
+						<div class=\"user-board-message-time\">" .
+                            wfMessage( 'userboard_posted_ago', $this->getTimeAgo( $message['timestamp'] ) )->parse() .
+                        "</div>
 						<div class=\"cleared\"></div>
+					</div>
+					<div class=\"user-board-message-body\">
+					    {$message_text}
 					</div>
 					<div class=\"user-board-message-links\">
 						{$board_link}

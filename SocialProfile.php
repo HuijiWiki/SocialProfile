@@ -97,9 +97,17 @@ require_once( "$IP/extensions/SocialProfile/UserStatus/UserStatus_AjaxFunctions.
 require_once( "$IP/extensions/SocialProfile/UserSiteFollows/UserSiteFollows_AjaxFunctions.php" );
 // What to display on social profile pages by default?
 $wgUserProfileDisplay['board'] = true;
-$wgUserProfileDisplay['foes'] = true;
-$wgUserProfileDisplay['friends'] = true;
-
+$wgUserProfileDisplay['foes'] = false;
+$wgUserProfileDisplay['friends'] = false;
+$wgUserProfileDisplay['custom'] = false;
+$wgUserProfileDisplay['interests'] = false;
+$wgUserProfileDisplay['stats'] = false;
+$wgUserProfileDisplay['games'] = false;
+$wgUserProfileDisplay['personal'] = false;
+$wgUserProfileDisplay['activity'] = true;
+$wgUserProfileDisplay['gifts'] = true;
+$wgUserProfileDisplay['awards'] = true;
+$wgUserProfileDisplay['userboxes'] = false;
 // Should we display UserBoard-related things on social profile pages?
 $wgUserBoard = true;
 
@@ -290,6 +298,7 @@ $wgResourceModules['ext.socialprofile.usersitefollows.js'] = array(
 	'scripts' => 'UserSiteFollows.js',
 	'localBasePath' => __DIR__ . '/UserSiteFollows',
 	'remoteExtPath' => 'SocialProfile/UserSiteFollows',
+	'positon' => 'bottom',
 );
 
 // UserUserFollows
@@ -297,6 +306,7 @@ $wgResourceModules['ext.socialprofile.useruserfollows.js'] = array(
 	'scripts' => 'UserUserFollows.js',
 	'localBasePath' => __DIR__ . '/UserUserFollows',
 	'remoteExtPath' => 'SocialProfile/UserUserFollows',
+	'positon' => 'bottom',
 );
 
 // End ResourceLoader stuff

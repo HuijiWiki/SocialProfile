@@ -809,6 +809,9 @@ span.span-color{
 .profile-top-right-top h4{
     color: #666;
 }
+.profile-top-right-top h4 img{
+    margin-right:5px
+}
 .profile-top-right p{
     display: inline;
     font-size: 12px!important;
@@ -998,3 +1001,35 @@ span.span-color{
      padding: 0;
      display: inline-block;
  }
+.user-page-message-form .form-group{
+    margin-bottom: 0;
+}
+.user-page-message-box-button {
+    height: 40px;
+    padding-right: 15px;
+}
+.user-page-message-box-button .site-button{
+    float: right;
+}
+.user-board-message{
+    padding-left: 10px;
+    border-radius: 3px;
+}
+.user-board-message-image>a>img{
+    width: 50px;
+}
+.user-board-message-content{
+    height: 60px;
+    margin-top: 10px;
+}
+.user-board-message-body{
+    margin-left: 5px;
+}
+.user-board-message-time{
+    margin-top: 15px;
+}
+.user-board-message{
+    border: none;
+    border-top: 1px solid #e2e2e2;
+    padding-top: 15px;
+}
