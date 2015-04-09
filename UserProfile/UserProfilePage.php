@@ -346,7 +346,7 @@ class UserProfilePage extends Article {
 		$polls = array();
 
 		// Try cache
-		$key = wfMemcKey( 'user', 'profile', 'polls', $this->user_id );
+		$key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'polls', $this->user_id );
 		$data = $wgMemc->get( $key );
 
 		if( $data ) {
@@ -388,7 +388,7 @@ class UserProfilePage extends Article {
 		$quiz = array();
 
 		// Try cache
-		$key = wfMemcKey( 'user', 'profile', 'quiz', $this->user_id );
+		$key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'quiz', $this->user_id );
 		$data = $wgMemc->get( $key );
 
 		if( $data ) {
@@ -437,7 +437,7 @@ class UserProfilePage extends Article {
 		$pics = array();
 
 		// Try cache
-		$key = wfMemcKey( 'user', 'profile', 'picgame', $this->user_id );
+		$key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'picgame', $this->user_id );
 		$data = $wgMemc->get( $key );
 		if( $data ) {
 			wfDebug( "Got profile picgames for user {$this->user_id} from cache\n" );
@@ -969,7 +969,7 @@ class UserProfilePage extends Article {
 				<div id="profile-image">' .($this->isOwner()? ('<div class="profile-image-container">'.$avatar->getOwnerAvatarURL().'</div>'): $avatar->getAvatarURL()) .'</div>' .
 					$user_name .
 				'</h1></div>';
-        $output .='<div class="modal fade upload-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        $output .='<div class="modal fade upload-model-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                       <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                           <div class="modal-header">
@@ -1140,7 +1140,7 @@ class UserProfilePage extends Article {
 
 		$count = 4;
 		$rel = new UserRelationship( $user_name );
-		$key = wfMemcKey( 'relationship', 'profile', "{$rel->user_id}-{$rel_type}" );
+		$key = wfForeignMemcKey( 'huiji', '', 'relationship', 'profile', "{$rel->user_id}-{$rel_type}" );
 		$data = $wgMemc->get( $key );
 
 		// Try cache
@@ -1611,7 +1611,7 @@ class UserProfilePage extends Article {
 		$user_safe = urlencode( $user_name );
 
 		// Try cache
-		$key = wfMemcKey( 'user', 'profile', 'gifts', "{$g->user_id}" );
+		$key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'gifts', "{$g->user_id}" );
 		$data = $wgMemc->get( $key );
 
 		if ( !$data ) {
@@ -1699,7 +1699,7 @@ class UserProfilePage extends Article {
 		$sg = new UserSystemGifts( $user_name );
 
 		// Try cache
-		$sg_key = wfMemcKey( 'user', 'profile', 'system_gifts', "{$sg->user_id}" );
+		$sg_key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'system_gifts', "{$sg->user_id}" );
 		$data = $wgMemc->get( $sg_key );
 		if ( !$data ) {
 			wfDebug( "Got profile awards for user {$user_name} from DB\n" );
@@ -1906,7 +1906,7 @@ class UserProfilePage extends Article {
 
 		// Try cache
 		/*
-		$key = wfMemcKey( 'user', 'profile', 'fanboxes', "{$f->user_id}" );
+		$key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'fanboxes', "{$f->user_id}" );
 		$data = $wgMemc->get( $key );
 
 		if ( !$data ) {

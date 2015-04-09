@@ -283,8 +283,8 @@ class UserRelationship {
 			}
 
 			// Purge caches
-			$wgMemc->delete( wfMemcKey( 'relationship', 'profile', "{$this->user_id}-{$ur_type}" ) );
-			$wgMemc->delete( wfMemcKey( 'relationship', 'profile', "{$ur_user_id_from}-{$ur_type}" ) );
+			$wgMemc->delete( wfForeignMemcKey( 'huiji', '', 'relationship', 'profile', "{$this->user_id}-{$ur_type}" ) );
+			$wgMemc->delete( wfForeignMemcKey( 'huiji', '', 'relationship', 'profile', "{$ur_user_id_from}-{$ur_type}" ) );
 
 			// Hooks (for Semantic SocialProfile mostly)
 			if ( $ur_type == 1 ) {
@@ -325,11 +325,11 @@ class UserRelationship {
 			__METHOD__
 		);
 
-		$wgMemc->delete( wfMemcKey( 'relationship', 'profile', "{$user1}-1" ) );
-		$wgMemc->delete( wfMemcKey( 'relationship', 'profile', "{$user2}-1" ) );
+		$wgMemc->delete( wfForeignMemcKey( 'huiji', '', 'relationship', 'profile', "{$user1}-1" ) );
+		$wgMemc->delete( wfForeignMemcKey( 'huiji', '', 'relationship', 'profile', "{$user2}-1" ) );
 
-		$wgMemc->delete( wfMemcKey( 'relationship', 'profile', "{$user1}-2" ) );
-		$wgMemc->delete( wfMemcKey( 'relationship', 'profile', "{$user2}-2" ) );
+		$wgMemc->delete( wfForeignMemcKey( 'huiji', '', 'relationship', 'profile', "{$user1}-2" ) );
+		$wgMemc->delete( wfForeignMemcKey( 'huiji', '', 'relationship', 'profile', "{$user2}-2" ) );
 
 		// RelationshipRemovedByUserID hook
 		wfRunHooks( 'RelationshipRemovedByUserID', array( $user1, $user2 ) );
@@ -542,7 +542,7 @@ class UserRelationship {
 	 */
 	private function incNewRequestCount( $userId, $relType ) {
 		global $wgMemc;
-		$key = wfMemcKey( 'user_relationship', 'open_request', $relType, $userId );
+		$key = wfForeignMemcKey( 'huiji', '', 'user_relationship', 'open_request', $relType, $userId );
 		$wgMemc->incr( $key );
 	}
 
@@ -554,7 +554,7 @@ class UserRelationship {
 	 */
 	private function decNewRequestCount( $userId, $relType ) {
 		global $wgMemc;
-		$key = wfMemcKey( 'user_relationship', 'open_request', $relType, $userId );
+		$key = wfForeignMemcKey( 'huiji', '', 'user_relationship', 'open_request', $relType, $userId );
 		$wgMemc->decr( $key );
 	}
 
@@ -571,7 +571,7 @@ class UserRelationship {
 
 		wfDebug( "Got open request count (type={$relType}) for id $userId from DB\n" );
 
-		$key = wfMemcKey( 'user_relationship', 'open_request', $relType, $userId );
+		$key = wfForeignMemcKey( 'huiji', '', 'user_relationship', 'open_request', $relType, $userId );
 		$dbr = wfGetDB( DB_SLAVE );
 		$requestCount = 0;
 
@@ -604,7 +604,7 @@ class UserRelationship {
 	 */
 	static function getOpenRequestCountCache( $userId, $relType ) {
 		global $wgMemc;
-		$key = wfMemcKey( 'user_relationship', 'open_request', $relType, $userId );
+		$key = wfForeignMemcKey( 'huiji', '', 'user_relationship', 'open_request', $relType, $userId );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
 			wfDebug( "Got open request count of $data (type={$relType}) for id $userId from cache\n" );

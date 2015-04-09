@@ -81,7 +81,7 @@ class SystemGifts {
 							__METHOD__
 						);
 
-						$sg_key = wfMemcKey( 'user', 'profile', 'system_gifts', "{$row2->stats_user_id}" );
+						$sg_key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'system_gifts', "{$row2->stats_user_id}" );
 						$wgMemc->delete( $sg_key );
 
 						// Update counters (bug #27981)

@@ -425,16 +425,16 @@ class UploadAvatar extends UploadFromFile {
 			}
 		}
 
-		$key = wfMemcKey( 'user', 'profile', 'avatar', $uid, 's' );
+		$key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'avatar', $uid, 's' );
 		$data = $wgMemc->delete( $key );
 
-		$key = wfMemcKey( 'user', 'profile', 'avatar', $uid, 'm' );
+		$key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'avatar', $uid, 'm' );
 		$data = $wgMemc->delete( $key );
 
-		$key = wfMemcKey( 'user', 'profile', 'avatar', $uid , 'l' );
+		$key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'avatar', $uid , 'l' );
 		$data = $wgMemc->delete( $key );
 
-		$key = wfMemcKey( 'user', 'profile', 'avatar', $uid, 'ml' );
+		$key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'avatar', $uid, 'ml' );
 		$data = $wgMemc->delete( $key );
 
 		$this->mExtension = $ext;

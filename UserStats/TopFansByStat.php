@@ -60,7 +60,7 @@ class TopFansByStat extends UnlistedSpecialPage {
 		// Get the list of users
 
 		// Try cache
-		$key = wfMemcKey( 'user_stats', 'top', $statistic, $count );
+		$key = wfForeignMemcKey( 'huiji', '', 'user_stats', 'top', $statistic, $count );
 		$data = $wgMemc->get( $key );
 
 		if ( $data != '' ) {

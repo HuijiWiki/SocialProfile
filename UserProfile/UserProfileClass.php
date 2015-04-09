@@ -71,7 +71,7 @@ class UserProfile {
 	static function clearCache( $user_id ) {
 		global $wgMemc;
 
-		$key = wfMemcKey( 'user', 'profile', 'info', $user_id );
+		$key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'info', $user_id );
 		$wgMemc->delete( $key );
 	}
 
@@ -88,7 +88,7 @@ class UserProfile {
 		$user->loadFromId();
 
 		// Try cache first
-		$key = wfMemcKey( 'user', 'profile', 'info', $this->user_id );
+		$key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'info', $this->user_id );
 		$data = $wgMemc->get( $key );
 		if ( $data ) {
 			wfDebug( "Got user profile info for {$this->user_name} from cache\n" );

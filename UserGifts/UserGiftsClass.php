@@ -223,7 +223,7 @@ class UserGifts {
 	 */
 	public function incNewGiftCount( $user_id ) {
 		global $wgMemc;
-		$key = wfMemcKey( 'user_gifts', 'new_count', $user_id );
+		$key = wfForeignMemcKey( 'huiji', '', 'user_gifts', 'new_count', $user_id );
 		$wgMemc->incr( $key );
 	}
 
@@ -235,7 +235,7 @@ class UserGifts {
 	 */
 	public function decNewGiftCount( $user_id ) {
 		global $wgMemc;
-		$key = wfMemcKey( 'user_gifts', 'new_count', $user_id );
+		$key = wfForeignMemcKey( 'huiji', '', 'user_gifts', 'new_count', $user_id );
 		$wgMemc->decr( $key );
 	}
 
@@ -245,7 +245,7 @@ class UserGifts {
 	 */
 	public function clearNewGiftCountCache() {
 		global $wgMemc;
-		$key = wfMemcKey( 'user_gifts', 'new_count', $this->user_id );
+		$key = wfForeignMemcKey( 'huiji', '', 'user_gifts', 'new_count', $this->user_id );
 		$wgMemc->set( $key, 0 );
 	}
 
@@ -259,7 +259,7 @@ class UserGifts {
 	 */
 	static function getNewGiftCountCache( $user_id ) {
 		global $wgMemc;
-		$key = wfMemcKey( 'user_gifts', 'new_count', $user_id );
+		$key = wfForeignMemcKey( 'huiji', '', 'user_gifts', 'new_count', $user_id );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
 			wfDebug( "Got new gift count of $data for id $user_id from cache\n" );
@@ -300,7 +300,7 @@ class UserGifts {
 		wfDebug( "Got new gift count for id $user_id from DB\n" );
 
 		global $wgMemc;
-		$key = wfMemcKey( 'user_gifts', 'new_count', $user_id );
+		$key = wfForeignMemcKey( 'huiji', '', 'user_gifts', 'new_count', $user_id );
 		$dbr = wfGetDB( DB_SLAVE );
 		$newGiftCount = 0;
 		$s = $dbr->selectRow(

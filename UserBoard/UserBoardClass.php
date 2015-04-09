@@ -120,7 +120,7 @@ class UserBoard {
 	 */
 	public function incNewMessageCount( $user_id ) {
 		global $wgMemc;
-		$key = wfMemcKey( 'user', 'newboardmessage', $user_id );
+		$key = wfForeignMemcKey( 'huiji', '', 'user', 'newboardmessage', $user_id );
 		$wgMemc->incr( $key );
 	}
 
@@ -133,7 +133,7 @@ class UserBoard {
 	 */
 	static function clearNewMessageCount( $user_id ) {
 		global $wgMemc;
-		$key = wfMemcKey( 'user', 'newboardmessage', $user_id );
+		$key = wfForeignMemcKey( 'huiji', '', 'user', 'newboardmessage', $user_id );
 		$wgMemc->set( $key, 0 );
 	}
 
@@ -147,7 +147,7 @@ class UserBoard {
 	 */
 	static function getNewMessageCountCache( $user_id ) {
 		global $wgMemc;
-		$key = wfMemcKey( 'user', 'newboardmessage', $user_id );
+		$key = wfForeignMemcKey( 'huiji', '', 'user', 'newboardmessage', $user_id );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
 			wfDebug( "Got new message count of $data for id $user_id from cache\n" );
@@ -168,7 +168,7 @@ class UserBoard {
 
 		wfDebug( "Got new message count for id $user_id from DB\n" );
 
-		$key = wfMemcKey( 'user', 'newboardmessage', $user_id );
+		$key = wfForeignMemcKey( 'huiji', '', 'user', 'newboardmessage', $user_id );
 		$newCount = 0;
 		/*
 		$dbw = wfGetDB( DB_MASTER );

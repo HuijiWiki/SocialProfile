@@ -60,7 +60,7 @@ class RemoveGift extends UnlistedSpecialPage {
 			$user_page_link = Title::makeTitle( NS_USER, $user->getName() );
 
 			if ( $rel->doesUserOwnGift( $user->getID(), $this->gift_id ) == true ) {
-				$wgMemc->delete( wfMemcKey( 'user', 'profile', 'gifts', $user->getID() ) );
+				$wgMemc->delete( wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'gifts', $user->getID() ) );
 				$rel->deleteGift( $this->gift_id );
 			}
 

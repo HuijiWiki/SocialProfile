@@ -52,7 +52,7 @@ class UserSystemGifts {
 		if ( $email && !empty( $sg_gift_id ) ) {
 			$this->sendGiftNotificationEmail( $this->user_id, $gift_id );
 		}
-		$wgMemc->delete( wfMemcKey( 'user', 'profile', 'system_gifts', $this->user_id ) );
+		$wgMemc->delete( wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'system_gifts', $this->user_id ) );
 		return $sg_gift_id;
 	}
 
@@ -242,7 +242,7 @@ class UserSystemGifts {
 	 */
 	public function incNewSystemGiftCount( $user_id ) {
 		global $wgMemc;
-		$key = wfMemcKey( 'system_gifts', 'new_count', $user_id );
+		$key = wfForeignMemcKey( 'huiji', '', 'system_gifts', 'new_count', $user_id );
 		$wgMemc->incr( $key );
 	}
 
@@ -254,7 +254,7 @@ class UserSystemGifts {
 	 */
 	public function decNewSystemGiftCount( $user_id ) {
 		global $wgMemc;
-		$key = wfMemcKey( 'system_gifts', 'new_count', $user_id );
+		$key = wfForeignMemcKey( 'huiji', '', 'system_gifts', 'new_count', $user_id );
 		$wgMemc->decr( $key );
 	}
 
@@ -264,7 +264,7 @@ class UserSystemGifts {
 	 */
 	public function clearNewSystemGiftCountCache() {
 		global $wgMemc;
-		$key = wfMemcKey( 'system_gifts', 'new_count', $user_id );
+		$key = wfForeignMemcKey( 'huiji', '', 'system_gifts', 'new_count', $user_id );
 		$wgMemc->set( $key, 0 );
 	}
 
@@ -278,7 +278,7 @@ class UserSystemGifts {
 	 */
 	static function getNewSystemGiftCountCache( $user_id ) {
 		global $wgMemc;
-		$key = wfMemcKey( 'system_gifts', 'new_count', $user_id );
+		$key = wfForeignMemcKey( 'huiji', '', 'system_gifts', 'new_count', $user_id );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
 			wfDebug( "Got new award count of $data for id $user_id from cache\n" );
@@ -320,7 +320,7 @@ class UserSystemGifts {
 		wfDebug( "Got new award count for id $user_id from DB\n" );
 
 		global $wgMemc;
-		$key = wfMemcKey( 'system_gifts', 'new_count', $user_id );
+		$key = wfForeignMemcKey( 'huiji', '', 'system_gifts', 'new_count', $user_id );
 		$dbr = wfGetDB( DB_SLAVE );
 		$new_gift_count = 0;
 		$s = $dbr->selectRow(

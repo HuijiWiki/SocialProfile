@@ -142,7 +142,7 @@ class UserStatsTrack {
 		global $wgMemc;
 
 		// clear stats cache for current user
-		$key = wfMemcKey( 'user', 'stats', $this->user_id );
+		$key = wfForeignMemcKey( 'huiji', '', 'user', 'stats', $this->user_id );
 		$wgMemc->delete( $key );
 	}
 
@@ -186,7 +186,7 @@ class UserStatsTrack {
 			$stat_field = $this->stats_fields[$field];
 			$field_count = $s->$stat_field;
 
-			$key = wfMemcKey( 'system_gift', 'id', $field . '-' . $field_count );
+			$key = wfForeignMemcKey( 'huiji', '', 'system_gift', 'id', $field . '-' . $field_count );
 			$data = $wgMemc->get( $key );
 
 			if ( $data ) {
@@ -726,7 +726,7 @@ class UserStats {
 	 */
 	public function getUserStatsCache() {
 		global $wgMemc;
-		$key = wfMemcKey( 'user', 'stats', $this->user_id );
+		$key = wfForeignMemcKey( 'huiji', '', 'user', 'stats', $this->user_id );
 		$data = $wgMemc->get( $key );
 		if ( $data ) {
 			wfDebug( "Got user stats for {$this->user_name} from cache\n" );
@@ -784,7 +784,7 @@ class UserStats {
 			$stats['points'] = '1,000';
 		}
 
-		$key = wfMemcKey( 'user', 'stats', $this->user_id );
+		$key = wfForeignMemcKey( 'huiji', '', 'user', 'stats', $this->user_id );
 		$wgMemc->set( $key, $stats );
 		return $stats;
 	}

@@ -82,9 +82,9 @@ class GiveGift extends SpecialPage {
 				);
 
 				// clear the cache for the user profile gifts for this user
-				$wgMemc->delete( wfMemcKey( 'user', 'profile', 'gifts', $this->user_id_to ) );
+				$wgMemc->delete( wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'gifts', $this->user_id_to ) );
 
-				$key = wfMemcKey( 'gifts', 'unique', 4 );
+				$key = wfForeignMemcKey( 'huiji', '', 'gifts', 'unique', 4 );
 				$data = $wgMemc->get( $key );
 
 				// check to see if this type of gift is in the unique list
