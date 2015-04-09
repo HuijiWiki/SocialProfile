@@ -129,5 +129,6 @@
 	"user-profile-picture-log-entry": "上载了新头像",
 	"user-profile-picture-log-delete-entry": "删除了$1的头像",
 	"right-avatarremove": "移除使用者的头像",
-	"user-recent-local-activity-title":"本wiki上的活动"
+	"user-recent-local-activity-title":"本wiki上的活动",
+	"user-recent-activity-follow":"关注了"
 }

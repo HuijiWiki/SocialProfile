@@ -20,21 +20,7 @@ class HuijiPrefix{
 			return $prefix;
 		}
 	}
-	public static function siteNameToPrefix( $siteName ){
-		$dbr = wfGetDB( DB_SLAVE );
-		$s = $dbr->selectRow(
-			'domain',
-			array( 'domain_prefix' ),
-			array(
-				'domain_name' => $siteName,
-			),
-			__METHOD__
-		);
-
-		if (  $s !== false  ) {
-			return $s->domain_prefix;
-		}else{
-			return $siteName;
-		}
+	public static function prefixToUrl( $prefix ){
+		return 'http://'.$prefix.'.huiji.wiki/';
 	}
 }

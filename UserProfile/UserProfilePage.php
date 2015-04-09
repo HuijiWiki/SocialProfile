@@ -1054,10 +1054,10 @@ class UserProfilePage extends Article {
 		} else {
 			$genderIcon = '♂/♀';
 		}
-        $output .='<div class="form-container '.($this->isOwner()?'owner':'').'"><div class="form-msg"><span class="form-location '.($city == ''?'edit-on':'').'" data-toggle="yes">'.($city == ''?($this->isOwner()?'填写居住地':'居住地未公开'):$city).'</span>
-                    <span class="span-color">|</span><span class="form-date '.($birthday == ''?'edit-on':'').'" data-birthday="'.($birthday == ''?'':$birthday).'">'.($birthday == ''?($this->isOwner()?'填写生日':'生日未公开'):'').'</span>
+        $output .='<div class="form-container '.($this->isOwner()?'owner':'').'"><div class="form-msg"><span class="form-location '.($city == ''&& $this->isOwner()?'edit-on':'').'" data-toggle="yes">'.($city == ''?($this->isOwner()?'填写居住地':'居住地未公开'):$city).'</span>
+                    <span class="span-color">|</span><span class="form-date '.(($birthday == ''|| $birthday == '0000-00-00') && $this->isOwner()?'edit-on':'').'" data-birthday="'.($birthday == ''||$birthday == '0000-00-00'?'':$birthday).'">'.($birthday == ''||$birthday == '0000-00-00'?($this->isOwner()?'填写生日':'生日未公开'):'').'</span>
                     <span class="span-color">|</span><span class="form-sex">'.$genderIcon.'</span></div>';
-        $output .='<div class="user-autograph"><span class="form-autograph '.($status == ''?'edit-on':'').'" data-toggle="yes">'.($status == ''?($this->isOwner()?'填写个人状态':'这个人很懒，什么都没有写...'):$status).'</span>
+        $output .='<div class="user-autograph"><span class="form-autograph '.($status == '' && $this->isOwner()?'edit-on':'').'" data-toggle="yes">'.($status == ''?($this->isOwner()?'填写个人状态':'这个人很懒，什么都没有写...'):$status).'</span>
                     <span class="glyphicon glyphicon-pencil form-change">修改</span></div></div>';
 
 		// Links to User:user_name from User_profile:
@@ -1278,7 +1278,8 @@ class UserProfilePage extends Article {
 				if ( $item['type'] == 'comment' ) {
 					$comment_url = "#comment-{$item['id']}";
 				}
-
+				$site_link = '<b><a href="' . HuijiPrefix::prefixToUrl($item['site']) .
+					"{$comment_url}\">" . HuijiPrefix::prefixToSiteName($item['site'])  . '</a></b> ';
 				$page_link = '<b><a href="' . htmlspecialchars( $title->getFullURL() ) .
 					"{$comment_url}\">" . $title->getPrefixedText() . '</a></b> ';
 				$b = new UserBoard(); // Easier than porting the time-related functions here
@@ -1287,13 +1288,9 @@ class UserProfilePage extends Article {
 				'</span>';
 
 				if ( $x < $style_limit ) {
-					$item_html .= '<div class="activity-item">
-						<img src="' . $wgExtensionAssetsPath . '/SocialProfile/images/' .
-							UserActivity::getTypeIcon( $item['type'] ) . '" alt="" border="0" />';
+					$item_html .= '<div class="activity-item">'.UserActivity::getTypeIcon( $item['type'] ) ;
 				} else {
-					$item_html .= '<div class="activity-item-bottom">
-						<img src="' . $wgExtensionAssetsPath . '/SocialProfile/images/' .
-							UserActivity::getTypeIcon( $item['type'] ) . '" alt="" border="0" />';
+					$item_html .= '<div class="activity-item-bottom">'.UserActivity::getTypeIcon( $item['type'] ) ;
 				}
 
 				$viewGift = SpecialPage::getTitleFor( 'ViewGift' );
@@ -1380,6 +1377,14 @@ class UserProfilePage extends Article {
 									"\" rel=\"nofollow\">{$network_image} \"{$item['comment']}\"</a>
 								</div>";
 						break;
+					case 'user_user_follow':
+						$item_html .= wfMessage( 'user-recent-activity-follow' )->escaped() .
+							" <b>{$user_link_2}</b> {$item_time}";
+						break;	
+					case 'user_site_follow':
+						$item_html .= wfMessage( 'user-recent-activity-follow' )->escaped() .
+							" <b>{$site_link}</b> {$item_time}";
+						break;						
 					}
 
 					$item_html .= '</div>';
@@ -1480,13 +1485,9 @@ class UserProfilePage extends Article {
 				'</span>';
 
 				if ( $x < $style_limit ) {
-					$item_html .= '<div class="activity-item">
-						<img src="' . $wgExtensionAssetsPath . '/SocialProfile/images/' .
-							UserActivity::getTypeIcon( $item['type'] ) . '" alt="" border="0" />';
+					$item_html .= '<div class="activity-item">'.UserActivity::getTypeIcon( $item['type'] ) ;
 				} else {
-					$item_html .= '<div class="activity-item-bottom">
-						<img src="' . $wgExtensionAssetsPath . '/SocialProfile/images/' .
-							UserActivity::getTypeIcon( $item['type'] ) . '" alt="" border="0" />';
+					$item_html .= '<div class="activity-item-bottom">'.UserActivity::getTypeIcon( $item['type'] ) ;
 				}
 
 				$viewGift = SpecialPage::getTitleFor( 'ViewGift' );

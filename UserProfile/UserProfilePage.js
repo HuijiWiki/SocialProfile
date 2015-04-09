@@ -232,7 +232,10 @@ jQuery( document ).ready( function() {
             }
         )
     });
-
+    var reload = ages($(".form-date").attr('data-birthday'));
+    if(reload!="0000-00-00"&&reload!='') {
+        $(".form-date").text(reload);
+    }
     function   ages(str)
     {
         var   r   =   str.match(/^(\d{1,4})(-|\/)(\d{1,2})\2(\d{1,2})$/);

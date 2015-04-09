@@ -223,7 +223,8 @@ class UserActivity {
 				'namespace' => '',
 				'username' => $row->f_user_name,
 				'userid' => $row->f_user_id,
-				'comment' => HuijiPrefix::prefixToSiteName($row->f_wiki_domain),
+				'comment' => '',
+				'site' => $row->f_wiki_domain,
 				'minor' => 0,
 				'new' => '0'
 			);
@@ -264,7 +265,7 @@ class UserActivity {
 		}
 
 		$res = $dbr->select(
-			'user_site_follow',
+			'user_user_follow',
 			array(
 				'UNIX_TIMESTAMP(f_date) AS item_date', 'f_id',
 				'f_user_id', 'f_user_name', 'f_target_user_name'
@@ -281,7 +282,7 @@ class UserActivity {
 		foreach ( $res as $row ) {
 			$this->items[] = array(
 				'id' => 0,
-				'type' => 'user_site_follow',
+				'type' => 'user_user_follow',
 				'timestamp' => ( $row->item_date ),
 				'pagetitle' => '',
 				'namespace' => '',
@@ -1129,12 +1130,12 @@ class UserActivity {
 	}	
 
 	public function getUserUserFollows() {
-		$this->setNetworkUpdates();
+		$this->setUserUserFollows();
 		return $this->items;
 	}	
 
 	public function getUserSiteFollows() {
-		$this->setNetworkUpdates();
+		$this->setUserSiteFollows();
 		return $this->items;
 	}
 
@@ -1343,27 +1344,31 @@ class UserActivity {
 	static function getTypeIcon( $type ) {
 		switch( $type ) {
 			case 'edit':
-				return 'editIcon.gif';
+				return '<i class="fa fa-pencil"></i>';
 			case 'vote':
-				return 'voteIcon.gif';
+				return '<i class="fa fa-bar-chart"></i>';
 			case 'comment':
-				return 'comment.gif';
+				return '<i class="fa fa-comment"></i>';
 			case 'gift-sent':
-				return 'icon_package.gif';
+				return '<i class="fa fa-gift"></i>';
 			case 'gift-rec':
-				return 'icon_package_get.gif';
+				return '<i class="fa fa-gift"></i>';
 			case 'friend':
-				return 'addedFriendIcon.png';
+				return '<i class="fa fa-user"></i>';
 			case 'foe':
-				return 'addedFoeIcon.png';
+				return '<i class="fa fa-user"></i>';
 			case 'system_message':
-				return 'challengeIcon.png';
+				return '<i class="fa fa-level-up"></i>';
 			case 'system_gift':
-				return 'awardIcon.png';
+				return '<i class="fa fa-heart"></i>';
 			case 'user_message':
-				return 'emailIcon.gif';
+				return '<i class="fa fa-comments-o"></i>';
 			case 'network_update':
-				return 'note.gif';
+				return '<i class="fa fa-laptop"></i>';
+			case 'user_user_follow':
+				return '<i class="fa fa-paper-plane"></i>';
+			case 'user_site_follow':
+				return '<i class="fa fa-paper-plane-o"></i>';
 		}
 	}
 
