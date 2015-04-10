@@ -212,7 +212,6 @@ class UserProfilePage extends Article {
 		$wgOut->addHTML( $this->getRelationships( $this->user_name, 1 ) );
 		$wgOut->addHTML( $this->getRelationships( $this->user_name, 2 ) );
 		$wgOut->addHTML( $this->getGifts( $this->user_name ) );
-		$wgOut->addHTML( $this->getAwards( $this->user_name ) );
 		$wgOut->addHTML( $this->getCustomInfo( $this->user_name ) );
 		$wgOut->addHTML( $this->getInterests( $this->user_name ) );
 		$wgOut->addHTML( $this->getFanBoxes( $this->user_name ) );
@@ -234,6 +233,7 @@ class UserProfilePage extends Article {
 		if ( !wfRunHooks( 'UserProfileBeginRight', array( &$this ) ) ) {
 			wfDebug( __METHOD__ . ": UserProfileBeginRight messed up profile!\n" );
 		}
+        $wgOut->addHTML( $this->getAwards( $this->user_name ) );
 		$wgOut->addHTML( $this->getPersonalInfo( $this->user_id, $this->user_name ) );
 		// Hook for BlogPage
 		if ( !wfRunHooks( 'UserProfileRightSideAfterActivity', array( $this ) ) ) {
@@ -966,7 +966,7 @@ class UserProfilePage extends Article {
 
 		$output .= '<div id="profile-title-container">
 				<h1 id="profile-title">
-				<div id="profile-image">' .($this->isOwner()? ('<div class="profile-image-container">'.$avatar->getOwnerAvatarURL().'</div>'): $avatar->getAvatarURL()) .'</div>' .
+				<div id="profile-image">' .($this->isOwner()? ('<div class="profile-image-container"><a href="/wiki/Special:UploadAvatar">'.$avatar->getOwnerAvatarURL().'</div>'): $avatar->getAvatarURL()) .'</a></div>' .
 					$user_name .
 				'</h1></div>';
         $output .='<div class="modal fade upload-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -1017,9 +1017,9 @@ class UserProfilePage extends Article {
 					    <ul class="user-follow-msg">
 					        <li><h5>编辑</h5><span>'.$stats_data['edits'].'</span></li>
 					        <li><h4>|</h4></li>
-					        <li><h5>关注</h5><span id="user-followed-count">'.UserUserFollow::getFollowedCount(User::newFromName($user)).'</span></li>
+					        <li><h5>关注</h5><span id="user-followed-count">'.UserUserFollow::getFollowingCount(User::newFromName($user)).'</span></li>
 					        <li><h4>|</h4></li>
-					        <li><h5>被关注</h5><span id="user-following-count">'.UserUserFollow::getFollowingCount(User::newFromName($user)).'</span></li>
+					        <li><h5>被关注</h5><span id="user-following-count">'.UserUserFollow::getFollowerCount(User::newFromName($user)).'</span></li>
                         </ul>
                         <div class="cleared"></div>
                     </div>

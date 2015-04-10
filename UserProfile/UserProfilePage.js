@@ -137,7 +137,7 @@ jQuery( document ).ready( function() {
 
     //Upload img
     $(".profile-image-container").on('mouseenter',function(){
-        var wrap = "<div class='upload-img-wrap'><a href='Special:UploadAvatar'>上传头像</a></div>"
+        var wrap = "<div class='upload-img-wrap'><a href='/wiki/Special:UploadAvatar'>上传头像</a></div>"
         $(this).append(wrap);
     });
     $(".profile-image-container").on('mouseleave',function(){
@@ -193,45 +193,51 @@ jQuery( document ).ready( function() {
         }else{
             gender = 'unknown';
         }
-        $.post(
-            mw.util.wikiScript(),{
-                action:'ajax',
-                rs:'wfUpdateUserStatus',
-                rsargs:[username,gender,'',location,birthday,autograph]
-            },
-            function( data ) {
-                console.log(gender);
-                var res = $.parseJSON(data);
-                if( res.success ){
-                    $(".form-container").show();
-                    if(location==''){
-                        $(".form-location").text("填写居住地").addClass("edit-on");
-                        //$(".edit-on").addEventListener('click',editer);
-                    }else{
-                        $(".form-location").text(location).removeClass("edit-on");
-                        //$(".edit-on").removeEventListener('click',editer);
+        if(location!=$(".form-location").text()||sex!=$(".form-sex").text()||autograph!=$(".form-autograph").text()||birthday!=$(".form-date").attr('data-birthday')) {
+            $.post(
+                mw.util.wikiScript(), {
+                    action: 'ajax',
+                    rs: 'wfUpdateUserStatus',
+                    rsargs: [username, gender, '', location, birthday, autograph]
+                },
+                function (data) {
+                    console.log(gender);
+                    var res = $.parseJSON(data);
+                    if (res.success) {
+                        console.log("1");
+                        $(".form-container").show();
+                        if (location == '') {
+                            $(".form-location").text("填写居住地").addClass("edit-on");
+                            //$(".edit-on").addEventListener('click',editer);
+                        } else {
+                            $(".form-location").text(location).removeClass("edit-on");
+                            //$(".edit-on").removeEventListener('click',editer);
+                        }
+                        if (autograph == '') {
+                            $(".form-autograph").text("填写个人状态").addClass("edit-on");
+                        } else {
+                            $(".form-autograph").text(autograph).removeClass("edit-on");
+                        }
+                        if (birthday == '') {
+                            $(".form-date").text("填写生日").addClass("edit-on");
+                        } else {
+                            var age = ages(birthday);
+                            $(".form-date").attr('data-birthday', birthday);
+                            console.log($(".form-date").data('birthday'));
+                            $(".form-date").text(age).removeClass("edit-on");
+                        }
+                        $(".form-sex").text(sex);
+                        $(".form-edit").remove();
+                    } else {
+                        alertime();
+                        alertp.text(res.message);
                     }
-                    if(autograph==''){
-                        $(".form-autograph").text("填写个人状态").addClass("edit-on");
-                    }else{
-                        $(".form-autograph").text(autograph).removeClass("edit-on");
-                    }
-                    if(birthday==''){
-                        $(".form-date").text("填写生日").addClass("edit-on");
-                    }else{
-                        var age = ages(birthday);
-                        $(".form-date").attr('data-birthday',birthday);
-                        console.log($(".form-date").data('birthday'));
-                        $(".form-date").text(age).removeClass("edit-on");
-                    }
-                    $(".form-sex").text(sex);
-                    $(".form-edit").remove();
-                }else{
-                    alertime();
-                    alertp.text(res.message);
                 }
-            }
-        )
+            )
+        }else{
+            $(".form-container").show();
+            $(".form-edit").remove();
+        }
     });
     var alreturn = $('.alert-return');
     var alertp = $('.alert-return p');

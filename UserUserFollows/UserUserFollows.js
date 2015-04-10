@@ -4,7 +4,6 @@
  */
 
 function requestUserUserFollowsResponse( follower, followee, action ) {
-
     var alreturn = $('.alert-return');
     var alertp = $('.alert-return p');
     function alertime(){
@@ -35,6 +34,7 @@ function requestUserUserFollowsResponse( follower, followee, action ) {
                     alertp.text(res.message);
 					jQuery( '#user-user-follow').html('<i class="fa fa-plus-square-o"></i>关注');
 				}
+				alreadySubmittedUserUserFollow = false;
 			}
 		);
 	} else {
@@ -61,20 +61,23 @@ function requestUserUserFollowsResponse( follower, followee, action ) {
                     alertp.text(res.message);
 					jQuery( '#user-user-follow').html('<i class="fa fa-minus-square-o">取关');
 				}
+				alreadySubmittedUserUserFollow = false;
 			}
 		);		
 	}
 }
 
+var alreadySubmittedUserUserFollow = false;
+
 jQuery( document ).ready( function() {
-	// These works should be done in skin beforehand:
-	//TODO: $out->addModules( 'ext.socialprofile.userrelationship.js' ); (put this on skin)
-	//TODO: Check if user is logged in.
-	//TODO: if user is logged in, check if user has followed site.
 	jQuery( 'li#user-user-follow' ).on( 'click', function() {
+		if (alreadySubmittedUserUserFollow == true){
+			return;
+		}
+		alreadySubmittedUserUserFollow = true;
 		//TODO: Check if user is logged in, if not prompt login form.
 		if (mw.config.get('wgUserName') == null){
-			window.location.href = "/wiki/Special:Login";
+			window.location.href = "/wiki/Special:Login?returnto="+window.location.href;
 			return;
 		}
 		jQuery( '#user-user-follow').html('<i class="fa fa-spinner fa-pulse"></i>');

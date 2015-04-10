@@ -34,6 +34,7 @@ function requestUserSiteFollowsResponse( username, servername, action ) {
                     alertime();
                     alertp.text(res.message);
 				}
+				alreadySubmittedUserSiteFollow = false;
 			}
 		);
 	} else {
@@ -59,17 +60,19 @@ function requestUserSiteFollowsResponse( username, servername, action ) {
                     alertime();
                     alertp.text(res.message);
 				}
+				alreadySubmittedUserSiteFollow = false;
 			}
+
 		);		
 	}
 }
-
+var alreadySubmittedUserSiteFollow = false;
 jQuery( document ).ready( function() {
-	// These works should be done in skin beforehand:
-	//TODO: $out->addModules( 'ext.socialprofile.userrelationship.js' ); (put this on skin)
-	//TODO: Check if user is logged in.
-	//TODO: if user is logged in, check if user has followed site.
 	jQuery( '#user-site-follow' ).on( 'click', function() {
+		if (alreadySubmittedUserSiteFollow == true){
+			return;
+		}
+		alreadySubmittedUserSiteFollow = true;
 		//TODO: Check if user is logged in, if not prompt login form.
 		if (mw.config.get('wgUserName') == null){
 			window.location.href = "/wiki/Special:Login";
