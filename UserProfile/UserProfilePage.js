@@ -137,7 +137,7 @@ jQuery( document ).ready( function() {
 
     //Upload img
     $(".profile-image-container").on('mouseenter',function(){
-        var wrap = "<div class='upload-img-wrap' data-toggle='modal' data-target='.upload-modal-lg' style='cursor: pointer'>上传头像</div>"
+        var wrap = "<div class='upload-img-wrap'><a href='Special:UploadAvatar'>上传头像</a></div>"
         $(this).append(wrap);
     });
     $(".profile-image-container").on('mouseleave',function(){
@@ -185,37 +185,14 @@ jQuery( document ).ready( function() {
         var birthday = $(".input-date").val();
         var sex = $('.form-edit input:radio:checked').val();
         var gender = '';
-        if (sex == '男'){
+        var username = mw.config.get('wgTitle');
+        if (sex == '♂'){
             gender = 'male';
-        }else if(sex == '女'){
+        }else if(sex == '♀'){
             gender = 'female';
         }else{
             gender = 'unknown';
         }
-        $(".form-container").show();
-        if(location==''){
-            $(".form-location").text("填写居住地").addClass("edit-on");
-            //$(".edit-on").addEventListener('click',editer);
-        }else{
-            $(".form-location").text(location).removeClass("edit-on");
-            //$(".edit-on").removeEventListener('click',editer);
-        }
-        if(autograph==''){
-            $(".form-autograph").text("填写个人状态").addClass("edit-on");
-        }else{
-            $(".form-autograph").text(autograph).removeClass("edit-on");
-        }
-        if(birthday==''){
-            $(".form-date").text("填写生日").addClass("edit-on");
-        }else{
-            var age = ages(birthday);
-            $(".form-date").attr('data-birthday',birthday);
-            console.log($(".form-date").data('birthday'));
-            $(".form-date").text(age).removeClass("edit-on");
-        }
-        $(".form-sex").text(sex);
-        $(".form-edit").remove();
-        var username = mw.config.get('wgTitle');
         $.post(
             mw.util.wikiScript(),{
                 action:'ajax',
@@ -223,15 +200,47 @@ jQuery( document ).ready( function() {
                 rsargs:[username,gender,'',location,birthday,autograph]
             },
             function( data ) {
+                console.log(gender);
                 var res = $.parseJSON(data);
                 if( res.success ){
-                    alert ( res.message );
+                    $(".form-container").show();
+                    if(location==''){
+                        $(".form-location").text("填写居住地").addClass("edit-on");
+                        //$(".edit-on").addEventListener('click',editer);
+                    }else{
+                        $(".form-location").text(location).removeClass("edit-on");
+                        //$(".edit-on").removeEventListener('click',editer);
+                    }
+                    if(autograph==''){
+                        $(".form-autograph").text("填写个人状态").addClass("edit-on");
+                    }else{
+                        $(".form-autograph").text(autograph).removeClass("edit-on");
+                    }
+                    if(birthday==''){
+                        $(".form-date").text("填写生日").addClass("edit-on");
+                    }else{
+                        var age = ages(birthday);
+                        $(".form-date").attr('data-birthday',birthday);
+                        console.log($(".form-date").data('birthday'));
+                        $(".form-date").text(age).removeClass("edit-on");
+                    }
+                    $(".form-sex").text(sex);
+                    $(".form-edit").remove();
                 }else{
-                    alert ( res.message );
+                    alertime();
+                    alertp.text(res.message);
                 }
             }
         )
     });
+    var alreturn = $('.alert-return');
+    var alertp = $('.alert-return p');
+    function alertime(){
+        alreturn.show();
+        setTimeout(function(){
+            alreturn.hide()
+        },1000);
+    }
     var reload = ages($(".form-date").attr('data-birthday'));
     if(reload!="0000-00-00"&&reload!='') {
         $(".form-date").text(reload);

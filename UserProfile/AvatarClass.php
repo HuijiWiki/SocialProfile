@@ -81,8 +81,8 @@ class wAvatar {
             'src' => "{$wgUploadPath}/avatars/{$this->getAvatarImage()}",
             'alt' => 'avatar',
             'border' => '0',
-            'data-toggle' => 'modal',
-            'data-target' => '.upload-modal-lg'
+//            'data-toggle' => 'modal',
+//            'data-target' => '.upload-modal-lg'
         );
         $params = array_merge( $extraParams, $defaultParams );
 

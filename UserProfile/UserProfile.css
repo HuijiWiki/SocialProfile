@@ -230,11 +230,11 @@
 /* User Activity */
 .activity-item {
 	border-bottom: 1px solid #dcdcdc;
-	padding: 7px 0px;
+	padding: 7px 10px;
 }
 
 .activity-item-bottom {
-	padding: 7px 0px 0px 0px;
+	padding: 7px 10px ;
 }
 
 .activity-item img, .activity-item-bottom img {
@@ -1017,6 +1017,11 @@ span.span-color{
 }
 .user-board-message-image>a>img{
     width: 50px;
+    padding: 1px;
+    border-radius: 2px;
+}
+.user-board-message-image>a>img:hover{
+    border: 1px solid #666;
 }
 .user-board-message-content{
     height: 60px;
@@ -1032,4 +1037,18 @@ span.span-color{
     border: none;
     border-top: 1px solid #e2e2e2;
     padding-top: 15px;
+}
+.fa{
+    padding-right: 5px;
+}
+.upload-img-wrap{
+    cursor: pointer;
+}
+.upload-img-wrap>a{
+    text-decoration: none;
+    color: #fff;
+}
+.upload-img-wrap>a:hover{
+    color: #fff;
+    text-decoration: none;
 }

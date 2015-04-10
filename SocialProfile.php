@@ -50,6 +50,7 @@ $wgAutoloadClasses['SpecialUploadAvatar'] = __DIR__ . '/UserProfile/SpecialUploa
 $wgAutoloadClasses['SpecialViewRelationshipRequests'] = __DIR__ . '/UserRelationship/SpecialViewRelationshipRequests.php';
 $wgAutoloadClasses['SpecialViewRelationships'] = __DIR__ . '/UserRelationship/SpecialViewRelationships.php';
 $wgAutoloadClasses['SpecialViewUserBoard'] = __DIR__ . '/UserBoard/SpecialUserBoard.php';
+$wgAutoloadClasses['SpecialViewFollows'] = __DIR__ . '/UserUserFollows/SpecialViewFollows.php';
 $wgAutoloadClasses['RemoveAvatar'] = __DIR__ . '/UserProfile/SpecialRemoveAvatar.php';
 $wgAutoloadClasses['UpdateEditCounts'] = __DIR__ . '/UserStats/SpecialUpdateEditCounts.php';
 $wgAutoloadClasses['UserBoard'] = __DIR__ . '/UserBoard/UserBoardClass.php';
@@ -88,6 +89,7 @@ $wgSpecialPages['UploadAvatar'] = 'SpecialUploadAvatar';
 $wgSpecialPages['UserBoard'] = 'SpecialViewUserBoard';
 $wgSpecialPages['ViewRelationshipRequests'] = 'SpecialViewRelationshipRequests';
 $wgSpecialPages['ViewRelationships'] = 'SpecialViewRelationships';
+$wgSpecialPages['ViewFollows'] = 'SpecialViewFollows';
 
 // Necessary AJAX functions
 require_once( "$IP/extensions/SocialProfile/UserBoard/UserBoard_AjaxFunctions.php" );
@@ -298,7 +300,6 @@ $wgResourceModules['ext.socialprofile.usersitefollows.js'] = array(
 	'scripts' => 'UserSiteFollows.js',
 	'localBasePath' => __DIR__ . '/UserSiteFollows',
 	'remoteExtPath' => 'SocialProfile/UserSiteFollows',
-	'positon' => 'bottom',
 );
 
 // UserUserFollows
@@ -306,9 +307,13 @@ $wgResourceModules['ext.socialprofile.useruserfollows.js'] = array(
 	'scripts' => 'UserUserFollows.js',
 	'localBasePath' => __DIR__ . '/UserUserFollows',
 	'remoteExtPath' => 'SocialProfile/UserUserFollows',
-	'positon' => 'bottom',
 );
-
+// UserUserFollows
+$wgResourceModules['ext.socialprofile.useruserfollows.css'] = array(
+	'styles' => 'UserUserFollows.css',
+	'localBasePath' => __DIR__ . '/UserUserFollows',
+	'remoteExtPath' => 'SocialProfile/UserUserFollows',
+);
 // End ResourceLoader stuff
 
 if( !defined( 'NS_USER_WIKI' ) ) {

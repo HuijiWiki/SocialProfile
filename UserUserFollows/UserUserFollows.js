@@ -5,6 +5,14 @@
 
 function requestUserUserFollowsResponse( follower, followee, action ) {
 
+    var alreturn = $('.alert-return');
+    var alertp = $('.alert-return p');
+    function alertime(){
+        alreturn.show();
+        setTimeout(function(){
+            alreturn.hide()
+        },1000);
+    }
 	//TODO: add waiting message.
 	//TODO: validate wgUserName.
 	if (!action){
@@ -23,7 +31,8 @@ function requestUserUserFollowsResponse( follower, followee, action ) {
 					count = parseInt(count)+1;
 					jQuery( '#user-following-count').html(count.toString());
 				}else{
-					alert(res.message);
+                    alertime();
+                    alertp.text(res.message);
 					jQuery( '#user-user-follow').html('<i class="fa fa-plus-square-o"></i>关注');
 				}
 			}
@@ -48,7 +57,8 @@ function requestUserUserFollowsResponse( follower, followee, action ) {
 						jQuery( '#user-following-count').html(0);	
 					}		
 				}else{
-					alert(res.message);
+                    alertime();
+                    alertp.text(res.message);
 					jQuery( '#user-user-follow').html('<i class="fa fa-minus-square-o">取关');
 				}
 			}

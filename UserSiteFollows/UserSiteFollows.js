@@ -7,6 +7,14 @@ function requestUserSiteFollowsResponse( username, servername, action ) {
 
 	//TODO: add waiting message.
 	//TODO: validate wgUserName.
+    var alreturn = $('.alert-return');
+    var alertp = $('.alert-return p');
+    function alertime(){
+        alreturn.show();
+        setTimeout(function(){
+            alreturn.hide()
+        },1000);
+    }
 	if (!action){
 		jQuery.post(
 			mw.util.wikiScript(), {
@@ -23,7 +31,8 @@ function requestUserSiteFollowsResponse( username, servername, action ) {
 					count = parseInt(count)+1;
 					jQuery( '#site-follower-count').html(count.toString());					
 				}else{
-					alert(res.message);
+                    alertime();
+                    alertp.text(res.message);
 				}
 			}
 		);
@@ -47,7 +56,8 @@ function requestUserSiteFollowsResponse( username, servername, action ) {
 						jQuery( '#site-follower-count').html(0);	
 					}		
 				}else{
-					alert(res.message);
+                    alertime();
+                    alertp.text(res.message);
 				}
 			}
 		);		

@@ -112,8 +112,8 @@ class UserProfilePage extends Article {
 		$userCount = UserSiteFollow::getUserCount($this->user);
 
 		if ($this->isOwner()){
-			$target = SpecialPage::getTitleFor('ViewRelationships');
-			$query = array('user' => $this->user_name);
+			$target = SpecialPage::getTitleFor('ViewFollows');
+			$query = array('user' => $this->user_name, 'rel_type' => 1);
 			$button1 = '<li>'.Linker::LinkKnown($target, '<i class="fa fa-users"></i>朋友', array(), $query).'</li> ';
 		} elseif ($uuf->checkUserUserFollow($wgUser, $this->user) ){
 			$button1 = '<li id="user-user-follow" class="unfollow"><a><i class="fa fa-minus-square-o"></i>取关</a></li> ';
@@ -218,6 +218,7 @@ class UserProfilePage extends Article {
 		$wgOut->addHTML( $this->getFanBoxes( $this->user_name ) );
 		$wgOut->addHTML( $this->getUserStats( $this->user_id, $this->user_name ) );
         $wgOut->addHTML( $this->getEditingActivity( $this->user_name ) );
+        $wgOut->addHTML( $this->getNonEditingActivity( $this->user_name ) );
 
 		if ( !wfRunHooks( 'UserProfileEndLeft', array( &$this ) ) ) {
 			wfDebug( __METHOD__ . ": UserProfileEndLeft messed up profile!\n" );
@@ -234,7 +235,6 @@ class UserProfilePage extends Article {
 			wfDebug( __METHOD__ . ": UserProfileBeginRight messed up profile!\n" );
 		}
 		$wgOut->addHTML( $this->getPersonalInfo( $this->user_id, $this->user_name ) );
-		$wgOut->addHTML( $this->getNonEditingActivity( $this->user_name ) );
 		// Hook for BlogPage
 		if ( !wfRunHooks( 'UserProfileRightSideAfterActivity', array( $this ) ) ) {
 			wfDebug( __METHOD__ . ": UserProfileRightSideAfterActivity hook messed up profile!\n" );

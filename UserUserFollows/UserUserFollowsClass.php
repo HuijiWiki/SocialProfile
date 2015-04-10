@@ -240,21 +240,21 @@ class UserUserFollow{
 	/**
 	 * Get the Follower or Following list for the current user.
 	 *
-	 * @param $type Integer: 1 for followers, 2 (or anything else but 1) for Followings
+	 * @param $type Integer: 1 for following, 2 (or anything else but 1) for followers
 	 * @param $limit Integer: used as the LIMIT in the SQL query
 	 * @param $page Integer: if greater than 0, will be used to calculate the
 	 *                       OFFSET for the SQL query
 	 * @return Array: array of follower/following information
 	 */
-	public function getFollowList( $type = 0, $limit = 0, $page = 0 ) {
+	public function getFollowList( $user, $type = 0, $limit = 0, $page = 0 ) {
 		$dbr = wfGetDB( DB_SLAVE );
 
 		$where = array();
 		$options = array();
-		if ($type = 1) {
-			$where['f_target_user_id'] = $this->user->getId();
+		if ($type !== 1) {
+			$where['f_target_user_id'] = $user->getId();
 		} else {
-			$where['f_user_id'] = $this->user->getId();
+			$where['f_user_id'] = $user->getId();
 		}
 		
 		if ( $limit > 0 ) {
@@ -281,8 +281,8 @@ class UserUserFollow{
 			$requests[] = array(
 				'id' => $row->f_id,
 				'timestamp' => ( $row->f_date ),
-				'user_id' => ( $type == 1? $row->f_user_id : $row->f_target_user_id),
-				'user_name' => ( $type == 1? $row->f_user_name : $row->f_target_user_name),
+				'user_id' => ( $type !== 1? $row->f_user_id : $row->f_target_user_id),
+				'user_name' => ( $type !== 1? $row->f_user_name : $row->f_target_user_name),
 				'type' => $type
 			);
 		}
@@ -297,9 +297,9 @@ class UserUserFollow{
 	 */
 	private function incFollowCount($follower, $followee){
 		global $wgMemc;
-		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_following_count', $followee->getName() );
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_following_count', $follower->getName() );
 		$wgMemc->incr( $key );
-		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_followed_count', $follower->getName() );
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_followed_count', $followee->getName() );
 		$wgMemc->incr( $key );
 	}
 	/**
@@ -310,9 +310,9 @@ class UserUserFollow{
 	 */
 	private function decFollowCount($follower, $followee){
 		global $wgMemc;
-		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_following_count', $followee->getName() );
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_following_count', $follower->getName() );
 		$wgMemc->decr( $key );
-		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_followed_count', $follower->getName() );
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_followed_count', $followee->getName() );
 		$wgMemc->decr( $key );
 	}
 	
