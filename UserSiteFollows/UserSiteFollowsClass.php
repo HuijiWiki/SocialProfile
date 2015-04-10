@@ -345,10 +345,10 @@ class UserSiteFollow{
 	 * @param $user User Object:
 	 * @return array
 	 */
-	static function getFullFollowedSitesDB( $user ) {
-		global $wgMemc;
+	public static function getFullFollowedSitesDB( $user ) {
+
 		$dbr = wfGetDB( DB_SLAVE );
-		$Followed = array();
+		$followed = array();
 
 		$s = $dbr->select(
 			'user_site_follow',

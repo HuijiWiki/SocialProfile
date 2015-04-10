@@ -193,7 +193,7 @@ jQuery( document ).ready( function() {
         }else{
             gender = 'unknown';
         }
-        if(location!=$(".form-location").text()||sex!=$(".form-sex").text()||autograph!=$(".form-autograph").text()||birthday!=$(".form-date").attr('data-birthday')) {
+        if(location!=$(".form-location").text()||sex!=$(".form-sex").text()||autograph!=$(".form-autograph").text()||birthday!=$(".form-date").attr('data-birthday')) {//如果没变 不发出数据 减少负担
             $.post(
                 mw.util.wikiScript(), {
                     action: 'ajax',
@@ -204,7 +204,6 @@ jQuery( document ).ready( function() {
                     console.log(gender);
                     var res = $.parseJSON(data);
                     if (res.success) {
-                        console.log("1");
                         $(".form-container").show();
                         if (location == '') {
                             $(".form-location").text("填写居住地").addClass("edit-on");
@@ -263,4 +262,31 @@ jQuery( document ).ready( function() {
         }
         return("输入的日期格式错误！");
     }
-} );
+    $('.profile-top-right-bottom>a').click(function(){
+        $('.watch-url').modal();
+        var username = mw.config.get('wgTitle');
+        console.log(username);
+        $.post(
+            mw.util.wikiScript(), {
+                action: 'ajax',
+                rs: 'wfUserSiteFollowsDetailsResponse',
+                rsargs: [username]
+            },
+            function(data){
+                var res = $.parseJSON(data);
+                console.log(res.success);
+                if (res.success==true){
+                    console.log("1");
+                    $.each(res.result,
+                        function(i, item){
+                            var msg='<li>'+item.result+'</li>'
+                            $('.modal-url').append(msg);
+                        }
+                    );
+                }
+                else{
+                }
+            }
+        );
+    });
+});

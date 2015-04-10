@@ -969,44 +969,17 @@ class UserProfilePage extends Article {
 				<div id="profile-image">' .($this->isOwner()? ('<div class="profile-image-container"><a href="/wiki/Special:UploadAvatar">'.$avatar->getOwnerAvatarURL().'</div>'): $avatar->getAvatarURL()) .'</a></div>' .
 					$user_name .
 				'</h1></div>';
-        $output .='<div class="modal fade upload-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                      <div class="modal-dialog modal-lg">
+        $output .='<div class="modal fade watch-url" tabindex="-1" role="dialog" aria-labelledby="mySmModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-sm">
                         <div class="modal-content">
                           <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                               <h4 class="modal-title" id="gridSystemModalLabel">Modal title</h4>
-                            </div>
+                          </div>
                             <div class="modal-body">
-                              <div class="container-fluid">
-                                <div class="row">
-                                  <div class="col-md-4">.col-md-4</div>
-                                  <div class="col-md-4 col-md-offset-4">.col-md-4 .col-md-offset-4</div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-md-3 col-md-offset-3">.col-md-3 .col-md-offset-3</div>
-                                  <div class="col-md-2 col-md-offset-4">.col-md-2 .col-md-offset-4</div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-md-6 col-md-offset-3">.col-md-6 .col-md-offset-3</div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-sm-9">
-                                    Level 1: .col-sm-9
-                                    <div class="row">
-                                      <div class="col-xs-8 col-sm-6">
-                                        Level 2: .col-xs-8 .col-sm-6
-                                      </div>
-                                      <div class="col-xs-4 col-sm-6">
-                                        Level 2: .col-xs-4 .col-sm-6
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                              <button type="button" class="btn btn-primary">Save changes</button>
+                                <ul class="modal-url">
+
+                                </ul>
                             </div>
                         </div>
                       </div>

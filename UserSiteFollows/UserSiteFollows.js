@@ -75,7 +75,8 @@ jQuery( document ).ready( function() {
 		alreadySubmittedUserSiteFollow = true;
 		//TODO: Check if user is logged in, if not prompt login form.
 		if (mw.config.get('wgUserName') == null){
-			window.location.href = "/wiki/Special:Login";
+			$('.user-login').modal();
+			return;
 		}
 		requestUserSiteFollowsResponse(
 			mw.config.get('wgUserName'),

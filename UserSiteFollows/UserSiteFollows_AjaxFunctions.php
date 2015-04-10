@@ -4,6 +4,7 @@
  */
 $wgAjaxExportList[] = 'wfUserSiteFollowsResponse';
 $wgAjaxExportList[] = 'wfUserSiteUnfollowsResponse';
+$wgAjaxExportList[] = 'wfUserSiteFollowsDetailsResponse';
 function wfUserSiteFollowsResponse( $username, $servername ) {
 	
 	global $wgUser, $wgServer, $wgHuijiPrefix;
@@ -77,4 +78,11 @@ function wfUserSiteUnfollowsResponse( $username, $servername ) {
 		}
 	}
 	return $out;
+}
+function wfUserSiteFollowsDetailsResponse( $username ) {
+	$sites = UserSiteFollow::getFullFollowedSitesDB(User::newFromName($username));
+	$ret = array('success'=> true, 'result'=>$sites );
+	$out = json_encode($ret);
+	return $out;
+
 }
