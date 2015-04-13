@@ -74,12 +74,13 @@ jQuery( document ).ready( function() {
 		if (alreadySubmittedUserUserFollow == true){
 			return;
 		}
-		alreadySubmittedUserUserFollow = true;
+		
 		//TODO: Check if user is logged in, if not prompt login form.
 		if (mw.config.get('wgUserName') == null){
 			$('.user-login').modal();
 			return;
 		}
+		alreadySubmittedUserUserFollow = true;
 		jQuery( '#user-user-follow').html('<i class="fa fa-spinner fa-pulse"></i>');
 		requestUserUserFollowsResponse(
 			mw.config.get('wgUserName'),

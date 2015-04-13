@@ -264,8 +264,8 @@ jQuery( document ).ready( function() {
     }
     $('.profile-top-right-bottom>a').click(function(){
         $('.watch-url').modal();
+        $('.modal-url').empty();
         var username = mw.config.get('wgTitle');
-        console.log(username);
         $.post(
             mw.util.wikiScript(), {
                 action: 'ajax',
@@ -274,17 +274,13 @@ jQuery( document ).ready( function() {
             },
             function(data){
                 var res = $.parseJSON(data);
-                console.log(res.success);
                 if (res.success==true){
-                    console.log("1");
                     $.each(res.result,
                         function(i, item){
-                            var msg='<li>'+item.result+'</li>'
+                            var msg='<li><a href="'+i+'.huiji.wiki">'+item+'</li>'
                             $('.modal-url').append(msg);
                         }
                     );
-                }
-                else{
                 }
             }
         );

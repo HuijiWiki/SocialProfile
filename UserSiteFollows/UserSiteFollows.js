@@ -72,12 +72,13 @@ jQuery( document ).ready( function() {
 		if (alreadySubmittedUserSiteFollow == true){
 			return;
 		}
-		alreadySubmittedUserSiteFollow = true;
+
 		//TODO: Check if user is logged in, if not prompt login form.
 		if (mw.config.get('wgUserName') == null){
 			$('.user-login').modal();
 			return;
 		}
+		alreadySubmittedUserSiteFollow = true;
 		requestUserSiteFollowsResponse(
 			mw.config.get('wgUserName'),
 			mw.config.get('wgServer'),

@@ -1053,3 +1053,16 @@ span.span-color{
     color: #fff;
     text-decoration: none;
 }
+.modal-url{
+    max-height: 200px;
+    overflow-y: auto;
+}
+.modal-url li{
+    list-style-type: none;
+}
+
+@media (min-width: 768px) {
+    .modal-dialog.modal-sm {
+        margin-top: 100px;
+    }
+}
