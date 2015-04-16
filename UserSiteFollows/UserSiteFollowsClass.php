@@ -219,8 +219,8 @@ class UserSiteFollow{
 		global $wgMemc;
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'check_follow', $user->getName(), $huijiPrefix );
 		$data = $wgMemc->get( $key );
-		if ( $data != '' ) {
-			wfDebug( "Got user count of $data ( User = {$user} ) from cache\n" );
+		if ( $data !== '' ) {
+			wfDebug( "Checkout ( User = {$user} ) from cache\n" );
 			return $data;
 		} else{
 			$dbr = wfGetDB( DB_SLAVE );

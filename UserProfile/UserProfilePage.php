@@ -114,20 +114,20 @@ class UserProfilePage extends Article {
 		if ($this->isOwner()){
 			$target = SpecialPage::getTitleFor('ViewFollows');
 			$query = array('user' => $this->user_name, 'rel_type' => 1);
-			$button1 = '<li>'.Linker::LinkKnown($target, '<i class="fa fa-users"></i>朋友', array(), $query).'</li> ';
+			$button1 = '<li class="mw-ui-button">'.Linker::LinkKnown($target, '<i class="fa fa-users"></i>朋友', array(), $query).'</li> ';
 		} elseif ($uuf->checkUserUserFollow($wgUser, $this->user) ){
-			$button1 = '<li id="user-user-follow" class="unfollow"><a><i class="fa fa-minus-square-o"></i>取关</a></li> ';
+			$button1 = '<li id="user-user-follow" class="unfollow mw-ui-button"><a><i class="fa fa-minus-square-o"></i>取关</a></li> ';
 		} else {
-			$button1 = '<li id="user-user-follow"><i class="fa fa-plus-square-o"></i></i>关注</li> ';
+			$button1 = '<li id="user-user-follow" class="mw-ui-button"><i class="fa fa-plus-square-o"></i></i>关注</li> ';
 		}
 		if ($this->isOwner()){
 			$target = SpecialPage::getTitleFor('ViewGifts');
 			$query = array('user' => $this->user_name);
-			$button2 = '<li>'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>礼物</a>', array(), $query).'</li> ';
+			$button2 = '<li class="mw-ui-button">'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>礼物</a>', array(), $query).'</li> ';
 		} else {
 			$target = SpecialPage::getTitleFor( 'GiveGift' );
 			$query = array('user' => $this->user_name);
-			$button2 = '<li>'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>赠送</a>', array(), $query).'</li> ';
+			$button2 = '<li class="mw-ui-button">'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>赠送</a>', array(), $query).'</li> ';
 		}
 		$watchlist = SpecialPage::getTitleFor( 'Watchlist' );
 		$contributions = SpecialPage::getTitleFor( 'Contributions' );
@@ -173,7 +173,7 @@ class UserProfilePage extends Article {
                     </ul>
                     <a>查看全部'.$userCount.'个wiki</a>
                     <div>
-                        <ul class="profile-interactive btn-group">'.
+                        <ul class="profile-interactive">'.
                             $button1.$button2.
                             '<li class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-align-justify"></span></li>
                             <ul class="dropdown-menu" role="menu">
@@ -1837,7 +1837,7 @@ class UserProfilePage extends Article {
                                     </div>
 						
 						<div class="user-page-message-box-button">
-							<input type="button" value="' . wfMessage( 'userboard_sendbutton' )->escaped() . '" class="site-button" />
+							<input type="button" value="' . wfMessage( 'userboard_sendbutton' )->escaped() . '" class="site-button mw-ui-button mw-ui-progressive" />
 						</div>
 					</div>';
 			} else {
