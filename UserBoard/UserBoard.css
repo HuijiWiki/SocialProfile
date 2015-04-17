@@ -35,6 +35,10 @@
 .user-page-message-form {
 	margin: 5px 0px 15px 0px;
 	font-weight: bold;
+    width:540px;
+}
+.user-page-message-form p textarea{
+    width: 540px;
 }
 
 .user-board-message {
@@ -114,4 +118,40 @@ select#message_type {
 
 .user-board-message-type {
 	color: #797979;
+}
+.user-page-message-form .form-group{
+    margin-bottom: 0;
+}
+.user-page-message-box-button {
+    height: 40px;
+    padding-right: 15px;
+}
+.user-page-message-box-button .site-button{
+    float: right;
+}
+.user-board-message{
+    padding-left: 10px;
+    border-radius: 3px;
+}
+.user-board-message-image>a>img{
+    width: 50px;
+    padding: 1px;
+    border-radius: 2px;
+}
+.user-board-message-image>a>img:hover{
+    border: 1px solid #666;
+}
+.user-board-message-content{
+    margin-top: 10px;
+}
+.user-board-message-body{
+    margin-left: 5px;
+}
+.user-board-message-time{
+    margin-top: 15px;
+}
+.user-board-message{
+    border: none;
+    border-top: 1px solid #e2e2e2;
+    padding-top: 15px;
 }
