@@ -64,9 +64,9 @@ class SpecialBoardBlast extends UnlistedSpecialPage {
 			$count = 0;
 			$user_ids_to = explode( ',', $request->getVal( 'ids' ) );
 			foreach ( $user_ids_to as $user_id ) {
-				$user = User::newFromId( $user_id );
+				$user_to = User::newFromId( $user_id );
 				$user->loadFromId();
-				$user_name = $user->getName();
+				$user_name = $user_to->getName();
 				$b->sendBoardMessage(
 					$user->getID(),
 					$user->getName(),
@@ -131,25 +131,25 @@ class SpecialBoardBlast extends UnlistedSpecialPage {
 		$output .= '</div>
 		</div>';
 
-		$rel = new UserRelationship( $user->getName() );
-		$relationships = $rel->getRelationshipList();
+		$uuf = new UserUserFollow();
+		$follows = $uuf->getFollowList($user, 0);
 
 		$output .= '<div id="blast-friends-list" class="blast-friends-list">';
 
 		$x = 1;
 		$per_row = 3;
-		if ( count( $relationships ) > 0 ) {
-			foreach ( $relationships as $relationship ) {
-				if ( $relationship['type'] == 1 ) {
+		if ( count( $follows ) > 0 ) {
+			foreach ( $follows as $follow ) {
+				if ( $follow['type'] == 1 ) {
 					$class = 'friend';
 				} else {
 					$class = 'foe';
 				}
-				$id = $relationship['user_id'];
+				$id = $follow['user_id'];
 				$output .= '<div class="blast-' . $class . "-unselected\" id=\"user-{$id}\">
-						{$relationship['user_name']}
+						{$follow['user_name']}
 					</div>";
-				if ( $x == count( $relationships ) || $x != 1 && $x % $per_row == 0 ) {
+				if ( $x == count( $follows ) || $x != 1 && $x % $per_row == 0 ) {
 					$output .= '<div class="cleared"></div>';
 				}
 				$x++;

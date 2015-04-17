@@ -46,7 +46,7 @@ function getSiteActivity( $input, $args, $parser ) {
 	$output = '';
 	if ( $activity ) {
 		$output .= '<div class="mp-site-activity">
-			<h2>' . wfMessage( 'useractivity-siteactivity' )->plain() . '</h2>';
+			<h4>' . wfMessage( 'useractivity-siteactivity' )->plain() . '</h4>';
 
 		$x = 1;
 		foreach ( $activity as $item ) {

@@ -7,7 +7,7 @@
     "boardblastlogintitle": "你必须先登录才能群发。",
     "boardblastlogintext": "要想群发，你需要先[[Special:UserLogin|登录]]。",
     "messagesenttitle": "消息已发送",
-    "boardblasttitle": "群发信息已发送",
+    "boardblasttitle": "群发信息",
     "boardblaststep1": "第一步——填写消息",
     "boardblastprivatenote": "所有的消息都会被标记为私聊",
     "boardblaststep2": "第二步——选择你要把消息发送给谁",
@@ -48,10 +48,13 @@
     "userboard_loggedout": "你必须先[[Special:UserLogin|登录]]才能向其他用户发送信息。",
     "userboard_showingmessages": "正在显示全部{{PLURAL:$1|$1条消息|$1条消息}}中的{{PLURAL:$4|消息$3|消息$2-$3}}。",
     "right-userboard-delete": "删除他人留言板的消息",
-    "userboard-time-days": "{{PLURAL:$1|一天|$1天}}",
-    "userboard-time-hours": "{{PLURAL:$1|一小时|$1小时}}",
-    "userboard-time-minutes": "{{PLURAL:$1|一分钟|$1分}}",
-    "userboard-time-seconds": "{{PLURAL:$1|一秒钟|$1秒}}",
+    "userboard-time-days": "$1天",
+    "userboard-time-hours": "$1小时",
+    "userboard-time-minutes": "$1分",
+    "userboard-time-seconds": "$1秒",
     "message_received_subject": "{{SITENAME}}的$1在你的留言板留言了。",
-    "message_received_body": "你好，$1,\n\n$2在{{SITENAME}}上给你留言了!\n\n点击你们下面的链接查看你的留言板：\n\n$3\n\n---\n\n不想再收到邮件提醒?\n\n点击$4\n来修改你的邮件设置。"
+    "message_received_body": "你好，$1,\n\n$2在{{SITENAME}}上给你留言了!\n\n点击你们下面的链接查看你的留言板：\n\n$3\n\n---\n\n不想再收到邮件提醒?\n\n点击$4\n来修改你的邮件设置。",
+    "notification-board": "$1在$3给你留言了。$2",
+    "notification-board-flyout": "$1在$3给你留言了。$2",
+    "notification-board-msg-link": "查看对话"
 }

@@ -28,16 +28,13 @@
 	border: 1px solid #FDC745;
 	color: #002BB8;
 	font-weight: bold;
-	padding: 3px;
 	overflow: hidden;
 	margin: 0px 3px 3px 0px;
 	float: left;
 	cursor: pointer;
-	width: 200px;
-	overflow: hidden;
 	font-weight: bold;
-	padding: 4px;
-	height: 17px;
+	padding: 5px 10px;
+    border-radius: 3px;
 }
 
 #blast-friends-list div.blast-friend-unselected,
@@ -45,16 +42,13 @@
 	border: 1px solid #dcdcdc;
 	color: #285C98;
 	font-weight: bold;
-	padding: 3px;
-	overflow: hidden;
 	margin: 0px 3px 3px 0px;
 	float: left;
 	cursor: pointer;
-	width: 200px;
 	overflow: hidden;
 	font-weight: bold;
-	padding: 4px;
-	height: 17px;
+	padding: 5px 10px;
+    border-radius: 3px;
 }
 
 .board-blast-message-form {
@@ -93,4 +87,13 @@
 .blast-nav h2 {
 	color: #333333;
 	margin: 15px 0px 10px 0px !important;
+}
+.board-blast-message-form textarea{
+    width: auto;
+}
+#blast-friends-list{
+    max-width: 540px;
+    max-height: 300px;
+    overflow-x:hidden;
+    overflow-y:auto;
 }
