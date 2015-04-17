@@ -52,8 +52,8 @@ function getSiteActivity( $input, $args, $parser ) {
 		foreach ( $activity as $item ) {
 			if ( $x < $fixedLimit ) {
 				$typeIcon = UserActivity::getTypeIcon( $item['type'] );
-				$output .= '<div class="mp-activity' . ( ( $x == $fixedLimit ) ? ' mp-activity-border-fix' : '' ) . '">
-				<img src="' . $wgExtensionAssetsPath . '/SocialProfile/images/' . $typeIcon . '" alt="' . $typeIcon . '" border="0" />'
+				$output .= '<div class="mp-activity' . ( ( $x == $fixedLimit ) ? ' mp-activity-border-fix' : '' ) . '">'
+				. $typeIcon 
 				. $item['data'] .
 				'</div>';
 				$x++;
