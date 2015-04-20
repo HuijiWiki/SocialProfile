@@ -146,7 +146,7 @@ class UserProfilePage extends Article {
 				if ($wgUser->isAllowed('block')){
 					$blockLink = '<li><a href="' . htmlspecialchars( $block->getFullURL( 'user='. $user_safe ) ). '" rel="nofollow">封禁用户</a></li>';	
 				}
-				if（$wgUser->isAllowed('userrights'){
+				if ($wgUser->isAllowed('userrights')){
 					$rightLink = '<li><a href="' . htmlspecialchars( $right->getFullURL( 'user='. $user_safe ) ). '" rel="nofollow">调整权限</a></li>';				
 				}
 			}else{
