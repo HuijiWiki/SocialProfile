@@ -12,5 +12,15 @@
 	"socialprofile-error-blocked":"您已被封禁",
 	"socialprofile-error-read_only":"维基数据库处于只读模式",
 	"socialprofile-error-not-allowed":"您是否还没有验证邮箱？",
-	"socialprofile-error-unknown":"请刷新页面重试"
+	"socialprofile-error-unknown":"请刷新页面重试",
+	"echo-category-title-follow-msg":"关注",
+	"echo-category-title-board-msg":"留言",
+	"echo-category-title-gift-receive":"收到礼物",
+	"echo-category-title-advancement":"升级",
+	"echo-category-title-system-gift-receive":"收到奖励",
+	"echo-pref-tooltip-system-gift-receive":"当系统颁发我奖励的时候通知我。",
+	"echo-pref-tooltip-advancement":"当我升级的时候通知我。",
+	"echo-pref-tooltip-gift-receive":"当我收到一个其他用户赠送的礼物时通知我。",
+	"echo-pref-tooltip-follow-msg":"当有其他用户关注我时通知我。",
+	"echo-pref-tooltip-board-msg":"当有其他用户在留言墙给我留言时通知我。"
 }
