@@ -210,6 +210,9 @@ class UserProfilePage extends Article {
 		if ( !wfRunHooks( 'UserProfileBeginLeft', array( &$this ) ) ) {
 			wfDebug( __METHOD__ . ": UserProfileBeginLeft messed up profile!\n" );
 		}
+		if ($this->user_id != $wgUser->getId()) {
+			$wgOut->addHTML( $this->getCommonInterest( $user_id,$target_user_id) );
+		}
 
 		$wgOut->addHTML( $this->getRelationships( $this->user_name, 1 ) );
 		$wgOut->addHTML( $this->getRelationships( $this->user_name, 2 ) );
@@ -2080,4 +2083,38 @@ class UserProfilePage extends Article {
 			$this->profile_data = $profile->getProfile();
 		}
 	}
+	/**
+	 * Get common interests with the user you are watching
+	 *
+	 * @param $target_user_id:current user; $user_id:his id
+	 * @return array
+	 */
+	function getCommonInterest( $user_id,$target_user_id){
+		global $wgUser;
+		$user_id = $this->user_id;
+		$target_user_id = $wgUser->getId();
+		$res = UserSiteFollow::getCommonInterest($user_id,$target_user_id);
+		$output .= '<div class="panel panel-default"><div class="user-section-heading panel-heading">
+				<div class="user-section-title">我和Ta的共同兴趣:
+				</div>
+				<div class="user-section-actions">
+					<div class="action-right">
+					</div>
+					<div class="action-left">
+					</div>
+					<div class="cleared"></div>
+				</div>
+			</div>
+			<div class="cleared"></div>
+			<div class="#">';
+		
+		foreach ($res as $value) {
+			$Iname = HuijiPrefix::prefixToSiteName($value);
+			$Iurl = HuijiPrefix::prefixToUrl($value);
+			$output .= '<a href="'.$Iurl.'">'.$Iname.'</a>';
+		}
+		$output .='</div></div>';
+		return $output;
+	}
+
 }
