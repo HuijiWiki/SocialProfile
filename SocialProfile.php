@@ -314,6 +314,24 @@ $wgResourceModules['ext.socialprofile.useruserfollows.css'] = array(
 	'localBasePath' => __DIR__ . '/UserUserFollows',
 	'remoteExtPath' => 'SocialProfile/UserUserFollows',
 );
+$wgResourceModules['ext.guidedTour.tour.newuser'] = array(
+	'scripts' => 'tours/newuser.js',
+	// Note that you should have an explicit dependency on the GuidedTour library.
+	'dependencies' => array('ext.guidedTour', 'ext.guidedTour.lib', 'ext.guidedTour.launcher'),
+	'messages' => array(
+		// This is a list of messages for your tour.
+		// You can include messages from your regular extension,
+		// or MediaWiki core, and you will also need messages specifically
+		// for the title, description and buttons of your tour.
+		// Note the naming scheme for tour-specific messages is based on your tour name.
+		// You do not need to add messages that are built-in to GuidedTour, like the okay button.
+		'guidedtour-tour-newuser-welcome-title',
+		'guidedtour-tour-newuser-welcome-description',
+	),
+        // localBasePath and remoteExtPath should match what your extension normally uses.
+	'localBasePath' => __DIR__ . '/resources',
+	'remoteExtPath' => 'SocialProfile/resources',
+);
 // End ResourceLoader stuff
 
 if( !defined( 'NS_USER_WIKI' ) ) {

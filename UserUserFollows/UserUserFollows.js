@@ -32,7 +32,7 @@ function requestUserUserFollowsResponse( follower, followee, action ) {
 				}else{
                     alertime();
                     alertp.text(res.message);
-					jQuery( '#user-user-follow').html('<a><i class="fa fa-plus-square-o"></i>关注</a>');
+					jQuery( '#user-user-follow').html('<a><i class="fa fa-plus-square-o"></i> 关注</a>');
 				}
 				alreadySubmittedUserUserFollow = false;
 			}
@@ -59,7 +59,7 @@ function requestUserUserFollowsResponse( follower, followee, action ) {
 				}else{
                     alertime();
                     alertp.text(res.message);
-					jQuery( '#user-user-follow').html('<a><i class="fa fa-minus-square-o">取关</i></a>');
+					jQuery( '#user-user-follow').html('<a><i class="fa fa-minus-square-o"></i> 取关</a>');
 				}
 				alreadySubmittedUserUserFollow = false;
 			}

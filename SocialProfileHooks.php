@@ -90,4 +90,14 @@ class SocialProfileHooks {
 
 		return true;
 	}
+
+	/**
+	 * Load javascript for new users
+	 * 
+	 */
+
+	public static function onAddNewAccount( User $user, $byEmail ) { 
+		//todo add tours.
+	}
+
 }

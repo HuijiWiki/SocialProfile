@@ -1,4 +1,6 @@
 {
 	"@metadata": [],
-	"socialprofile-desc": "{{desc|name=Social Profile|url=https://www.mediawiki.org/wiki/Extension:SocialProfile}}"
+	"socialprofile-desc": "{{desc|name=Social Profile|url=https://www.mediawiki.org/wiki/Extension:SocialProfile}}",
+	"guidedtour-tour-newuser-welcome-title": "wag",
+	"guidedtour-tour-newuser-welcome-description":"that"
 }

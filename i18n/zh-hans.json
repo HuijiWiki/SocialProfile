@@ -22,5 +22,7 @@
 	"echo-pref-tooltip-advancement":"当我升级的时候通知我。",
 	"echo-pref-tooltip-gift-receive":"当我收到一个其他用户赠送的礼物时通知我。",
 	"echo-pref-tooltip-follow-msg":"当有其他用户关注我时通知我。",
-	"echo-pref-tooltip-board-msg":"当有其他用户在留言墙给我留言时通知我。"
+	"echo-pref-tooltip-board-msg":"当有其他用户在留言墙给我留言时通知我。",
+	"guidedtour-tour-newuser-welcome-title": "wag",
+	"guidedtour-tour-newuser-welcome-description":"that"
 }

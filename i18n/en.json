@@ -2,5 +2,7 @@
 	"@metadata": {
 		"authors": []
 	},
-	"socialprofile-desc": "A set of social tools for MediaWiki"
+	"socialprofile-desc": "A set of social tools for MediaWiki",
+	"guidedtour-tour-newuser-welcome-title": "wag",
+	"guidedtour-tour-newuser-welcome-description":"that"
 }
