@@ -238,6 +238,10 @@ $wgHooks['ParserFirstCallInit'][] = 'AvatarParserFunction::setupAvatarParserFunc
 // For the Renameuser extension
 $wgHooks['RenameUserComplete'][] = 'SocialProfileHooks::onRenameUserComplete';
 
+// Set new user tours
+$wgHooks['AddNewAccount'][] = 'SocialProfileHooks::onAddNewAccount';
+
+
 // ResourceLoader module definitions for certain components which do not have
 // their own loader file
 
