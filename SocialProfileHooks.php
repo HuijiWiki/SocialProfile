@@ -99,7 +99,7 @@ class SocialProfileHooks {
 	public static function onAddNewAccount( User $user, $byEmail ) { 
 		//todo add tours.
 		$value = '{"version":1,"tours":{"newuser":{"step":"intro"}}}';
-		setcookie("huiji-mw-tour", $value, time()+3600*24*90);  /* expire in 90 days */
+		setcookie("huiji-mw-tour", $value, time()+3600*24*90, "/", ".huiji.wiki" );  /* expire in 90 days */
 	}
 
 }
