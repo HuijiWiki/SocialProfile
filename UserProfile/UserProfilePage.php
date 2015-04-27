@@ -979,7 +979,7 @@ class UserProfilePage extends Article {
                         <div class="modal-content">
                           <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                              <h4 class="modal-title" id="gridSystemModalLabel">Modal title</h4>
+                              <h4 class="modal-title" id="gridSystemModalLabel">Ta关注的All</h4>
                           </div>
                             <div class="modal-body">
                                 <ul class="modal-url">
@@ -2107,11 +2107,15 @@ class UserProfilePage extends Article {
 			</div>
 			<div class="cleared"></div>
 			<div class="#">';
-		
-		foreach ($res as $value) {
-			$Iname = HuijiPrefix::prefixToSiteName($value);
-			$Iurl = HuijiPrefix::prefixToUrl($value);
-			$output .= '<a href="'.$Iurl.'">'.$Iname.'</a>';
+			
+		if(!empty($res)){
+			foreach ($res as $value) {
+				$Iname = HuijiPrefix::prefixToSiteName($value);
+				$Iurl = HuijiPrefix::prefixToUrl($value);
+				$output .= '<a href="'.$Iurl.'">'.$Iname.'</a>';
+			}
+		}else{
+			$output .='<p>&nbsp;您和Ta还没有共同兴趣~</p>';
 		}
 		$output .='</div></div>';
 		return $output;

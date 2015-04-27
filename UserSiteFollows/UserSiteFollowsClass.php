@@ -342,29 +342,50 @@ class UserSiteFollow{
 	 * Get full list of followed sites from the
 	 * database and cache it.
 	 *
-	 * @param $user User Object:
+	 * @param $user: vist user id;$target_user_id:visted id
 	 * @return array
 	 */
-	public static function getFullFollowedSitesDB( $user ) {
+	public static function getFullFollowedSitesDB( $user_id,$target_user_id ) {
 
 		$dbr = wfGetDB( DB_SLAVE );
 		$followed = array();
-
+		$res = $dbr->select(
+			'user_site_follow',
+			array('f_wiki_domain'),
+			array(
+				'f_user_id' => $target_user_id
+			),
+			__METHOD__,
+			array(
+				'ORDER BY' => 'f_date DESC',
+			)
+		);
 		$s = $dbr->select(
 			'user_site_follow',
 			array( 'f_wiki_domain' ),
 			array(
-				'f_user_id' => $user->getId()
+				'f_user_id' => $user_id
 			),
 			__METHOD__,
 			array( 
 				'ORDER BY' => 'f_date DESC',
 			)
 		);
-		foreach( $s as $row ){
-			$prefix = $row->f_wiki_domain;
-			$siteName = HuijiPrefix::prefixToSiteName($prefix);
-			$followed[$prefix] = $siteName;
+		foreach( $res as $row ){
+			$domain = $row->f_wiki_domain;
+			$siteName = HuijiPrefix::prefixToSiteName($domain);
+			foreach ($s as $value) {
+				if($domain == $value->f_wiki_domain){
+					$is_follow= 'Y';
+				}else{
+					$is_follow= 'N';
+				}		
+			}
+			$temp['key'] = $domain;
+			$temp['val'] = $siteName;
+			$temp['is'] = $is_follow;
+			$followed[] = $temp;
+
 		}
 		return $followed;
 	}

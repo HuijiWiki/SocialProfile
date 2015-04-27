@@ -265,19 +265,25 @@ jQuery( document ).ready( function() {
     $('.profile-top-right-bottom>a').click(function(){
         $('.watch-url').modal();
         $('.modal-url').empty();
-        var username = mw.config.get('wgTitle');
+        var t_name = mw.config.get('wgTitle');
+        var user_name = mw.config.get('wgUserName');
         $.post(
             mw.util.wikiScript(), {
                 action: 'ajax',
                 rs: 'wfUserSiteFollowsDetailsResponse',
-                rsargs: [username]
+                rsargs: [user_name,t_name]
             },
             function(data){
-                var res = $.parseJSON(data);
+                var res = $.parseJSON(data);console.log(res);
                 if (res.success==true){
+                    
                     $.each(res.result,
                         function(i, item){
-                            var msg='<li><a href="'+i+'.huiji.wiki">'+item+'</li>'
+                            if (item.is == 'Y') {
+                                var msg='<li><a href="'+item.key+'.huiji.wiki">'+item.val+'</a><button>取关</button></li>';
+                            }else{
+                                var msg='<li><a href="'+item.key+'.huiji.wiki">'+item.val+'</a><button>关注</button></li>';
+                            }
                             $('.modal-url').append(msg);
                         }
                     );

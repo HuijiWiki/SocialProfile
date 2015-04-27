@@ -79,10 +79,12 @@ function wfUserSiteUnfollowsResponse( $username, $servername ) {
 	}
 	return $out;
 }
-function wfUserSiteFollowsDetailsResponse( $username ) {
-	$sites = UserSiteFollow::getFullFollowedSitesDB(User::newFromName($username));
+function wfUserSiteFollowsDetailsResponse( $user_name,$t_name ) {
+	$user_id = User::idFromName($user_name);
+	$t_id = User::idFromName($t_name);
+	$sites = UserSiteFollow::getFullFollowedSitesDB($user_id,$t_id);
 	$ret = array('success'=> true, 'result'=>$sites );
 	$out = json_encode($ret);
 	return $out;
-
+    
 }
