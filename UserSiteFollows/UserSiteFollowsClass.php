@@ -368,6 +368,97 @@ class UserSiteFollow{
 		}
 		return $followed;
 	}
-	
+	/**
+	 * Get user's followed from the
+	 * database and show it.
+	 *
+	 * @param $f_user_id:current user
+	 * @return array
+	 */
+	public static function getFollowedByUser( $f_user_id ){
+		$dbr = wfGetDB( DB_SLAVE );
+		$followme = $dbr->select(
+			'user_user_follow',
+			array(
+				'f_target_user_id',
+			),
+			array(
+				'f_user_id' => $f_user_id,
+			),
+			__METHOD__
+		);
+		return $followme;
+
+	}
+	/**
+	 * Get the common interests users of followed sites from the
+	 * database and show it.
+	 *
+	 * @param $user_id:current user; $huijiPrefix:common interests
+	 * @return array
+	 */
+	public static function getCommonInterestUser( $user_id,$huijiPrefix ){
+		$dbr = wfGetDB( DB_SLAVE );
+		$follow = self::getFollowedByUser($user_id);
+		$common = array();
+		$res = $dbr->select(
+				'user_site_follow',
+				array(
+					'f_user_id',
+				),
+			    array(
+			    	'f_wiki_domain' => $huijiPrefix,
+			    ),
+			    __METHOD__
+		);
+		foreach ($res as $resval) {
+			$uid = $resval->f_user_id;
+			foreach ($follow as $folval) {
+				if($uid == $folval->$f_target_user_id){
+					$common[] = $uid;
+				}
+			}
+		}
+		return $common;
+	}
+	/**
+	 * Get common interests with the user you are watching
+	 *
+	 * @param $user_id:current user; $target_user_id:his id
+	 * @return array
+	 */
+	public static function getCommonInterest( $user_id,$target_user_id ){
+		$dbr = wfGetDB( DB_SLAVE );
+		$coninterest = array();
+		$ures = $dbr->select(
+			'user_site_follow',
+			array(
+				'f_wiki_domain',
+			),
+			array(
+				'f_user_id' => $user_id,
+			),
+			__METHOD__
+		);
+		$tres = $dbr->select(
+			'user_site_follow',
+			array(
+				'f_wiki_domain',
+			),
+			array(
+				'f_user_id' => $target_user_id,
+			),
+			__METHOD__
+		);
+		foreach ($tres as $tval) {
+			$tdomain = $tval->f_wiki_domain;
+			foreach ($ures as $uval) {
+				if ($tdomain == $uval->f_wiki_domain) {
+					$coninterest[] = $tdomain;
+				}
+			}
+		}
+		return $coninterest;
+	}
 
 }
