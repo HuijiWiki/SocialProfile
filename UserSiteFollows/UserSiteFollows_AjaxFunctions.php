@@ -5,9 +5,11 @@
 $wgAjaxExportList[] = 'wfUserSiteFollowsResponse';
 $wgAjaxExportList[] = 'wfUserSiteUnfollowsResponse';
 $wgAjaxExportList[] = 'wfUserSiteFollowsDetailsResponse';
+$wgAjaxExportList[] = 'wfUserFollowsSiteResponse';
+
 function wfUserSiteFollowsResponse( $username, $servername ) {
 	
-	global $wgUser, $wgServer, $wgHuijiPrefix;
+	global $wgUser;
 
 	$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_UNKNOWN);
 
@@ -36,8 +38,13 @@ function wfUserSiteFollowsResponse( $username, $servername ) {
 	}
 
 	$usf = new UserSiteFollow();
-	if ( $username === $wgUser->getName() && $servername === $wgServer){
-		if ($usf->addUserSiteFollow($wgUser, $wgHuijiPrefix) >= 0){
+	if ( $username === $wgUser->getName() ){//&& $servername === $wgServer
+		$str = substr($servername,7);
+		$n=strpos($str,'.huiji.wiki');
+		if ($n){
+			$servername=substr($str,0,$n);
+		}
+		if ($usf->addUserSiteFollow($wgUser, $servername) >= 0){
 			$out = ResponseGenerator::getJson(ResponseGenerator::SUCCESS);
 		}
 	}
@@ -72,8 +79,13 @@ function wfUserSiteUnfollowsResponse( $username, $servername ) {
 	}
 
 	$usf = new UserSiteFollow();
-	if ( $username === $wgUser->getName() && $servername === $wgServer){
-		if ($usf->deleteUserSiteFollow($wgUser, $wgHuijiPrefix)){
+	if ( $username === $wgUser->getName()){// && $servername === $wgServer
+		$str = substr($servername,7);
+		$n=strpos($str,'.huiji.wiki');
+		if ($n){
+			$servername=substr($str,0,$n);
+		}
+		if ($usf->deleteUserSiteFollow($wgUser, $servername)){
 			$out = ResponseGenerator::getJson(ResponseGenerator::SUCCESS);
 		}
 	}
@@ -87,4 +99,43 @@ function wfUserSiteFollowsDetailsResponse( $user_name,$t_name ) {
 	$out = json_encode($ret);
 	return $out;
     
+}
+//
+function wfUserFollowsSiteResponse( $user, $site_name ) {
+	global $wgUser, $wgSitename, $wgServer, $wgHuijiPrefix;
+
+	$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_UNKNOWN);
+	// This feature is only available for logged-in users.
+	if ( !$wgUser->isLoggedIn() ) {
+		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NOT_LOGGED_IN);
+		return $out;
+	}
+
+	// No need to allow blocked users to access this page, they could abuse it, y'know.
+	if ( $wgUser->isBlocked() ) {
+		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_BLOCKED);
+		return $out;
+	}
+
+	// Database operations require write mode
+	if ( wfReadOnly() ) {
+		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_READ_ONLY);
+		return $out;
+	}
+
+	// Are we even allowed to do this?
+	if ( !$wgUser->isAllowed( 'edit' ) ) {
+		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NOT_ALLOWED);
+		return $out;
+	}
+	$str = substr($site_name,7);
+	$n=strpos($str,'.huiji.wiki');
+	if ($n) 
+		$site_name=substr($str,0,$n);
+	// $user_id = User::idFromName($user_name);
+	// $t_id = User::idFromName($t_name);
+	$sites = UserSiteFollow::getUserFollowSite($wgUser, $site_name);
+	$ret = array('success'=> true, 'result'=>$sites );
+	$out = json_encode($ret);
+	return $out;
 }

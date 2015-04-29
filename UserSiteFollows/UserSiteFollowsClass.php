@@ -349,6 +349,7 @@ class UserSiteFollow{
 
 		$dbr = wfGetDB( DB_SLAVE );
 		$followed = array();
+		$fs = array();
 		$res = $dbr->select(
 			'user_site_follow',
 			array('f_wiki_domain'),
@@ -371,20 +372,22 @@ class UserSiteFollow{
 				'ORDER BY' => 'f_date DESC',
 			)
 		);
+		foreach ($s as$value) {
+			$fs[] = $value->f_wiki_domain;
+		}
 		foreach( $res as $row ){
+			$temp = array();
 			$domain = $row->f_wiki_domain;
 			$siteName = HuijiPrefix::prefixToSiteName($domain);
-			foreach ($s as $value) {
-				if($domain == $value->f_wiki_domain){
-					$is_follow= 'Y';
-				}else{
-					$is_follow= 'N';
-				}		
-			}
 			$temp['key'] = $domain;
 			$temp['val'] = $siteName;
+			if(in_array($domain, $fs)){
+				$is_follow = 'Y';
+			}else{
+				$is_follow = 'N';
+			}
 			$temp['is'] = $is_follow;
-			$followed[] = $temp;
+			$followed[] = $temp; 
 
 		}
 		return $followed;
@@ -480,6 +483,74 @@ class UserSiteFollow{
 			}
 		}
 		return $coninterest;
+	}
+	/**
+	 * Get site follows from DB 
+	 *
+	 * @param $user:current user; $site_name:servername
+	 * @return array
+	 */
+	public static function getUserFollowSite( $user,$site_name ){
+		$dbr = wfGetDB( DB_SLAVE );
+		$request = array();
+		$user_id = User::idFromName($user);
+		$followed = self::getFollowedByUser($user_id);
+		$res = $dbr->select(
+			'user_site_follow',
+			array(
+				'f_user_name'
+			),
+			array(
+				'f_wiki_domain' => $site_name
+			),
+			__METHOD__
+		);
+		
+		foreach ($res as $value) {
+			$u_name = $value->f_user_name;
+			$temp['user'] = $u_name;
+			$temp['user_id'] = User::idFromName($u_name);
+			$req = $dbr->select(
+				'user_stats',
+				array(
+					'stats_edit_count'
+				),
+				array(
+					'stats_user_name' => $u_name
+				),
+				__METHOD__
+			);
+			foreach ($req as $value) {
+				$temp['count'] = $value->stats_edit_count;
+			}
+			
+			if(in_array($u_name, $followed)){
+				$is_follow = 'Y';
+			}else{
+				$is_follow = 'N';
+			}
+			$temp['is_follow'] = $is_follow;
+			$request = $temp;
+ 		}
+		// foreach ($req as $value) {
+		// 	$a = $value->stats_user_name;
+		// 	foreach ($res as $user_val) {
+		// 		if($a == $user_val){
+		// 			$temp['user'] = $a;
+		// 			if(in_array($a,$followed)){
+		// 				$is_follow = 'Y';
+		// 			}else{
+		// 				$is_follow = 'N';
+		// 			}
+		// 			$temp['is_follow'] = $is_follow;
+		// 			$request[] = $temp;
+		// 		}				
+		// 	}
+			
+		// }
+		// $request = $res;
+		return $request;
+
 	}
 
 }

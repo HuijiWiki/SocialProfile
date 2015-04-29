@@ -46,7 +46,7 @@ class UserProfilePage extends Article {
 	 * Constructor
 	 */
 	function __construct( $title ) {
-		global $wgUser;
+		global $wgUser,$wgHuijiPrefix;
 		parent::__construct( $title );
 		$this->user_name = $title->getText();
 		$this->user_id = User::idFromName( $this->user_name );
@@ -71,7 +71,7 @@ class UserProfilePage extends Article {
 	}
 
 	function view() {
-		global $wgOut, $wgUser;
+		global $wgOut, $wgUser, $wgHuijiprefix;
 
 		$wgOut->setPageTitle( $this->mTitle->getPrefixedText() );
 
@@ -173,7 +173,7 @@ class UserProfilePage extends Article {
                         <li><a href="'.$tfsUrl[1].'">'.$tfsName[1].'</a></li>
                         <li><a href="'.$tfsUrl[2].'">'.$tfsName[2].'</a></li>
                     </ul>
-                    <a>查看全部'.$userCount.'个wiki</a>
+                    <a>查看全部'.$userCount.'个wi'.$wgHuijiPrefix.'ki</a>
                     <div>
                         <ul class="profile-interactive">'.
                             $button1.$button2.
@@ -2112,7 +2112,7 @@ class UserProfilePage extends Article {
 			foreach ($res as $value) {
 				$Iname = HuijiPrefix::prefixToSiteName($value);
 				$Iurl = HuijiPrefix::prefixToUrl($value);
-				$output .= '<a href="'.$Iurl.'">'.$Iname.'</a>';
+				$output .= '<a href="'.$Iurl.'">'.$Iname.'&nbsp;</a>';
 			}
 		}else{
 			$output .='<p>&nbsp;您和Ta还没有共同兴趣~</p>';
