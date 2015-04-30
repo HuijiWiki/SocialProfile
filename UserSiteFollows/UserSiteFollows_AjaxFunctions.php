@@ -104,12 +104,12 @@ function wfUserSiteFollowsDetailsResponse( $user_name,$t_name ) {
 function wfUserFollowsSiteResponse( $user, $site_name ) {
 	global $wgUser, $wgSitename, $wgServer, $wgHuijiPrefix;
 
-	$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_UNKNOWN);
-	// This feature is only available for logged-in users.
-	if ( !$wgUser->isLoggedIn() ) {
-		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NOT_LOGGED_IN);
-		return $out;
-	}
+	// $out = ResponseGenerator::getJson(ResponseGenerator::ERROR_UNKNOWN);
+	// // This feature is only available for logged-in users.
+	// if ( !$wgUser->isLoggedIn() ) {
+	// 	$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NOT_LOGGED_IN);
+	// 	return $out;
+	// }
 
 	// No need to allow blocked users to access this page, they could abuse it, y'know.
 	if ( $wgUser->isBlocked() ) {
@@ -123,11 +123,11 @@ function wfUserFollowsSiteResponse( $user, $site_name ) {
 		return $out;
 	}
 
-	// Are we even allowed to do this?
-	if ( !$wgUser->isAllowed( 'edit' ) ) {
-		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NOT_ALLOWED);
-		return $out;
-	}
+	// // Are we even allowed to do this?
+	// if ( !$wgUser->isAllowed( 'edit' ) ) {
+	// 	$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NOT_ALLOWED);
+	// 	return $out;
+	// }
 	$str = substr($site_name,7);
 	$n=strpos($str,'.huiji.wiki');
 	if ($n) 

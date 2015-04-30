@@ -396,23 +396,27 @@ class UserSiteFollow{
 	 * Get user's followed from the
 	 * database and show it.
 	 *
-	 * @param $f_user_id:current user
+	 * @param $username:current user
 	 * @return array
 	 */
-	public static function getFollowedByUser( $f_user_id ){
+	public static function getFollowedByUser( $username ){
 		$dbr = wfGetDB( DB_SLAVE );
-		$followme = $dbr->select(
+		$res = array();
+		$res = $dbr->select(
 			'user_user_follow',
 			array(
-				'f_target_user_id',
+				'f_target_user_name'
 			),
 			array(
-				'f_user_id' => $f_user_id,
+				'f_user_name' => $username
 			),
 			__METHOD__
 		);
-		return $followme;
-
+		foreach ($res as $value) {
+			$req[] = $value->f_target_user_name;
+		}
+		$res = $req;
+		return $res;
 	}
 	/**
 	 * Get the common interests users of followed sites from the
@@ -493,8 +497,7 @@ class UserSiteFollow{
 	public static function getUserFollowSite( $user,$site_name ){
 		$dbr = wfGetDB( DB_SLAVE );
 		$request = array();
-		$user_id = User::idFromName($user);
-		$followed = self::getFollowedByUser($user_id);
+		$follower = self::getFollowedByUser($user);
 		$res = $dbr->select(
 			'user_site_follow',
 			array(
@@ -509,7 +512,12 @@ class UserSiteFollow{
 		foreach ($res as $value) {
 			$u_name = $value->f_user_name;
 			$temp['user'] = $u_name;
-			$temp['user_id'] = User::idFromName($u_name);
+			$userPage = Title::makeTitle( NS_USER, $u_name );
+			$userPageURL = htmlspecialchars( $userPage->getFullURL() );
+			$temp['userUrl'] = $userPageURL;
+			$user_id = User::idFromName($u_name);
+			$avatar = new wAvatar( $user_id, 'm' );
+			$temp['url'] = $avatar->getAvatarURL();
 			$req = $dbr->select(
 				'user_stats',
 				array(
@@ -524,31 +532,14 @@ class UserSiteFollow{
 				$temp['count'] = $value->stats_edit_count;
 			}
 			
-			if(in_array($u_name, $followed)){
+			if(in_array($u_name, $follower)){
 				$is_follow = 'Y';
 			}else{
 				$is_follow = 'N';
 			}
 			$temp['is_follow'] = $is_follow;
-			$request = $temp;
+			$request[] = $temp;
  		}
-		// foreach ($req as $value) {
-		// 	$a = $value->stats_user_name;
-		// 	foreach ($res as $user_val) {
-		// 		if($a == $user_val){
-		// 			$temp['user'] = $a;
-		// 			if(in_array($a,$followed)){
-		// 				$is_follow = 'Y';
-		// 			}else{
-		// 				$is_follow = 'N';
-		// 			}
-		// 			$temp['is_follow'] = $is_follow;
-		// 			$request[] = $temp;
-		// 		}				
-		// 	}
-			
-		// }
-		// $request = $res;
 		return $request;
 
 	}

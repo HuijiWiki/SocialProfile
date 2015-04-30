@@ -179,6 +179,7 @@ jQuery( document ).ready( function() {
 	$('#site-follower-count').click(function(){
 		var alreturn = $('.alert-return');
 	    var alertp = $('.alert-return p');
+        $('.follow-modal').empty();
 	    function alertime(){
 	        alreturn.show();
 	        setTimeout(function(){
@@ -201,23 +202,15 @@ jQuery( document ).ready( function() {
 				if(res.success){
 					$.each(res.result,
 						function(i,item){
-							// var msg = '<li>'+item.user+'</li>';
+							if (item.is_follow == 'Y') {
+								var msg = '<li><a href="'+item.userUrl+'">'+item.url+'</a><a href="'+item.userUrl+'">'+item.user+'</a>编辑次数：'+item.count+'<i>(已关注)</i></li>';
+							}else{
+								var msg = '<li><a href="'+item.userUrl+'">'+item.url+'</a><a href="'+item.userUrl+'">'+item.user+'</a>编辑次数：'+item.count+'</li>';
+							}
+							$('.follow-modal').append(msg);
 						}
-						// $('.modal-title').append(msg);
+						
 					);
-					
-					// $.each(res.result,
-     //                    function(i, item){
-     //                        if (item.is == 'Y') {
-     //                            var msg='<li><a href="'+item.key+'.huiji.wiki">'+item.val+'</a><button class="user-href-follow unfollow">取关</button></li>';
-     //                        }else{
-     //                            var msg='<li><a href="'+item.key+'.huiji.wiki">'+item.val+'</a><button class="user-href-follow">关注</button></li>';
-     //                        }
-     //                        $('.follow-modal').append(msg);
-     //                    }
-     //                );
-
-
 				}else{
 					alertime();
                     alertp.text(res.message);
@@ -226,10 +219,6 @@ jQuery( document ).ready( function() {
 	});
 
 } );
-
-
-
-
 
 function requestUserFollowsSiteResponse( username, servername) {
 

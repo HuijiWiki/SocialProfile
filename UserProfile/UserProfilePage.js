@@ -282,9 +282,9 @@ jQuery( document ).ready( function() {
                     $.each(res.result,
                         function(i, item){
                             if (item.is == 'Y') {
-                                var msg='<li><a href="'+item.key+'.huiji.wiki">'+item.val+'</a><button class="user-href-follow unfollow">取关</button></li>';
+                                var msg='<li><a href="'+"http://"+item.key+'.huiji.wiki">'+item.val+'</a><button class="user-href-follow unfollow">取关</button></li>';
                             }else{
-                                var msg='<li><a href="'+item.key+'.huiji.wiki">'+item.val+'</a><button class="user-href-follow">关注</button></li>';
+                                var msg='<li><a href="'+"http://"+item.key+'.huiji.wiki">'+item.val+'</a><button class="user-href-follow">关注</button></li>';
                             }
                             $('.modal-url').append(msg);
                         }
