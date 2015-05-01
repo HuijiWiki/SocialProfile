@@ -2094,8 +2094,17 @@ class UserProfilePage extends Article {
 		$user_id = $this->user_id;
 		$target_user_id = $wgUser->getId();
 		$res = UserSiteFollow::getCommonInterest($user_id,$target_user_id);
+		$us = new UserStatus($this->user);
+		$gender = $us->getGender();
+		if ($gender == 'male'){
+			$genderIcon = '他';
+		} elseif ($gender == 'female'){
+			$genderIcon = '她';
+		} else {
+			$genderIcon = 'TA';
+		}
 		$output .= '<div class="panel panel-default"><div class="user-section-heading panel-heading">
-				<div class="user-section-title">我和Ta的共同兴趣:
+				<div class="user-section-title">我和'.$genderIcon.'的共同兴趣:
 				</div>
 				<div class="user-section-actions">
 					<div class="action-right">
@@ -2106,13 +2115,13 @@ class UserProfilePage extends Article {
 				</div>
 			</div>
 			<div class="cleared"></div>
-			<div class="#">';
+			<div class="common-interest-container panel-body">';
 			
 		if(!empty($res)){
 			foreach ($res as $value) {
 				$Iname = HuijiPrefix::prefixToSiteName($value);
 				$Iurl = HuijiPrefix::prefixToUrl($value);
-				$output .= '<a href="'.$Iurl.'">'.$Iname.'&nbsp;</a>';
+				$output .= '<span class="label label-primary"><a href="http://'.$Iurl.'">'.$Iname.'&nbsp;</a></span>';
 			}
 		}else{
 			$output .='<p>&nbsp;您和Ta还没有共同兴趣~</p>';
