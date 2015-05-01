@@ -173,7 +173,7 @@ class UserProfilePage extends Article {
                         <li><a href="'.$tfsUrl[1].'">'.$tfsName[1].'</a></li>
                         <li><a href="'.$tfsUrl[2].'">'.$tfsName[2].'</a></li>
                     </ul>
-                    <a>查看全部'.$userCount.'个wi'.$wgHuijiPrefix.'ki</a>
+                    <a>查看全部'.$userCount.'个wiki</a>
                     <div>
                         <ul class="profile-interactive">'.
                             $button1.$button2.
@@ -947,7 +947,24 @@ class UserProfilePage extends Article {
 		$user_page = Title::makeTitle( NS_USER, $user );
 		$user_social_profile = Title::makeTitle( NS_USER_PROFILE, $user );
 		$user_wiki = Title::makeTitle( NS_USER_WIKI, $user );
-
+		$us = new UserStatus($this->user);
+		$city = $us->getCity();
+		$birthday = $us->getBirthday();
+		$status = $us->getStatus();
+		$gender = $us->getGender();
+		if ($gender == 'male'){
+			$genderIcon = '♂';
+			$gendertext = '他';
+		} elseif ($gender == 'female'){
+			$genderIcon = '♀';
+			$gendertext = '她';
+		} else {
+			$genderIcon = '♂/♀';
+			$gendertext = 'TA';
+		}
+		if ($this->isOwner()){
+			$gendertext = '你';
+		}
 		if ( $id != 0 ) {
 			$relationship = UserRelationship::getUserRelationshipByID( $id, $wgUser->getID() );
 		}
@@ -979,12 +996,11 @@ class UserProfilePage extends Article {
                         <div class="modal-content">
                           <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                              <h4 class="modal-title" id="gridSystemModalLabel">Ta关注的All</h4>
+                              <h4 class="modal-title" id="gridSystemModalLabel">'.$gendertext.'关注的全部wiki</h4>
                           </div>
                             <div class="modal-body">
-                                <ul class="modal-url">
-
-                                </ul>
+	                            <div class="list-group">
+								</div>                         
                             </div>
                         </div>
                       </div>
@@ -1018,20 +1034,6 @@ class UserProfilePage extends Article {
 					</div>';
 		}
 		$output .= '<div class="profile-actions">';
-
-
-		$us = new UserStatus($this->user);
-		$city = $us->getCity();
-		$birthday = $us->getBirthday();
-		$status = $us->getStatus();
-		$gender = $us->getGender();
-		if ($gender == 'male'){
-			$genderIcon = '♂';
-		} elseif ($gender == 'female'){
-			$genderIcon = '♀';
-		} else {
-			$genderIcon = '♂/♀';
-		}
         $output .='<div class="form-container '.($this->isOwner()?'owner':'').'"><div class="form-msg"><span class="form-location '.($city == ''&& $this->isOwner()?'edit-on':'').'" data-toggle="yes">'.($city == ''?($this->isOwner()?'填写居住地':'居住地未公开'):$city).'</span>
                     <span class="span-color">|</span><span class="form-date '.(($birthday == ''|| $birthday == '0000-00-00') && $this->isOwner()?'edit-on':'').'" data-birthday="'.($birthday == ''||$birthday == '0000-00-00'?'':$birthday).'">'.($birthday == ''||$birthday == '0000-00-00'?($this->isOwner()?'填写生日':'生日未公开'):'').'</span>
                     <span class="span-color">|</span><span class="form-sex">'.$genderIcon.'</span></div>';

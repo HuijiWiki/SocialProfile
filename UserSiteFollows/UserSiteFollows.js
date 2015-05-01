@@ -87,10 +87,10 @@ jQuery( document ).ready( function() {
 	} );
 
 
-	jQuery( '.modal' ).on( 'click','.user-href-follow', function() {
+	$( '.modal' ).on('click', '.user-href-follow', function(event) {	
+		event.preventDefault();
 		var that = $(this);
-		var server = 'http://' + that.parent().find('a').attr('href');
-		console.log(server);
+		var server = that.parent().attr('href');
 		if (alreadySubmittedUserSiteFollow == true){
 			return;
 		}
@@ -100,19 +100,19 @@ jQuery( document ).ready( function() {
 			$('.user-login').modal();
 			return;
 		}
-		console.log(mw.config.get('wgUserName'));
-		console.log(server);
 		alreadySubmittedUserSiteFollow = true;
 		requestUserHrefFollowsResponse(
 			mw.config.get('wgUserName'),
 			server,
-			that.hasClass('unfollow')
+			that.hasClass('unfollow'),
+			that
 		);
 		// wikis alert window
-		function requestUserHrefFollowsResponse( username, servername, action ) {
+		function requestUserHrefFollowsResponse( username, servername, action, element ) {
 
 			//TODO: add waiting message.
 			//TODO: validate wgUserName.
+			var mElement = element;
 		    var alreturn = $('.alert-return');
 		    var alertp = $('.alert-return p');
 		    function alertime(){
@@ -131,11 +131,14 @@ jQuery( document ).ready( function() {
 					function( data ) {
 						var res = jQuery.parseJSON(data);
 						if (res.success){
-							that.html('取关');
-							that.addClass('unfollow');
-							var count = jQuery( '#site-follower-count').html();
-							count = parseInt(count)+1;
-							jQuery( '#site-follower-count').html(count.toString());					
+							mElement.html('取关');
+							mElement.addClass('unfollow');
+							// if (servername == mw.config.get('wgServer')){
+							// 	var count = jQuery( '#site-follower-count').html();
+							// 	count = parseInt(count)+1;
+							// 	jQuery( '#site-follower-count').html(count.toString());										
+							// }
+			
 						}else{
 		                    alertime();
 		                    alertp.text(res.message);
@@ -153,15 +156,18 @@ jQuery( document ).ready( function() {
 					function( data ) {
 						var res = jQuery.parseJSON(data);
 						if ( res.success ){
-							that.html('<span class="glyphicon glyphicon-plus"></span>关注</a>');
-							that.removeClass('unfollow');	
-							var count = jQuery( '#site-follower-count').html();
-							count = parseInt(count)-1;
-							if (count >= 0){
-								jQuery( '#site-follower-count').html(count.toString());	
-							}else{
-								jQuery( '#site-follower-count').html(0);	
-							}		
+							mElement.html('关注');
+							mElement.removeClass('unfollow');	
+							
+							// if (servername == mw.config.get('wgServer')){
+								// var count = jQuery( '#site-follower-count').html();
+								// count = parseInt(count)-1;
+							// 	if (count >= 0){
+							// 		jQuery( '#site-follower-count').html(count.toString());	
+							// 	}else{
+							// 		jQuery( '#site-follower-count').html(0);	
+							// 	}	
+							// }	
 						}else{
 		                    alertime();
 		                    alertp.text(res.message);

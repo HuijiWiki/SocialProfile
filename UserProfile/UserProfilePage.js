@@ -264,11 +264,9 @@ jQuery( document ).ready( function() {
     }
     $('.profile-top-right-bottom>a').click(function(){
         $('.watch-url').modal();
-        $('.modal-url').empty();
+        $('.modal-body .list-group').empty();
         var t_name = mw.config.get('wgTitle');
         var user_name = mw.config.get('wgUserName');
-        console.log(user_name);
-        console.log(t_name);
         $.post(
             mw.util.wikiScript(), {
                 action: 'ajax',
@@ -282,11 +280,11 @@ jQuery( document ).ready( function() {
                     $.each(res.result,
                         function(i, item){
                             if (item.is == 'Y') {
-                                var msg='<li><a href="'+"http://"+item.key+'.huiji.wiki">'+item.val+'</a><button class="user-href-follow unfollow">取关</button></li>';
+                                var msg='<a href="'+"http://"+item.key+'.huiji.wiki" class="list-group-item">'+item.val+'<span class="badge user-href-follow unfollow">取关</span></a>';
                             }else{
-                                var msg='<li><a href="'+"http://"+item.key+'.huiji.wiki">'+item.val+'</a><button class="user-href-follow">关注</button></li>';
+                                var msg='<a href="'+"http://"+item.key+'.huiji.wiki" class="list-group-item">'+item.val+'<span class="badge user-href-follow">关注</span></a>';
                             }
-                            $('.modal-url').append(msg);
+                            $('.modal-body .list-group').append(msg);
                         }
                     );
                 }
