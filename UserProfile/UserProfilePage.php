@@ -2123,10 +2123,10 @@ class UserProfilePage extends Article {
 			foreach ($res as $value) {
 				$Iname = HuijiPrefix::prefixToSiteName($value);
 				$Iurl = HuijiPrefix::prefixToUrl($value);
-				$output .= '<span class="label label-primary"><a href="http://'.$Iurl.'">'.$Iname.'&nbsp;</a></span>';
+				$output .= '<span class="label label-primary"><a href="'.$Iurl.'">'.$Iname.'&nbsp;</a></span>';
 			}
 		}else{
-			$output .='<p>&nbsp;您和Ta还没有共同兴趣~</p>';
+			$output .='<p>&nbsp;您和'.$genderIcon.'还没有共同兴趣~</p>';
 		}
 		$output .='</div></div>';
 		return $output;
