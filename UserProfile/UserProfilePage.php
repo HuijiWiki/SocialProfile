@@ -1021,7 +1021,7 @@ class UserProfilePage extends Article {
 		if ( $wgUserLevels ) {
 			$progress = $user_level->getLevelProgress()*100;
 			$output .= '<div id="honorific-level" class="label label-info">
-						<a href="' . htmlspecialchars( $level_link->getFullURL() ) . '" rel="nofollow">(' . $user_level->getLevelName() . ')</a>
+						<a href="' . htmlspecialchars( $level_link->getFullURL() ) . '" rel="nofollow">' . $user_level->getLevelName() . '</a>
 					</div>
 					<div id="points-level" class="progress">
 						<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="'.$progress.'" aria-valuemin="0" aria-valuemax="100" style="width: '.$progress.'%">
@@ -1840,7 +1840,7 @@ class UserProfilePage extends Article {
 								wfMessage( 'userboard_private' )->escaped() .
 							'</option>
 						</select><p><div class="form-group" style="padding:14px;">
-                                      <textarea class="form-control" name="message" id="message" placeholder="对他说点什么"></textarea>
+                                      <textarea class="form-control" name="message" id="message" placeholder=""></textarea>
                                     </div>
 						
 						<div class="user-page-message-box-button">
