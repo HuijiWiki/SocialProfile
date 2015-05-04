@@ -89,8 +89,8 @@ jQuery( document ).ready( function() {
 
 	jQuery( '.modal' ).on( 'click','.user-href-follow', function() {
 		var that = $(this);
-		var server = 'http://' + that.parent().find('a').attr('href');
-		console.log(server);
+		// var server = 'http://' + that.parent().find('a').attr('href');
+		var server = that.parent().find('a').attr('href');
 		if (alreadySubmittedUserSiteFollow == true){
 			return;
 		}
@@ -100,8 +100,8 @@ jQuery( document ).ready( function() {
 			$('.user-login').modal();
 			return;
 		}
-		console.log(mw.config.get('wgUserName'));
-		console.log(server);
+		// console.log(mw.config.get('wgUserName'));
+		// console.log(server);
 		alreadySubmittedUserSiteFollow = true;
 		requestUserHrefFollowsResponse(
 			mw.config.get('wgUserName'),
@@ -133,9 +133,9 @@ jQuery( document ).ready( function() {
 						if (res.success){
 							that.html('取关');
 							that.addClass('unfollow');
-							var count = jQuery( '#site-follower-count').html();
+							var count = jQuery( '#wiki-follower-count').html();
 							count = parseInt(count)+1;
-							jQuery( '#site-follower-count').html(count.toString());					
+							jQuery( '#wiki-follower-count').html(count.toString());					
 						}else{
 		                    alertime();
 		                    alertp.text(res.message);
@@ -155,12 +155,12 @@ jQuery( document ).ready( function() {
 						if ( res.success ){
 							that.html('<span class="glyphicon glyphicon-plus"></span>关注</a>');
 							that.removeClass('unfollow');	
-							var count = jQuery( '#site-follower-count').html();
+							var count = jQuery( '#wiki-follower-count').html();
 							count = parseInt(count)-1;
 							if (count >= 0){
-								jQuery( '#site-follower-count').html(count.toString());	
+								jQuery( '#wiki-follower-count').html(count.toString());	
 							}else{
-								jQuery( '#site-follower-count').html(0);	
+								jQuery( '#wiki-follower-count').html(0);	
 							}		
 						}else{
 		                    alertime();
@@ -196,10 +196,13 @@ jQuery( document ).ready( function() {
 			},
 			function( data ) {
 				var res = jQuery.parseJSON(data);
-				console.log(user);
-				console.log(site_name);
-				console.log(res);
+				// console.log(user);
+				// console.log(site_name);
+				// console.log(res);
 				if(res.success){
+					if(res.result==0){
+						$('.follow-modal').append('暂时还没关注>-<');
+					}
 					$.each(res.result,
 						function(i,item){
 							if (item.is_follow == 'Y') {
@@ -208,8 +211,7 @@ jQuery( document ).ready( function() {
 								var msg = '<li><a href="'+item.userUrl+'">'+item.url+'</a><a href="'+item.userUrl+'">'+item.user+'</a>编辑次数：'+item.count+'</li>';
 							}
 							$('.follow-modal').append(msg);
-						}
-						
+						}						
 					);
 				}else{
 					alertime();

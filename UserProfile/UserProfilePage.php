@@ -173,7 +173,14 @@ class UserProfilePage extends Article {
                         <li><a href="'.$tfsUrl[1].'">'.$tfsName[1].'</a></li>
                         <li><a href="'.$tfsUrl[2].'">'.$tfsName[2].'</a></li>
                     </ul>
-                    <a>查看全部'.$userCount.'个wi'.$wgHuijiPrefix.'ki</a>
+        ');
+        if( $wgUser->getName() == $this->user_name ){
+        	$wgOut->addHTML('<a >查看全部<i id="wiki-follower-count">'.$userCount.'</i>个wiki</a>');
+        }else{
+        	$wgOut->addHTML('<a >查看全部<i>'.$userCount.'</i>个wiki</a>');
+        }
+                    
+        $wgOut->addHTML('
                     <div>
                         <ul class="profile-interactive">'.
                             $button1.$button2.

@@ -267,8 +267,8 @@ jQuery( document ).ready( function() {
         $('.modal-url').empty();
         var t_name = mw.config.get('wgTitle');
         var user_name = mw.config.get('wgUserName');
-        console.log(user_name);
-        console.log(t_name);
+        // console.log(user_name);
+        // console.log(t_name);
         $.post(
             mw.util.wikiScript(), {
                 action: 'ajax',
@@ -276,19 +276,27 @@ jQuery( document ).ready( function() {
                 rsargs: [user_name,t_name]
             },
             function(data){
-                var res = $.parseJSON(data);console.log(res);
+                var res = $.parseJSON(data);//console.log(res);
                 if (res.success==true){
-                    
-                    $.each(res.result,
-                        function(i, item){
-                            if (item.is == 'Y') {
-                                var msg='<li><a href="'+"http://"+item.key+'.huiji.wiki">'+item.val+'</a><button class="user-href-follow unfollow">取关</button></li>';
-                            }else{
-                                var msg='<li><a href="'+"http://"+item.key+'.huiji.wiki">'+item.val+'</a><button class="user-href-follow">关注</button></li>';
+                    if(user_name != null){
+                        $.each(res.result,
+                            function(i, item){
+                                if (item.is == 'Y') {
+                                    var msg='<li><a href="'+"http://"+item.key+'.huiji.wiki">'+item.val+'</a><button class="user-href-follow unfollow">取关</button></li>';
+                                }else{
+                                    var msg='<li><a href="'+"http://"+item.key+'.huiji.wiki">'+item.val+'</a><button class="user-href-follow">关注</button></li>';
+                                }
+                                $('.modal-url').append(msg);
                             }
-                            $('.modal-url').append(msg);
+                        );
+                    }else{
+                        $.each(res.result,
+                            function(i, item){
+                                var msg='<li><a href="'+"http://"+item.key+'.huiji.wiki">'+item.val+'</a></li>';
+                                $('.modal-url').append(msg);
                         }
                     );
+                    }
                 }
             }
         );
