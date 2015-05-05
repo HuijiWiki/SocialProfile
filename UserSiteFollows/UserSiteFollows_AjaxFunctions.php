@@ -6,7 +6,6 @@ $wgAjaxExportList[] = 'wfUserSiteFollowsResponse';
 $wgAjaxExportList[] = 'wfUserSiteUnfollowsResponse';
 $wgAjaxExportList[] = 'wfUserSiteFollowsDetailsResponse';
 $wgAjaxExportList[] = 'wfUserFollowsSiteResponse';
-
 function wfUserSiteFollowsResponse( $username, $servername ) {
 	
 	global $wgUser;
@@ -39,10 +38,11 @@ function wfUserSiteFollowsResponse( $username, $servername ) {
 
 	$usf = new UserSiteFollow();
 	if ( $username === $wgUser->getName() ){//&& $servername === $wgServer
+		//convert full url to prefix
 		$str = substr($servername,7);
-		$n=strpos($str,'.huiji.wiki');
+		$n = strpos($str, '.huiji.wiki');
 		if ($n){
-			$servername=substr($str,0,$n);
+			$servername = substr($str, 0, $n);
 		}
 		if ($usf->addUserSiteFollow($wgUser, $servername) >= 0){
 			$out = ResponseGenerator::getJson(ResponseGenerator::SUCCESS);
@@ -98,18 +98,10 @@ function wfUserSiteFollowsDetailsResponse( $user_name,$t_name ) {
 	$ret = array('success'=> true, 'result'=>$sites );
 	$out = json_encode($ret);
 	return $out;
-    
 }
-//
+
 function wfUserFollowsSiteResponse( $user, $site_name ) {
 	global $wgUser, $wgSitename, $wgServer, $wgHuijiPrefix;
-
-	// $out = ResponseGenerator::getJson(ResponseGenerator::ERROR_UNKNOWN);
-	// // This feature is only available for logged-in users.
-	// if ( !$wgUser->isLoggedIn() ) {
-	// 	$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NOT_LOGGED_IN);
-	// 	return $out;
-	// }
 
 	// No need to allow blocked users to access this page, they could abuse it, y'know.
 	if ( $wgUser->isBlocked() ) {
@@ -123,11 +115,6 @@ function wfUserFollowsSiteResponse( $user, $site_name ) {
 		return $out;
 	}
 
-	// // Are we even allowed to do this?
-	// if ( !$wgUser->isAllowed( 'edit' ) ) {
-	// 	$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NOT_ALLOWED);
-	// 	return $out;
-	// }
 	$str = substr($site_name,7);
 	$n=strpos($str,'.huiji.wiki');
 	if ($n) 
@@ -137,5 +124,5 @@ function wfUserFollowsSiteResponse( $user, $site_name ) {
 	$sites = UserSiteFollow::getUserFollowSite($wgUser, $site_name);
 	$ret = array('success'=> true, 'result'=>$sites );
 	$out = json_encode($ret);
-	return $out;
+	return $out;  
 }

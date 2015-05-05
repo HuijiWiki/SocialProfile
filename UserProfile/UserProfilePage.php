@@ -173,6 +173,7 @@ class UserProfilePage extends Article {
                         <li><a href="'.$tfsUrl[1].'">'.$tfsName[1].'</a></li>
                         <li><a href="'.$tfsUrl[2].'">'.$tfsName[2].'</a></li>
                     </ul>
+
         ');
         if( $wgUser->getName() == $this->user_name ){
         	$wgOut->addHTML('<a >查看全部<i id="wiki-follower-count">'.$userCount.'</i>个wiki</a>');
@@ -954,7 +955,24 @@ class UserProfilePage extends Article {
 		$user_page = Title::makeTitle( NS_USER, $user );
 		$user_social_profile = Title::makeTitle( NS_USER_PROFILE, $user );
 		$user_wiki = Title::makeTitle( NS_USER_WIKI, $user );
-
+		$us = new UserStatus($this->user);
+		$city = $us->getCity();
+		$birthday = $us->getBirthday();
+		$status = $us->getStatus();
+		$gender = $us->getGender();
+		if ($gender == 'male'){
+			$genderIcon = '♂';
+			$gendertext = '他';
+		} elseif ($gender == 'female'){
+			$genderIcon = '♀';
+			$gendertext = '她';
+		} else {
+			$genderIcon = '♂/♀';
+			$gendertext = 'TA';
+		}
+		if ($this->isOwner()){
+			$gendertext = '你';
+		}
 		if ( $id != 0 ) {
 			$relationship = UserRelationship::getUserRelationshipByID( $id, $wgUser->getID() );
 		}
@@ -986,12 +1004,11 @@ class UserProfilePage extends Article {
                         <div class="modal-content">
                           <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                              <h4 class="modal-title" id="gridSystemModalLabel">Ta关注的All</h4>
+                              <h4 class="modal-title" id="gridSystemModalLabel">'.$gendertext.'关注的全部wiki</h4>
                           </div>
                             <div class="modal-body">
-                                <ul class="modal-url">
-
-                                </ul>
+	                            <div class="list-group">
+								</div>                         
                             </div>
                         </div>
                       </div>
@@ -1012,7 +1029,7 @@ class UserProfilePage extends Article {
 		if ( $wgUserLevels ) {
 			$progress = $user_level->getLevelProgress()*100;
 			$output .= '<div id="honorific-level" class="label label-info">
-						<a href="' . htmlspecialchars( $level_link->getFullURL() ) . '" rel="nofollow">(' . $user_level->getLevelName() . ')</a>
+						<a href="' . htmlspecialchars( $level_link->getFullURL() ) . '" rel="nofollow">' . $user_level->getLevelName() . '</a>
 					</div>
 					<div id="points-level" class="progress">
 						<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="'.$progress.'" aria-valuemin="0" aria-valuemax="100" style="width: '.$progress.'%">
@@ -1025,20 +1042,6 @@ class UserProfilePage extends Article {
 					</div>';
 		}
 		$output .= '<div class="profile-actions">';
-
-
-		$us = new UserStatus($this->user);
-		$city = $us->getCity();
-		$birthday = $us->getBirthday();
-		$status = $us->getStatus();
-		$gender = $us->getGender();
-		if ($gender == 'male'){
-			$genderIcon = '♂';
-		} elseif ($gender == 'female'){
-			$genderIcon = '♀';
-		} else {
-			$genderIcon = '♂/♀';
-		}
         $output .='<div class="form-container '.($this->isOwner()?'owner':'').'"><div class="form-msg"><span class="form-location '.($city == ''&& $this->isOwner()?'edit-on':'').'" data-toggle="yes">'.($city == ''?($this->isOwner()?'填写居住地':'居住地未公开'):$city).'</span>
                     <span class="span-color">|</span><span class="form-date '.(($birthday == ''|| $birthday == '0000-00-00') && $this->isOwner()?'edit-on':'').'" data-birthday="'.($birthday == ''||$birthday == '0000-00-00'?'':$birthday).'">'.($birthday == ''||$birthday == '0000-00-00'?($this->isOwner()?'填写生日':'生日未公开'):'').'</span>
                     <span class="span-color">|</span><span class="form-sex">'.$genderIcon.'</span></div>';
@@ -1845,7 +1848,7 @@ class UserProfilePage extends Article {
 								wfMessage( 'userboard_private' )->escaped() .
 							'</option>
 						</select><p><div class="form-group" style="padding:14px;">
-                                      <textarea class="form-control" name="message" id="message" placeholder="对他说点什么"></textarea>
+                                      <textarea class="form-control" name="message" id="message" placeholder=""></textarea>
                                     </div>
 						
 						<div class="user-page-message-box-button">
@@ -2101,8 +2104,17 @@ class UserProfilePage extends Article {
 		$user_id = $this->user_id;
 		$target_user_id = $wgUser->getId();
 		$res = UserSiteFollow::getCommonInterest($user_id,$target_user_id);
+		$us = new UserStatus($this->user);
+		$gender = $us->getGender();
+		if ($gender == 'male'){
+			$genderIcon = '他';
+		} elseif ($gender == 'female'){
+			$genderIcon = '她';
+		} else {
+			$genderIcon = 'TA';
+		}
 		$output .= '<div class="panel panel-default"><div class="user-section-heading panel-heading">
-				<div class="user-section-title">我和Ta的共同兴趣:
+				<div class="user-section-title">我和'.$genderIcon.'的共同兴趣:
 				</div>
 				<div class="user-section-actions">
 					<div class="action-right">
@@ -2113,16 +2125,16 @@ class UserProfilePage extends Article {
 				</div>
 			</div>
 			<div class="cleared"></div>
-			<div class="#">';
+			<div class="common-interest-container panel-body">';
 			
 		if(!empty($res)){
 			foreach ($res as $value) {
 				$Iname = HuijiPrefix::prefixToSiteName($value);
 				$Iurl = HuijiPrefix::prefixToUrl($value);
-				$output .= '<a href="'.$Iurl.'">'.$Iname.'&nbsp;</a>';
+				$output .= '<span class="label label-primary"><a href="'.$Iurl.'">'.$Iname.'&nbsp;</a></span>';
 			}
 		}else{
-			$output .='<p>&nbsp;您和Ta还没有共同兴趣~</p>';
+			$output .='<p>&nbsp;您和'.$genderIcon.'还没有共同兴趣~</p>';
 		}
 		$output .='</div></div>';
 		return $output;

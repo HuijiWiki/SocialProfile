@@ -1068,3 +1068,18 @@ span.span-color{
         margin-top: 100px;
     }
 }
+.common-interest-container a {
+	display: inline-block;
+	margin: 4px 0px 0px;
+	font-size: 14px;
+	color: #FFF;
+	text-decoration: none;
+}
+.common-interest-container .label {
+    padding: 0.5em;
+    margin-left: 10px;
+}
+.common-interest-container a:focus, .common-interest-container a:hover{
+	color: #FFF;
+	text-decoration: none;	
+}
