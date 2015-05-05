@@ -184,7 +184,7 @@ class UserProfilePage extends Article {
                                         '.$rightLink.' 
                                         <li class="divider"></li>
                                         '.$watchlistLink.' 
-                                        <li><a href="' . htmlspecialchars( $contributions->getFullURL('user='. $user_safe  )) . '" rel="nofollow">' . wfMessage( 'user-contributions' )->escaped() . '</a></li>
+                                        <li><a href="' . htmlspecialchars( $contributions->getFullURL('target='. $user_safe.'&contribs=user'  )) . '" rel="nofollow">' . wfMessage( 'user-contributions' )->escaped() . '</a></li>
                             </ul>
                         </ul>
                     </div>
