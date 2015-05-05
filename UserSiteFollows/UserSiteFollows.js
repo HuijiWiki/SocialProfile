@@ -25,7 +25,12 @@ function requestUserSiteFollowsResponse( username, servername, action ) {
 			function( data ) {
 				var res = jQuery.parseJSON(data);
 				if (res.success){
-					jQuery( '#user-site-follow').html('取消关注');
+                    if($('#user-site-follow').hasClass('mw-ui-progressive')){
+                        $('#user-site-follow').removeClass('mw-ui-progressive');
+                    }else{
+                        $('#user-site-follow').addClass('mw-ui-progressive');
+                    }
+                    $( '#user-site-follow').html('取消关注');
 					jQuery( '#user-site-follow').addClass('unfollow');
 					var count = jQuery( '#site-follower-count').html();
 					count = parseInt(count)+1;
@@ -47,7 +52,12 @@ function requestUserSiteFollowsResponse( username, servername, action ) {
 			function( data ) {
 				var res = jQuery.parseJSON(data);
 				if ( res.success ){
-					jQuery( '#user-site-follow').html('<span class="glyphicon glyphicon-plus"></span>关注</a>');
+                    $( '#user-site-follow').html('<span class="glyphicon glyphicon-plus"></span>关注</a>');
+                    if($('#user-site-follow').hasClass('mw-ui-progressive')){
+                        $('#user-site-follow').removeClass('mw-ui-progressive');
+                    }else{
+                        $('#user-site-follow').addClass('mw-ui-progressive');
+                    }
 					jQuery( '#user-site-follow').removeClass('unfollow');	
 					var count = jQuery( '#site-follower-count').html();
 					count = parseInt(count)-1;
@@ -78,12 +88,13 @@ jQuery( document ).ready( function() {
 			$('.user-login').modal();
 			return;
 		}
-		alreadySubmittedUserSiteFollow = true;
-		requestUserSiteFollowsResponse(
-			mw.config.get('wgUserName'),
-			mw.config.get('wgServer'),
-			jQuery( '#user-site-follow' ).hasClass('unfollow')
-		);
+        $( '#user-site-follow').html('<i class="fa fa-spinner fa-pulse"></i>');
+        alreadySubmittedUserSiteFollow = true;
+        requestUserSiteFollowsResponse(
+            mw.config.get('wgUserName'),
+            mw.config.get('wgServer'),
+            jQuery('#user-site-follow').hasClass('unfollow')
+        );
 	} );
 
 
