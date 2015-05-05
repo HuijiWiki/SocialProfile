@@ -116,11 +116,9 @@ function wfUserFollowsSiteResponse( $user, $site_name ) {
 	}
 
 	$str = substr($site_name,7);
-	$n=strpos($str,'.huiji.wiki');
+	$n = strpos($str,'.huiji.wiki');
 	if ($n) 
 		$site_name=substr($str,0,$n);
-	// $user_id = User::idFromName($user_name);
-	// $t_id = User::idFromName($t_name);
 	$sites = UserSiteFollow::getUserFollowSite($wgUser, $site_name);
 	$ret = array('success'=> true, 'result'=>$sites );
 	$out = json_encode($ret);
