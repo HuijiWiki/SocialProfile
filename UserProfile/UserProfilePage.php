@@ -186,7 +186,7 @@ class UserProfilePage extends Article {
                         <ul class="profile-interactive">'.
                             $button1.$button2.
                             '<li class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-align-justify"></span></li>
-                            <ul class="dropdown-menu" role="menu">
+                            <ul class="dropdown-menu mw-ui-button" role="menu">
                                         '.$sendMessageLink.' 
                                         '.$blockLink.' 
                                         '.$rightLink.' 
