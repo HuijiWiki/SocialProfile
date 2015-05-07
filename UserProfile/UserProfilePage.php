@@ -1331,7 +1331,7 @@ class UserProfilePage extends Article {
 							'" border="0" alt="" />';
 						$viewSystemGift = SpecialPage::getTitleFor( 'ViewSystemGift' );
 						$item_html .= wfMessage( 'user-recent-system-gift' )->escaped() . " {$item_time}
-								<div class=\"user-home-item-gift\">
+								<div class=\"item\">
 									<a href=\"" . htmlspecialchars( $viewSystemGift->getFullURL( "gift_id={$item['id']}" ) ) . "\" rel=\"nofollow\">
 										{$gift_image}
 										{$item['pagetitle']}

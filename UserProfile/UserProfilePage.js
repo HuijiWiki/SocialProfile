@@ -179,6 +179,7 @@ jQuery( document ).ready( function() {
         $(".input-location").val(location);
         $(".form-container").hide();
     });
+    $('.edit-on').bind('click',editer);
     $(".profile-actions").on("click",".form-submit",function(){
         var location = $(".input-location").val();
         var autograph = $(".form-textarea").val();
@@ -207,22 +208,29 @@ jQuery( document ).ready( function() {
                         $(".form-container").show();
                         if (location == '') {
                             $(".form-location").text("填写居住地").addClass("edit-on");
-                            //$(".edit-on").addEventListener('click',editer);
+                            $('.form-location.edit-on').unbind();
+                            $('.form-location.edit-on').bind('click',editer);
                         } else {
+                            $('.edit-on').unbind();
                             $(".form-location").text(location).removeClass("edit-on");
-                            //$(".edit-on").removeEventListener('click',editer);
                         }
                         if (autograph == '') {
                             $(".form-autograph").text("填写个人状态").addClass("edit-on");
+                            $('.form-autograph.edit-on').unbind();
+                            $('.form-autograph.edit-on').bind('click',editer);
                         } else {
+                            $('.form-autograph.edit-on').unbind();
                             $(".form-autograph").text(autograph).removeClass("edit-on");
                         }
                         if (birthday == '') {
                             $(".form-date").text("填写生日").addClass("edit-on");
+                            $('.form-date.edit-on').unbind();
+                            $('.form-date.edit-on').bind('click',editer);
                         } else {
                             var age = ages(birthday);
                             $(".form-date").attr('data-birthday', birthday);
                             console.log($(".form-date").data('birthday'));
+                            $('.form-date.edit-on').unbind();
                             $(".form-date").text(age).removeClass("edit-on");
                         }
                         $(".form-sex").text(sex);
@@ -238,6 +246,9 @@ jQuery( document ).ready( function() {
             $(".form-edit").remove();
         }
     });
+    function editer(){
+        $(".form-change").trigger('click');
+    }
     var alreturn = $('.alert-return');
     var alertp = $('.alert-return p');
     function alertime(){
