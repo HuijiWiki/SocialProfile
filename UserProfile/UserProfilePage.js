@@ -181,7 +181,9 @@ jQuery( document ).ready( function() {
     });
     $(".profile-actions").on("click",".form-submit",function(){
         var location = $(".input-location").val();
+        location = location.replace(/(^\s*)|(\s*$)/g, "");
         var autograph = $(".form-textarea").val();
+        autograph = autograph.replace(/(^\s*)|(\s*$)/g, "");
         var birthday = $(".input-date").val();
         var sex = $('.form-edit input:radio:checked').val();
         var gender = '';

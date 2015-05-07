@@ -21,7 +21,7 @@ class UserUserFollow{
 		if ($follower == $followee){
 			return false;
 		}
-		if ( $this->checkUserUserFollow( $follower, $followee ) !== false ){
+		if ( $this->checkUserUserFollow( $follower, $followee ) != false ){
 			return 0;
 		}
 		$dbw = wfGetDB( DB_MASTER );
@@ -126,7 +126,7 @@ class UserUserFollow{
 			__METHOD__
 		);
 
-		if ( $s !== false ) {
+		if ( $s != false ) {
 			$followerCount = $s->count;
 		}
 
@@ -192,7 +192,7 @@ class UserUserFollow{
 			__METHOD__
 		);
 
-		if ( $s !== false ) {
+		if ( $s != false ) {
 			$followingCount = $s->count;
 		}
 
@@ -230,7 +230,7 @@ class UserUserFollow{
 			array( 'f_user_id' => $follower->getId(), 'f_target_user_id' => $followee->getId() ),
 			__METHOD__
 		);
-		if ($s !== false){
+		if ($s != false){
 			return $s->f_id;
 		}else {
 			return false;
@@ -251,7 +251,7 @@ class UserUserFollow{
 
 		$where = array();
 		$options = array();
-		if ($type !== 1) {
+		if ($type != 1) {
 			$where['f_target_user_id'] = $user->getId();
 		} else {
 			$where['f_user_id'] = $user->getId();
@@ -281,8 +281,8 @@ class UserUserFollow{
 			$requests[] = array(
 				'id' => $row->f_id,
 				'timestamp' => ( $row->f_date ),
-				'user_id' => ( $type !== 1? $row->f_user_id : $row->f_target_user_id),
-				'user_name' => ( $type !== 1? $row->f_user_name : $row->f_target_user_name),
+				'user_id' => ( $type != 1? $row->f_user_id : $row->f_target_user_id),
+				'user_name' => ( $type != 1? $row->f_user_name : $row->f_target_user_name),
 				'type' => $type
 			);
 		}

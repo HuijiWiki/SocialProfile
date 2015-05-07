@@ -15,7 +15,7 @@ class UserSiteFollow{
 	 */
 	public function addUserSiteFollow($user, $huijiPrefix){
 		global $wgMemc;
-		if ( $this->checkUserSiteFollow( $user, $huijiPrefix ) !== false ){
+		if ( $this->checkUserSiteFollow( $user, $huijiPrefix ) != false ){
 			return 0;
 		}
 		$dbw = wfGetDB( DB_MASTER );
@@ -114,7 +114,7 @@ class UserSiteFollow{
 			__METHOD__
 		);
 
-		if ( $s !== false ) {
+		if ( $s != false ) {
 			$siteCount = $s->count;
 		}
 
@@ -184,7 +184,7 @@ class UserSiteFollow{
 			__METHOD__
 		);
 
-		if ( $s !== false ) {
+		if ( $s != false ) {
 			$userCount = $s->count;
 		}
 
@@ -219,7 +219,7 @@ class UserSiteFollow{
 		global $wgMemc;
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'check_follow', $user->getName(), $huijiPrefix );
 		$data = $wgMemc->get( $key );
-		if ( $data !== '' ) {
+		if ( $data != '' ) {
 			wfDebug( "Checkout ( User = {$user} ) from cache\n" );
 			return $data;
 		} else{
@@ -230,7 +230,7 @@ class UserSiteFollow{
 				array( 'f_user_id' => $user->getId(), 'f_wiki_domain' => $huijiPrefix ),
 				__METHOD__
 			);
-			if ($s !== false){
+			if ($s != false){
 				$wgMemc->set($key, true);
 				return true;
 			}else {
@@ -491,7 +491,7 @@ class UserSiteFollow{
 	/**
 	 * Get site follows from DB 
 	 *
-	 * @param $user:current user; $site_name:servername
+	 * @param $user:current username; $site_name:servername
 	 * @return array
 	 */
 	public static function getUserFollowSite( $user,$site_name ){

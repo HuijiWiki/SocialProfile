@@ -5,6 +5,8 @@
 $wgAjaxExportList[] = 'wfUpdateUserStatus';
 function wfUpdateUserStatus( $username, $gender, $province, $city, $birthday, $status ) {
 	global $wgUser;
+	$city = trim($city);
+	$status = trim($status);
 	$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_UNKNOWN);
 
 	// This feature is only available for logged-in users.
@@ -33,6 +35,7 @@ function wfUpdateUserStatus( $username, $gender, $province, $city, $birthday, $s
 
 	if ( $username === $wgUser->getName() ){
 		$us = new UserStatus($wgUser);
+
 		if ($us->setAll($gender, $province, $city, $birthday, $status)){
 			$out = ResponseGenerator::getJson(ResponseGenerator::SUCCESS);
 		}

@@ -1008,8 +1008,8 @@ class UserProfilePage extends Article {
                           </div>
                             <div class="modal-body">
 	                            <div class="list-group">
-								</div>                         
-                            </div>
+								</div>
+							</div>
                         </div>
                       </div>
                     </div>';
@@ -1833,7 +1833,7 @@ class UserProfilePage extends Article {
 		</div>
 		<div class="cleared"></div> <div class="panel-body">';
 
-		if ( $wgUser->getName() !== $user_name ) {
+		if ( $wgUser->getName() != $user_name ) {
 			if ( $wgUser->isLoggedIn() && !$wgUser->isBlocked() ) {
 				$output .= '<div class="user-page-message-form">
 						<input type="hidden" id="user_name_to" name="user_name_to" value="' . addslashes( $user_name ) . '" />

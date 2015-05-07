@@ -25,12 +25,7 @@ function requestUserSiteFollowsResponse( username, servername, action ) {
 			function( data ) {
 				var res = jQuery.parseJSON(data);
 				if (res.success){
-                    if($('#user-site-follow').hasClass('mw-ui-progressive')){
-                        $('#user-site-follow').removeClass('mw-ui-progressive');
-                    }else{
-                        $('#user-site-follow').addClass('mw-ui-progressive');
-                    }
-                    $( '#user-site-follow').html('取消关注');
+					jQuery( '#user-site-follow').html('取消关注');
 					jQuery( '#user-site-follow').addClass('unfollow');
 					var count = jQuery( '#site-follower-count').html();
 					count = parseInt(count)+1;
@@ -52,12 +47,7 @@ function requestUserSiteFollowsResponse( username, servername, action ) {
 			function( data ) {
 				var res = jQuery.parseJSON(data);
 				if ( res.success ){
-                    $( '#user-site-follow').html('<span class="glyphicon glyphicon-plus"></span>关注</a>');
-                    if($('#user-site-follow').hasClass('mw-ui-progressive')){
-                        $('#user-site-follow').removeClass('mw-ui-progressive');
-                    }else{
-                        $('#user-site-follow').addClass('mw-ui-progressive');
-                    }
+					jQuery( '#user-site-follow').html('<span class="glyphicon glyphicon-plus"></span>关注</a>');
 					jQuery( '#user-site-follow').removeClass('unfollow');	
 					var count = jQuery( '#site-follower-count').html();
 					count = parseInt(count)-1;
@@ -88,13 +78,12 @@ jQuery( document ).ready( function() {
 			$('.user-login').modal();
 			return;
 		}
-        $( '#user-site-follow').html('<i class="fa fa-spinner fa-pulse"></i>');
-        alreadySubmittedUserSiteFollow = true;
-        requestUserSiteFollowsResponse(
-            mw.config.get('wgUserName'),
-            mw.config.get('wgServer'),
-            jQuery('#user-site-follow').hasClass('unfollow')
-        );
+		alreadySubmittedUserSiteFollow = true;
+		requestUserSiteFollowsResponse(
+			mw.config.get('wgUserName'),
+			mw.config.get('wgServer'),
+			jQuery( '#user-site-follow' ).hasClass('unfollow')
+		);
 	} );
 
 
@@ -223,7 +212,7 @@ jQuery( document ).ready( function() {
 			},
 			function( data ) {
 				var res = jQuery.parseJSON(data);
-				// console.log(user);
+				console.log(user);
 				// console.log(site_name);
 				// console.log(res);
 				if(res.success){
@@ -232,6 +221,7 @@ jQuery( document ).ready( function() {
 					}
 					$.each(res.result,
 						function(i,item){
+							// console.log(res);
 							if (item.is_follow == 'Y') {
 								var msg = '<li><a href="'+item.userUrl+'">'+item.url+'</a><a href="'+item.userUrl+'">'+item.user+'</a>编辑次数：'+item.count+'<i>(已关注)</i></li>';
 							}else{
