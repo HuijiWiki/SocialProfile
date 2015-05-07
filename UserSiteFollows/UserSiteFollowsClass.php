@@ -241,6 +241,7 @@ class UserSiteFollow{
 		}
 
 	}
+
 	/**
 	 * Increase the amount of follewers for the site.
 	 *
