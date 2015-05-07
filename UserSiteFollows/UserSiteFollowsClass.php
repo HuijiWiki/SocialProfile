@@ -219,7 +219,7 @@ class UserSiteFollow{
 		global $wgMemc;
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'check_follow', $user->getName(), $huijiPrefix );
 		$data = $wgMemc->get( $key );
-		if ( $data !== '' ) {
+		if ( $data != '' ) {
 			wfDebug( "Checkout ( User = {$user} ) from cache\n" );
 			return $data;
 		} else{
@@ -241,6 +241,7 @@ class UserSiteFollow{
 		}
 
 	}
+
 	/**
 	 * Increase the amount of follewers for the site.
 	 *
