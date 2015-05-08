@@ -170,49 +170,86 @@ class SpecialViewFollows extends SpecialPage {
 				// 	$user->getID()
 				// );
 
+				$username = $follow['user_name'];
+				$userobj = User::newFromName($username);
+				$ust = new UserStatus($userobj);
+				$allinfo = $ust->getUserAllInfoDB( );
+
 				// Safe titles
-				$userPage = Title::makeTitle( NS_USER, $follow['user_name'] );
-				$indivFollow = $uuf->checkUserUserFollow($user, User::newFromId($follow['user_id']));
-				if ($indivFollow) {
-					$followButton = '<li  class="user-user-follow unfollow" data-username="'.$follow['user_name'].'"><a><i class="fa fa-minus-square-o"></i>取关</a></li> ';
+				$userPage = Title::makeTitle( NS_USER, $allinfo['username'] );
+				// $indivFollow = $uuf->checkUserUserFollow($user, User::newFromId($follow['user_id']));
+				$is_follow = $allinfo['is_follow'];
+				if ($is_follow == 'Y') {
+					$followButton = '<li  class="user-user-follow unfollow" data-username="'.$allinfo['username'].'"><a><i class="fa fa-minus-square-o"></i>取关</a></li> ';
 				} else {
-					$followButton = '<li class="user-user-follow" data-username="'.$follow['user_name'].'"><i class="fa fa-plus-square-o"></i></i>关注</li> ';
+					$followButton = '<li class="user-user-follow" data-username="'.$allinfo['username'].'"><i class="fa fa-plus-square-o"></i></i>关注</li> ';
 				}
 
 				$userPageURL = htmlspecialchars( $userPage->getFullURL() );
-				$avatar = new wAvatar( $follow['user_id'], 'ml' );
+				// $avatar = new wAvatar( $follow['user_id'], 'ml' );
 
-				$avatar_img = $avatar->getAvatarURL();
+				// $avatar_img = $avatar->getAvatarURL();
+				$avatar_img = $allinfo['url'];
+				$user_gender = $allinfo['gender'];
+				$user_count = $allinfo['usercounts'];
+				$user_counted = $allinfo['usercounted'];
+				$editcount = $allinfo['editcount'];
+				$commonfollow = $allinfo['commonfollow'];
+				$minefollowerhim = $allinfo['minefollowerhim'];
+				$user_level = $allinfo['level'];
 
-				$username_length = strlen( $follow['user_name'] );
-				$username_space = stripos( $follow['user_name'], ' ' );
+				$username_length = strlen( $allinfo['username'] );
+				$username_space = stripos( $allinfo['username'], ' ' );
 
 				if ( ( $username_space == false || $username_space >= "30" ) && $username_length > 30 ) {
-					$user_name_display = substr( $follow['user_name'], 0, 30 ) .
-						' ' . substr( $follow['user_name'], 30, 50 );
+					$user_name_display = substr( $allinfo['username'], 0, 30 ) .
+						' ' . substr( $allinfo['username'], 30, 50 );
 				} else {
-					$user_name_display = $follow['user_name'];
+					$user_name_display = $allinfo['username'];
 				}
-
+				if ($user_gender == 'male'){
+					$genderIcon = '♂';
+				} elseif ($user_gender == 'female'){
+					$genderIcon = '♀';
+				} else {
+					$genderIcon = '';
+				}
 				$output .= "<div class=\"relationship-item\">
 					<a href=\"{$userPageURL}\">{$avatar_img}</a>
 					<div class=\"relationship-info\">
 						<div class=\"relationship-name\">
-							<a href=\"{$userPageURL}\">{$user_name_display}</a>
+							<a href=\"{$userPageURL}\">{$user_name_display}</a><i>{$genderIcon}</i><i>{$user_level}</i>
 						</div>
 					<div class=\"relationship-actions\"><ul>";
 
-				
+				$output .= '<li>关注数:'.$user_count.'被关注:'.$user_counted.' 编辑:'.$editcount.'</li>';
 				$output .= $followButton;
 				$target = SpecialPage::getTitleFor( 'GiveGift' );
 				$query = array('user' => $follow['user_name']);
 				$output .= '<li>'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>礼物</a>', array(), $query).'</li> ';
+				$output .=  '<li>共同关注:';
+				if(!empty($commonfollow)){
+					foreach ($commonfollow as $val) {
+						$output .= $val.'&nbsp';
+					}
+				}else{
+					$output .= '(<i>暂无</i>)';
+				}
+				$output .= '</li><li>我关注的谁也关注Ta:';
+				if(!empty($minefollowerhim)){
+					foreach ($minefollowerhim as $val) {
+						$output .= $val.'&nbsp';
+					}
+				}else{
+					$output .= '(<i>暂无</i>)';
+				}
+				$output .= '</li>';
 				$output .= '</ul></div>
 					<div class="cleared"></div>
 				</div>';
 
 				$output .= '</div>';
-				if ( $x == count( $fellows ) || $x != 1 && $x % $per_row == 0 ) {
+				if ( $x == count( $follows ) || $x != 1 && $x % $per_row == 0 ) {
 					$output .= '<div class="cleared"></div>';
 				}
 				$x++;
