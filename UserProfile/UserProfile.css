@@ -1080,6 +1080,8 @@ span.span-color{
 .common-interest-container .label {
     padding: 0.5em;
     margin-left: 10px;
+    margin-bottom: 5px;
+    display: inline-block;
 }
 .common-interest-container a:focus, .common-interest-container a:hover{
 	color: #FFF;
