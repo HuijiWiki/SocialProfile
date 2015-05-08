@@ -26,7 +26,7 @@ function requestUserSiteFollowsResponse( username, servername, action ) {
 				var res = jQuery.parseJSON(data);
 				if (res.success){
 					jQuery( '#user-site-follow').html('取消关注');
-					jQuery( '#user-site-follow').addClass('unfollow');
+					jQuery( '#user-site-follow').addClass('unfollow').removeClass('mw-ui-progressive');
 					var count = jQuery( '#site-follower-count').html();
 					count = parseInt(count)+1;
 					jQuery( '#site-follower-count').html(count.toString());					
@@ -48,7 +48,7 @@ function requestUserSiteFollowsResponse( username, servername, action ) {
 				var res = jQuery.parseJSON(data);
 				if ( res.success ){
 					jQuery( '#user-site-follow').html('<span class="glyphicon glyphicon-plus"></span>关注</a>');
-					jQuery( '#user-site-follow').removeClass('unfollow');	
+					jQuery( '#user-site-follow').removeClass('unfollow').addClass('mw-ui-progressive');	
 					var count = jQuery( '#site-follower-count').html();
 					count = parseInt(count)-1;
 					if (count >= 0){
