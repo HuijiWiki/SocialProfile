@@ -5,7 +5,7 @@
 $wgAjaxExportList[] = 'wfUserSiteFollowsResponse';
 $wgAjaxExportList[] = 'wfUserSiteUnfollowsResponse';
 $wgAjaxExportList[] = 'wfUserSiteFollowsDetailsResponse';
-$wgAjaxExportList[] = 'wfUserFollowsSiteResponse';
+$wgAjaxExportList[] = 'wfUsersFollowingSiteResponse';
 function wfUserSiteFollowsResponse( $username, $servername ) {
 	
 	global $wgUser;
@@ -38,12 +38,6 @@ function wfUserSiteFollowsResponse( $username, $servername ) {
 
 	$usf = new UserSiteFollow();
 	if ( $username === $wgUser->getName() ){//&& $servername === $wgServer
-		//convert full url to prefix
-		$str = substr($servername,7);
-		$n = strpos($str, '.huiji.wiki');
-		if ($n){
-			$servername = substr($str, 0, $n);
-		}
 		if ($usf->addUserSiteFollow($wgUser, $servername) >= 0){
 			$out = ResponseGenerator::getJson(ResponseGenerator::SUCCESS);
 		}
@@ -80,11 +74,6 @@ function wfUserSiteUnfollowsResponse( $username, $servername ) {
 
 	$usf = new UserSiteFollow();
 	if ( $username === $wgUser->getName()){// && $servername === $wgServer
-		$str = substr($servername,7);
-		$n=strpos($str,'.huiji.wiki');
-		if ($n){
-			$servername=substr($str,0,$n);
-		}
 		if ($usf->deleteUserSiteFollow($wgUser, $servername)){
 			$out = ResponseGenerator::getJson(ResponseGenerator::SUCCESS);
 		}
@@ -100,25 +89,8 @@ function wfUserSiteFollowsDetailsResponse( $user_name,$t_name ) {
 	return $out;
 }
 
-function wfUserFollowsSiteResponse( $user, $site_name ) {
-	global $wgUser, $wgSitename, $wgServer, $wgHuijiPrefix;
-
-	// No need to allow blocked users to access this page, they could abuse it, y'know.
-	if ( $wgUser->isBlocked() ) {
-		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_BLOCKED);
-		return $out;
-	}
-
-	// Database operations require write mode
-	if ( wfReadOnly() ) {
-		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_READ_ONLY);
-		return $out;
-	}
-
-	$str = substr($site_name,7);
-	$n = strpos($str,'.huiji.wiki');
-	if ($n) 
-		$site_name=substr($str,0,$n);
+function wfUsersFollowingSiteResponse( $user, $site_name ) {
+	global $wgUser;
 	$sites = UserSiteFollow::getUserFollowSite($wgUser, $site_name);
 	$ret = array('success'=> true, 'result'=>$sites );
 	$out = json_encode($ret);
