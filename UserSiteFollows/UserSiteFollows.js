@@ -1,4 +1,4 @@
-vaScript for UserSiteFollow
+/* javaScript for UserSiteFollow
  * Used on Sidebar.
  */
 var userSiteFollows = {
