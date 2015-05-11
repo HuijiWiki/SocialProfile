@@ -176,7 +176,7 @@ class UserProfilePage extends Article {
 
         ');
         if( $wgUser->getName() == $this->user_name ){
-        	$wgOut->addHTML('<a >查看全部<i id="wiki-follower-count">'.$userCount.'</i>个wiki</a>');
+        	$wgOut->addHTML('<a >查看全部<i id="site-following-count">'.$userCount.'</i>个wiki</a>');
         }else{
         	$wgOut->addHTML('<a >查看全部<i>'.$userCount.'</i>个wiki</a>');
         }
