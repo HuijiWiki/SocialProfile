@@ -254,6 +254,7 @@ class UserSiteFollow{
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'user_count', $user->getName() );
 		$wgMemc->incr( $key );
 		$wgMemc->delete( wfForeignMemcKey('huiji','', 'user_site_follow', 'top_followed', $user->getName() ) );
+		$wgMemc->delete( wfForeignMemcKey('huiji','', 'user_site_follow', 'all_sites_user_following', $user->getName() ) );
 	}
 	/**
 	 * Decrease the amount of follewers for the site.
@@ -267,6 +268,7 @@ class UserSiteFollow{
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'user_count', $user->getName() );
 		$wgMemc->decr( $key );	
 		$wgMemc->delete( wfForeignMemcKey('huiji','', 'user_site_follow', 'top_followed', $user->getName() ) );
+		$wgMemc->delete( wfForeignMemcKey('huiji','', 'user_site_follow', 'all_sites_user_following', $user->getName() ) );	
 	}
 		
 
@@ -539,7 +541,7 @@ class UserSiteFollow{
 	 * Get user following sites 
 	 *
 	 * @param $user:current username
-	 * @return array
+	 * @return array list of sites
 	 */	
 	public static function getUserFollowingSites( $user ){
 		$data = self::getUserFollowingSitesCache( $user );
