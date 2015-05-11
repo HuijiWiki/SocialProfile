@@ -241,7 +241,6 @@ class UserSiteFollow{
 		}
 
 	}
-
 	/**
 	 * Increase the amount of follewers for the site.
 	 *
@@ -311,7 +310,7 @@ class UserSiteFollow{
 			__METHOD__,
 			array( 
 				'ORDER BY' => 'f_date DESC',
-				'LIMIT' => '3'
+				'LIMIT' => '3' 
 			)
 		);
 		foreach( $s as $row ){
@@ -351,34 +350,16 @@ class UserSiteFollow{
 		$dbr = wfGetDB( DB_SLAVE );
 		$followed = array();
 		$fs = array();
-		$res = $dbr->select(
-			'user_site_follow',
-			array('f_wiki_domain'),
-			array(
-				'f_user_id' => $target_user_id
-			),
-			__METHOD__,
-			array(
-				'ORDER BY' => 'f_date DESC',
-			)
-		);
-		$s = $dbr->select(
-			'user_site_follow',
-			array( 'f_wiki_domain' ),
-			array(
-				'f_user_id' => $user_id
-			),
-			__METHOD__,
-			array( 
-				'ORDER BY' => 'f_date DESC',
-			)
-		);
-		foreach ($s as$value) {
-			$fs[] = $value->f_wiki_domain;
+		$tuser = User::newFromId($target_user_id);
+		$res = self::getUserFollowingSites($tuser);
+		$user = User::newFromId($user_id);
+		$s = self::getUserFollowingSites($user);
+		foreach ($s as $value) {
+			$fs[] = $value;
 		}
 		foreach( $res as $row ){
 			$temp = array();
-			$domain = $row->f_wiki_domain;
+			$domain = $row;
 			$siteName = HuijiPrefix::prefixToSiteName($domain);
 			$temp['key'] = $domain;
 			$temp['val'] = $siteName;
@@ -400,7 +381,33 @@ class UserSiteFollow{
 	 * @param $username:current user
 	 * @return array
 	 */
-	public static function getFollowedByUser( $username ){
+	public static function getFollowedByUser( $username ) {
+		// global $wgMemc;
+		// $user = User::newFromName($username);
+		// $key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_followed_count', $username );
+		// $data = $wgMemc->get( $key );
+		$data = self::getFollowedByUserCache( $username );
+		if ( $data != '' ) {
+			wfDebug( "Got user count of $data ( User = {$user} ) from cache\n" );
+			return $data;
+		}else {
+			return self::getFollowedByUserDB( $username );
+		}
+	}
+	public static function getFollowedByUserCache( $username ) {
+		global $wgMemc;
+		$user = User::newFromName($username);
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_followed_count', $username );
+		$data = $wgMemc->get( $key );
+		if ( $data != '' ) {
+			wfDebug( "Got top followed $data ( User = {$user} ) from cache\n" );
+			return $data;
+		}
+	}
+	public static function getFollowedByUserDB( $username ){
+		global $wgMemc;
+		$user = User::newFromName($username);
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_followed_count', $username );
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = array();
 		$res = $dbr->select(
@@ -417,39 +424,40 @@ class UserSiteFollow{
 			$req[] = $value->f_target_user_name;
 		}
 		$res = $req;
+		$wgMemc->set( $key, $res );
 		return $res;
 	}
-	/**
-	 * Get the common interests users of followed sites from the
-	 * database and show it.
-	 *
-	 * @param $user_id:current user; $huijiPrefix:common interests
-	 * @return array
-	 */
-	public static function getCommonInterestUser( $user_id,$huijiPrefix ){
-		$dbr = wfGetDB( DB_SLAVE );
-		$follow = self::getFollowedByUser($user_id);
-		$common = array();
-		$res = $dbr->select(
-				'user_site_follow',
-				array(
-					'f_user_id',
-				),
-			    array(
-			    	'f_wiki_domain' => $huijiPrefix,
-			    ),
-			    __METHOD__
-		);
-		foreach ($res as $resval) {
-			$uid = $resval->f_user_id;
-			foreach ($follow as $folval) {
-				if($uid == $folval->$f_target_user_id){
-					$common[] = $uid;
-				}
-			}
-		}
-		return $common;
-	}
+	// /**
+	//  * Get the common interests users of followed sites from the
+	//  * database and show it.
+	//  *
+	//  * @param $user_id:current user; $huijiPrefix:common interests
+	//  * @return array
+	//  */
+	// public static function getCommonInterestUser( $user_id,$huijiPrefix ){
+	// 	$dbr = wfGetDB( DB_SLAVE );
+	// 	$follow = self::getFollowedByUser($user_id);
+	// 	$common = array();
+	// 	$res = $dbr->select(
+	// 			'user_site_follow',
+	// 			array(
+	// 				'f_user_id',
+	// 			),
+	// 		    array(
+	// 		    	'f_wiki_domain' => $huijiPrefix,
+	// 		    ),
+	// 		    __METHOD__
+	// 	);
+	// 	foreach ($res as $resval) {
+	// 		$uid = $resval->f_user_id;
+	// 		foreach ($follow as $folval) {
+	// 			if($uid == $folval->$f_target_user_id){
+	// 				$common[] = $uid;
+	// 			}
+	// 		}
+	// 	}
+	// 	return $common;
+	// }
 	/**
 	 * Get common interests with the user you are watching
 	 *
@@ -459,38 +467,21 @@ class UserSiteFollow{
 	public static function getCommonInterest( $user_id,$target_user_id ){
 		$dbr = wfGetDB( DB_SLAVE );
 		$coninterest = array();
-		$ures = $dbr->select(
-			'user_site_follow',
-			array(
-				'f_wiki_domain',
-			),
-			array(
-				'f_user_id' => $user_id,
-			),
-			__METHOD__
-		);
-		$tres = $dbr->select(
-			'user_site_follow',
-			array(
-				'f_wiki_domain',
-			),
-			array(
-				'f_user_id' => $target_user_id,
-			),
-			__METHOD__
-		);
+		$user = User::newFromId($user_id);
+		$ures = self::getUserFollowingSites($user);
+		$tuser = User::newFromId($target_user_id);
+		$tres = self::getUserFollowingSites($tuser);
 		foreach ($tres as $tval) {
-			$tdomain = $tval->f_wiki_domain;
 			foreach ($ures as $uval) {
-				if ($tdomain == $uval->f_wiki_domain) {
-					$coninterest[] = $tdomain;
+				if ($tval == $uval) {
+					$coninterest[] = $tval;
 				}
 			}
 		}
 		return $coninterest;
 	}
 	/**
-	 * Get site follows from DB 
+	 * Get site followed users from DB 
 	 *
 	 * @param $user:current username; $site_name:servername
 	 * @return array
@@ -498,7 +489,7 @@ class UserSiteFollow{
 	public static function getUserFollowSite( $user,$site_name ){
 		$dbr = wfGetDB( DB_SLAVE );
 		$request = array();
-		$follower = self::getFollowedByUser($user);
+		$follower = self::getFollowedByUser( $user->getName() );
 		$res = $dbr->select(
 			'user_site_follow',
 			array(
@@ -544,5 +535,55 @@ class UserSiteFollow{
 		return $request;
 
 	}
+	/**
+	 * Get user following sites 
+	 *
+	 * @param $user:current username
+	 * @return array
+	 */	
+	public static function getUserFollowingSites( $user ){
+		$data = self::getUserFollowingSitesCache( $user );
+		if ( $data != '' ) {
+			return $data;
+		} else {
+			return self::getUserFollowingSitesDB( $user );
+		}
+	}
+	public static function getUserFollowingSitesCache( $user ){
+		global $wgMemc;
+		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'all_sites_user_following', $user->getName() );
+		$data = $wgMemc->get( $key );
+		if ( $data != '' ) {
+			wfDebug( "Got top followed $data ( User = {$user} ) from cache\n" );
+			return $data;
+		}		
+	}
+	public static function getUserFollowingSitesDB( $user ){
+		global $wgMemc;
+		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'all_sites_user_following', $user->getName() );
+		$dbr = wfGetDB( DB_SLAVE );
+		$result = array();
+		$res = $dbr->select(
+			'user_site_follow',
+			array('f_wiki_domain'),
+			array(
+				'f_user_id' => $user->getId()
+			),
+			__METHOD__,
+			array(
+				'ORDER BY' => 'f_date DESC',
+			)
+		);
+		if($res != false){
+			foreach ($res as $value) {
+				$result[] = $value->f_wiki_domain;
+			}
+			$wgMemc->set( $key, $result );
+			return $result; 
+		}
+
+	}
+
+
 
 }

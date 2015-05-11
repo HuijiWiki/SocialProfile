@@ -26,7 +26,7 @@ function requestUserSiteFollowsResponse( username, servername, action ) {
 				var res = jQuery.parseJSON(data);
 				if (res.success){
 					jQuery( '#user-site-follow').html('取消关注');
-					jQuery( '#user-site-follow').addClass('unfollow').removeClass('mw-ui-progressive');
+					jQuery( '#user-site-follow').addClass('unfollow');
 					var count = jQuery( '#site-follower-count').html();
 					count = parseInt(count)+1;
 					jQuery( '#site-follower-count').html(count.toString());					
@@ -48,7 +48,7 @@ function requestUserSiteFollowsResponse( username, servername, action ) {
 				var res = jQuery.parseJSON(data);
 				if ( res.success ){
 					jQuery( '#user-site-follow').html('<span class="glyphicon glyphicon-plus"></span>关注</a>');
-					jQuery( '#user-site-follow').removeClass('unfollow').addClass('mw-ui-progressive');	
+					jQuery( '#user-site-follow').removeClass('unfollow');	
 					var count = jQuery( '#site-follower-count').html();
 					count = parseInt(count)-1;
 					if (count >= 0){
@@ -214,7 +214,7 @@ jQuery( document ).ready( function() {
 				var res = jQuery.parseJSON(data);
 				console.log(user);
 				// console.log(site_name);
-				// console.log(res);
+				console.log(res);
 				if(res.success){
 					if(res.result==0){
 						$('.follow-modal').append('暂时还没人关注Ta >-<');

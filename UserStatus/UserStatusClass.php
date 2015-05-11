@@ -178,32 +178,7 @@ class UserStatus{
 		// return $profileId;
 
 	}
-	/**
-	 * Get user's followed from the
-	 * database
-	 *
-	 * @param $username:current user
-	 * @return array
-	 */
-	public static function getFollowedByUser( $username ){
-		$dbr = wfGetDB( DB_SLAVE );
-		$res = array();
-		$res = $dbr->select(
-			'user_user_follow',
-			array(
-				'f_target_user_name'
-			),
-			array(
-				'f_user_name' => $username
-			),
-			__METHOD__
-		);
-		foreach ($res as $value) {
-			$req[] = $value->f_target_user_name;
-		}
-		$res = $req;
-		return $res;
-	}
+	
 	/**
      * GET USER INFO
      * @param user UserName
@@ -271,7 +246,7 @@ class UserStatus{
 		//是否关注
 		$current_user = $wgUser->getName();
 		// return $current_user;
-		$follower = self::getFollowedByUser($current_user);
+		$follower = UserSiteFollow::getFollowedByUser($current_user);
 		if(in_array($this->username, $follower)){
 			$result['is_follow'] = 'Y';
 		}else{
@@ -281,7 +256,7 @@ class UserStatus{
 		//共同关注
 		$cfollow = array();
 		$t_user = $this->username;
-		$ufollower = self::getFollowedByUser( $t_user );
+		$ufollower = UserSiteFollow::getFollowedByUser( $t_user );
 
 		foreach ($follower as $valuea) {
 			if(in_array($valuea, $ufollower)){
@@ -289,28 +264,72 @@ class UserStatus{
 			}
 		}
 		$result['commonfollow'] = $cfollow;
-		//我关注的谁也关注他
-		$followehe = $dbr->select(
-			'user_user_follow',
-			array( 'f_user_name' ),
-			array(
-				'f_target_user_name' => $this->username
-			),
-			__METHOD__
-		);
-		$followhim = array();
-		foreach ($followehe as $val) {
-			$foname = $val->f_user_name;
-			if(in_array($foname, $follower)){
-				$followhim[] = $foname;
-			}
-		}
-		$result['minefollowerhim'] = $followhim;
+		// //我关注的谁也关注他
+		// $followehe = $dbr->select(
+		// 	'user_user_follow',
+		// 	array( 'f_user_name' ),
+		// 	array(
+		// 		'f_target_user_name' => $this->username
+		// 	),
+		// 	__METHOD__
+		// );
+		// $followhim = array();
+		// foreach ($followehe as $val) {
+		// 	$foname = $val->f_user_name;
+		// 	if(in_array($foname, $follower)){
+		// 		$followhim[] = $foname;
+		// 	}
+		// }
+		$result['minefollowerhim'] = self::getFollowingFollowsUser( $t_user,$current_user );
+		// $result['minefollowerhim'] = $followhim;
 		// $data = $result;
 		// $wgMemc->set( $key, $result );
 		return $result;
 	}
 
+	//我关注的谁也关注他
+	public static function getFollowingFollowsUser( $username,$current_user ){
+		$data = self::getFollowingFollowsUserCache( $username,$current_user );
+		if ( $data != '' ) {
+			return $data;
+		} else {
+			return self::getFollowingFollowsUserDB( $username,$current_user );
+		}
+	}
+	public static function getFollowingFollowsUserCache( $username,$current_user ){
+		global $wgMemc;
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'my_following_follows_him', $username );
+		$data = $wgMemc->get( $key );
+		if ( $data != '' ) {
+			wfDebug( "Got top followed $data ( User = {$user} ) from cache\n" );
+			return $data;
+		}	
+	}
+	public static function getFollowingFollowsUserDB( $username,$current_user ){
+		global $wgMemc;
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'my_following_follows_him', $username );
+		// return $current_user;
+		$dbr = wfGetDB( DB_SLAVE );
+		$follower = UserSiteFollow::getFollowedByUser($current_user);
+		$followehe = $dbr->select(
+			'user_user_follow',
+			array( 'f_user_name' ),
+			array(
+				'f_target_user_name' => $username
+			),
+			__METHOD__
+		);
+		$result = array();
+		foreach ($followehe as $val) {
+			$foname = $val->f_user_name;
+			if(in_array($foname, $follower)){
+				$result[] = $foname;
+			}
+		}
+		$wgMemc->set( $key, $result );
+		return $result;
+	}
+ 
 	// public function getSimpleUserInfoDB( ){
 	// 	global $wgMemc;
 	// 	$username = $this->user->getName();
