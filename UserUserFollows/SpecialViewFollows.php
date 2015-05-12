@@ -191,6 +191,7 @@ class SpecialViewFollows extends SpecialPage {
 				// $avatar_img = $avatar->getAvatarURL();
 				$avatar_img = $allinfo['url'];
 				$user_gender = $allinfo['gender'];
+				$user_status = $allinfo['status'];
 				$user_count = $allinfo['usercounts'];
 				$user_counted = $allinfo['usercounted'];
 				$editcount = $allinfo['editcount'];
@@ -221,7 +222,11 @@ class SpecialViewFollows extends SpecialPage {
 							<a href=\"{$userPageURL}\">{$user_name_display}</a><i>{$genderIcon}</i><i>{$user_level}</i>
 						</div>
 					<div class=\"relationship-actions\"><ul>";
-
+				if(empty($user_status)){
+					$output .= '<li>Nothing there</li>';
+				}else{
+					$output .= '<li>'.$user_status.'</li>';					
+				}
 				$output .= '<li>关注数:'.$user_count.'被关注:'.$user_counted.' 编辑:'.$editcount.'</li>';
 				$output .= $followButton;
 				$target = SpecialPage::getTitleFor( 'GiveGift' );

@@ -197,6 +197,7 @@ jQuery( document ).ready( function() {
 		var user = mw.config.get('wgUserName');
 		var site_name = mw.config.get('wgHuijiPrefix');
 		userSiteFollows.fillUsersModal(user, site_name);
+		$('.follow-modal').empty();
 	});
 
 } );

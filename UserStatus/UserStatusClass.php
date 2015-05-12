@@ -180,39 +180,10 @@ class UserStatus{
 	}
 	
 	/**
-     * GET USER INFO
+     * GET USER DETAIL INFO
      * @param user UserName
      * 
-     * @return data String a json string contains requested info.
-     */
-	// public function getUserAllInfo( $username ){
-	// 	$data = $this->getUserAllInfoCache( $username );
-	// 	if ( $data != '' ) {
-	// 		return $data;
-	// 	} else {
-	// 		return $this->getUserAllInfoDB( $username );
-	// 	}
-	// }
-	/**
-     * GET USER INFO FROM CACHE
-     * @param user UserName
-     * 
-     * @return data String a json string contains requested info.
-     */
-	// public function getUserAllInfoCache( $username ){
-	// 	global $wgMemc;
-	// 	$key = wfForeignMemcKey('huiji','', 'user_all_info', 'get_all', $username );
-	// 	$data = $wgMemc->get( $key );
-	// 	if ( $data != '' ) {
-	// 		wfDebug( "Got user bio and status $data ( user = {$this->user} ) from cache\n" );
-	// 		return $data;
-	// 	}
-	// }
-	/**
-     * GET USER INFO FROM DATABASE
-     * @param user UserName
-     * 
-     * @return data String a json string contains requested info.
+     * @return result array
      */
 	public function getUserAllInfoDB( ){
 		global $wgUser;
@@ -225,9 +196,7 @@ class UserStatus{
 		$gender = $this->getGender();
 		$status = $this->getStatus();
 		$result['gender'] = $gender;
-		$result['status'] = $status;
-
-		
+		$result['status'] = $status;	
 		//关注数
 		$usercount = UserUserFollow::getFollowingCount( $this->user );
 		$result['usercounts'] = $usercount;
@@ -264,25 +233,8 @@ class UserStatus{
 			}
 		}
 		$result['commonfollow'] = $cfollow;
-		// //我关注的谁也关注他
-		// $followehe = $dbr->select(
-		// 	'user_user_follow',
-		// 	array( 'f_user_name' ),
-		// 	array(
-		// 		'f_target_user_name' => $this->username
-		// 	),
-		// 	__METHOD__
-		// );
-		// $followhim = array();
-		// foreach ($followehe as $val) {
-		// 	$foname = $val->f_user_name;
-		// 	if(in_array($foname, $follower)){
-		// 		$followhim[] = $foname;
-		// 	}
-		// }
+		//我关注的谁也关注他
 		$result['minefollowerhim'] = self::getFollowingFollowsUser( $t_user,$current_user );
-		// $result['minefollowerhim'] = $followhim;
-		// $data = $result;
 		// $wgMemc->set( $key, $result );
 		return $result;
 	}
@@ -329,40 +281,5 @@ class UserStatus{
 		$wgMemc->set( $key, $result );
 		return $result;
 	}
- 
-	// public function getSimpleUserInfoDB( ){
-	// 	global $wgMemc;
-	// 	$username = $this->user->getName();
-	// 	$key = wfForeignMemcKey('huiji','', 'simple_user_info', 'get_all', $username );
-	// 	$result['username'] = $username;
-	// 	$user_id = $this->user->getId();
-	// 	$avatar = new wAvatar( $user_id, 'm' );
-	// 	$result['url'] = $avatar->getAvatarURL();
-	// 	$dbr = wfGetDB( DB_SLAVE );
-	// 	$level = $dbr->select(
-	// 		'user_stats',
-	// 		array(
-	// 			'stats_total_points'
-	// 		),
-	// 		array(
-	// 			'stats_user_name' => $username
-	// 		),__METHOD__
-	// 	);
-	// 	foreach ($level as $value) {
-	// 		$result['level'] = $value->stats_total_points;
-	// 	}
-	// 	$gender = $this->getGender();
-	// 	$result['gender'] = $gender;
-	// 	$current_user = $wgUser->getName();
-	// 	// return $current_user;
-	// 	$follower = self::getFollowedByUser($current_user);
-	// 	// return 'qqq';
-	// 	if(in_array($username, $follower)){
-	// 		$result['is_follow'] = 'Y';
-	// 	}else{
-	// 		$result['is_follow'] = 'N';
-	// 	}
-	// 	$wgMemc->set( $key, $result );
-	// 	return $result;
-	// }
+ 	
 }
