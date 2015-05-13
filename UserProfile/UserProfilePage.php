@@ -200,17 +200,17 @@ class UserProfilePage extends Article {
             </div>
         ');
         $wgOut->addHTML( '<div class="cleared"></div></div>');
-		// User does not want social profile for User:user_name, so we just
-		// show header + page content
-		if (
-			$this->getTitle()->getNamespace() == NS_USER &&
-			$this->profile_data['user_id'] &&
-			$this->profile_data['user_page_type'] == 0
-		)
-		{
-			parent::view();
-			return '';
-		}
+		// // User does not want social profile for User:user_name, so we just
+		// // show header + page content
+		// if (
+		// 	$this->getTitle()->getNamespace() == NS_USER &&
+		// 	$this->profile_data['user_id'] &&
+		// 	$this->profile_data['user_page_type'] == 0
+		// )
+		// {
+		// 	parent::view();
+		// 	return '';
+		// }
 
 		// Left side
 		$wgOut->addHTML( '<div id="user-page-left" class="col-md-6">' );
