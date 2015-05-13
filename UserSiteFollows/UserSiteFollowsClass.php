@@ -255,6 +255,7 @@ class UserSiteFollow{
 		$wgMemc->incr( $key );
 		$wgMemc->delete( wfForeignMemcKey('huiji','', 'user_site_follow', 'top_followed', $user->getName() ) );
 		$wgMemc->delete( wfForeignMemcKey('huiji','', 'user_site_follow', 'all_sites_user_following', $user->getName() ) );
+
 	}
 	/**
 	 * Decrease the amount of follewers for the site.
@@ -510,30 +511,28 @@ class UserSiteFollow{
 			$userPageURL = htmlspecialchars( $userPage->getFullURL() );
 			$temp['userUrl'] = $userPageURL;
 			$user_id = User::idFromName($u_name);
+			$stats = new UserStats( $user_id, $u_name );
+			$stats_data = $stats->getUserStats();
+			$user_level = new UserLevel( $stats_data['points'] );
+			$temp['level'] = $user_level->getLevelName();
 			$avatar = new wAvatar( $user_id, 'm' );
 			$temp['url'] = $avatar->getAvatarURL();
-			$req = $dbr->select(
-				'user_stats',
-				array(
-					'stats_edit_count'
-				),
-				array(
-					'stats_user_name' => $u_name
-				),
-				__METHOD__
-			);
-			foreach ($req as $value) {
-				$temp['count'] = $value->stats_edit_count;
-			}
-			
+			$tuser = User::newFromName($u_name);
+			$temp['count'] = UserStats::getSiteEditsCount($tuser);
+
 			if(in_array($u_name, $follower)){
 				$is_follow = 'Y';
 			}else{
 				$is_follow = 'N';
 			}
 			$temp['is_follow'] = $is_follow;
+			
 			$request[] = $temp;
  		}
+ 		foreach ($request as $key => $value) {
+				$count[$key] = $value['count'];
+			}
+		array_multisort($count, SORT_DESC, $request); 
 		return $request;
 
 	}
@@ -585,7 +584,5 @@ class UserSiteFollow{
 		}
 
 	}
-
-
 
 }

@@ -126,9 +126,9 @@ var userSiteFollows = {
 						function(i,item){
 							// console.log(res);
 							if (item.is_follow == 'Y') {
-								var msg = '<li><a href="'+item.userUrl+'">'+item.url+'</a><a href="'+item.userUrl+'">'+item.user+'</a>编辑次数：'+item.count+'<i>(已关注)</i></li>';
+								var msg = '<li><a href="'+item.userUrl+'">'+item.url+'</a><a href="'+item.userUrl+'">'+item.user+'</a>等级:<i>'+item.level+'</i>编辑次数：'+item.count+'<i>(已关注)</i></li>';
 							}else{
-								var msg = '<li><a href="'+item.userUrl+'">'+item.url+'</a><a href="'+item.userUrl+'">'+item.user+'</a>编辑次数：'+item.count+'</li>';
+								var msg = '<li><a href="'+item.userUrl+'">'+item.url+'</a><a href="'+item.userUrl+'">'+item.user+'</a>等级:<i>'+item.level+'</i>编辑次数：'+item.count+'</li>';
 							}
 							$('.follow-modal').append(msg);
 						}						

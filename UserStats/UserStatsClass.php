@@ -918,6 +918,48 @@ class UserStats {
 
 		return $list;
 	}
+	/**
+	 * Get the site's followed who with highest editcount
+	 *
+	 * @param $user 
+	 * @return $count useredits count
+	 */	
+	public static function getSiteEditsCount( $user ){
+		$data = self::getSiteEditsCountCache( $user );
+		if ( $data != '' ) {
+			return $data;
+		} else {
+			return self::getSiteEditsCountDB( $user );
+		}
+	}
+	public static function getSiteEditsCountCache( $user ){
+		global $wgMemc;
+		$key = wfMemcKey( 'revision', 'high_edit_site_followed', $user->getName() );
+		$data = $wgMemc->get( $key );
+		if ( $data != '' ) {
+			wfDebug( "Got top followed $data ( User = {$user} ) from cache\n" );
+			return $data;
+		}
+	}
+	public static function getSiteEditsCountDB( $user ){
+		global $wgMemc;
+		$key = wfMemcKey('revision', 'high_edit_site_followed', $user->getName() );
+		$dbr = wfGetDB( DB_SLAVE );
+		// return $user->getName();	
+		$res = $dbr->select(
+			'revision',
+			array('COUNT(*) AS ecount'),
+			array(
+				'rev_user_text' => $user->getName()
+			),
+			__METHOD__
+		);
+		foreach ($res as $value) {
+			$count = $value->ecount;
+		}
+		$wgMemc->set( $key, $count );
+		return $count;
+	}
 }
 
 class UserLevel {
@@ -1035,4 +1077,5 @@ class UserEmailTrack {
 			);
 		}
 	}
+	
 }

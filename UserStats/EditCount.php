@@ -21,7 +21,7 @@ $wgHooks['ArticleUndelete'][] = 'restoreDeletedEdits';
  * listed in the $wgNamespacesForEditPoints array.
  */
 function incEditCount( $article, $revision, $baseRevId ) {
-	global $wgUser, $wgNamespacesForEditPoints;
+	global $wgUser, $wgNamespacesForEditPoints,$wgMemc;
 
 	// only keep tally for allowable namespaces
 	if (
@@ -31,6 +31,8 @@ function incEditCount( $article, $revision, $baseRevId ) {
 		$stats = new UserStatsTrack( $wgUser->getID(), $wgUser->getName() );
 		$stats->incStatField( 'edit' );
 	}
+	$key = wfMemcKey( 'revision', 'high_edit_site_followed', $wgUser->getName() );
+	$wgMemc->incr( $key );
 
 	return true;
 }
@@ -40,7 +42,7 @@ function incEditCount( $article, $revision, $baseRevId ) {
  * $wgNamespacesForEditPoints array that they've edited has been deleted.
  */
 function removeDeletedEdits( &$article, &$user, &$reason ) {
-	global $wgNamespacesForEditPoints;
+	global $wgNamespacesForEditPoints,$wgMemc;
 
 	// only keep tally for allowable namespaces
 	if (
@@ -60,6 +62,8 @@ function removeDeletedEdits( &$article, &$user, &$reason ) {
 			$stats->decStatField( 'edit', $row->the_count );
 		}
 	}
+	$key = wfMemcKey( 'revision', 'high_edit_site_followed', $wgUser->getName() );
+	$wgMemc->decr( $key );
 
 	return true;
 }
@@ -70,7 +74,7 @@ function removeDeletedEdits( &$article, &$user, &$reason ) {
  * it was originally deleted.
  */
 function restoreDeletedEdits( &$title, $new ) {
-	global $wgNamespacesForEditPoints;
+	global $wgNamespacesForEditPoints,$wgMemc;
 
 	// only keep tally for allowable namespaces
 	if (
@@ -90,6 +94,8 @@ function restoreDeletedEdits( &$title, $new ) {
 			$stats->incStatField( 'edit', $row->the_count );
 		}
 	}
+	$key = wfMemcKey( 'revision', 'high_edit_site_followed', $wgUser->getName() );
+	$wgMemc->incr( $key );
 
 	return true;
 }
