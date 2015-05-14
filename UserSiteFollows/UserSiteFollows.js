@@ -131,8 +131,11 @@ var userSiteFollows = {
 								var msg = '<li><a href="'+item.userUrl+'">'+item.url+'</a><a href="'+item.userUrl+'">'+item.user+'</a>等级:<i>'+item.level+'</i>编辑次数：'+item.count+'</li>';
 							}
 							$('.follow-modal').append(msg);
-						}						
+						}	
+
 					);
+					$('.follow-modal').append('<a href="/wiki/Special:FollowsRank">more</a>');
+
 				}else{
 					userSiteFollows.alerttime();
                     userSiteFollows.alertp.text(res.message);
