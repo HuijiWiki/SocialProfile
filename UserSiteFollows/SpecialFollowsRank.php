@@ -36,7 +36,7 @@ class SpecialFollowsRank extends SpecialPage {
 	 * @param $params Mixed: parameter(s) passed to the page or null
 	 */
 	public function execute( $params ) {
-		global $wgUser,$wgSitename,$wgHuijiPrefix;
+		global $wgUser,$wgSitename,$wgHuijiPrefix,$wgUserLevels;
 		$lang = $this->getLanguage();
 		$out = $this->getOutput();
 		$request = $this->getRequest();
@@ -46,7 +46,9 @@ class SpecialFollowsRank extends SpecialPage {
 		$this->setHeaders();
 
 		// Add CSS
-		$out->addModuleStyles( 'ext.socialprofile.useruserfollows.css' );
+		// $out->addModuleStyles( 'ext.socialprofile.useruserfollows.css' );
+		$out->addModuleStyles( 'ext.socialprofile.userstats.css' );
+
 
 		// Add JS
 		// $out->addModuleScripts( 'ext.socialprofile.useruserfollows.js');
@@ -93,36 +95,78 @@ class SpecialFollowsRank extends SpecialPage {
 		$target_user = User::newFromId( $user_id );
 		$userPage = Title::makeTitle( NS_USER, $user_name );
 		$sitefollows = UserSiteFollow::getUserFollowSite($target_user, $wgHuijiPrefix);
-		foreach ( $sitefollows as $follow ) {
-			$username = $follow['user'];
-			$userPageURL = $follow['userUrl'];
-			$avatar_img = $follow['url'];
-			$user_level = $follow['level'];
-			$username_length = strlen( $follow['user'] );
-			$username_space = stripos( $follow['user'], ' ' );
-			if ( ( $username_space == false || $username_space >= "30" ) && $username_length > 30 ) {
-				$user_name_display = substr( $follow['user'], 0, 30 ) .						' ' . substr( $follow['user'], 30, 50 );
-			} else {
-				$user_name_display = $follow['user'];
-			}
-			$output .= "<div class=\"relationship-item\">
-				<a href=\"{$userPageURL}\">{$avatar_img}</a>
-				<div class=\"relationship-info\">
-					<div class=\"relationship-name\">
-						<a href=\"{$userPageURL}\">{$user_name_display}</a><i>{$user_level}</i>
-					</div>
-				<div class=\"relationship-actions\"><ul>";
-			$output .= '<li>编辑数:'.$follow['count'].'</li>';
-			$output .= $followButton;
-			$target = SpecialPage::getTitleFor( 'GiveGift' );
-			$query = array('user' => $follow['user']);
-			$output .= '<li>'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>礼物</a>', array(), $query).'</li> ';
-			$output .= '</ul></div>
-				<div class="cleared"></div>
-			</div>';
-			$output .= '</div>';
+		// foreach ( $sitefollows as $follow ) {
+		// 	$username = $follow['user'];
+		// 	$userPageURL = $follow['userUrl'];
+		// 	$avatar_img = $follow['url'];
+		// 	$user_level = $follow['level'];
+		// 	$username_length = strlen( $follow['user'] );
+		// 	$username_space = stripos( $follow['user'], ' ' );
+		// 	if ( ( $username_space == false || $username_space >= "30" ) && $username_length > 30 ) {
+		// 		$user_name_display = substr( $follow['user'], 0, 30 ) .						' ' . substr( $follow['user'], 30, 50 );
+		// 	} else {
+		// 		$user_name_display = $follow['user'];
+		// 	}
+		// 	$output .= "<div class=\"relationship-item\">
+		// 		<a href=\"{$userPageURL}\">{$avatar_img}</a>
+		// 		<div class=\"relationship-info\">
+		// 			<div class=\"relationship-name\">
+		// 				<a href=\"{$userPageURL}\">{$user_name_display}</a><i>{$user_level}</i>
+		// 			</div>
+		// 		<div class=\"relationship-actions\"><ul>";
+		// 	$output .= '<li>编辑数:'.$follow['count'].'</li>';
+		// 	$output .= $followButton;
+		// 	$target = SpecialPage::getTitleFor( 'GiveGift' );
+		// 	$query = array('user' => $follow['user']);
+		// 	$output .= '<li>'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>礼物</a>', array(), $query).'</li> ';
+		// 	$output .= '</ul></div>
+		// 		<div class="cleared"></div>
+		// 	</div>';
+		// 	$output .= '</div>';
+		// 	$output .= '<div class="cleared"></div>';
+		// }
+		$output .= '<div class="top-users">';
+		$last_level_count = 1000;
+		$x = 1;
+		foreach ( $sitefollows as $user ) {
+			$user_title = Title::makeTitle( NS_USER, $user['user'] );
+			$commentIcon = $user['url'];
+
+			// Break list into sections based on User Level if it's defined for this site
+			// if ( is_array( $wgUserLevels ) ) {
+				// $user_level = $user['level'] ;
+				if ( $user['count'] < $last_level_count ) {
+					// $output .= "<div class=\"top-fan-row\"><div class=\"top-fan-level\">
+					// 	{$last_level_count}
+					// 	↑</div></div>";
+					$last_level_count = $last_level_count - 100;
+				}elseif( $user['count'] == $last_level_count ){
+					if($last_level_count>0){
+						$output .= "<div class=\"top-fan-row\"><div class=\"top-fan-level\">
+							{$last_level_count}
+							↑</div></div>";
+						$last_level_count = $last_level_count;
+					}
+				}
+				
+			// }
+
+			$output .= "<div class=\"top-fan-row\">
+				<span class=\"top-fan-num\">{$x}.</span>
+				<span class=\"top-fan\">
+					{$commentIcon} <a href='" . $user['userUrl'] . "'>" .
+						$user['user'] .'<i>'.$user['level'] .'</i></a>
+				</span>';
+
+			$output .= '<span class="top-fan-points"><b>' .
+				number_format( $user['count'] ) . '</b> ' .
+				$this->msg( 'top-fans-points' )->plain() . '</span>';
 			$output .= '<div class="cleared"></div>';
+			$output .= '</div>';
+			$x++;
 		}
+
+		$output .= '</div><div class="cleared"></div>';
 
 		/**
 		 * Build next/prev nav
