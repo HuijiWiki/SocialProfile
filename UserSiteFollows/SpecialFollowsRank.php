@@ -126,30 +126,10 @@ class SpecialFollowsRank extends SpecialPage {
 		// 	$output .= '<div class="cleared"></div>';
 		// }
 		$output .= '<div class="top-users">';
-		$last_level_count = 1000;
 		$x = 1;
 		foreach ( $sitefollows as $user ) {
 			$user_title = Title::makeTitle( NS_USER, $user['user'] );
 			$commentIcon = $user['url'];
-
-			// Break list into sections based on User Level if it's defined for this site
-			// if ( is_array( $wgUserLevels ) ) {
-				// $user_level = $user['level'] ;
-				if ( $user['count'] < $last_level_count ) {
-					// $output .= "<div class=\"top-fan-row\"><div class=\"top-fan-level\">
-					// 	{$last_level_count}
-					// 	↑</div></div>";
-					$last_level_count = $last_level_count - 100;
-				}elseif( $user['count'] == $last_level_count ){
-					if($last_level_count>0){
-						$output .= "<div class=\"top-fan-row\"><div class=\"top-fan-level\">
-							{$last_level_count}
-							↑</div></div>";
-						$last_level_count = $last_level_count;
-					}
-				}
-				
-			// }
 
 			$output .= "<div class=\"top-fan-row\">
 				<span class=\"top-fan-num\">{$x}.</span>
