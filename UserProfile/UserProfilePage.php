@@ -103,11 +103,18 @@ class UserProfilePage extends Article {
 		$usf = new UserSiteFollow();
 		$uuf = new UserUserFollow();
 		$topFollowedSites = $usf->getTopFollowedSites( $this->user );
-		$tfsUrl = array();
-		$tfsName = array();
+		$temp = array();
 		foreach( $topFollowedSites as $key => $value ){
-			$tfsUrl[] = 'http://'.$key.'.huiji.wiki';
-			$tfsName[] = $value;
+			$user = User::newFromName($wgUser->getName());
+			$temp['url'] = 'http://'.$key.'.huiji.wiki';
+			$temp['name'] = $value;
+			$temp['count'] = UserStats::getSiteEditsCount($user,$key);
+			$res[] = $temp;
+		}
+		//sort by edit num
+		foreach ($res as $value) {
+			$count[] = $val['count'];
+			array_multisort($count, SORT_DESC, $res);
 		}
 		$userCount = UserSiteFollow::getUserCount($this->user);
 
@@ -168,11 +175,17 @@ class UserProfilePage extends Article {
                     .'</ul>
                 </div>
                 <div class="profile-top-right-bottom">
-                    <ul>
-                        <li><a href="'.$tfsUrl[0].'">'.$tfsName[0].'</a></li>
-                        <li><a href="'.$tfsUrl[1].'">'.$tfsName[1].'</a></li>
-                        <li><a href="'.$tfsUrl[2].'">'.$tfsName[2].'</a></li>
-                    </ul>
+                    <ul>');
+        	foreach ($res as $val) {
+        		$Turl[] = $val['url'];
+        		$Tname[] = $val['name'];
+        		$Tcount[] = $val['count'];
+        	}
+        	$num = ( count($Tname) > 3 )?3:count($Tname);
+        	for ($i=0; $i < $num; $i++) { 
+            	$wgOut->addHTML('<li><a href="'.$Turl[$i].'">'.$Tname[$i].'</a></li>');
+        	}
+        $wgOut->addHTML(' </ul>
 
         ');
         if( $wgUser->getName() == $this->user_name ){

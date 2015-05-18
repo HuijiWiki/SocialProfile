@@ -924,12 +924,12 @@ class UserStats {
 	 * @param $user 
 	 * @return $count useredits count
 	 */	
-	public static function getSiteEditsCount( $user ){
+	public static function getSiteEditsCount( $user,$prefix=null ){
 		$data = self::getSiteEditsCountCache( $user );
 		if ( $data != '' ) {
 			return $data;
 		} else {
-			return self::getSiteEditsCountDB( $user );
+			return self::getSiteEditsCountDB( $user,$prefix=null );
 		}
 	}
 	public static function getSiteEditsCountCache( $user ){
@@ -941,19 +941,27 @@ class UserStats {
 			return $data;
 		}
 	}
-	public static function getSiteEditsCountDB( $user ){
-		global $wgMemc;
+	public static function getSiteEditsCountDB( $user,$prefix=null ){
+		global $wgMemc,$isProduction;
 		$key = wfMemcKey('revision', 'high_edit_site_followed', $user->getName() );
-		$dbr = wfGetDB( DB_SLAVE );
-		// return $user->getName();	
+		if ($prefix != null) {
+			if( $isProduction == true ){
+				$prefix = 'huiji_sites-'.$prefix;
+			}else{
+				$prefix = 'huiji_'.str_replace('.', '_', $prefix);
+			}
+			$dbr = wfGetDB( DB_SLAVE,$groups = array(),$wiki = $prefix );
+		}else{
+			$dbr = wfGetDB( DB_SLAVE );
+		}
 		$res = $dbr->select(
-			'revision',
-			array('COUNT(*) AS ecount'),
-			array(
-				'rev_user_text' => $user->getName()
-			),
-			__METHOD__
-		);
+				'revision',
+				array('COUNT(*) AS ecount'),
+				array(
+					'rev_user_text' => $user->getName()
+				),
+				__METHOD__
+			);
 		foreach ($res as $value) {
 			$count = $value->ecount;
 		}

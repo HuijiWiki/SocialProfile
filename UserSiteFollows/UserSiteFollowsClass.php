@@ -364,6 +364,7 @@ class UserSiteFollow{
 			$temp = array();
 			$domain = $row;
 			$siteName = HuijiPrefix::prefixToSiteName($domain);
+			$temp['count'] = UserStats::getSiteEditsCount($user,$domain);
 			$temp['key'] = $domain;
 			$temp['val'] = $siteName;
 			if(in_array($domain, $fs)){
@@ -373,8 +374,11 @@ class UserSiteFollow{
 			}
 			$temp['is'] = $is_follow;
 			$followed[] = $temp; 
-
 		}
+		foreach ($followed as $key => $value) {
+				$count[$key] = $value['count'];
+			}
+		array_multisort($count, SORT_DESC, $followed); 
 		return $followed;
 	}
 	/**
@@ -430,37 +434,6 @@ class UserSiteFollow{
 		$wgMemc->set( $key, $res );
 		return $res;
 	}
-	// /**
-	//  * Get the common interests users of followed sites from the
-	//  * database and show it.
-	//  *
-	//  * @param $user_id:current user; $huijiPrefix:common interests
-	//  * @return array
-	//  */
-	// public static function getCommonInterestUser( $user_id,$huijiPrefix ){
-	// 	$dbr = wfGetDB( DB_SLAVE );
-	// 	$follow = self::getFollowedByUser($user_id);
-	// 	$common = array();
-	// 	$res = $dbr->select(
-	// 			'user_site_follow',
-	// 			array(
-	// 				'f_user_id',
-	// 			),
-	// 		    array(
-	// 		    	'f_wiki_domain' => $huijiPrefix,
-	// 		    ),
-	// 		    __METHOD__
-	// 	);
-	// 	foreach ($res as $resval) {
-	// 		$uid = $resval->f_user_id;
-	// 		foreach ($follow as $folval) {
-	// 			if($uid == $folval->$f_target_user_id){
-	// 				$common[] = $uid;
-	// 			}
-	// 		}
-	// 	}
-	// 	return $common;
-	// }
 	/**
 	 * Get common interests with the user you are watching
 	 *
