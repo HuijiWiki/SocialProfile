@@ -125,11 +125,9 @@ var userSiteFollows = {
 					$.each(res.result,
 						function(i,item){
 							// console.log(res);
-							if (item.is_follow == 'Y') {
-								var msg = '<li><a href="'+item.userUrl+'">'+item.url+'</a><a href="'+item.userUrl+'">'+item.user+'</a>等级:<i>'+item.level+'</i>编辑次数：'+item.count+'<i>(已关注)</i></li>';
-							}else{
-								var msg = '<li><a href="'+item.userUrl+'">'+item.url+'</a><a href="'+item.userUrl+'">'+item.user+'</a>等级:<i>'+item.level+'</i>编辑次数：'+item.count+'</li>';
-							}
+
+								var msg = '<li><a href="'+item.userUrl+'" class="follow-modal-headimg">'+item.url+'</a><a href="'+item.userUrl+'" class="follow-modal-username">'+item.user+'</a><span class="follow-modal-level">等级:<i>'+item.level+'</i></span><span class="follow-modal-editnum">编辑次数：'+item.count+'</span></li>';
+
 							$('.follow-modal').append(msg);
 						}	
 

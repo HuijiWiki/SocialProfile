@@ -688,6 +688,8 @@
 }
 #content h1#profile-title{
     font-size: 24px;
+    word-wrap: break-word;
+    word-break: break-all;
 }
 @media screen and (min-width: 768px) {
     .jumbotron {
@@ -919,22 +921,10 @@ span.span-color{
     }
 }
 @media screen and (max-width:566px){
-    .profile-page{
-        margin-left: -35px;
-        margin-right: -35px;
+    #content h1#profile-title{
+        font-size: 1.5em;
     }
-    #profile-top.row{
-        margin-left: 1px;
-        margin-right: 1px;
-    }
-    #user-page-left.col-md-6{
-        padding-left: 1px;
-        padding-right: 1px;
-    }
-    #user-page-right.col-md-6{
-        padding-left: 1px;
-        padding-right: 1px;
-    }
+   
     .profile-top-right {
         padding-left: 15px!important;
     }
