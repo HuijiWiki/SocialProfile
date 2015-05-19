@@ -104,12 +104,14 @@ class UserProfilePage extends Article {
 		$uuf = new UserUserFollow();
 		$topFollowedSites = $usf->getTopFollowedSites( $this->user );
 		$temp = array();
-		foreach( $topFollowedSites as $key => $value ){
-			$user = User::newFromName($wgUser->getName());
-			$temp['url'] = 'http://'.$key.'.huiji.wiki';
-			$temp['name'] = $value;
-			$temp['count'] = UserStats::getSiteEditsCount($user,$key);
-			$res[] = $temp;
+		if ( $wgUser->isLoggedIn() ) {
+			foreach( $topFollowedSites as $key => $value ){
+				$user = User::newFromName($wgUser->getName());
+				$temp['url'] = 'http://'.$key.'.huiji.wiki';
+				$temp['name'] = $value;
+				$temp['count'] = UserStats::getSiteEditsCount($user,$key);
+				$res[] = $temp;
+			}
 		}
 		//sort by edit num
 		foreach ($res as $value) {

@@ -91,8 +91,13 @@ function wfUserSiteFollowsDetailsResponse( $user_name,$t_name ) {
 
 function wfUsersFollowingSiteResponse( $user, $site_name ) {
 	global $wgUser;
-	$sites = UserSiteFollow::getUserFollowSite($wgUser, $site_name);
-	$ret = array('success'=> true, 'result'=>$sites );
-	$out = json_encode($ret);
-	return $out;  
+	if ( $wgUser->isLoggedIn() ) {
+		$sites = UserSiteFollow::getUserFollowSite($wgUser, $site_name);
+		$ret = array('success'=> true, 'result'=>$sites );
+		$out = json_encode($ret);
+		return $out;  
+	}else{
+		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NOT_LOGGED_IN);
+		return $out;
+	}
 }
