@@ -118,22 +118,30 @@ var userSiteFollows = {
 			function( data ) {
 				var res = jQuery.parseJSON(data);
 				if(res.success){
-					if(res.result==0){
+					if(res.result.length==0){
 						var sitename = mw.config.get('wgSiteName');
 						$('.follow-modal').append('暂时还没人关注'+sitename+' >-<');
-					}
-					$.each(res.result,
-						function(i,item){
-							// console.log(res);
+					}else{
+                        var msg = '<li class="row"><span class="col-xs-6 col-md-4 col-sm-4">昵称</span><span class="hidden-xs col-md-4 col-sm-4">等级</span><span class="col-xs-6 col-md-4 col-sm-4">编辑次数</span></li>'
+                        $('.follow-modal').append(msg);
+                        if(res.result.length>4) {
+                            var i;
+                            for( i=0;i<4;i++ ){
+                                var msg = '<li class="row"><span class="col-xs-6 col-md-4 col-sm-4 modal-user-info"><a href="' + res.result[i].userUrl + '" class="follow-modal-headimg">' + res.result[i].url + '</a><a href="' + res.result[i].userUrl + '" class="follow-modal-username">' + res.result[i].user + '</a></span><span class="follow-modal-level hidden-xs col-md-4 col-sm-4">' + res.result[i].level + '</span><span class="follow-modal-editnum col-xs-6 col-md-4 col-sm-4">' + res.result[i].count + '</span></li>';
+                                $('.follow-modal').append(msg);
+                            }
 
-								var msg = '<li><a href="'+item.userUrl+'" class="follow-modal-headimg">'+item.url+'</a><a href="'+item.userUrl+'" class="follow-modal-username">'+item.user+'</a><span class="follow-modal-level">等级:<i>'+item.level+'</i></span><span class="follow-modal-editnum">编辑次数：'+item.count+'</span></li>';
-
-							$('.follow-modal').append(msg);
-						}	
-
-					);
-					$('.follow-modal').append('<a href="/wiki/Special:FollowsRank">more</a>');
-
+                            $('.follow-modal').append('<div class="follow-modal-more"><a href="/wiki/Special:FollowsRank">more</a></div>');
+                        }
+                        else{
+                            $.each(res.result,
+                                function (i, item) {
+                                    var msg = '<li class="row"><span class="col-xs-6 col-md-4 col-sm-4 modal-user-info"><a href="' + item.userUrl + '" class="follow-modal-headimg">' + item.url + '</a><a href="' + item.userUrl + '" class="follow-modal-username">' + item.user + '</a></span><span class="follow-modal-level hidden-xs col-md-4 col-sm-4">' + item.level + '</span><span class="follow-modal-editnum col-xs-6 col-md-4 col-sm-4">' + item.count + '</span></li>';
+                                    $('.follow-modal').append(msg);
+                                }
+                            );
+                        }
+                    }
 				}else{
 					userSiteFollows.alerttime();
                     userSiteFollows.alertp.text(res.message);
