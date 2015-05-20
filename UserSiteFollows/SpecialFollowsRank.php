@@ -135,8 +135,8 @@ class SpecialFollowsRank extends SpecialPage {
 				<span class=\"top-fan-num\">{$x}.</span>
 				<span class=\"top-fan\">
 					{$commentIcon} <a href='" . $user['userUrl'] . "'>" .
-						$user['user'] .'<i>'.$user['level'] .'</i></a>
-				</span>';
+						$user['user'] .'</a><i>'.$user['level'] .'
+				</i></span>';
 
 			$output .= '<span class="top-fan-points"><b>' .
 				number_format( $user['count'] ) . '</b> ' .

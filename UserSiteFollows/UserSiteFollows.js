@@ -116,6 +116,7 @@ var userSiteFollows = {
 				rsargs: [username, servername]
 			},
 			function( data ) {
+                $('.follow-modal').empty();
 				var res = jQuery.parseJSON(data);
 				if(res.success){
 					if(res.result.length==0){
@@ -206,7 +207,7 @@ jQuery( document ).ready( function() {
 		var user = mw.config.get('wgUserName');
 		var site_name = mw.config.get('wgHuijiPrefix');
 		userSiteFollows.fillUsersModal(user, site_name);
-		$('.follow-modal').empty();
+        $('.follow-modal').empty().append('<i class="fa fa-spinner fa-spin fa-5x"></i>');
 	});
 
 } );
