@@ -104,17 +104,19 @@ class UserProfilePage extends Article {
 		$uuf = new UserUserFollow();
 		$topFollowedSites = $usf->getTopFollowedSites( $this->user );
 		$temp = array();
-		if ( $wgUser->isLoggedIn() ) {
+		
 			foreach( $topFollowedSites as $key => $value ){
-				$user = User::newFromName($wgUser->getName());
+				// if ( $wgUser->isLoggedIn() ) {
+				$user = User::newFromName( $this->user_name );
+				// }
 				$temp['url'] = 'http://'.$key.'.huiji.wiki';
 				$temp['name'] = $value;
 				$temp['count'] = UserStats::getSiteEditsCount($user,$key);
 				$res[] = $temp;
 			}
-		}
+		
 		//sort by edit num
-		foreach ($res as $value) {
+		foreach ($res as $val) {
 			$count[] = $val['count'];
 			array_multisort($count, SORT_DESC, $res);
 		}

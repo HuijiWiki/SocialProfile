@@ -83,7 +83,7 @@ function wfUserSiteUnfollowsResponse( $username, $servername ) {
 function wfUserSiteFollowsDetailsResponse( $user_name,$t_name ) {
 	$user_id = User::idFromName($user_name);
 	$t_id = User::idFromName($t_name);
-	$sites = UserSiteFollow::getFullFollowedSitesDB($user_id,$t_id);
+	$sites = UserSiteFollow::getFullFollowedSites($user_id,$t_id);
 	$ret = array('success'=> true, 'result'=>$sites );
 	$out = json_encode($ret);
 	return $out;
@@ -91,13 +91,13 @@ function wfUserSiteFollowsDetailsResponse( $user_name,$t_name ) {
 
 function wfUsersFollowingSiteResponse( $user, $site_name ) {
 	global $wgUser;
-	if ( $wgUser->isLoggedIn() ) {
+	// if ( $wgUser->isLoggedIn() ) {
 		$sites = UserSiteFollow::getUserFollowSite($wgUser, $site_name);
 		$ret = array('success'=> true, 'result'=>$sites );
 		$out = json_encode($ret);
 		return $out;  
-	}else{
-		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NOT_LOGGED_IN);
-		return $out;
-	}
+	// }else{
+	// 	$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NOT_LOGGED_IN);
+	// 	return $out;
+	// }
 }
