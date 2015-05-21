@@ -948,7 +948,7 @@ class UserStats {
 			if( $isProduction == true && $prefix == 'huiji_home'){
 				$prefix = 'huiji_home';
 			}elseif ( $isProduction == true ) {
-				$prefix = 'huiji_sites-'.$prefix;
+				$prefix = 'huiji_sites-'.str_replace('.', '_', $prefix);
 			}else{
 				$prefix = 'huiji_'.str_replace('.', '_', $prefix);
 			}
