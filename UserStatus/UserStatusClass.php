@@ -234,7 +234,7 @@ class UserStatus{
 		}
 		$result['commonfollow'] = $cfollow;
 		//我关注的谁也关注他
-		$result['minefollowerhim'] = self::getFollowingFollowsUser( $t_user,$current_user );
+		$result['minefollowerhim'] = self::getFollowingFollowsUserDB( $t_user,$current_user );
 		// $wgMemc->set( $key, $result );
 		return $result;
 	}
@@ -262,24 +262,28 @@ class UserStatus{
 		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'my_following_follows_him', $username );
 		// return $current_user;
 		$dbr = wfGetDB( DB_SLAVE );
-		$follower = UserSiteFollow::getFollowedByUser($current_user);
-		$followehe = $dbr->select(
-			'user_user_follow',
-			array( 'f_user_name' ),
-			array(
-				'f_target_user_name' => $username
-			),
-			__METHOD__
-		);
-		$result = array();
-		foreach ($followehe as $val) {
-			$foname = $val->f_user_name;
-			if(in_array($foname, $follower)){
-				$result[] = $foname;
+		if($current_user != NULL){
+			$follower = UserSiteFollow::getFollowedByUser($current_user);
+			$followehe = $dbr->select(
+				'user_user_follow',
+				array( 'f_user_name' ),
+				array(
+					'f_target_user_name' => $username
+				),
+				__METHOD__
+			);
+			$result = array();
+			foreach ($followehe as $val) {
+				$foname = $val->f_user_name;
+				if(in_array($foname, $follower)){
+					$result[] = $foname;
+				}
 			}
+			$wgMemc->set( $key, $result );
+			return $result;
+		}else{
+			return '';
 		}
-		$wgMemc->set( $key, $result );
-		return $result;
 	}
  	
 }
