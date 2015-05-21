@@ -42,7 +42,7 @@ function incEditCount( $article, $revision, $baseRevId ) {
  * $wgNamespacesForEditPoints array that they've edited has been deleted.
  */
 function removeDeletedEdits( &$article, &$user, &$reason ) {
-	global $wgNamespacesForEditPoints,$wgMemc,$wgUser;
+	global $wgNamespacesForEditPoints,$wgMemc;
 
 	// only keep tally for allowable namespaces
 	if (
@@ -60,10 +60,11 @@ function removeDeletedEdits( &$article, &$user, &$reason ) {
 		foreach ( $res as $row ) {
 			$stats = new UserStatsTrack( $row->rev_user, $row->rev_user_text );
 			$stats->decStatField( 'edit', $row->the_count );
+			$key = wfMemcKey( 'revision', 'high_edit_site_followed', $row->rev_user_text );
+			$wgMemc->decr( $key,$row->the_count );
 		}
 	}
-	$key = wfMemcKey( 'revision', 'high_edit_site_followed', $wgUser->getName() );
-	$wgMemc->decr( $key );
+	
 
 	return true;
 }
@@ -74,7 +75,7 @@ function removeDeletedEdits( &$article, &$user, &$reason ) {
  * it was originally deleted.
  */
 function restoreDeletedEdits( &$title, $new ) {
-	global $wgNamespacesForEditPoints,$wgMemc,$wgUser;
+	global $wgNamespacesForEditPoints,$wgMemc;
 
 	// only keep tally for allowable namespaces
 	if (
@@ -92,10 +93,11 @@ function restoreDeletedEdits( &$title, $new ) {
 		foreach ( $res as $row ) {
 			$stats = new UserStatsTrack( $row->rev_user, $row->rev_user_text );
 			$stats->incStatField( 'edit', $row->the_count );
+			$key = wfMemcKey( 'revision', 'high_edit_site_followed', $row->rev_user_text );
+			$wgMemc->incr( $key, $row->the_count );
 		}
 	}
-	$key = wfMemcKey( 'revision', 'high_edit_site_followed', $wgUser->getName() );
-	$wgMemc->incr( $key );
+
 
 	return true;
 }
