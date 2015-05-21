@@ -17,12 +17,18 @@
 
 class SpecialUploadAvatar extends SpecialUpload {
 	public $avatarUploadDirectory;
-
+	
 	/**
 	 * Constructor
 	 */
 	public function __construct( $request = null ) {
-		SpecialPage::__construct( 'UploadAvatar', 'upload', false/* listed? */ );
+		global $wgUser;
+		$mailVerify = $wgUser->getEmailAuthenticationTimestamp();
+		if ($mailVerify == NULL) {
+			return false;
+		}else{
+			SpecialPage::__construct( 'UploadAvatar', 'upload', false/* listed? */ );
+		}
 	}
 
 	/**

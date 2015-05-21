@@ -1008,12 +1008,18 @@ class UserProfilePage extends Article {
 		// 	}
 		// 	$wgOut->addModules( 'ext.socialprofile.useruserfollows.js' );
 		// }
+		$mailVerify = $wgUser->getEmailAuthenticationTimestamp();
+		if ($mailVerify == NULL) {
+			 $href = "/wiki/Special:ConfirmEmail";
+		}else{
+			$href = "/wiki/Special:UploadAvatar";
+		}
 
 		$output .= '<div id="profile-right" class="col-md-6 col-sm-12 col-xs-12">';
 
 		$output .= '<div id="profile-title-container">
 				<h1 id="profile-title">
-				<div id="profile-image">' .($this->isOwner()? ('<div class="profile-image-container"><a href="/wiki/Special:UploadAvatar">'.$avatar->getOwnerAvatarURL().'</div>'): $avatar->getAvatarURL()) .'</a></div>' .
+				<div id="profile-image">' .($this->isOwner()? ('<div class="profile-image-container"><a href="'.$href.'">'.$avatar->getOwnerAvatarURL().'</div>'): $avatar->getAvatarURL()) .'</a></div>' .
 					$user_name .
 				'</h1></div>';
         $output .='<div class="modal fade watch-url" tabindex="-1" role="dialog" aria-labelledby="mySmModalLabel" aria-hidden="true">

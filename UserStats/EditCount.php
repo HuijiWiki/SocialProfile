@@ -42,7 +42,7 @@ function incEditCount( $article, $revision, $baseRevId ) {
  * $wgNamespacesForEditPoints array that they've edited has been deleted.
  */
 function removeDeletedEdits( &$article, &$user, &$reason ) {
-	global $wgNamespacesForEditPoints,$wgMemc;
+	global $wgNamespacesForEditPoints,$wgMemc,$wgUser;
 
 	// only keep tally for allowable namespaces
 	if (
@@ -74,7 +74,7 @@ function removeDeletedEdits( &$article, &$user, &$reason ) {
  * it was originally deleted.
  */
 function restoreDeletedEdits( &$title, $new ) {
-	global $wgNamespacesForEditPoints,$wgMemc;
+	global $wgNamespacesForEditPoints,$wgMemc,$wgUser;
 
 	// only keep tally for allowable namespaces
 	if (
