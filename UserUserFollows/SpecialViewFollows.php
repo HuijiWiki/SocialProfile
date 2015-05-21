@@ -135,12 +135,12 @@ class SpecialViewFollows extends SpecialPage {
 				$this->msg( 'ur-backlink', $user_name )->parse() .
 			'</a> | '.Linker::LinkKnown($target, '关注我的人', array(), $query2).'
 		</div>
-		<div class="relationship-count">' .
+		<div class="relationship-wrapper"><div class="relationship-count">' .
 			$this->msg(
 				'ur-relationship-count-friends',
 				$user_name,
 				$total
-			)->text() . '</div>';
+			)->text() . '</div><div class="relationship-list">';
 		} else {
 			$out->setPageTitle( $this->msg( 'ur-title-foe', $user_name )->parse() );
 
@@ -182,7 +182,7 @@ class SpecialViewFollows extends SpecialPage {
 				if ($is_follow == 'Y') {
 					$followButton = '<li  class="user-user-follow unfollow" data-username="'.$allinfo['username'].'"><a><i class="fa fa-minus-square-o"></i>取关</a></li> ';
 				} else {
-					$followButton = '<li class="user-user-follow" data-username="'.$allinfo['username'].'"><a><i class="fa fa-plus-square-o"></i>关注</a></li> ';
+					$followButton = '<li class="user-user-follow" data-username="'.$allinfo['username'].'"><i class="fa fa-plus-square-o"></i></i>关注</li> ';
 				}
 
 				$userPageURL = htmlspecialchars( $userPage->getFullURL() );
@@ -216,23 +216,23 @@ class SpecialViewFollows extends SpecialPage {
 					$genderIcon = '';
 				}
 				$output .= "<div class=\"relationship-item\">
-					<a href=\"{$userPageURL}\">{$avatar_img}</a>
+					<a href=\"{$userPageURL}\" data-name=\"{$user_name_display}\">{$avatar_img}</a>
 					<div class=\"relationship-info\">
 						<div class=\"relationship-name\">
 							<a href=\"{$userPageURL}\">{$user_name_display}</a><i>{$genderIcon}</i><i>{$user_level}</i>
 						</div>
-					<div class=\"relationship-actions\"><ul>";
+					<div class=\"relationship-actions\">";
 				if(empty($user_status)){
-					$output .= '<li>Nothing there</li>';
+					$output .= '<div>Nothing there</div>';
 				}else{
-					$output .= '<li>'.$user_status.'</li>';					
+					$output .= '<div>'.$user_status.'</div>';
 				}
-				$output .= '<li>关注数:'.$user_count.'被关注:'.$user_counted.' 编辑:'.$editcount.'</li>';
-				$output .= $followButton;
+				$output .= '<div>关注数:'.$user_count.' | 被关注:'.$user_counted.' | 编辑:'.$editcount.'</div>';
+				$output .= '<ul class="relationship-list-btn">'.$followButton;
 				$target = SpecialPage::getTitleFor( 'GiveGift' );
 				$query = array('user' => $follow['user_name']);
-				$output .= '<li>'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>礼物</a>', array(), $query).'</li> ';
-				$output .=  '<li>共同关注:';
+				$output .= '<li>'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>礼物</a>', array(), $query).'</li> </ul>';
+				/*$output .=  '<li>共同关注:';
 				if(!empty($commonfollow)){
 					foreach ($commonfollow as $val) {
 						$output .= $val.'&nbsp';
@@ -248,8 +248,8 @@ class SpecialViewFollows extends SpecialPage {
 				}else{
 					$output .= '(<i>暂无</i>)';
 				}
-				$output .= '</li>';
-				$output .= '</ul></div>
+				$output .= '</li>';*/
+				$output .= '</div>
 					<div class="cleared"></div>
 				</div>';
 
@@ -324,7 +324,7 @@ class SpecialViewFollows extends SpecialPage {
 						)
 					);
 			}
-			$output .= '</div>';
+			$output .= '</div></div></div>';
 		}
 
 		$out->addHTML( $output );
