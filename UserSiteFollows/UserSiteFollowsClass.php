@@ -255,7 +255,7 @@ class UserSiteFollow{
 		$wgMemc->incr( $key );
 		$wgMemc->delete( wfForeignMemcKey('huiji','', 'user_site_follow', 'top_followed', $user->getName() ) );
 		$wgMemc->delete( wfForeignMemcKey('huiji','', 'user_site_follow', 'all_sites_user_following', $user->getName() ) );
-		$wgMemc->delete( wfForeignMemcKey('huiji','', 'user_site_follow', 'site_followed_count', $user->getName() ) );
+		$wgMemc->delete( wfForeignMemcKey('huiji','', 'user_site_follow', 'site_followed_list', $huijiPrefix ) );
 
 
 	}
@@ -272,7 +272,7 @@ class UserSiteFollow{
 		$wgMemc->decr( $key );	
 		$wgMemc->delete( wfForeignMemcKey('huiji','', 'user_site_follow', 'top_followed', $user->getName() ) );
 		$wgMemc->delete( wfForeignMemcKey('huiji','', 'user_site_follow', 'all_sites_user_following', $user->getName() ) );	
-		$wgMemc->delete( wfForeignMemcKey('huiji','', 'user_site_follow', 'site_followed_count', $user->getName() ) );
+		$wgMemc->delete( wfForeignMemcKey('huiji','', 'user_site_follow', 'site_followed_list', $huijiPrefix ) );
 	}
 		
 
@@ -384,59 +384,7 @@ class UserSiteFollow{
 		array_multisort($count, SORT_DESC, $followed); 
 		return $followed;
 	}
-	/**
-	 * Get user's followed from the
-	 * database and show it.
-	 *
-	 * @param $username:current user
-	 * @return array
-	 */
-	public static function getFollowedByUser( $username ) {
-		// global $wgMemc;
-		// $user = User::newFromName($username);
-		// $key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_followed_count', $username );
-		// $data = $wgMemc->get( $key );
-		$data = self::getFollowedByUserCache( $username );
-		if ( $data != '' ) {
-			wfDebug( "Got user count of $data ( User = {$user} ) from cache\n" );
-			return $data;
-		}else {
-			return self::getFollowedByUserDB( $username );
-		}
-	}
-	public static function getFollowedByUserCache( $username ) {
-		global $wgMemc;
-		$user = User::newFromName($username);
-		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_followed_count', $username );
-		$data = $wgMemc->get( $key );
-		if ( $data != '' ) {
-			wfDebug( "Got top followed $data ( User = {$user} ) from cache\n" );
-			return $data;
-		}
-	}
-	public static function getFollowedByUserDB( $username ){
-		global $wgMemc;
-		$user = User::newFromName($username);
-		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_followed_count', $username );
-		$dbr = wfGetDB( DB_SLAVE );
-		$res = array();
-		$res = $dbr->select(
-			'user_user_follow',
-			array(
-				'f_target_user_name'
-			),
-			array(
-				'f_user_name' => $username
-			),
-			__METHOD__
-		);
-		foreach ($res as $value) {
-			$req[] = $value->f_target_user_name;
-		}
-		$res = $req;
-		$wgMemc->set( $key, $res );
-		return $res;
-	}
+
 	/**
 	 * Get common interests with the user you are watching
 	 *
@@ -468,38 +416,39 @@ class UserSiteFollow{
 	public static function getUserFollowSite( $user,$site_name ){
 		$dbr = wfGetDB( DB_SLAVE );
 		$request = array();
-		$follower = self::getFollowedByUser( $user->getName() );
-		$res = self::getSiteFollowedUser($user,$site_name);
-		foreach ($res as $value) {
-			$u_name = $value;
-			$temp['user'] = $u_name;
-			$userPage = Title::makeTitle( NS_USER, $u_name );
-			$userPageURL = htmlspecialchars( $userPage->getFullURL() );
-			$temp['userUrl'] = $userPageURL;
-			$user_id = User::idFromName($u_name);
-			$stats = new UserStats( $user_id, $u_name );
-			$stats_data = $stats->getUserStats();
-			$user_level = new UserLevel( $stats_data['points'] );
-			$temp['level'] = $user_level->getLevelName();
-			$avatar = new wAvatar( $user_id, 'm' );
-			$temp['url'] = $avatar->getAvatarURL();
-			$tuser = User::newFromName($u_name);
-			$temp['count'] = UserStats::getSiteEditsCount($tuser);
+			$follower = UserUserFollow::getFollowedByUser( $user->getName() );
+			$res = self::getSiteFollowedUserDB($user,$site_name);
+			foreach ($res as $value) {
+				$u_name = $value;
+				$temp['user'] = $u_name;
+				// $temp['user'] = User::getEffectiveGroups($user);
+				$userPage = Title::makeTitle( NS_USER, $u_name );
+				$userPageURL = htmlspecialchars( $userPage->getFullURL() );
+				$temp['userUrl'] = $userPageURL;
+				$user_id = User::idFromName($u_name);
+				$stats = new UserStats( $user_id, $u_name );
+				$stats_data = $stats->getUserStats();
+				$user_level = new UserLevel( $stats_data['points'] );
+				$temp['level'] = $user_level->getLevelName();
+				$avatar = new wAvatar( $user_id, 'm' );
+				$temp['url'] = $avatar->getAvatarURL();
+				$tuser = User::newFromName($u_name);
+				$temp['count'] = UserStats::getSiteEditsCount($tuser);
 
-			if(in_array($u_name, $follower)){
-				$is_follow = 'Y';
-			}else{
-				$is_follow = 'N';
-			}
-			$temp['is_follow'] = $is_follow;
-			
-			$request[] = $temp;
- 		}
- 		foreach ($request as $key => $value) {
-				$count[$key] = $value['count'];
-			}
-		array_multisort($count, SORT_DESC, $request); 
-		return $request;
+				if(in_array($u_name, $follower)){
+					$is_follow = 'Y';
+				}else{
+					$is_follow = 'N';
+				}
+				$temp['is_follow'] = $is_follow;
+				
+				$request[] = $temp;
+	 		}
+	 		foreach ($request as $key => $value) {
+					$count[$key] = $value['count'];
+				}
+			array_multisort($count, SORT_DESC, $request); 
+			return $request;
 
 	}
 	/**
@@ -567,7 +516,7 @@ class UserSiteFollow{
 	}
 	public static function getSiteFollowedUserCache( $user,$sitename ) {
 		global $wgMemc;
-		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'site_followed_count', $user->getName() );
+		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'site_followed_list', $sitename );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
 			wfDebug( "Got top followed $data ( User = {$user} ) from cache\n" );
@@ -576,7 +525,7 @@ class UserSiteFollow{
 	}
 	public static function getSiteFollowedUserDB( $user,$sitename ){
 		global $wgMemc;
-		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'site_followed_count', $user->getName() );
+		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'site_followed_list', $sitename );
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = array();
 		$res = $dbr->select(
@@ -592,7 +541,11 @@ class UserSiteFollow{
 		// return $res;	
 		if($res == true){
 			foreach ($res as $value) {
-				$data[] = $value->f_user_name;
+				$ruser = User::newFromName($value->f_user_name);
+				$group = $ruser->getEffectiveGroups();
+				if(!in_array( 'bot', $group) && !in_array('bot-global', $group)){
+					$data[] = $value->f_user_name;					
+				}
 			}
 			$wgMemc->set( $key, $data );
 			return $data;

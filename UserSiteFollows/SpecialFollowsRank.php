@@ -45,6 +45,8 @@ class SpecialFollowsRank extends SpecialPage {
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
 
+		$output = '<i>'.$this->msg( 'followsranknote' )->plain().'</i>';
+
 		// Add CSS
 		// $out->addModuleStyles( 'ext.socialprofile.useruserfollows.css' );
 		$out->addModuleStyles( 'ext.socialprofile.userstats.css' );
@@ -53,7 +55,7 @@ class SpecialFollowsRank extends SpecialPage {
 		// Add JS
 		// $out->addModuleScripts( 'ext.socialprofile.useruserfollows.js');
 
-		$output = '';
+		// $output = '';
 
 		/**
 		 * Get query string variables
@@ -61,17 +63,6 @@ class SpecialFollowsRank extends SpecialPage {
 		$user_name = $request->getVal( 'user' );
 		$rel_type = $request->getInt( 'rel_type' );
 		$page = $request->getInt( 'page' );
-
-		/**
-		 * Redirect Non-logged in users to Login Page
-		 * It will automatically return them to the ViewRelationships page
-		 */
-		if ( !$user->isLoggedIn() && $user_name == '' ) {
-			$out->setPageTitle( $this->msg( 'ur-error-page-title' )->plain() );
-			$login = SpecialPage::getTitleFor( 'Userlogin' );
-			$out->redirect( htmlspecialchars( $login->getFullURL( 'returnto=Special:FollowsRank' ) ) );
-			return false;
-		}
 
 		/**
 		 * Set up config for page / default values
@@ -140,7 +131,7 @@ class SpecialFollowsRank extends SpecialPage {
 
 			$output .= '<span class="top-fan-points"><b>' .
 				number_format( $user['count'] ) . '</b> ' .
-				$this->msg( 'top-fans-points' )->plain() . '</span>';
+				$this->msg( 'top-fans-times' )->plain() . '</span>';
 			$output .= '<div class="cleared"></div>';
 			$output .= '</div>';
 			$x++;

@@ -182,7 +182,7 @@ class SpecialViewFollows extends SpecialPage {
 				if ($is_follow == 'Y') {
 					$followButton = '<li  class="user-user-follow unfollow" data-username="'.$allinfo['username'].'"><a><i class="fa fa-minus-square-o"></i>取关</a></li> ';
 				} else {
-					$followButton = '<li class="user-user-follow" data-username="'.$allinfo['username'].'"><i class="fa fa-plus-square-o"></i></i>关注</li> ';
+					$followButton = '<li class="user-user-follow" data-username="'.$allinfo['username'].'"><a><i class="fa fa-plus-square-o"></i>关注</a></li> ';
 				}
 
 				$userPageURL = htmlspecialchars( $userPage->getFullURL() );

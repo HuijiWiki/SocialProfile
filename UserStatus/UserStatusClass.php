@@ -215,7 +215,7 @@ class UserStatus{
 		//是否关注
 		$current_user = $wgUser->getName();
 		// return $current_user;
-		$follower = UserSiteFollow::getFollowedByUser($current_user);
+		$follower = UserUserFollow::getFollowedByUser($current_user);
 		if(in_array($this->username, $follower)){
 			$result['is_follow'] = 'Y';
 		}else{
@@ -225,7 +225,7 @@ class UserStatus{
 		//共同关注
 		$cfollow = array();
 		$t_user = $this->username;
-		$ufollower = UserSiteFollow::getFollowedByUser( $t_user );
+		$ufollower = UserUserFollow::getFollowedByUser( $t_user );
 
 		foreach ($follower as $valuea) {
 			if(in_array($valuea, $ufollower)){
@@ -234,12 +234,11 @@ class UserStatus{
 		}
 		$result['commonfollow'] = $cfollow;
 		//我关注的谁也关注他
-		$result['minefollowerhim'] = self::getFollowingFollowsUserDB( $t_user,$current_user );
+		$result['minefollowerhim'] = self::getFollowingFollowsUser( $t_user,$current_user );
 		// $wgMemc->set( $key, $result );
 		return $result;
 	}
 
-	//我关注的谁也关注他
 	public static function getFollowingFollowsUser( $username,$current_user ){
 		$data = self::getFollowingFollowsUserCache( $username,$current_user );
 		if ( $data != '' ) {
@@ -263,7 +262,7 @@ class UserStatus{
 		// return $current_user;
 		$dbr = wfGetDB( DB_SLAVE );
 		if($current_user != NULL){
-			$follower = UserSiteFollow::getFollowedByUser($current_user);
+			$follower = UserUserFollow::getFollowedByUser($current_user);
 			$followehe = $dbr->select(
 				'user_user_follow',
 				array( 'f_user_name' ),

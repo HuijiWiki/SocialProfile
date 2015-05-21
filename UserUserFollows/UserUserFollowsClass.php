@@ -290,6 +290,59 @@ class UserUserFollow{
 		return $requests;
 	}
 	/**
+	 * Get user's followed from the
+	 * database and show it.
+	 *
+	 * @param $username:current user
+	 * @return array
+	 */
+	public static function getFollowedByUser( $username ) {
+		// global $wgMemc;
+		// $user = User::newFromName($username);
+		// $key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_followed_count', $username );
+		// $data = $wgMemc->get( $key );
+		$data = self::getFollowedByUserCache( $username );
+		if ( $data != '' ) {
+			wfDebug( "Got user count of $data ( User = {$user} ) from cache\n" );
+			return $data;
+		}else {
+			return self::getFollowedByUserDB( $username );
+		}
+	}
+	public static function getFollowedByUserCache( $username ) {
+		global $wgMemc;
+		$user = User::newFromName($username);
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_following_list', $user->getName() );
+		$data = $wgMemc->get( $key );
+		if ( $data != '' ) {
+			wfDebug( "Got top followed $data ( User = {$user} ) from cache\n" );
+			return $data;
+		}
+	}
+	public static function getFollowedByUserDB( $username ){
+		global $wgMemc;
+		$user = User::newFromName($username);
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_following_list', $user->getName() );
+		$dbr = wfGetDB( DB_SLAVE );
+		$res = array();
+		$res = $dbr->select(
+			'user_user_follow',
+			array(
+				'f_target_user_name'
+			),
+			array(
+				'f_user_name' => $username
+			),
+			__METHOD__
+		);
+		foreach ($res as $value) {
+			$req[] = $value->f_target_user_name;
+		}
+		$res = $req;
+		$wgMemc->set( $key, $res );
+		return $res;
+	}
+	/**
 	 * Increase the amount of following and followed count.
 	 *
 	 *  @param $follower User object: the user who initiates the follow
@@ -301,6 +354,11 @@ class UserUserFollow{
 		$wgMemc->incr( $key );
 		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_follower_count', $followee->getName() );
 		$wgMemc->incr( $key );
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_following_list', $follower->getName() );
+		$followingList = $wgMemc->get( $key );
+		$followingList[] = $followee;
+		$wgMemc->set( $key, $followingList );
+
 	}
 	/**
 	 * Decrease the amount of follewers for the site.
@@ -314,6 +372,11 @@ class UserUserFollow{
 		$wgMemc->decr( $key );
 		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_follower_count', $followee->getName() );
 		$wgMemc->decr( $key );
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_following_list', $follower->getName() );
+		$followingList = $wgMemc->get( $key );
+		$fKey = array_keys($followingList,$followee);
+		unset($followingList[$fKey[0]]);
+		$wgMemc->set( $key, $followingList);
 	}
 	
 	/**
