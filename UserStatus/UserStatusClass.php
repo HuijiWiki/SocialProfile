@@ -213,28 +213,35 @@ class UserStatus{
 		$result['level'] = $user_level->getLevelName();
 
 		//是否关注
-		$current_user = $wgUser->getName();
-		// return $current_user;
-		$follower = UserUserFollow::getFollowedByUser($current_user);
-		if(in_array($this->username, $follower)){
-			$result['is_follow'] = 'Y';
-		}else{
-			$result['is_follow'] = 'N';
-		}
-
-		//共同关注
-		$cfollow = array();
-		$t_user = $this->username;
-		$ufollower = UserUserFollow::getFollowedByUser( $t_user );
-
-		foreach ($follower as $valuea) {
-			if(in_array($valuea, $ufollower)){
-				$cfollow[] = $valuea; 
+		if( $wgUser->isLoggedIn() ){			
+			$current_user = $wgUser->getName();
+			
+			// return $current_user;
+			$follower = UserUserFollow::getFollowedByUser($current_user);
+			if(in_array($this->username, $follower)){
+				$result['is_follow'] = 'Y';
+			}else{
+				$result['is_follow'] = 'N';
 			}
+
+			//共同关注
+			$cfollow = array();
+			$t_user = $this->username;
+			$ufollower = UserUserFollow::getFollowedByUser( $t_user );
+
+			foreach ($follower as $valuea) {
+				if(in_array($valuea, $ufollower)){
+					$cfollow[] = $valuea; 
+				}
+			}
+			$result['commonfollow'] = $cfollow;
+			//我关注的谁也关注他
+			$result['minefollowerhim'] = self::getFollowingFollowsUser( $t_user,$current_user );
+		}else{
+			$result['is_follow'] = '';
+			$result['commonfollow'] = '';
+			$result['minefollowerhim'] = '';
 		}
-		$result['commonfollow'] = $cfollow;
-		//我关注的谁也关注他
-		$result['minefollowerhim'] = self::getFollowingFollowsUser( $t_user,$current_user );
 		// $wgMemc->set( $key, $result );
 		return $result;
 	}

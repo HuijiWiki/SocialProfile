@@ -358,6 +358,10 @@ class UserUserFollow{
 		$followingList = $wgMemc->get( $key );
 		$followingList[] = $followee;
 		$wgMemc->set( $key, $followingList );
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'my_following_follows_him', $follower->getName() );
+		$followingList = $wgMemc->get( $key );
+		$followingList[] = $followee;
+		$wgMemc->set( $key, $followingList );
 
 	}
 	/**
@@ -373,6 +377,11 @@ class UserUserFollow{
 		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_follower_count', $followee->getName() );
 		$wgMemc->decr( $key );
 		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_following_list', $follower->getName() );
+		$followingList = $wgMemc->get( $key );
+		$fKey = array_keys($followingList,$followee);
+		unset($followingList[$fKey[0]]);
+		$wgMemc->set( $key, $followingList);
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'my_following_follows_him', $follower->getName() );
 		$followingList = $wgMemc->get( $key );
 		$fKey = array_keys($followingList,$followee);
 		unset($followingList[$fKey[0]]);
