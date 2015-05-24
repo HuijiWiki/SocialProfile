@@ -141,6 +141,7 @@ class UserProfilePage extends Article {
 			$button2 = '<li class="mw-ui-button">'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>赠送</a>', array(), $query).'</li> ';
 		}
 		$contributions = SpecialPage::getTitleFor( 'Contributions' );
+		$watchlist = SpecialPage::getTitleFor('Watchlist');
 		$send_message = SpecialPage::getTitleFor('UserBoard');
 		$user_safe = urlencode( $this->user );
 		$tools = array();
