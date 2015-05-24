@@ -1062,7 +1062,6 @@ span.span-color{
 }
 .common-interest-container a {
 	display: inline-block;
-	margin: 4px 0px 0px;
 	font-size: 14px;
 	color: #FFF;
 	text-decoration: none;
@@ -1076,4 +1075,8 @@ span.span-color{
 .common-interest-container a:focus, .common-interest-container a:hover{
 	color: #FFF;
 	text-decoration: none;	
+}
+.profile-top-right-bottom .open > .dropdown-menu {
+    display: block;
+	padding-top: 10px;
 }

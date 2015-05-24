@@ -85,19 +85,19 @@ class UserProfilePage extends Article {
 		$sysop = '';
 		$rollback = '';
 		$autoconfirmed = '';
-		if (in_array( 'staff', $this->user->getEffectiveGroups())){
+		if (in_array( 'staff', $this->user->getEffectiveGroups(true))){
 			$staff = '<li>职员</li> ';
 		}
-		if (in_array( 'bureaucrat', $this->user->getEffectiveGroups())){
+		if (in_array( 'bureaucrat', $this->user->getEffectiveGroups(true))){
 			$bureaucrat = '<li>行政员</li> ';
 		}
-		if (in_array( 'sysop', $this->user->getEffectiveGroups())){
+		if (in_array( 'sysop', $this->user->getEffectiveGroups(true))){
 			$sysop = '<li>管理员</li> ';
 		}
-		if (in_array( 'rollback', $this->user->getEffectiveGroups())){
+		if (in_array( 'rollback', $this->user->getEffectiveGroups(true))){
 			$rollback = '<li>回退员</li> ';
 		}
-		if (in_array( 'autoconfirmed', $this->user->getEffectiveGroups())){
+		if (in_array( 'autoconfirmed', $this->user->getEffectiveGroups(true))){
 			$autoconfirmed = '<li>自动确认用户</li> ';
 		}
 		$usf = new UserSiteFollow();
@@ -140,32 +140,79 @@ class UserProfilePage extends Article {
 			$query = array('user' => $this->user_name);
 			$button2 = '<li class="mw-ui-button">'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>赠送</a>', array(), $query).'</li> ';
 		}
-		$watchlist = SpecialPage::getTitleFor( 'Watchlist' );
 		$contributions = SpecialPage::getTitleFor( 'Contributions' );
-		$send_message = SpecialPage::getTitleFor( 'UserBoard' );
+		$send_message = SpecialPage::getTitleFor('UserBoard');
 		$user_safe = urlencode( $this->user );
-		$right = SpecialPage::getTitleFor('UserRights');
-		$block = SpecialPage::getTitleFor('Block');
-		$sendMessageLink = '';
-		$watchlistLink = '';
-		$blockLink = '';
-		$rightLink = '';
+		$tools = array();
 		if ($wgUser->isLoggedIn()){
 			if (!$this->isOwner()){
-				$sendMessageLink = '<li><a href="' . htmlspecialchars( $send_message->getFullURL( 'user=' . $wgUser->getName() . '&conv=' . $user_safe  ) ) . '" rel="nofollow">' .
+				$tools[] = '<li><a href="' . htmlspecialchars( $send_message->getFullURL( 'user=' . $wgUser->getName() . '&conv=' . $user_safe  ) ) . '" rel="nofollow">' .
 			 			wfMessage( 'user-send-message' )->escaped() . '</a></li>';
 				if ($wgUser->isAllowed('block')){
-					$blockLink = '<li><a href="' . htmlspecialchars( $block->getFullURL( 'user='. $user_safe ) ). '" rel="nofollow">封禁用户</a></li>';	
+					# Block / Change block / Unblock links
+					if ($this->user->isBlocked() && $this->user->getBlock()->getType() != Block::TYPE_AUTO){
+						$tools[] = '<li>'.Linker::linkKnown( # Change block link
+                           SpecialPage::getTitleFor( 'Block', $this->user_name ),
+                           wfMessage( 'change-blocklink' )->escaped()
+                       ).'</li>';
+                       $tools[] = '<li>'.Linker::linkKnown( # Unblock link
+                           SpecialPage::getTitleFor( 'Unblock', $this->user_name ),
+                           wfMessage( 'unblocklink' )->escaped()
+                       ).'</li>';
+					} else {
+						$tools[] = '<li>'.Linker::linkKnown( # Block link
+                        	SpecialPage::getTitleFor( 'Block', $this->user_name ),
+                        	wfMessage( 'blocklink' )->escaped()
+                        ).'</li>';
+					}
 				}
-				if ($wgUser->isAllowed('userrights')){
-					$rightLink = '<li><a href="' . htmlspecialchars( $right->getFullURL( 'user='. $user_safe ) ). '" rel="nofollow">调整权限</a></li>';				
-				}
-			}else{
-				$watchlistLink = '<li><a href="' . htmlspecialchars( $watchlist->getFullURL() ) . '">' . wfMessage( 'user-watchlist' )->escaped() . '</a></li>';
+				# Block log link
+				$tools[] = '<li>'.Linker::linkKnown(
+	                SpecialPage::getTitleFor( 'Log', 'block' ),
+	                wfMessage( 'sp-contributions-blocklog' ),
+	                array(),
+	                array( 'page' => $this->mTitle->getPrefixedText() )
+	            ).'</li>';
+	            # Suppression log link
+	            if ( $wgUser->isAllowed( 'suppressionlog' ) ) {
+                 	$tools[] = '<li>'.Linker::linkKnown(
+                    	SpecialPage::getTitleFor( 'Log', 'suppress' ),
+                        wfMessage( 'sp-contributions-suppresslog' )->escaped(),
+                        array(),
+                        array( 'offender' => $this->user_name )
+                   ).'</li>';
+                }
 			}
-
+			# Uploads
+		        $tools[] = '<li>'.Linker::linkKnown(
+				SpecialPage::getTitleFor( 'Listfiles', $this->user_name ),
+				wfMessage( 'sp-contributions-uploads' )->escaped()
+			).'</li>';
+			# Other logs link
+			$tools[] = '<li>'.Linker::linkKnown(
+				SpecialPage::getTitleFor( 'Log', $this->user_name ),
+				wfMessage( 'sp-contributions-logs' )->escaped()
+			).'</li>';
+			# Add link to deleted user contributions for priviledged users
+			if ( $wgUser->isAllowed( 'deletedhistory' ) ) {
+				$tools[] = '<li>'.Linker::linkKnown(
+					SpecialPage::getTitleFor( 'DeletedContributions', $this->user_name ),
+					wfMessage( 'sp-contributions-deleted' )->escaped()
+				).'</li>';
+			}
+     		# Add a link to change user rights for privileged users
+			$userrightsPage = new UserrightsPage();
+			$userrightsPage->setContext( $this->getContext() );
+			if ( $userrightsPage->userCanChangeRights( $this->user ) ) {
+				$tools[] = '<li>'.Linker::linkKnown(
+					SpecialPage::getTitleFor( 'Userrights', $this->user_name ),
+					wfMessage( 'sp-contributions-userrights' )->escaped()
+				).'</li>';
+			}
+			if ($this->isOwner()){
+				$tools[] = '<li><a href="' . htmlspecialchars( $watchlist->getFullURL() ) . '">' . wfMessage( 'user-watchlist' )->escaped() . '</a></li>';
+			}
 		} 
-
 		$wgOut->addModuleScripts( 'ext.socialprofile.useruserfollows.js' );
 		$wgOut->addHTML($wgAjaxExportList);
 		$wgOut->addHTML( '<div class="profile-page"><div id="profile-top" class="jumbotron row">' );
@@ -173,7 +220,7 @@ class UserProfilePage extends Article {
         $wgOut->addHTML('
             <div class="col-md-6 col-sm-12 col-xs-12 profile-top-right">
                 <div class="profile-top-right-top">
-                    <div><h4><img src="/resources/assets/huiji_logo_blue.png" width="25"></img>在本wiki</h4></div>
+                    <div><h4><span class="icon-huiji"></span>在本wiki</h4></div>
                     <ul>'.
                     $staff.$bureaucrat.$sysop.$rollback.$autoconfirmed
                     .'</ul>
@@ -192,7 +239,7 @@ class UserProfilePage extends Article {
         $wgOut->addHTML(' </ul>
 
         ');
-        if( $wgUser->getName() == $this->user_name ){
+        if( $this->isOwner() ){
         	$wgOut->addHTML('<a >查看全部<i id="site-following-count">'.$userCount.'</i>个wiki</a>');
         }else{
         	$wgOut->addHTML('<a >查看全部<i>'.$userCount.'</i>个wiki</a>');
@@ -204,11 +251,7 @@ class UserProfilePage extends Article {
                             $button1.$button2.
                             '<li class="dropdown-toggle mw-ui-button" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-align-justify"></span></li>
                             <ul class="dropdown-menu" role="menu">
-                                        '.$sendMessageLink.' 
-                                        '.$blockLink.' 
-                                        '.$rightLink.' 
-                                        <li class="divider"></li>
-                                        '.$watchlistLink.' 
+                                        '.implode('', $tools).' 
                                         <li><a href="' . htmlspecialchars( $contributions->getFullURL('target='. $user_safe.'&contribs=user'  )) . '" rel="nofollow">' . wfMessage( 'user-contributions' )->escaped() . '</a></li>
                             </ul>
                         </ul>
