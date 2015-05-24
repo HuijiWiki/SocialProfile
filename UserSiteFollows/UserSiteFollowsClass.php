@@ -414,10 +414,11 @@ class UserSiteFollow{
 	 * @return array
 	 */
 	public static function getUserFollowSite( $user,$site_name ){
+		// return '';
 		$dbr = wfGetDB( DB_SLAVE );
 		$request = array();
-			$follower = UserUserFollow::getFollowedByUser( $user->getName() );
-			$res = self::getSiteFollowedUserDB($user,$site_name);
+			// $follower = UserUserFollow::getFollowedByUser( $user->getName() );
+			$res = self::getSiteFollowedUser($user,$site_name);
 			foreach ($res as $value) {
 				$u_name = $value;
 				$temp['user'] = $u_name;
@@ -435,12 +436,12 @@ class UserSiteFollow{
 				$tuser = User::newFromName($u_name);
 				$temp['count'] = UserStats::getSiteEditsCount($tuser);
 
-				if(in_array($u_name, $follower)){
-					$is_follow = 'Y';
-				}else{
-					$is_follow = 'N';
-				}
-				$temp['is_follow'] = $is_follow;
+				// if(in_array($u_name, $follower)){
+				// 	$is_follow = 'Y';
+				// }else{
+				// 	$is_follow = 'N';
+				// }
+				// $temp['is_follow'] = $is_follow;
 				
 				$request[] = $temp;
 	 		}

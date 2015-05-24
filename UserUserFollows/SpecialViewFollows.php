@@ -62,12 +62,12 @@ class SpecialViewFollows extends SpecialPage {
 		 * Redirect Non-logged in users to Login Page
 		 * It will automatically return them to the ViewRelationships page
 		 */
-		if ( !$user->isLoggedIn() && $user_name == '' ) {
-			$out->setPageTitle( $this->msg( 'ur-error-page-title' )->plain() );
-			$login = SpecialPage::getTitleFor( 'Userlogin' );
-			$out->redirect( htmlspecialchars( $login->getFullURL( 'returnto=Special:ViewFollows' ) ) );
-			return false;
-		}
+		// if ( !$user->isLoggedIn() && $user_name == '' ) {
+		// 	$out->setPageTitle( $this->msg( 'ur-error-page-title' )->plain() );
+		// 	$login = SpecialPage::getTitleFor( 'Userlogin' );
+		// 	$out->redirect( htmlspecialchars( $login->getFullURL( 'returnto=Special:ViewFollows' ) ) );
+		// 	return false;
+		// }
 
 		/**
 		 * Set up config for page / default values
@@ -118,8 +118,8 @@ class SpecialViewFollows extends SpecialPage {
 		$followingCount = UserUserFollow::getFollowingCount($target_user);
 		$back_link = Title::makeTitle( NS_USER, $user_name );
 		$target = SpecialPage::getTitleFor('ViewFollows');
-		$query1 = array('user' => $this->user_name, 'rel_type' => 1);
-		$query2 = array('user' => $this->user_name, 'rel_type' => 2);
+		$query1 = array('user' => $user_name, 'rel_type' => 1);
+		$query2 = array('user' => $user_name, 'rel_type' => 2);
 		$blast = SpecialPage::getTitleFor('SendBoardBlast');
 
 		if ( $rel_type == 1 ) {
@@ -127,8 +127,8 @@ class SpecialViewFollows extends SpecialPage {
 
 			$total = $followingCount;
 			$target = SpecialPage::getTitleFor('ViewFollows');
-			$query1 = array('user' => $this->user_name, 'rel_type' => 1);
-			$query2 = array('user' => $this->user_name, 'rel_type' => 2);
+			$query1 = array('user' => $user_name, 'rel_type' => 1);
+			$query2 = array('user' => $user_name, 'rel_type' => 2);
 			$rem = $this->msg( 'ur-remove-relationship-friend' )->plain();
 			$output .= '<div class="back-links">
 			<a href="' . htmlspecialchars( $back_link->getFullURL() ) . '">' .
@@ -160,7 +160,6 @@ class SpecialViewFollows extends SpecialPage {
 				$total
 			)->text() . '</div>';
 		}
-
 		if ( $follows ) {
 			$x = 1;
 
@@ -195,8 +194,8 @@ class SpecialViewFollows extends SpecialPage {
 				$user_count = $allinfo['usercounts'];
 				$user_counted = $allinfo['usercounted'];
 				$editcount = $allinfo['editcount'];
-				$commonfollow = $allinfo['commonfollow'];
-				$minefollowerhim = $allinfo['minefollowerhim'];
+				// $commonfollow = $allinfo['commonfollow'];
+				// $minefollowerhim = $allinfo['minefollowerhim'];
 				$user_level = $allinfo['level'];
 
 				$username_length = strlen( $allinfo['username'] );
