@@ -51,6 +51,8 @@ $wgAutoloadClasses['SpecialViewRelationshipRequests'] = __DIR__ . '/UserRelation
 $wgAutoloadClasses['SpecialViewRelationships'] = __DIR__ . '/UserRelationship/SpecialViewRelationships.php';
 $wgAutoloadClasses['SpecialViewUserBoard'] = __DIR__ . '/UserBoard/SpecialUserBoard.php';
 $wgAutoloadClasses['SpecialViewFollows'] = __DIR__ . '/UserUserFollows/SpecialViewFollows.php';
+$wgAutoloadClasses['SpecialFollowsRank'] = __DIR__ . '/UserSiteFollows/SpecialFollowsRank.php';
+$wgAutoloadClasses['SpecialRandomwiki'] = __DIR__ . '/SpecialRandomwiki.php';
 $wgAutoloadClasses['RemoveAvatar'] = __DIR__ . '/UserProfile/SpecialRemoveAvatar.php';
 $wgAutoloadClasses['UpdateEditCounts'] = __DIR__ . '/UserStats/SpecialUpdateEditCounts.php';
 $wgAutoloadClasses['UserBoard'] = __DIR__ . '/UserBoard/UserBoardClass.php';
@@ -71,7 +73,7 @@ $wgAutoloadClasses['UserUserFollow'] = __DIR__ . '/UserUserFollows/UserUserFollo
 $wgAutoloadClasses['UserStatus'] = __DIR__ . '/UserStatus/UserStatusClass.php';
 $wgAutoloadClasses['HuijiPrefix'] = __DIR__ . '/HuijiPrefixClass.php';
 $wgAutoloadClasses['ResponseGenerator'] = __DIR__ . '/ResponseGeneratorClass.php';
-$wgAutoloadClasses['SpecialFollowsRank'] = __DIR__ . '/UserSiteFollows/SpecialFollowsRank.php';
+
 // New special pages
 $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
 $wgSpecialPages['EditProfile'] = 'SpecialEditProfile';
@@ -92,6 +94,7 @@ $wgSpecialPages['ViewRelationshipRequests'] = 'SpecialViewRelationshipRequests';
 $wgSpecialPages['ViewRelationships'] = 'SpecialViewRelationships';
 $wgSpecialPages['ViewFollows'] = 'SpecialViewFollows';
 $wgSpecialPages['FollowsRank'] = 'SpecialFollowsRank';
+$wgSpecialPages['Randomwiki'] = 'SpecialRandomwiki';
 
 // Necessary AJAX functions
 require_once( "$IP/extensions/SocialProfile/UserBoard/UserBoard_AjaxFunctions.php" );
