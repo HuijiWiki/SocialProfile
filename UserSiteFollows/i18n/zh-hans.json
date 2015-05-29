@@ -38,8 +38,8 @@
 	"ur-title-friend": "$1的朋友清单",
 	"friend_request_subject": "$1已在{{SITENAME}}把您加入成为朋友！",
 	"friend_removed_subject": "哎唷！$1已在{{SITENAME}}把您从朋友清单移除了!",
-	"followsrank": "本站编辑排行",
-	"top-fans-points":"points",
-	"top-fans-times":"times",
-	"followsranknote":"注：机器人不在排名中"
+	"editrank": "本站编辑排行",
+	"top-fans-points":"经验点",
+	"top-fans-times":"次",
+	"edit-rank-note":"注：机器人不在排名中"
 }

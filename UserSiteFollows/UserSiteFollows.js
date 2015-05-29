@@ -132,7 +132,7 @@ var userSiteFollows = {
                                 $('.follow-modal').append(msg);
                             }
 
-                            $('.follow-modal').append('<div class="follow-modal-more"><a href="/wiki/Special:FollowsRank">more</a></div>');
+                            $('.follow-modal').append('<div class="follow-modal-more"><a href="/wiki/Special:EditRank">更多</a></div>');
                         }
                         else{
                             $.each(res.result,

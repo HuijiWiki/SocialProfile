@@ -51,7 +51,7 @@ $wgAutoloadClasses['SpecialViewRelationshipRequests'] = __DIR__ . '/UserRelation
 $wgAutoloadClasses['SpecialViewRelationships'] = __DIR__ . '/UserRelationship/SpecialViewRelationships.php';
 $wgAutoloadClasses['SpecialViewUserBoard'] = __DIR__ . '/UserBoard/SpecialUserBoard.php';
 $wgAutoloadClasses['SpecialViewFollows'] = __DIR__ . '/UserUserFollows/SpecialViewFollows.php';
-$wgAutoloadClasses['SpecialFollowsRank'] = __DIR__ . '/UserSiteFollows/SpecialFollowsRank.php';
+$wgAutoloadClasses['SpecialEditRank'] = __DIR__ . '/UserSiteFollows/SpecialEditRank.php';
 $wgAutoloadClasses['SpecialRandomwiki'] = __DIR__ . '/SpecialRandomwiki.php';
 $wgAutoloadClasses['RemoveAvatar'] = __DIR__ . '/UserProfile/SpecialRemoveAvatar.php';
 $wgAutoloadClasses['UpdateEditCounts'] = __DIR__ . '/UserStats/SpecialUpdateEditCounts.php';
@@ -93,7 +93,7 @@ $wgSpecialPages['UserBoard'] = 'SpecialViewUserBoard';
 $wgSpecialPages['ViewRelationshipRequests'] = 'SpecialViewRelationshipRequests';
 $wgSpecialPages['ViewRelationships'] = 'SpecialViewRelationships';
 $wgSpecialPages['ViewFollows'] = 'SpecialViewFollows';
-$wgSpecialPages['FollowsRank'] = 'SpecialFollowsRank';
+$wgSpecialPages['EditRank'] = 'SpecialEditRank';
 $wgSpecialPages['Randomwiki'] = 'SpecialRandomwiki';
 
 // Necessary AJAX functions
