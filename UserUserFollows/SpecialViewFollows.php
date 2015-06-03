@@ -172,7 +172,7 @@ class SpecialViewFollows extends SpecialPage {
 				$username = $follow['user_name'];
 				$userobj = User::newFromName($username);
 				$ust = new UserStatus($userobj);
-				$allinfo = $ust->getUserAllInfoDB( );
+				$allinfo = $ust->getUserAllInfo( );
 
 				// Safe titles
 				$userPage = Title::makeTitle( NS_USER, $allinfo['username'] );

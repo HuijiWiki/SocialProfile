@@ -82,7 +82,7 @@ function wfUserUserUnfollowsResponse( $follower, $followee ) {
 function wfUserFollowsInfoResponse( $username ) {
 	$user = User::newFromName( $username );
 	$ust = new UserStatus( $user );
-	$sites = $ust->getUserAllInfoDB( );
+	$sites = $ust->getUserAllInfo( );
     $ret = array('success'=> true, 'result'=>$sites );
     $out = json_encode($ret);
 		 //TODO: use wfMessage instead of hard code

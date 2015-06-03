@@ -185,7 +185,7 @@ class UserStatus{
      * 
      * @return result array
      */
-	public function getUserAllInfoDB( ){
+	public function getUserAllInfo( ){
 		global $wgUser;
 		$dbr = wfGetDB( DB_SLAVE );
 		$result = array();
