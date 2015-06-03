@@ -10,7 +10,7 @@
  * @copyright Copyright © 2007, Wikia Inc.
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License 2.0 or later
  */
-class SpecialFollowsRank extends SpecialPage {
+class SpecialEditRank extends SpecialPage {
 	/**
 	 * Constructor -- set up the new special page
 	 */
