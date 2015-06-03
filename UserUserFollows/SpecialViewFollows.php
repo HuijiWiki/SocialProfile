@@ -222,7 +222,7 @@ class SpecialViewFollows extends SpecialPage {
 						</div>
 					<div class=\"relationship-actions\">";
 				if(empty($user_status)){
-					$output .= '<div>Nothing there</div>';
+					$output .= '<div>这个人很懒</div>';
 				}else{
 					$output .= '<div>'.$user_status.'</div>';
 				}
