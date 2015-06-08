@@ -45,22 +45,22 @@ function getSiteActivity( $input, $args, $parser ) {
 
 	$output = '';
 	if ( $activity ) {
-		$output .= '<div class="mp-site-activity">
-			<h4>' . wfMessage( 'useractivity-siteactivity' )->plain() . '</h4>';
+		$output .= '<ul class="mp-site-activity">
+			<h2>' . wfMessage( 'useractivity-siteactivity' )->plain() . '</h2>';
 
 		$x = 1;
 		foreach ( $activity as $item ) {
 			if ( $x < $fixedLimit ) {
 				$typeIcon = UserActivity::getTypeIcon( $item['type'] );
-				$output .= '<div class="mp-activity' . ( ( $x == $fixedLimit ) ? ' mp-activity-border-fix' : '' ) . '">'
+				$output .= '<li class="mp-activity' . ( ( $x == $fixedLimit ) ? ' mp-activity-border-fix' : '' ) . '">'
 				. $typeIcon 
 				. $item['data'] .
-				'</div>';
+				'</li>';
 				$x++;
 			}
 		}
 
-		$output .= '</div>';
+		$output .= '</ul>';
 	}
 
 	return $output;
