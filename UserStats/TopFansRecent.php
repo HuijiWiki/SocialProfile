@@ -149,9 +149,9 @@ class TopFansRecent extends UnlistedSpecialPage {
 
 			$output .= '<div class="top-fan-row">
 				<span class="top-fan-num">' . $x . '.</span>
-				<span class="top-fan">' .
+				<span class="top-fan"><a href="' . htmlspecialchars( $user_title->getFullURL() ) . '" >' .
 					$avatarImage .
-					'<a href="' . htmlspecialchars( $user_title->getFullURL() ) . '" >' . $user['user_name'] . '</a>
+					'</a><a href="' . htmlspecialchars( $user_title->getFullURL() ) . '" >' . $user['user_name'] . '</a>
 				</span>';
 
 			$output .= '<span class="top-fan-points"><b>' .

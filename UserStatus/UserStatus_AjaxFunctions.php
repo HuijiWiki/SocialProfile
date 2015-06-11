@@ -3,6 +3,7 @@
  * AJAX functions used by UserSiteFollow extension.
  */
 $wgAjaxExportList[] = 'wfUpdateUserStatus';
+$wgAjaxExportList[] = 'wfGetUserAvatar';
 function wfUpdateUserStatus( $username, $gender, $province, $city, $birthday, $status ) {
 	global $wgUser;
 	$city = trim($city);
@@ -41,4 +42,14 @@ function wfUpdateUserStatus( $username, $gender, $province, $city, $birthday, $s
 		}
 	}
 	return $out;
+}
+function wfGetUserAvatar( $username ){
+	if( $username==true ){
+		$user_id = User::idFromName( $username );
+		$avatar = new wAvatar( $user_id, 'm' );
+    	$useravatar = $avatar->getAvatarURL();
+	    $ret = array('success'=> true, 'result'=>$useravatar );
+	    $out = json_encode($ret);
+		return $out;
+	}
 }

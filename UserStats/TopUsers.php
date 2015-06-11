@@ -152,8 +152,8 @@ class TopUsersPoints extends SpecialPage {
 
 			$output .= "<div class=\"top-fan-row\">
 				<span class=\"top-fan-num\">{$x}.</span>
-				<span class=\"top-fan\">
-					{$commentIcon} <a href='" . htmlspecialchars( $user_title->getFullURL() ) . "'>" .
+				<span class=\"top-fan\"><a href='" . htmlspecialchars( $user_title->getFullURL() ) . "'>
+					{$commentIcon} </a><a href='" . htmlspecialchars( $user_title->getFullURL() ) . "'>" .
 						$user['user_name'] . '</a>
 				</span>';
 
