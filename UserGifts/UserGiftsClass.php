@@ -45,7 +45,7 @@ class UserGifts {
 		);
 		$ug_gift_id = $dbw->insertId();
 		$this->incGiftGivenCount( $gift_id );
-		$this->sendGiftNotificationEmail( $user_id_to, $this->user_name, $gift_id, $type );
+		$this->sendGiftNotificationEmail( $user_id_to, $this->user_name, $ug_gift_id, $type );
 
 		// Add to new gift count cache for receiving user
 		$this->incNewGiftCount( $user_id_to );

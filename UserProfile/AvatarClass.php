@@ -93,3 +93,4 @@ class wAvatar {
         return Html::element( 'img', $params, '' );
     }
 }
+

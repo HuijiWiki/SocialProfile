@@ -212,7 +212,7 @@ class SpecialViewFollows extends SpecialPage {
 				} elseif ($user_gender == 'female'){
 					$genderIcon = '♀';
 				} else {
-					$genderIcon = '';
+					$genderIcon = '♂/♀';
 				}
 				$output .= "<div class=\"relationship-item\">
 					<a href=\"{$userPageURL}\" data-name=\"{$user_name_display}\">{$avatar_img}</a>

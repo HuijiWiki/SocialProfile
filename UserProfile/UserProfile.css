@@ -796,7 +796,6 @@ span.span-color{
 }
 @media screen and (min-width: 1366px){
     .profile-page{
-        width: 1200px;
         margin: 0 auto;
     }
 }
@@ -1013,7 +1012,6 @@ span.span-color{
 .user-board-message-image>a>img{
     width: 50px;
     padding: 1px;
-    border-radius: 2px;
 }
 .user-board-message-image>a>img:hover{
     border: 1px solid #666;
@@ -1079,4 +1077,10 @@ span.span-color{
 .profile-top-right-bottom .open > .dropdown-menu {
     display: block;
 	padding-top: 10px;
+}
+@media screen and (max-width:375px){
+    .profile-page{
+        margin-left:-15px;
+        margin-right: -15px;
+    }
 }
