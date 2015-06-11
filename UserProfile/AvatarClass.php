@@ -60,12 +60,14 @@ class wAvatar {
 	 * */
 	function getAvatarURL( $extraParams = array() ) {
 		global $wgUploadPath;
-
+		$user_id = $this->user_id;
+		$user = User::newFromId( $user_id );
 		$defaultParams = array(
 			'src' => "{$wgUploadPath}/avatars/{$this->getAvatarImage()}",
 			'alt' => 'avatar',
 			'border' => '0',
-			'class' => 'headimg'
+			'class' => 'headimg',
+			'data-name' => $user->getName()
 		);
 		$params = array_merge( $extraParams, $defaultParams );
 
@@ -82,7 +84,7 @@ class wAvatar {
             'src' => "{$wgUploadPath}/avatars/{$this->getAvatarImage()}",
             'alt' => 'avatar',
             'border' => '0',
-            'class' => 'headimg'
+			'class' => 'headimg'
 //            'data-toggle' => 'modal',
 //            'data-target' => '.upload-modal-lg'
         );
@@ -91,3 +93,4 @@ class wAvatar {
         return Html::element( 'img', $params, '' );
     }
 }
+
