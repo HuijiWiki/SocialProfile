@@ -503,9 +503,9 @@ class UserBoard {
 		if ( $time[$timeabrv] > 0 ) {
 			$timeStr = wfMessage( "userboard-time-{$timename}", $time[$timeabrv] )->parse();
 		}
-		if ( $timeStr ) {
-			$timeStr .= ' ';
-		}
+		// if ( $timeStr ) {
+		// 	$timeStr .= ' ';
+		// }
 		return $timeStr;
 	}
 
