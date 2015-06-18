@@ -169,9 +169,9 @@ class TopFansByStat extends UnlistedSpecialPage {
 
 			$output .= '<div class="top-fan-row">
 				<span class="top-fan-num">' . $x . '.</span>
-				<span class="top-fan">' .
+				<span class="top-fan"><a href="' . htmlspecialchars( $user_title->getFullURL() ) . '">' .
 					$commentIcon .
-					'<a href="' . htmlspecialchars( $user_title->getFullURL() ) . '">' . $user_name . '</a>
+					'</a><a href="' . htmlspecialchars( $user_title->getFullURL() ) . '">' . $user_name . '</a>
 				</span>
 				<span class="top-fan-points"><b>' . $statistics_row . '</b> ' . $lowercase_statistics_name . '</span>
 				<div class="cleared"></div>

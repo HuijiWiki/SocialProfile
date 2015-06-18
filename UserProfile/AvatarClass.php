@@ -79,7 +79,7 @@ class wAvatar {
      * */
     function getOwnerAvatarURL( $extraParams = array() ) {
         global $wgUploadPath;
-
+        
         $defaultParams = array(
             'src' => "{$wgUploadPath}/avatars/{$this->getAvatarImage()}",
             'alt' => 'avatar',
