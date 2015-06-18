@@ -45,9 +45,7 @@ function getSiteActivity( $input, $args, $parser ) {
 
 	$output = '';
 	if ( $activity ) {
-		$output .= '<ul class="mp-site-activity">
-			<h2>' . wfMessage( 'useractivity-siteactivity' )->plain() . '</h2>';
-
+		$output .= '<h2>' . wfMessage( 'useractivity-siteactivity' )->plain() . '</h2><ul class="mp-site-activity">';
 		$x = 1;
 		foreach ( $activity as $item ) {
 			if ( $x < $fixedLimit ) {
