@@ -13,7 +13,8 @@ var UserProfilePage = {
 			encMsg = encodeURIComponent( document.getElementById( 'message' ).value ),
 			msgType = document.getElementById( 'message_type' ).value;
 		if ( document.getElementById( 'message' ).value && !UserProfilePage.posted ) {
-			UserProfilePage.posted = 1;
+			jQuery('#message').val('');
+            UserProfilePage.posted = 1;
 			jQuery.post(
 				mw.util.wikiScript(), {
 					action: 'ajax',

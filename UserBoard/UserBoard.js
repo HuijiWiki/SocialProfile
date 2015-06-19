@@ -20,6 +20,7 @@ var UserBoard = {
 					rsargs: [encodedName, encodedMsg, messageType, perPage]
 				},
 				function( data ) {
+					jQuery('#message').val('');
 					UserBoard.posted = 0;
 					var user_1, user_2;
 					if ( sender ) { // it's a board to board
