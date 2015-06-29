@@ -12,5 +12,11 @@
 	"top-fans-stats-gifts-rec-count": "接获的$1礼物",
 	"top-fans-stats-gifts-sent-count": "发送的$1礼物",
 	"right-updatepoints": "更新编辑次数",
+	"top-fans-by-points-nav-header": "排行榜",
+	"user-stats-alltime-title": "总排行榜",
+	"top-fans-total-points-link": "总排行榜",
+    "top-fans-weekly-points-link": "周排行榜",
+    "top-fans-monthly-points-link": "月排行榜",
+    "topusers": "用户排行",
 	"level-advanced-to": "已升至第<span style=\"font-weight:800;\">$1</span>级"
 }

@@ -39,9 +39,9 @@ class TopFansRecent extends UnlistedSpecialPage {
 		}
 
 		if ( $period == 'weekly' ) {
-			$pageTitle = 'user-stats-weekly-title';
+			$pageTitle = 'top-fans-weekly-points-link';
 		} else {
-			$pageTitle = 'user-stats-monthly-title';
+			$pageTitle = 'top-fans-monthly-points-link';
 		}
 		$out->setPageTitle( $this->msg( $pageTitle )->plain() );
 
