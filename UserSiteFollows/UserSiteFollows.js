@@ -180,7 +180,7 @@ jQuery( document ).ready( function() {
 	} );
 
 
-	$( '.modal' ).on('click', '.user-site-follow-from-modal', function(event) {	
+	$( '.modal,.top-users' ).on('click', '.user-site-follow-from-modal', function(event) {
 		event.preventDefault();
 		var that = $(this);
 		var server = that.parent().attr('href');

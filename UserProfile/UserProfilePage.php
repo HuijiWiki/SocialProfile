@@ -71,7 +71,7 @@ class UserProfilePage extends Article {
 	}
 
 	function view() {
-		global $wgOut, $wgUser, $wgHuijiprefix;
+		global $wgOut, $wgUser, $wgHuijiprefix, $wgOnlineStatusBarDefaultOffline, $wgOnlineStatusBarDefaultOnline;
 
 		$wgOut->setPageTitle( $this->mTitle->getPrefixedText() );
 
@@ -213,7 +213,16 @@ class UserProfilePage extends Article {
 			if ($this->isOwner()){
 				$tools[] = '<li><a href="' . htmlspecialchars( $watchlist->getFullURL() ) . '">' . wfMessage( 'user-watchlist' )->escaped() . '</a></li>';
 			}
-		} 
+		}
+		//user isonline
+		// $_SESSION['username'] = $wgUser->getName();
+		// $user = User::newFromName( $this->user_name );
+		// $isonline = OnlineStatusBar_StatusCheck::getStatus( $user );
+		// if($isonline === 'online'){
+		// 	$online = '在线';
+		// }else{
+		// 	$online = '未知';
+		// }
 		$wgOut->addModuleScripts( 'ext.socialprofile.useruserfollows.js' );
 		$wgOut->addHTML($wgAjaxExportList);
 		$wgOut->addHTML( '<div class="profile-page"><div id="profile-top" class="jumbotron row">' );
@@ -1042,16 +1051,9 @@ class UserProfilePage extends Article {
 		wfDebug( 'profile type: ' . $profile_data['user_page_type'] . "\n" );
 		$output = '';
 
-		// $uuf = new UserUserFollow();
-		// $following = $uuf->checkUserUserFollow($wgUser, User::newFromId($user_id));
-		// if ( !$this->isOwner() ) {
-		// 	if (!$following ){
-		// 		$output .= '<button id="user-user-follow" class="mw-ui-button mw-ui-progressive">关注'.$user_name.'</button>';
-		// 	}else{
-		// 		$output .= '<button id="user-user-follow" class="mw-ui-button mw-ui-progressive unfollow">已关注</button>';
-		// 	}
-		// 	$wgOut->addModules( 'ext.socialprofile.useruserfollows.js' );
-		// }
+		//get more
+		$target = SpecialPage::getTitleFor('FollowSites');
+		$query = array('user_id' => $wgUser->getId(), 'target_user_id' => $this->user_id);
 		$mailVerify = $wgUser->getEmailAuthenticationTimestamp();
 		if ($mailVerify == NULL) {
 			 $href = "/wiki/Special:ConfirmEmail";
@@ -1076,6 +1078,7 @@ class UserProfilePage extends Article {
                             <div class="modal-body">
 	                            <div class="list-group">
 								</div>
+								'.Linker::LinkKnown($target, '更多</a>', array(), $query).'
 							</div>
                         </div>
                       </div>
