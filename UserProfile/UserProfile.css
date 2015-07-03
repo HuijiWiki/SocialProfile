@@ -1083,3 +1083,6 @@ span.span-color{
         margin-right: -15px;
     }
 }
+.c-avatar {
+    top:inherit;
+}
