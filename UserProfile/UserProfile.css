@@ -692,9 +692,8 @@
     word-break: break-all;
 }
 @media screen and (min-width: 768px) {
-    .jumbotron {
-        padding-top: 30px!important;
-        padding-bottom: 30px!important;
+    .profile-page .jumbotron {
+        padding:30px 50px!important;
     }
 }
 #honorific-level.label{
@@ -709,7 +708,7 @@
 }
 .user-follow-msg li{
     float: left;
-    margin-right: 20px;
+    margin-right: 10px;
 }
 .user-follow-msg h4{
     font-size: 24px;
@@ -829,8 +828,8 @@ span.span-color{
     border-bottom: 1px solid #e0e0e0;
 }
 .profile-top-right-top li{
-    display: inline;
-    padding: 2px 5px;
+    display: inline-block;
+    padding:0 5px;
     background: #09c;
     color: #fff;
 }
@@ -947,7 +946,7 @@ span.span-color{
     .user-follow-msg li{
         margin-right:4px;
     }
-    #profile-image{
+    #profile-image,#profile-image img{
         margin-right: 0;
     }
     span.span-color{
@@ -1083,4 +1082,7 @@ span.span-color{
         margin-left:-15px;
         margin-right: -15px;
     }
+}
+.c-avatar {
+    top:inherit;
 }
