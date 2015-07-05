@@ -57,8 +57,7 @@
     "notification-board": "$1在$3给你留言了。$2",
     "notification-board-flyout": "$1在$3给你留言了。$2",
     "notification-board-msg-link": "查看对话",
-    "notification-board-email-subject": "$1给你留言了。",
+    "notification-board-email-subject": "{{SITENAME}}的$1在你的留言板留言了。",
     "notification-board-email-body": "$1在$3给你留言了。$2",
     "notification-board-email-batch-body":"$1给你留言了。"
-}
 }
