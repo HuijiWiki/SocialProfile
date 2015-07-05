@@ -56,5 +56,9 @@
     "message_received_body": "你好，$1,\n\n$2在{{SITENAME}}上给你留言了!\n\n点击你们下面的链接查看你的留言板：\n\n$3\n\n---\n\n不想再收到邮件提醒?\n\n点击$4\n来修改你的邮件设置。",
     "notification-board": "$1在$3给你留言了。$2",
     "notification-board-flyout": "$1在$3给你留言了。$2",
-    "notification-board-msg-link": "查看对话"
+    "notification-board-msg-link": "查看对话",
+    "notification-board-email-subject": "$1给你留言了。",
+    "notification-board-email-body": "$1在$3给你留言了。$2",
+    "notification-board-email-batch-body":"$1给你留言了。"
+}
 }
