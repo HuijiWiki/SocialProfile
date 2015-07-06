@@ -209,5 +209,4 @@ jQuery( document ).ready( function() {
 		userSiteFollows.fillUsersModal(user, site_name);
         $('.follow-modal').empty().append('<i class="fa fa-spinner fa-spin fa-5x"></i>');
 	});
-
 } );

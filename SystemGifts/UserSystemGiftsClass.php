@@ -50,7 +50,7 @@ class UserSystemGifts {
 		$this->incNewSystemGiftCount( $this->user_id );
 
 		if ( $email && !empty( $sg_gift_id ) ) {
-			$this->sendGiftNotificationEmail( $this->user_id, $gift_id );
+			$this->sendGiftNotificationEmail( $this->user_id, $sg_gift_id );
 		}
 		$wgMemc->delete( wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'system_gifts', $this->user_id ) );
 		return $sg_gift_id;
