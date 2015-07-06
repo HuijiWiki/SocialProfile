@@ -381,7 +381,7 @@ class UserBoard {
 		if ( $messages ) {
 			foreach ( $messages as $message ) {
 				$user = Title::makeTitle( NS_USER, $message['user_name_from'] );
-				$avatar = new wAvatar( $message['user_id_from'], 'm' );
+				$avatar = new wAvatar( $message['user_id_from'], 'ml' );
 
 				$board_to_board = '';
 				$board_link = '';
