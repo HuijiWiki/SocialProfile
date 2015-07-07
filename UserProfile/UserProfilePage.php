@@ -250,9 +250,9 @@ class UserProfilePage extends Article {
 
         ');
         if( $this->isOwner() ){
-        	$wgOut->addHTML('<a >查看全部<i id="site-following-count">'.$userCount.'</i>个wiki</a>');
+        	$wgOut->addHTML('<a >查看我关注的<i id="site-following-count">'.$userCount.'</i>个wiki</a>');
         }else{
-        	$wgOut->addHTML('<a >查看全部<i>'.$userCount.'</i>个wiki</a>');
+        	$wgOut->addHTML('<a >关注了<i>'.$userCount.'</i>个wiki</a>');
         }
                     
         $wgOut->addHTML('
@@ -1073,12 +1073,11 @@ class UserProfilePage extends Article {
                         <div class="modal-content">
                           <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                              <h4 class="modal-title" id="gridSystemModalLabel">'.$gendertext.'关注的全部wiki</h4>
+                              <h4 class="modal-title" id="gridSystemModalLabel">'.$gendertext.'关注的wiki</h4>
                           </div>
                             <div class="modal-body">
-	                            <div class="list-group">
-								</div>
-								'.Linker::LinkKnown($target, '更多</a>', array(), $query).'
+	                            <div class="list-group"></div>
+								'.Linker::LinkKnown($target, '<i class="fa fa-arrows-alt"></i> 全部', array('type'=>'button', 'class'=>'btn btn-default'), $query).'
 							</div>
                         </div>
                       </div>

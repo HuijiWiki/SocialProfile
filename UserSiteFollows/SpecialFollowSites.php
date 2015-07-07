@@ -77,7 +77,7 @@ class SpecialFollowSites extends SpecialPage {
 		if( !$sites ){
 		    $output .= '<div class="top-users"><h3>暂时还没有关注哦</h3>';
 		}
-		$output .= '<div class="top-users">';
+		$output .= '<div class="top-users" style="width:90%; max-width:500px">';
 		foreach ( $sites as $user ) {
 			$site_name = $user['val'];
 			$domain_name = $user['key'];
