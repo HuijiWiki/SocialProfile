@@ -146,7 +146,11 @@ class TopFansRecent extends UnlistedSpecialPage {
 			$user_title = Title::makeTitle( NS_USER, $user['user_name'] );
 			$avatar = new wAvatar( $user['user_id'], 'm' );
 			$avatarImage = $avatar->getAvatarURL();
-
+			if ($user['points'] < 0) {
+				$points = 0;
+			}else{
+				$points = $user['points'];
+			}
 			$output .= '<div class="top-fan-row">
 				<span class="top-fan-num">' . $x . '.</span>
 				<span class="top-fan"><a href="' . htmlspecialchars( $user_title->getFullURL() ) . '" >' .
@@ -155,7 +159,7 @@ class TopFansRecent extends UnlistedSpecialPage {
 				</span>';
 
 			$output .= '<span class="top-fan-points"><b>' .
-				$this->getLanguage()->formatNum( $user['points'] ) . '</b> ' .
+				$this->getLanguage()->formatNum( $points ) . '</b> ' .
 				$this->msg( 'top-fans-points' )->plain() . '</span>';
 			$output .= '<div class="cleared"></div>';
 			$output .= '</div>';

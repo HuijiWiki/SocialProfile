@@ -924,26 +924,24 @@ class UserStats {
 	 * @param $user 
 	 * @return $count useredits count
 	 */	
-	public static function getSiteEditsCount( $user,$prefix=null ){
-		$data = self::getSiteEditsCountCache( $user );
-		if ( $data != '' ) {
-			return $data;
-		} else {
-			return self::getSiteEditsCountDB( $user,$prefix=null );
-		}
-	}
-	public static function getSiteEditsCountCache( $user ){
-		global $wgMemc;
-		$key = wfMemcKey( 'revision', 'high_edit_site_followed', $user->getName() );
-		$data = $wgMemc->get( $key );
+	public static function getSiteEditsCount( $user, $prefix ){
+		$data = self::getSiteEditsCountCache( $user, $prefix );
 		if ( $data != '' ) {
 			wfDebug( "Got top followed $data ( User = {$user} ) from cache\n" );
 			return $data;
+		} else {
+			return self::getSiteEditsCountDB( $user,$prefix );
 		}
 	}
-	public static function getSiteEditsCountDB( $user,$prefix=null ){
+	public static function getSiteEditsCountCache( $user, $prefix ){
+		global $wgMemc;
+		$key = wfMemcKey( 'revision', 'high_edit_site_followed', $user->getName(), $prefix );
+		$data = $wgMemc->get( $key );
+		return $data;
+	}
+	public static function getSiteEditsCountDB( $user, $prefix ){
 		global $wgMemc,$isProduction;
-		$key = wfMemcKey('revision', 'high_edit_site_followed', $user->getName() );
+		$key = wfMemcKey('revision', 'high_edit_site_followed', $user->getName(),$prefix );
 		if ($prefix != null) {
 			if( $isProduction == true && $prefix == 'huiji_home'){
 				$prefix = 'huiji_home';

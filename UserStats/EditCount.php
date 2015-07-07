@@ -21,7 +21,7 @@ $wgHooks['ArticleUndelete'][] = 'restoreDeletedEdits';
  * listed in the $wgNamespacesForEditPoints array.
  */
 function incEditCount( $article, $revision, $baseRevId ) {
-	global $wgUser, $wgNamespacesForEditPoints,$wgMemc;
+	global $wgUser, $wgNamespacesForEditPoints,$wgMemc,$wgHuijiPrefix;
 
 	// only keep tally for allowable namespaces
 	if (
@@ -31,7 +31,7 @@ function incEditCount( $article, $revision, $baseRevId ) {
 		$stats = new UserStatsTrack( $wgUser->getID(), $wgUser->getName() );
 		$stats->incStatField( 'edit' );
 	}
-	$key = wfMemcKey( 'revision', 'high_edit_site_followed', $wgUser->getName() );
+	$key = wfMemcKey( 'revision', 'high_edit_site_followed', $wgUser->getName(), $wgHuijiPrefix );
 	$wgMemc->incr( $key );
 
 	return true;
@@ -42,7 +42,7 @@ function incEditCount( $article, $revision, $baseRevId ) {
  * $wgNamespacesForEditPoints array that they've edited has been deleted.
  */
 function removeDeletedEdits( &$article, &$user, &$reason ) {
-	global $wgNamespacesForEditPoints,$wgMemc;
+	global $wgNamespacesForEditPoints,$wgMemc,$wgHuijiPrefix;
 
 	// only keep tally for allowable namespaces
 	if (
@@ -60,7 +60,7 @@ function removeDeletedEdits( &$article, &$user, &$reason ) {
 		foreach ( $res as $row ) {
 			$stats = new UserStatsTrack( $row->rev_user, $row->rev_user_text );
 			$stats->decStatField( 'edit', $row->the_count );
-			$key = wfMemcKey( 'revision', 'high_edit_site_followed', $row->rev_user_text );
+			$key = wfMemcKey( 'revision', 'high_edit_site_followed', $row->rev_user_text, $wgHuijiPrefix );
 			$wgMemc->decr( $key,$row->the_count );
 		}
 	}
@@ -75,7 +75,7 @@ function removeDeletedEdits( &$article, &$user, &$reason ) {
  * it was originally deleted.
  */
 function restoreDeletedEdits( &$title, $new ) {
-	global $wgNamespacesForEditPoints,$wgMemc;
+	global $wgNamespacesForEditPoints,$wgMemc,$wgHuijiPrefix;
 
 	// only keep tally for allowable namespaces
 	if (
@@ -93,7 +93,7 @@ function restoreDeletedEdits( &$title, $new ) {
 		foreach ( $res as $row ) {
 			$stats = new UserStatsTrack( $row->rev_user, $row->rev_user_text );
 			$stats->incStatField( 'edit', $row->the_count );
-			$key = wfMemcKey( 'revision', 'high_edit_site_followed', $row->rev_user_text );
+			$key = wfMemcKey( 'revision', 'high_edit_site_followed', $row->rev_user_text, $wgHuijiPrefix );
 			$wgMemc->incr( $key, $row->the_count );
 		}
 	}

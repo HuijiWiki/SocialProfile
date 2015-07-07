@@ -104,22 +104,22 @@ class UserProfilePage extends Article {
 		$uuf = new UserUserFollow();
 		$topFollowedSites = $usf->getTopFollowedSites( $this->user );
 		$temp = array();
-		
-			foreach( $topFollowedSites as $key => $value ){
-				// if ( $wgUser->isLoggedIn() ) {
-				$user = User::newFromName( $this->user_name );
-				// }
-				$temp['url'] = 'http://'.$key.'.huiji.wiki';
-				$temp['name'] = $value;
-				$temp['count'] = UserStats::getSiteEditsCount($user,$key);
-				$res[] = $temp;
-			}
+
+		foreach( $topFollowedSites as $key => $value ){
+			// if ( $wgUser->isLoggedIn() ) {
+			$user = User::newFromName( $this->user_name );
+			// }
+			$temp['url'] = 'http://'.$key.'.huiji.wiki';
+			$temp['name'] = $value;
+			$temp['count'] = UserStats::getSiteEditsCount($user,$key);
+			$res[] = $temp;
+		}
 		
 		//sort by edit num
 		foreach ($res as $val) {
 			$count[] = $val['count'];
-			array_multisort($count, SORT_DESC, $res);
 		}
+		array_multisort($count, SORT_DESC, $res);
 		$userCount = UserSiteFollow::getUserCount($this->user);
 
 		if ($this->isOwner()){
@@ -237,15 +237,15 @@ class UserProfilePage extends Article {
                 </div>
                 <div class="profile-top-right-bottom">
                     <ul>');
-        	foreach ($res as $val) {
-        		$Turl[] = $val['url'];
-        		$Tname[] = $val['name'];
-        		$Tcount[] = $val['count'];
-        	}
-        	$num = ( count($Tname) > 3 )?3:count($Tname);
-        	for ($i=0; $i < $num; $i++) { 
-            	$wgOut->addHTML('<li><a href="'.$Turl[$i].'">'.$Tname[$i].'</a></li>');
-        	}
+        foreach ($res as $value) {
+        	$Turl[] = $value['url'];
+        	$Tname[] = $value['name'];
+        	$Tcount[] = $value['count'];
+        }
+        $num = ( count($Tname) > 3 )?3:count($Tname);
+        for ($i=0; $i < $num; $i++) { 
+           	$wgOut->addHTML('<li><a href="'.$Turl[$i].'">'.$Tname[$i].'</a></li>');
+        }
         $wgOut->addHTML(' </ul>
 
         ');

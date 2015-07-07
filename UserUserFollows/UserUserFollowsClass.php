@@ -303,7 +303,7 @@ class UserUserFollow{
 		// $data = $wgMemc->get( $key );
 		$data = self::getFollowedByUserCache( $username );
 		if ( $data != '' ) {
-			wfDebug( "Got user count of $data ( User = {$user} ) from cache\n" );
+			wfDebug( "Got user count of $data ( User = {$username} ) from cache\n" );
 			return $data;
 		}else {
 			return self::getFollowedByUserDB( $username );
@@ -314,10 +314,7 @@ class UserUserFollow{
 		$user = User::newFromName($username);
 		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_following_list', $user->getName() );
 		$data = $wgMemc->get( $key );
-		if ( $data != '' ) {
-			wfDebug( "Got top followed $data ( User = {$user} ) from cache\n" );
-			return $data;
-		}
+		return $data;
 	}
 	public static function getFollowedByUserDB( $username ){
 		global $wgMemc;
@@ -356,12 +353,12 @@ class UserUserFollow{
 		$wgMemc->incr( $key );
 		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_following_list', $follower->getName() );
 		$followingList = $wgMemc->get( $key );
-		$followingList[] = $followee;
+		$followingList[] = $followee->getName();
 		$wgMemc->set( $key, $followingList );
 		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'my_following_follows_him', $follower->getName() );
-		$followingList = $wgMemc->get( $key );
-		$followingList[] = $followee;
-		$wgMemc->set( $key, $followingList );
+		$followingListMy = $wgMemc->get( $key );
+		$followingListMy[] = $followee->getName();
+		$wgMemc->set( $key, $followingListMy );
 
 	}
 	/**
@@ -378,14 +375,14 @@ class UserUserFollow{
 		$wgMemc->decr( $key );
 		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_following_list', $follower->getName() );
 		$followingList = $wgMemc->get( $key );
-		$fKey = array_keys($followingList,$followee);
+		$fKey = array_keys($followingList,$followee->getName());
 		unset($followingList[$fKey[0]]);
 		$wgMemc->set( $key, $followingList);
 		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'my_following_follows_him', $follower->getName() );
-		$followingList = $wgMemc->get( $key );
-		$fKey = array_keys($followingList,$followee);
-		unset($followingList[$fKey[0]]);
-		$wgMemc->set( $key, $followingList);
+		$followingListMy = $wgMemc->get( $key );
+		$fKey = array_keys($followingListMy,$followee->getName());
+		unset($followingListMy[$fKey[0]]);
+		$wgMemc->set( $key, $followingListMy);
 	}
 	
 	/**
