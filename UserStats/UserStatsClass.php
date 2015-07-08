@@ -943,7 +943,7 @@ class UserStats {
 		global $wgMemc,$isProduction;
 		$key = wfMemcKey('revision', 'high_edit_site_followed', $user->getName(),$prefix );
 		if ($prefix != null) {
-			if( $isProduction == true && $prefix == 'huiji_home'){
+			if( $isProduction == true && $prefix == 'home'){
 				$prefix = 'huiji_home';
 			}elseif ( $isProduction == true ) {
 				$prefix = 'huiji_sites-'.str_replace('.', '_', $prefix);
