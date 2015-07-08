@@ -13,8 +13,7 @@ var UserProfilePage = {
 			encMsg = encodeURIComponent( document.getElementById( 'message' ).value ),
 			msgType = document.getElementById( 'message_type' ).value;
 		if ( document.getElementById( 'message' ).value && !UserProfilePage.posted ) {
-			jQuery('#message').val('');
-            UserProfilePage.posted = 1;
+			UserProfilePage.posted = 1;
 			jQuery.post(
 				mw.util.wikiScript(), {
 					action: 'ajax',
@@ -279,24 +278,42 @@ jQuery( document ).ready( function() {
             function(data){
                 var res = $.parseJSON(data);//console.log(res);
                 if (res.success==true){
+                    if (res.result.length == 0) {
+                        $('.modal-body .btn-default').hide();
+                        $('.modal-body .list-group').append('您暂时还没有关注的wiki哦');
+                    };
                     if(user_name != null){
                         $.each(res.result,
                             function(i, item){
-                                 if (item.is == 'Y') {
-                                    var msg='<a href="'+"http://"+item.key+'.huiji.wiki" class="list-group-item">'+item.val+'<span class="badge user-site-follow-from-modal unfollow">取关</span></a>';
-                                }else{
-                                    var msg='<a href="'+"http://"+item.key+'.huiji.wiki" class="list-group-item">'+item.val+'<span class="badge user-site-follow-from-modal">关注</span></a>';
-                                }
-                                $('.modal-body .list-group').append(msg);
+                                if( i<10 && i>=0){
+                                    $('.modal-body .btn-default').hide();
+                                    if (item.is == 'Y') {
+                                        var msg='<a href="'+"http://"+item.key+'.huiji.wiki" class="list-group-item">'+item.val+'<span class="badge user-site-follow-from-modal unfollow">取关</span></a>';
+                                    }else{
+                                        var msg='<a href="'+"http://"+item.key+'.huiji.wiki" class="list-group-item">'+item.val+'<span class="badge user-site-follow-from-modal">关注</span></a>';
+                                    }
+                                    $('.modal-body .list-group').append(msg);
+                                }else if (i>=10) {
+                                    $('.modal-body .btn-default').show();
+                                };                                
                             }
                         );
                     }else{
                         $.each(res.result,
                             function(i, item){
-                                var msg='<a href="'+"http://"+item.key+'.huiji.wiki" class="list-group-item">'+item.val+'</a>'; 
-                                $('.list-group').append(msg);
-                        }
-                    );
+                                if( i<10 && i>=0){
+                                    $('.modal-body .btn-default').hide();
+                                    if (item.is == 'Y') {
+                                        var msg='<a href="'+"http://"+item.key+'.huiji.wiki" class="list-group-item">'+item.val+'</a>';
+                                    }else{
+                                        var msg='<a href="'+"http://"+item.key+'.huiji.wiki" class="list-group-item">'+item.val+'</a>';
+                                    }
+                                    $('.modal-body .list-group').append(msg);
+                                }else if (i>=10) {
+                                    $('.modal-body .btn-default').show();
+                                };                                
+                            }
+                        );
                     }
                 }
             }
