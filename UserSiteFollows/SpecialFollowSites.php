@@ -147,6 +147,7 @@ class SpecialFollowSites extends SpecialPage {
 			if ( ( $total - ( $per_page * $page ) ) > 0 ) {
 				$output .= '<li>' .
 					Linker::link(
+						$pageLink,
 						'<span aria-hidden="true">&raquo;</span>',
 						array(),
 						array(
