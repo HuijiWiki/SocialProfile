@@ -1076,7 +1076,8 @@ class UserProfilePage extends Article {
                               <h4 class="modal-title" id="gridSystemModalLabel">'.$gendertext.'关注的wiki</h4>
                           </div>
                             <div class="modal-body">
-	                            <div class="list-group"></div>
+	                            <div class="list-group">
+								</div>
 								'.Linker::LinkKnown($target, '<i class="fa fa-arrows-alt"></i> 全部', array('type'=>'button', 'class'=>'btn btn-default'), $query).'
 							</div>
                         </div>

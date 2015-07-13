@@ -4,14 +4,9 @@
  *user_id :thte user who is visting
  *target_user_id :user be visted
  * Example URL: index.php?title=Special:FollowSites&user_id=*&target_user_id=* 
- *
- * @file
- * @ingroup Extensions
- * @author David Pean <david.pean@gmail.com>
- * @copyright Copyright © 2007, Wikia Inc.
- * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License 2.0 or later
  */
 class SpecialFollowSites extends SpecialPage {
+
 	/**
 	 * Constructor -- set up the new special page
 	 */
@@ -63,7 +58,8 @@ class SpecialFollowSites extends SpecialPage {
 		if ( !$rel_type || !is_numeric( $rel_type ) ) {
 			$rel_type = 2;
 		}
-		$per_page = 50;
+		//per_page : Limit the number of pages per page
+		$per_page = 20;
 		$per_row = 2;
 		/**
 		 * If no user is set in the URL, we assume its the current user
@@ -74,11 +70,14 @@ class SpecialFollowSites extends SpecialPage {
 			return false;
 		}
 		$sites = UserSiteFollow::getFullFollowedSites( $user_id,$target_user_id );
+		$total = count($sites);
+		$star_page = $per_page*($page-1);
+		$per_sites = array_slice($sites,$star_page ,$per_page );
 		if( !$sites ){
 		    $output .= '<div class="top-users"><h3>暂时还没有关注哦</h3>';
 		}
 		$output .= '<div class="top-users" style="width:90%; max-width:500px">';
-		foreach ( $sites as $user ) {
+		foreach ( $per_sites as $user ) {
 			$site_name = $user['val'];
 			$domain_name = $user['key'];
 			$is_follow = $user['is'];
@@ -111,6 +110,8 @@ class SpecialFollowSites extends SpecialPage {
 					array(),
 					array(
 						'user' => $user_name,
+						'user_id'=> $user_id,
+						'target_user_id'=> $target_user_id,
 						'rel_type' => $rel_type,
 						'page' => ( $page - 1 )
 					)
@@ -135,6 +136,8 @@ class SpecialFollowSites extends SpecialPage {
 						array(),
 						array(
 							'user' => $user_name,
+							'user_id'=> $user_id,
+							'target_user_id'=> $target_user_id,
 							'rel_type' => $rel_type,
 							'page' => $i
 						)
@@ -149,6 +152,8 @@ class SpecialFollowSites extends SpecialPage {
 						array(),
 						array(
 							'user' => $user_name,
+							'user_id'=> $user_id,
+							'target_user_id'=> $target_user_id,
 							'rel_type' => $rel_type,
 							'page' => ( $page + 1 )
 						)
