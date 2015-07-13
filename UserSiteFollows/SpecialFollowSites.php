@@ -102,11 +102,11 @@ class SpecialFollowSites extends SpecialPage {
 		$numofpages = $total / $per_page;
 		$pageLink = $this->getPageTitle();
 		if ( $numofpages > 1 ) {
-			$output .= '<div class="page-nav">';
+			$output .= '<nav class="page-nav pagination">';
 			if ( $page > 1 ) {
-				$output .= Linker::link(
+				$output .='<li>'. Linker::link(
 					$pageLink,
-					$this->msg( 'ur-previous' )->plain(),
+					'<span aria-hidden="true">&laquo;</span>',
 					array(),
 					array(
 						'user' => $user_name,
@@ -115,7 +115,7 @@ class SpecialFollowSites extends SpecialPage {
 						'rel_type' => $rel_type,
 						'page' => ( $page - 1 )
 					)
-				) . $this->msg( 'word-separator' )->plain();
+				) . '</li>';
 			}
 			if ( ( $total % $per_page ) != 0 ) {
 				$numofpages++;
@@ -128,9 +128,9 @@ class SpecialFollowSites extends SpecialPage {
 			}
 			for ( $i = 1; $i <= $numofpages; $i++ ) {
 				if ( $i == $page ) {
-					$output .= ( $i . ' ' );
+					$output .= ( '<li class="active"><a href="#">'.$i.' <span class="sr-only">(current)</span></a></li>' );
 				} else {
-					$output .= Linker::link(
+					$output .= '<li>'.Linker::link(
 						$pageLink,
 						$i,
 						array(),
@@ -141,13 +141,13 @@ class SpecialFollowSites extends SpecialPage {
 							'rel_type' => $rel_type,
 							'page' => $i
 						)
-					) . $this->msg( 'word-separator' )->plain();
+					) . '</li>';
 				}
 			}
 			if ( ( $total - ( $per_page * $page ) ) > 0 ) {
-				$output .= $this->msg( 'word-separator' )->plain() .
+				$output .= '<li>' .
 					Linker::link(
-						$pageLink,
+						'<span aria-hidden="true">&raquo;</span>'
 						$this->msg( 'ur-next' )->plain(),
 						array(),
 						array(
@@ -157,9 +157,9 @@ class SpecialFollowSites extends SpecialPage {
 							'rel_type' => $rel_type,
 							'page' => ( $page + 1 )
 						)
-					);
+					).'</li>';
 			}
-			$output .= '</div>';
+			$output .= '</nav>';
 		}
 		$out->addHTML( $output );
 	}

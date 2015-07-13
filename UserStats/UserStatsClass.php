@@ -189,7 +189,7 @@ class UserStatsTrack {
 			$key = wfForeignMemcKey( 'huiji', '', 'system_gift', 'id', $field . '-' . $field_count );
 			$data = $wgMemc->get( $key );
 
-			if ( $data ) {
+			if ( $data != '' && is_int($data)  ) {
 				wfDebug( "Got system gift ID from cache\n" );
 				$systemGiftID = $data;
 			} else {
