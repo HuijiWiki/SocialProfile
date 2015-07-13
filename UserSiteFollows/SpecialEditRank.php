@@ -80,7 +80,7 @@ class SpecialEditRank extends SpecialPage {
 		    $output .= '<div class="top-users"><h3>此页暂时没有排行</h3>';
 		}
 		$output .= '<div class="top-users">';
-		$x = 1;
+		$x = $star_page+1;
 		foreach ( $result as $user ) {
 			$user_title = Title::makeTitle( NS_USER, $user['user'] );
 			$commentIcon = $user['url'];
