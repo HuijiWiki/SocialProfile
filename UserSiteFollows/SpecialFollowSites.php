@@ -76,6 +76,9 @@ class SpecialFollowSites extends SpecialPage {
 		if( !$sites ){
 		    $output .= '<div class="top-users"><h3>暂时还没有关注哦</h3>';
 		}
+		if( !$per_sites ){
+		    $output .= '<div class="top-users"><h3>此页暂时没有站点</h3>';
+		}
 		$output .= '<div class="top-users" style="width:90%; max-width:500px">';
 		foreach ( $per_sites as $user ) {
 			$site_name = $user['val'];
@@ -120,12 +123,12 @@ class SpecialFollowSites extends SpecialPage {
 			if ( ( $total % $per_page ) != 0 ) {
 				$numofpages++;
 			}
-			if ( $numofpages >= 9 && $page < $total ) {
-				$numofpages = 9 + $page;
-			}
-			if ( $numofpages >= ( $total / $per_page ) ) {
-				$numofpages = ( $total / $per_page ) + 1;
-			}
+			// if ( $numofpages >= 2 && $page < $total ) {
+			// 	$numofpages = 2 + $page;
+			// }
+			// if ( $numofpages >= ( $total / $per_page ) ) {
+			// 	$numofpages = ( $total / $per_page ) + 1;
+			// }
 			for ( $i = 1; $i <= $numofpages; $i++ ) {
 				if ( $i == $page ) {
 					$output .= ( '<li class="active"><a href="#">'.$i.' <span class="sr-only">(current)</span></a></li>' );
