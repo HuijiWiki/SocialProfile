@@ -41,6 +41,8 @@ $wgAutoloadClasses['GenerateTopUsersReport'] = __DIR__ . '/UserStats/GenerateTop
 
 $wgAutoloadClasses['SpecialAddRelationship'] = __DIR__ . '/UserRelationship/SpecialAddRelationship.php';
 $wgAutoloadClasses['SpecialBoardBlast'] = __DIR__ . '/UserBoard/SpecialSendBoardBlast.php';
+$wgAutoloadClasses['SpecialSendToFollowers'] = __DIR__ . '/UserBoard/SpecialSendToFollowers.php';
+$wgAutoloadClasses['SpecialSendToAllUser'] = __DIR__ . '/UserBoard/SpecialSendToAllUser.php';
 $wgAutoloadClasses['SpecialEditProfile'] = __DIR__ . '/UserProfile/SpecialEditProfile.php';
 $wgAutoloadClasses['SpecialPopulateUserProfiles'] = __DIR__ . '/UserProfile/SpecialPopulateExistingUsersProfiles.php';
 $wgAutoloadClasses['SpecialRemoveRelationship'] = __DIR__ . '/UserRelationship/SpecialRemoveRelationship.php';
@@ -83,6 +85,8 @@ $wgSpecialPages['PopulateUserProfiles'] = 'SpecialPopulateUserProfiles';
 $wgSpecialPages['RemoveAvatar'] = 'RemoveAvatar';
 $wgSpecialPages['RemoveRelationship'] = 'SpecialRemoveRelationship';
 $wgSpecialPages['SendBoardBlast'] = 'SpecialBoardBlast';
+$wgSpecialPages['SendToFollowers'] = 'SpecialSendToFollowers';
+$wgSpecialPages['SendToAllUser'] = 'SpecialSendToAllUser';
 $wgSpecialPages['TopFansByStatistic'] = 'TopFansByStat';
 $wgSpecialPages['TopUsers'] = 'TopUsersPoints';
 $wgSpecialPages['TopUsersRecent'] = 'TopFansRecent';
@@ -236,6 +240,7 @@ $wgAutoloadClasses['SocialProfileHooks'] = __DIR__ . '/SocialProfileHooks.php';
 require_once( "$IP/extensions/SocialProfile/UserProfile/UserProfile.php" ); // Profile page configuration loader file
 require_once( "$IP/extensions/SocialProfile/UserGifts/Gifts.php" ); // UserGifts (user-to-user gifting functionality) loader file
 require_once( "$IP/extensions/SocialProfile/SystemGifts/SystemGifts.php" ); // SystemGifts (awards functionality) loader file
+require_once( "$IP/extensions/SocialProfile/UserBoard/UserBoard.php" ); // UserBoard loader file
 require_once( "$IP/extensions/SocialProfile/UserActivity/UserActivity.php" ); // UserActivity - recent social changes
 
 $wgHooks['CanonicalNamespaces'][] = 'SocialProfileHooks::onCanonicalNamespaces';

@@ -1,22 +1,20 @@
 <?php
 /**
- * A special page to allow users to send a mass board message by selecting from
- * a list of their friends and foes
+ * A special page to allow users to send a mass board message to users following thier sites
  *
  * @file
  * @ingroup Extensions
- * @author David Pean <david.pean@gmail.com>
- * @copyright Copyright © 2007, Wikia Inc.
- * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License 2.0 or later
+ * @author slx
  */
 
-class SpecialBoardBlast extends UnlistedSpecialPage {
+class SpecialSendToFollowers extends UnlistedSpecialPage {
 
 	/**
 	 * Constructor
 	 */
 	public function __construct() {
-		parent::__construct( 'SendBoardBlast' );
+
+		parent::__construct( 'SendToFollowers' );
 	}
 
 	/**
@@ -28,6 +26,11 @@ class SpecialBoardBlast extends UnlistedSpecialPage {
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$user = $this->getUser();
+		// If the user doesn't have the required 'SendToFollowers' permission, display an error
+		if ( !$user->isAllowed( 'SendToFollowers' ) ) {
+			$out->permissionRequired( 'SendToFollowers' );
+			return;
+		}
 
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
@@ -90,13 +93,8 @@ class SpecialBoardBlast extends UnlistedSpecialPage {
 	 * Displays the form for sending board blasts
 	 */
 	function displayForm() {
+		global $wgHuijiPrefix;
 		$user = $this->getUser();
-
-		$stats = new UserStats( $user->getID(), $user->getName() );
-		$stats_data = $stats->getUserStats();
-		$friendCount = $stats_data['friend_count'];
-		$foeCount = $stats_data['foe_count'];
-
 		$output = '<div class="board-blast-message-form">
 				<h2>' . $this->msg( 'boardblaststep1' )->escaped() . '</h2>
 				<form method="post" name="blast" action="">
@@ -117,8 +115,8 @@ class SpecialBoardBlast extends UnlistedSpecialPage {
 		$output .= '</div>
 		</div>';
 
-		$uuf = new UserUserFollow();
-		$follows = $uuf->getFollowList($user, 0);
+		$usf = new UserSiteFollow();
+		$follows = $usf->getSiteFollowedUser( $user->getName(),$wgHuijiPrefix );
 
 		$output .= '<div id="blast-friends-list" class="blast-friends-list">';
 
@@ -131,12 +129,14 @@ class SpecialBoardBlast extends UnlistedSpecialPage {
 				} else {
 					$class = 'foe';
 				}
-				$id = $follow['user_id'];
-				$output .= '<div class="blast-' . $class . "-unselected\" id=\"user-{$id}\">
-						{$follow['user_name']}
-					</div>";
-				if ( $x == count( $follows ) || $x != 1 && $x % $per_row == 0 ) {
-					$output .= '<div class="cleared"></div>';
+				if ( $follow !== $user->getName() ) {
+					$id = User::idFromName($follow);
+					$output .= '<div class="blast-' . $class . "-unselected\" id=\"user-{$id}\">
+							".$follow."
+						</div>";
+					if ( $x == count( $follows ) || $x != 1 && $x % $per_row == 0 ) {
+						$output .= '<div class="cleared"></div>';
+					}
 				}
 				$x++;
 			}

@@ -935,13 +935,13 @@ class UserStats {
 	}
 	public static function getSiteEditsCountCache( $user, $prefix ){
 		global $wgMemc;
-		$key = wfMemcKey( 'revision', 'high_edit_site_followed', $user->getName(), $prefix );
+		$key = wfForeignMemcKey( 'huiji', '', 'revision', 'high_edit_site_followed', $user, $prefix );
 		$data = $wgMemc->get( $key );
 		return $data;
 	}
 	public static function getSiteEditsCountDB( $user, $prefix ){
 		global $wgMemc,$isProduction;
-		$key = wfMemcKey('revision', 'high_edit_site_followed', $user->getName(),$prefix );
+		$key = wfForeignMemcKey( 'huiji', '', 'revision', 'high_edit_site_followed', $user,$prefix );
 		if ($prefix != null) {
 			if( $isProduction == true && $prefix == 'home'){
 				$prefix = 'huiji_home';
@@ -967,6 +967,46 @@ class UserStats {
 		}
 		$wgMemc->set( $key, $count );
 		return $count;
+	}
+	/**
+	 * Get All user
+	 *
+	 * @param 
+	 * @return $results: array()
+	 */
+	static function getAllUser(){
+		$data = self::getAllUserCache( );
+		if ( $data != '' ) {
+			wfDebug( "Get all user from cache\n" );
+			return $data;
+		} else {
+			return self::getAllUserDB( );
+		}
+	}
+	static function getAllUserCache(){
+		global $wgMemc;
+		$key = wfForeignMemcKey( 'huiji', '', 'user', 'get_all_user' );
+		$data = $wgMemc->get( $key );
+		return $data;
+	}
+	static function getAllUserDB(){
+		global $wgMemc;
+		$key = wfForeignMemcKey( 'huiji', '', 'user', 'get_all_user' );
+		$dbr = wfGetDB( DB_SLAVE );
+		$userList = $dbr->select(
+				'user',
+				array('user_id', 'user_name'),
+				array(),
+				__METHOD__
+			);
+		foreach ($userList as $value) {
+			$results[] = array(
+				'user_id' => $value->user_id,
+				'user_name' => $value->user_name
+			);
+		}
+		$wgMemc->set( $key, $results );
+		return $results;
 	}
 }
 
