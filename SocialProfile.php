@@ -253,6 +253,8 @@ $wgHooks['RenameUserComplete'][] = 'SocialProfileHooks::onRenameUserComplete';
 // Set new user tours
 $wgHooks['AddNewAccount'][] = 'SocialProfileHooks::onAddNewAccount';
 
+// expose config vars to javascript
+$wgHooks['ResourceLoaderGetConfigVars'][] = 'onResourceLoaderGetConfigVars';
 
 // ResourceLoader module definitions for certain components which do not have
 // their own loader file
