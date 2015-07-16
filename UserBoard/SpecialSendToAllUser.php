@@ -13,7 +13,7 @@ class SpecialSendToAllUser extends UnlistedSpecialPage {
 	 * Constructor
 	 */
 	public function __construct() {
-
+		set_time_limit(0);
 		parent::__construct( 'SendToAllUser' );
 	}
 
@@ -66,20 +66,32 @@ class SpecialSendToAllUser extends UnlistedSpecialPage {
 
 			$count = 0;
 			$user_ids_to = explode( ',', $request->getVal( 'ids' ) );
-			foreach ( $user_ids_to as $user_id ) {
-				$user_to = User::newFromId( $user_id );
-				$user->loadFromId();
-				$user_name = $user_to->getName();
-				$b->sendBoardMessage(
-					$user->getID(),
-					$user->getName(),
-					$user_id,
-					$user_name,
-					$request->getVal( 'message' ),
-					1
-				);
-				$count++;
+			$i = count($user_ids_to);
+			$per_num = 100;
+			$num = $i/$per_num;
+			$int_num = ceil($num);
+			for($k=1;$k<=$int_num;$k++){
+				$star = $per_num*($k-1);
+				$res_arr = array_slice($user_ids_to, $star, $per_num);
+				foreach ( $res_arr as $user_id ) {
+					$user_to = User::newFromId( $user_id );
+					$user->loadFromId();
+					$user_name = $user_to->getName();
+					$b->sendBoardMessage(
+						$user->getID(),
+						$user->getName(),
+						$user_id,
+						$user_name,
+						$request->getVal( 'message' ),
+						1
+					);
+					$count++;
+				}
+				ob_flush();
+			    flush();
+			    sleep(1);
 			}
+			
 			$output .= $this->msg( 'messagesentsuccess' )->plain();
 		} else {
 			$out->setPageTitle( $this->msg( 'boardblasttitle' )->plain() );
