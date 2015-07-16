@@ -102,4 +102,11 @@ class SocialProfileHooks {
 		setcookie("huiji-mw-tour", $value, time()+3600*24*90, "/", ".huiji.wiki" );  /* expire in 90 days */
 	}
 
+	public static function onResourceLoaderGetConfigVars( array &$vars ) {
+	    global $wgHuijiPrefix, $wgHuijiId;
+	    $vars['wgHuijiPrefix'] = $wgHuijiPrefix;
+	    $vars['wgHuijiId'] = $wgHuijiId;
+	    return true;
+	}
+
 }
