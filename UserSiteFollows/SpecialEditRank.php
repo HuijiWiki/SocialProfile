@@ -61,7 +61,7 @@ class SpecialEditRank extends SpecialPage {
 		if ( !$rel_type || !is_numeric( $rel_type ) ) {
 			$rel_type = 2;
 		}
-		$per_page = 50;
+		$per_page = 20;
 		$per_row = 2;
 		/**
 		 * If no user is set in the URL, we assume its the current user
@@ -73,39 +73,15 @@ class SpecialEditRank extends SpecialPage {
 		$target_user = User::newFromId( $user_id );
 		$userPage = Title::makeTitle( NS_USER, $user_name );
 		$sitefollows = UserSiteFollow::getUserFollowSite($target_user, $wgHuijiPrefix);
-		// foreach ( $sitefollows as $follow ) {
-		// 	$username = $follow['user'];
-		// 	$userPageURL = $follow['userUrl'];
-		// 	$avatar_img = $follow['url'];
-		// 	$user_level = $follow['level'];
-		// 	$username_length = strlen( $follow['user'] );
-		// 	$username_space = stripos( $follow['user'], ' ' );
-		// 	if ( ( $username_space == false || $username_space >= "30" ) && $username_length > 30 ) {
-		// 		$user_name_display = substr( $follow['user'], 0, 30 ) .						' ' . substr( $follow['user'], 30, 50 );
-		// 	} else {
-		// 		$user_name_display = $follow['user'];
-		// 	}
-		// 	$output .= "<div class=\"relationship-item\">
-		// 		<a href=\"{$userPageURL}\">{$avatar_img}</a>
-		// 		<div class=\"relationship-info\">
-		// 			<div class=\"relationship-name\">
-		// 				<a href=\"{$userPageURL}\">{$user_name_display}</a><i>{$user_level}</i>
-		// 			</div>
-		// 		<div class=\"relationship-actions\"><ul>";
-		// 	$output .= '<li>编辑数:'.$follow['count'].'</li>';
-		// 	$output .= $followButton;
-		// 	$target = SpecialPage::getTitleFor( 'GiveGift' );
-		// 	$query = array('user' => $follow['user']);
-		// 	$output .= '<li>'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>礼物</a>', array(), $query).'</li> ';
-		// 	$output .= '</ul></div>
-		// 		<div class="cleared"></div>
-		// 	</div>';
-		// 	$output .= '</div>';
-		// 	$output .= '<div class="cleared"></div>';
-		// }
+		$total = count($sitefollows);
+		$star_page = $per_page*($page-1);
+		$result = array_slice($sitefollows,$star_page ,$per_page );
+		if( !$result ){
+		    $output .= '<div class="top-users"><h3>此页暂时没有排行</h3>';
+		}
 		$output .= '<div class="top-users">';
-		$x = 1;
-		foreach ( $sitefollows as $user ) {
+		$x = $star_page+1;
+		foreach ( $result as $user ) {
 			$user_title = Title::makeTitle( NS_USER, $user['user'] );
 			$commentIcon = $user['url'];
 			$output .= "<div class=\"top-fan-row\">
@@ -129,33 +105,33 @@ class SpecialEditRank extends SpecialPage {
 		$numofpages = $total / $per_page;
 		$pageLink = $this->getPageTitle();
 		if ( $numofpages > 1 ) {
-			$output .= '<div class="page-nav">';
+			$output .= '<nav class="page-nav pagination">';
 			if ( $page > 1 ) {
-				$output .= Linker::link(
+				$output .= '<li>'.Linker::link(
 					$pageLink,
-					$this->msg( 'ur-previous' )->plain(),
+					'<span aria-hidden="true">&laquo;</span>',
 					array(),
 					array(
 						'user' => $user_name,
 						'rel_type' => $rel_type,
 						'page' => ( $page - 1 )
 					)
-				) . $this->msg( 'word-separator' )->plain();
+				) . '</li>';
 			}
 			if ( ( $total % $per_page ) != 0 ) {
 				$numofpages++;
 			}
-			if ( $numofpages >= 9 && $page < $total ) {
-				$numofpages = 9 + $page;
-			}
-			if ( $numofpages >= ( $total / $per_page ) ) {
-				$numofpages = ( $total / $per_page ) + 1;
-			}
+			// if ( $numofpages >= 9 && $page < $total ) {
+			// 	$numofpages = 9 + $page;
+			// }
+			// if ( $numofpages >= ( $total / $per_page ) ) {
+			// 	$numofpages = ( $total / $per_page ) + 1;
+			// }
 			for ( $i = 1; $i <= $numofpages; $i++ ) {
 				if ( $i == $page ) {
-					$output .= ( $i . ' ' );
+					$output .= ( '<li class="active"><a href="#">'.$i.' <span class="sr-only">(current)</span></a></li>' );
 				} else {
-					$output .= Linker::link(
+					$output .= '<li>'.Linker::link(
 						$pageLink,
 						$i,
 						array(),
@@ -164,23 +140,23 @@ class SpecialEditRank extends SpecialPage {
 							'rel_type' => $rel_type,
 							'page' => $i
 						)
-					) . $this->msg( 'word-separator' )->plain();
+					) . '</li>';
 				}
 			}
 			if ( ( $total - ( $per_page * $page ) ) > 0 ) {
-				$output .= $this->msg( 'word-separator' )->plain() .
+				$output .= '<li>' .
 					Linker::link(
 						$pageLink,
-						$this->msg( 'ur-next' )->plain(),
+						'<span aria-hidden="true">&raquo;</span>',
 						array(),
 						array(
 							'user' => $user_name,
 							'rel_type' => $rel_type,
 							'page' => ( $page + 1 )
 						)
-					);
+					).'</li>';
 			}
-			$output .= '</div>';
+			$output .= '</nav>';
 		}
 		$out->addHTML( $output );
 	}

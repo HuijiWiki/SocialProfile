@@ -31,9 +31,9 @@ function incEditCount( $article, $revision, $baseRevId ) {
 		$stats = new UserStatsTrack( $wgUser->getID(), $wgUser->getName() );
 		$stats->incStatField( 'edit' );
 	}
-	$key = wfMemcKey( 'revision', 'high_edit_site_followed', $wgUser->getName(), $wgHuijiPrefix );
-	$wgMemc->incr( $key );
 
+	$key = wfForeignMemcKey( 'huiji', '', 'revision', 'high_edit_site_followed', $wgUser->getName(), $wgHuijiPrefix );
+	$wgMemc->incr( $key );
 	return true;
 }
 
@@ -60,7 +60,7 @@ function removeDeletedEdits( &$article, &$user, &$reason ) {
 		foreach ( $res as $row ) {
 			$stats = new UserStatsTrack( $row->rev_user, $row->rev_user_text );
 			$stats->decStatField( 'edit', $row->the_count );
-			$key = wfMemcKey( 'revision', 'high_edit_site_followed', $row->rev_user_text, $wgHuijiPrefix );
+			$key = wfForeignMemcKey( 'huiji', '', 'revision', 'high_edit_site_followed', $row->rev_user_text, $wgHuijiPrefix );
 			$wgMemc->decr( $key,$row->the_count );
 		}
 	}
@@ -93,7 +93,7 @@ function restoreDeletedEdits( &$title, $new ) {
 		foreach ( $res as $row ) {
 			$stats = new UserStatsTrack( $row->rev_user, $row->rev_user_text );
 			$stats->incStatField( 'edit', $row->the_count );
-			$key = wfMemcKey( 'revision', 'high_edit_site_followed', $row->rev_user_text, $wgHuijiPrefix );
+			$key = wfForeignMemcKey( 'huiji', '', 'revision', 'high_edit_site_followed', $row->rev_user_text, $wgHuijiPrefix );
 			$wgMemc->incr( $key, $row->the_count );
 		}
 	}

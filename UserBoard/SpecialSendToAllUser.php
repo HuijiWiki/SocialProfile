@@ -1,22 +1,20 @@
 <?php
 /**
- * A special page to allow users to send a mass board message by selecting from
- * a list of their friends and foes
+ * A special page to allow users to send a mass board message to all users
  *
  * @file
  * @ingroup Extensions
- * @author David Pean <david.pean@gmail.com>
- * @copyright Copyright © 2007, Wikia Inc.
- * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License 2.0 or later
+ * @author slx
  */
 
-class SpecialBoardBlast extends UnlistedSpecialPage {
+class SpecialSendToAllUser extends UnlistedSpecialPage {
 
 	/**
 	 * Constructor
 	 */
 	public function __construct() {
-		parent::__construct( 'SendBoardBlast' );
+		set_time_limit(0);
+		parent::__construct( 'SendToAllUser' );
 	}
 
 	/**
@@ -28,6 +26,11 @@ class SpecialBoardBlast extends UnlistedSpecialPage {
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$user = $this->getUser();
+		// If the user doesn't have the required 'SendToAllUser' permission, display an error
+		if ( !$user->isAllowed( 'SendToAllUser' ) ) {
+			$out->permissionRequired( 'SendToAllUser' );
+			return;
+		}
 
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
@@ -63,20 +66,32 @@ class SpecialBoardBlast extends UnlistedSpecialPage {
 
 			$count = 0;
 			$user_ids_to = explode( ',', $request->getVal( 'ids' ) );
-			foreach ( $user_ids_to as $user_id ) {
-				$user_to = User::newFromId( $user_id );
-				$user->loadFromId();
-				$user_name = $user_to->getName();
-				$b->sendBoardMessage(
-					$user->getID(),
-					$user->getName(),
-					$user_id,
-					$user_name,
-					$request->getVal( 'message' ),
-					1
-				);
-				$count++;
+			$i = count($user_ids_to);
+			$per_num = 100;
+			$num = $i/$per_num;
+			$int_num = ceil($num);
+			for($k=1;$k<=$int_num;$k++){
+				$star = $per_num*($k-1);
+				$res_arr = array_slice($user_ids_to, $star, $per_num);
+				foreach ( $res_arr as $user_id ) {
+					$user_to = User::newFromId( $user_id );
+					$user->loadFromId();
+					$user_name = $user_to->getName();
+					$b->sendBoardMessage(
+						$user->getID(),
+						$user->getName(),
+						$user_id,
+						$user_name,
+						$request->getVal( 'message' ),
+						1
+					);
+					$count++;
+				}
+				ob_flush();
+			    flush();
+			    sleep(1);
 			}
+			
 			$output .= $this->msg( 'messagesentsuccess' )->plain();
 		} else {
 			$out->setPageTitle( $this->msg( 'boardblasttitle' )->plain() );
@@ -90,13 +105,8 @@ class SpecialBoardBlast extends UnlistedSpecialPage {
 	 * Displays the form for sending board blasts
 	 */
 	function displayForm() {
+		global $wgHuijiPrefix;
 		$user = $this->getUser();
-
-		$stats = new UserStats( $user->getID(), $user->getName() );
-		$stats_data = $stats->getUserStats();
-		$friendCount = $stats_data['friend_count'];
-		$foeCount = $stats_data['foe_count'];
-
 		$output = '<div class="board-blast-message-form">
 				<h2>' . $this->msg( 'boardblaststep1' )->escaped() . '</h2>
 				<form method="post" name="blast" action="">
@@ -114,11 +124,12 @@ class SpecialBoardBlast extends UnlistedSpecialPage {
 						$this->msg( 'boardlinkselectall' )->escaped() . '</a> -
 					<a href="javascript:void(0);" class="blast-unselect-all-link">' .
 						$this->msg( 'boardlinkunselectall' )->escaped() . '</a> ';
+
 		$output .= '</div>
 		</div>';
 
-		$uuf = new UserUserFollow();
-		$follows = $uuf->getFollowList($user, 0);
+		$us = new UserStats();
+		$follows = $us->getAllUser( );
 
 		$output .= '<div id="blast-friends-list" class="blast-friends-list">';
 
@@ -131,12 +142,14 @@ class SpecialBoardBlast extends UnlistedSpecialPage {
 				} else {
 					$class = 'foe';
 				}
-				$id = $follow['user_id'];
-				$output .= '<div class="blast-' . $class . "-unselected\" id=\"user-{$id}\">
-						{$follow['user_name']}
-					</div>";
-				if ( $x == count( $follows ) || $x != 1 && $x % $per_row == 0 ) {
-					$output .= '<div class="cleared"></div>';
+				if ( $follow['user_name'] !== $user->getName() ) {
+					$id = $follow['user_id'];
+					$output .= '<div class="blast-' . $class . "-unselected\" id=\"user-{$id}\">
+							".$follow['user_name']."
+						</div>";
+					if ( $x == count( $follows ) || $x != 1 && $x % $per_row == 0 ) {
+						$output .= '<div class="cleared"></div>';
+					}
 				}
 				$x++;
 			}

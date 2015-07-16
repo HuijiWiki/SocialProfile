@@ -434,7 +434,7 @@ class UserSiteFollow{
 				$avatar = new wAvatar( $user_id, 'm' );
 				$temp['url'] = $avatar->getAvatarURL();
 				$tuser = User::newFromName($u_name);
-				$temp['count'] = UserStats::getSiteEditsCount($tuser);
+				$temp['count'] = UserStats::getSiteEditsCount($tuser,$site_name);
 
 				// if(in_array($u_name, $follower)){
 				// 	$is_follow = 'Y';

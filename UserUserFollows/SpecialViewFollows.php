@@ -78,7 +78,7 @@ class SpecialViewFollows extends SpecialPage {
 		if ( !$rel_type || !is_numeric( $rel_type ) ) {
 			$rel_type = 2;
 		}
-		$per_page = 50;
+		$per_page = 10;
 		$per_row = 2;
 
 		/**
@@ -114,6 +114,8 @@ class SpecialViewFollows extends SpecialPage {
 		 */
 		$uuf = new UserUserFollow();
 		$follows = $uuf->getFollowList( $target_user, $rel_type, $perpage, $page);
+		$star_page = $per_page*($page-1);
+		$per_follow = array_slice($follows,$star_page ,$per_page );
 		$followerCount = UserUserFollow::getFollowerCount($target_user);
 		$followingCount = UserUserFollow::getFollowingCount($target_user);
 		$back_link = Title::makeTitle( NS_USER, $user_name );
@@ -153,17 +155,17 @@ class SpecialViewFollows extends SpecialPage {
 				$this->msg( 'ur-backlink', $user_name )->parse() .
 			'</a> | '.Linker::LinkKnown($target, '我关注的人', array(), $query1).' | '.Linker::LinkKnown($blast, '向关注我的人群发信息').'
 		</div>
-		<div class="relationship-count">'
+		<div class="relationship-wrapper"><div class="relationship-count">'
 			. $this->msg(
 				'ur-relationship-count-foes',
 				$user_name,
 				$total
-			)->text() . '</div>';
+			)->text() . '</div><div class="relationship-list">';
 		}
-		if ( $follows ) {
+		if ( $per_follow ) {
 			$x = 1;
 
-			foreach ( $follows as $follow ) {
+			foreach ( $per_follow as $follow ) {
 				// $indivRelationship = UserRelationship::getUserRelationshipByID(
 				// 	$relationship['user_id'],
 				// 	$user->getID()
@@ -231,23 +233,6 @@ class SpecialViewFollows extends SpecialPage {
 				$target = SpecialPage::getTitleFor( 'GiveGift' );
 				$query = array('user' => $follow['user_name']);
 				$output .= '<li>'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>礼物</a>', array(), $query).'</li> </ul>';
-				/*$output .=  '<li>共同关注:';
-				if(!empty($commonfollow)){
-					foreach ($commonfollow as $val) {
-						$output .= $val.'&nbsp';
-					}
-				}else{
-					$output .= '(<i>暂无</i>)';
-				}
-				$output .= '</li><li>我关注的谁也关注Ta:';
-				if(!empty($minefollowerhim)){
-					foreach ($minefollowerhim as $val) {
-						$output .= $val.'&nbsp';
-					}
-				}else{
-					$output .= '(<i>暂无</i>)';
-				}
-				$output .= '</li>';*/
 				$output .= '</div>
 					<div class="cleared"></div>
 				</div>';
@@ -269,35 +254,35 @@ class SpecialViewFollows extends SpecialPage {
 		$pageLink = $this->getPageTitle();
 
 		if ( $numofpages > 1 ) {
-			$output .= '<div class="page-nav">';
+			$output .= '<nav class="page-nav pagination">';
 			if ( $page > 1 ) {
-				$output .= Linker::link(
+				$output .= '<li>'.Linker::link(
 					$pageLink,
-					$this->msg( 'ur-previous' )->plain(),
+					'<span aria-hidden="true">&laquo;</span>',
 					array(),
 					array(
 						'user' => $user_name,
 						'rel_type' => $rel_type,
 						'page' => ( $page - 1 )
 					)
-				) . $this->msg( 'word-separator' )->plain();
+				) . '</li>';
 			}
 
 			if ( ( $total % $per_page ) != 0 ) {
 				$numofpages++;
 			}
-			if ( $numofpages >= 9 && $page < $total ) {
-				$numofpages = 9 + $page;
-			}
-			if ( $numofpages >= ( $total / $per_page ) ) {
-				$numofpages = ( $total / $per_page ) + 1;
-			}
+			// if ( $numofpages >= 9 && $page < $total ) {
+			// 	$numofpages = 9 + $page;
+			// }
+			// if ( $numofpages >= ( $total / $per_page ) ) {
+			// 	$numofpages = ( $total / $per_page ) + 1;
+			// }
 
 			for ( $i = 1; $i <= $numofpages; $i++ ) {
 				if ( $i == $page ) {
-					$output .= ( $i . ' ' );
+					$output .= ( '<li class="active"><a href="#">'.$i.' <span class="sr-only">(current)</span></a></li>' );
 				} else {
-					$output .= Linker::link(
+					$output .= '<li>'.Linker::link(
 						$pageLink,
 						$i,
 						array(),
@@ -306,24 +291,24 @@ class SpecialViewFollows extends SpecialPage {
 							'rel_type' => $rel_type,
 							'page' => $i
 						)
-					) . $this->msg( 'word-separator' )->plain();
+					) . '</li>';
 				}
 			}
 
 			if ( ( $total - ( $per_page * $page ) ) > 0 ) {
-				$output .= $this->msg( 'word-separator' )->plain() .
+				$output .= '<li>' .
 					Linker::link(
 						$pageLink,
-						$this->msg( 'ur-next' )->plain(),
+						'<span aria-hidden="true">&raquo;</span>',
 						array(),
 						array(
 							'user' => $user_name,
 							'rel_type' => $rel_type,
 							'page' => ( $page + 1 )
 						)
-					);
+					).'</li>';
 			}
-			$output .= '</div></div></div>';
+			$output .= '</nav></div></div></div></div>';
 		}
 
 		$out->addHTML( $output );
