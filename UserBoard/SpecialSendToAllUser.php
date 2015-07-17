@@ -85,11 +85,11 @@ class SpecialSendToAllUser extends UnlistedSpecialPage {
 						$request->getVal( 'message' ),
 						1
 					);
-					$count++;
+					// $count++;
 				}
 				ob_flush();
 			    flush();
-			    sleep(1);
+			    sleep(2);
 			}
 			
 			$output .= $this->msg( 'messagesentsuccess' )->plain();
