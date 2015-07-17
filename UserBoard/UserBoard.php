@@ -7,6 +7,6 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 global $wgAvailableRights, $wgGroupPermissions;
 
 $wgAvailableRights[] = 'SendToFollowers';
-$wgGroupPermissions['staff']['SendToFollowers'] = true;
+$wgGroupPermissions['sysop']['SendToFollowers'] = true;
 $wgAvailableRights[] = 'SendToAllUser';
-$wgGroupPermissions['sysop']['SendToAllUser'] = true;
+$wgGroupPermissions['staff']['SendToAllUser'] = true;
