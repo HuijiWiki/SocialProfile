@@ -246,6 +246,7 @@ require_once( "$IP/extensions/SocialProfile/UserActivity/UserActivity.php" ); //
 $wgHooks['CanonicalNamespaces'][] = 'SocialProfileHooks::onCanonicalNamespaces';
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'SocialProfileHooks::onLoadExtensionSchemaUpdates';
 $wgHooks['ParserFirstCallInit'][] = 'AvatarParserFunction::setupAvatarParserFunction';
+$wgHooks['BeforePageDisplay'][] = 'SocialProfileHooks::onBeforePageDisplay';
 
 // For the Renameuser extension
 $wgHooks['RenameUserComplete'][] = 'SocialProfileHooks::onRenameUserComplete';
@@ -331,6 +332,7 @@ $wgResourceModules['ext.socialprofile.useruserfollows.css'] = array(
 	'styles' => 'UserUserFollows.css',
 	'localBasePath' => __DIR__ . '/UserUserFollows',
 	'remoteExtPath' => 'SocialProfile/UserUserFollows',
+	'position' => 'top',
 );
 $wgResourceModules['ext.guidedTour.tour.newuser'] = array(
 	'scripts' => 'tours/newuser.js',
