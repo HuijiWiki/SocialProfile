@@ -13,7 +13,7 @@ class SocialProfileHooks {
 	 */
 	public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) { 
 		// Add required CSS & JS via ResourceLoader
-		$out->addModules( array('ext.socialprofile.usersitefollows.js','ext.socialprofile.useruserfollows.js', 'ext.socialprofile.useruserfollows.css' );
+		$out->addModules( array('ext.socialprofile.usersitefollows.js','ext.socialprofile.useruserfollows.js', 'ext.socialprofile.useruserfollows.css' ));
 	}
 	/**
 	 * Register the canonical names for our custom namespaces and their talkspaces.
