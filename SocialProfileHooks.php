@@ -7,7 +7,14 @@
  * @file
  */
 class SocialProfileHooks {
-
+	/** 
+	 * Enable follow user/site on every page
+	 *
+	 */
+	public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) { 
+		// Add required CSS & JS via ResourceLoader
+		$out->addModules( array('ext.socialprofile.usersitefollows.js','ext.socialprofile.useruserfollows.js', 'ext.socialprofile.useruserfollows.css' );
+	}
 	/**
 	 * Register the canonical names for our custom namespaces and their talkspaces.
 	 *
