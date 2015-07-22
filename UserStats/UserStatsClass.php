@@ -1008,6 +1008,53 @@ class UserStats {
 		$wgMemc->set( $key, $results );
 		return $results;
 	}
+	/**
+	 * get the last user edit
+	 * @param revPageId: page id; prefix
+	 * 
+	 */
+	static function getLastEditer( $revPageId, $prefix ){
+		$data = self::getLastEditerCache( $revPageId, $prefix );
+		if ( $data != '' ) {
+			return $data;
+		} else {
+			return self::getLastEditerDB( $revPageId, $prefix );
+		}
+	}
+
+	static function getLastEditerCache( $revPageId, $prefix ){
+		global $wgMemc;
+		$key = wfForeignMemcKey( 'huiji', '', 'revision', 'last_edit_user', $revPageId, $prefix );
+		$data = $wgMemc->get( $key );
+		return $data;
+	}
+
+	static function getLastEditerDB( $revPageId, $prefix ){
+		global $wgMemc;
+		$key = wfForeignMemcKey( 'huiji', '', 'revision', 'last_edit_user', $revPageId, $prefix );
+		$dbr = wfGetDB( DB_SLAVE );
+		$data = $dbr->select(
+				'revision',
+				array('rev_user', 'rev_user_text', 'rev_timestamp'),
+				array(
+					'rev_page'=>$revPageId
+				),
+				__METHOD__,
+				array(
+					'ORDER BY' => 'rev_timestamp DESC',
+					'LIMIT' => '1'
+				)
+			);
+		foreach ($data as $value) {
+			$res['rev_user'] = $value->rev_user; 
+			$res['rev_user_text'] = $value->rev_user_text; 
+			$res['rev_timestamp'] = $value->rev_timestamp; 
+		}
+		if ( $res ) {
+			$wgMemc->set( $key, $res );
+			return $res; 
+		}
+	}
 }
 
 class UserLevel {

@@ -34,6 +34,8 @@ function incEditCount( $article, $revision, $baseRevId ) {
 
 	$key = wfForeignMemcKey( 'huiji', '', 'revision', 'high_edit_site_followed', $wgUser->getName(), $wgHuijiPrefix );
 	$wgMemc->incr( $key );
+	$key = wfForeignMemcKey( 'huiji', '', 'revision', 'last_edit_user', $article->getTitle()->getArticleId(), $wgHuijiPrefix );
+	$wgMemc->delete($key);
 	return true;
 }
 
