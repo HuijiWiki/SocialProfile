@@ -110,10 +110,12 @@ class SocialProfileHooks {
 		setcookie("huiji-mw-tour", $value, time()+3600*24*90, "/", ".huiji.wiki" );  /* expire in 90 days */
 		$key = wfForeignMemcKey( 'huiji', '', 'user', 'get_all_user' );
  		$data = $wgMemc->get( $key );
- 		$newUser['user_id'] = $user->getId();
- 		$newUser['user_name'] = $user->getName();
- 		$data[] = $newUser;
- 		$wgMemc->set( $key, $data );
+		if ($data != ''){
+ 			$newUser['user_id'] = $user->getId();
+ 			$newUser['user_name'] = $user->getName();
+ 			$data[] = $newUser;
+ 			$wgMemc->set( $key, $data );
+		}
 	}
 	/**
 	* Expose config vars to javascript
