@@ -223,8 +223,8 @@ class UserProfilePage extends Article {
 		// }else{
 		// 	$online = '未知';
 		// }
-		$wgOut->addModuleScripts( 'ext.socialprofile.useruserfollows.js' );
-		$wgOut->addHTML($wgAjaxExportList);
+		// $wgOut->addModuleScripts( 'ext.socialprofile.useruserfollows.js' ); #this script is already added globally
+		// $wgOut->addHTML($wgAjaxExportList); # What is that for??
 		$wgOut->addHTML( '<div class="profile-page"><div id="profile-top" class="jumbotron row">' );
 		$wgOut->addHTML( $this->getProfileTop( $this->user_id, $this->user_name ) );
         $wgOut->addHTML('
@@ -1336,8 +1336,10 @@ class UserProfilePage extends Article {
 				if ( $item['type'] == 'comment' ) {
 					$comment_url = "#comment-{$item['id']}";
 				}
-				$site_link = '<b><a href="' . HuijiPrefix::prefixToUrl($item['site']) .
-					"{$comment_url}\">" . HuijiPrefix::prefixToSiteName($item['site'])  . '</a></b> ';
+				if (array_key_exists('site', $item)){
+					$site_link = '<b><a href="' . HuijiPrefix::prefixToUrl($item['site']) .
+						"{$comment_url}\">" . HuijiPrefix::prefixToSiteName($item['site'])  . '</a></b> ';					
+				}
 				$page_link = '<b><a href="' . htmlspecialchars( $title->getFullURL() ) .
 					"{$comment_url}\">" . $title->getPrefixedText() . '</a></b> ';
 				$b = new UserBoard(); // Easier than porting the time-related functions here
