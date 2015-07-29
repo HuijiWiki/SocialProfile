@@ -35,16 +35,19 @@
 .user-page-message-form {
 	margin: 5px 0px 15px 0px;
 	font-weight: bold;
-    width:540px;
+    max-width:540px;
+    width: 100%;
 }
 .user-page-message-form p textarea{
-    width: 540px;
+    max-width: 530px;
+    width: 100%;
 }
 
 .user-board-message {
 	border: 1px solid #D4DFD7;
 	margin: 0px 0px 15px 0px;
-	width: 550px;
+	max-width: 540px;
+	width: 100%;
 }
 
 .user-board-message-from {
