@@ -22,7 +22,10 @@ class UserBoard {
 	 * @param $message_type Integer: 0 for public message
 	 * @return Integer: the inserted value of ub_id row
 	 */
-	public function sendBoardMessage( $user_id_from, $user_name_from, $user_id_to, $user_name_to, $message, $message_type = 0 ) {
+	public function sendBoardMessage( $user_id_from, $user_name_from, $user_id_to, $user_name_to, $message, $message_type = 0 ) {		
+		// convert '@' to wiki link;
+		$message = CommentFunctions::preprocessText($message);
+
 		$dbw = wfGetDB( DB_MASTER );
 
 		$user_name_from = stripslashes( $user_name_from );
@@ -47,6 +50,10 @@ class UserBoard {
 			$this->sendBoardNotificationEmail( $user_id_to, $user_name_from );
 			$this->incNewMessageCount( $user_id_to );
 		}
+		$mentionedUsers = CommentFunctions::getMentionedUsers($message);
+		if ( count( $mentionedUsers ) && $message_type = 0 ) {
+			$this->sendMentionedNotification($user_id_from, $user_name_from, $user_id_to, $user_name_to, $message, $mentionedUsers);
+		}
 
 		$stats = new UserStatsTrack( $user_id_to, $user_name_to );
 		if ( $message_type == 0 ) {
@@ -61,6 +68,28 @@ class UserBoard {
 		$stats->incStatField( 'user_board_sent' );
 
 		return $dbw->insertId();
+	}
+	/**
+	 * Sends an Echo to mentioned users.
+	 *
+	 */
+	public function sendMentionedNotification($user_id_from, $user_name_from, $user_id_to, $user_name_to, $message, $mentionedUsers){
+		$agent = User::newFromId( $user_id_from );
+		$userObjTo = User::newFromId( $user_id_to );
+		$pageTitle = $userObjTo->getUserPage();
+
+		EchoEvent::create( array(
+			'type' => 'comment-msg',
+			'title' => $pageTitle,
+			'extra' => array(
+				'content' => $message,
+				'mentioned-users' => $mentionedUsers,
+				'comment-content' => $content,
+				'comment-id' => "",
+			),
+			'agent' => $agent,
+		) );
+
 	}
 
 	/**

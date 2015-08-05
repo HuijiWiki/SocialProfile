@@ -8,5 +8,5 @@ global $wgAvailableRights, $wgGroupPermissions;
 
 $wgAvailableRights[] = 'SendToFollowers';
 $wgGroupPermissions['sysop']['SendToFollowers'] = true;
-$wgAvailableRights[] = 'SendToAllUser';
-$wgGroupPermissions['staff']['SendToAllUser'] = true;
+$wgAvailableRights[] = 'SendToAllUsers';
+$wgGroupPermissions['staff']['SendToAllUsers'] = true;
