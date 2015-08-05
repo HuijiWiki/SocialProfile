@@ -47,11 +47,11 @@ class UserBoard {
 
 		// Send e-mail notification (if user is not writing on own board)
 		if ( $user_id_from != $user_id_to ) {
-			$this->sendBoardNotificationEmail( $user_id_to, $user_name_from );
+			$this->sendBoardNotificationEmail( $user_id_to, $user_name_from, $message );
 			$this->incNewMessageCount( $user_id_to );
 		}
 		$mentionedUsers = CommentFunctions::getMentionedUsers($message);
-		if ( count( $mentionedUsers ) && $message_type = 0 ) {
+		if ( count( $mentionedUsers ) && $message_type == 0 ) {
 			$this->sendMentionedNotification($user_id_from, $user_name_from, $user_id_to, $user_name_to, $message, $mentionedUsers);
 		}
 
@@ -75,21 +75,19 @@ class UserBoard {
 	 */
 	public function sendMentionedNotification($user_id_from, $user_name_from, $user_id_to, $user_name_to, $message, $mentionedUsers){
 		$agent = User::newFromId( $user_id_from );
-		$userObjTo = User::newFromId( $user_id_to );
-		$pageTitle = $userObjTo->getUserPage();
-
+		$board_link = SpecialPage::getTitleFor( 'UserBoard' );
 		EchoEvent::create( array(
-			'type' => 'comment-msg',
-			'title' => $pageTitle,
-			'extra' => array(
-				'content' => $message,
-				'mentioned-users' => $mentionedUsers,
-				'comment-content' => $content,
-				'comment-id' => "",
-			),
+			'type' => 'board-msg',
+			'title' => $board_link,
+		    'extra' => array(
+		         'board-user-id' => $user_id_to,  
+		         'board-user' => $user_name_to,
+		         'board-user-conv' => $user_name_from,
+		         'mentioned-users' => $mentionedUsers,
+		         'board-content' => $message,
+		     ),
 			'agent' => $agent,
 		) );
-
 	}
 
 	/**
@@ -98,7 +96,7 @@ class UserBoard {
 	 * @param $user_id_to Integer: user ID of the reciever
 	 * @param $user_from Mixed: the user name of the person who wrote the board message
 	 */
-	public function sendBoardNotificationEmail( $user_id_to, $user_from ) {
+	public function sendBoardNotificationEmail( $user_id_to, $user_from, $message ) {
 		$user = User::newFromId( $user_id_to );
 		$user->loadFromId();
 
@@ -113,6 +111,7 @@ class UserBoard {
 		         'board-user-id' => $user_id_to,  
 		         'board-user' => $username,
 		         'board-user-conv' => $user_from,
+		         'board-content' => $message,
 		     ),
 		     'agent' => $agent,
 		     'title' => $board_link,
@@ -528,14 +527,7 @@ class UserBoard {
 	}
 
 	public function getTimeOffset( $time, $timeabrv, $timename ) {
-		$timeStr = '';
-		if ( $time[$timeabrv] > 0 ) {
-			$timeStr = wfMessage( "userboard-time-{$timename}", $time[$timeabrv] )->parse();
-		}
-		// if ( $timeStr ) {
-		// 	$timeStr .= ' ';
-		// }
-		return $timeStr;
+		return CommentFunctions::getTimeOffset( $time, $timeabrv, $timename );
 	}
 
 	/**
@@ -545,24 +537,7 @@ class UserBoard {
 	 * @return $timeStr Mixed: time, such as "20 days" or "11 hours"
 	 */
 	public function getTimeAgo( $time ) {
-		$timeArray = $this->dateDiff( time(), $time );
-		$timeStr = '';
-		$timeStrD = $this->getTimeOffset( $timeArray, 'd', 'days' );
-		$timeStrH = $this->getTimeOffset( $timeArray, 'h', 'hours' );
-		$timeStrM = $this->getTimeOffset( $timeArray, 'm', 'minutes' );
-		$timeStrS = $this->getTimeOffset( $timeArray, 's', 'seconds' );
-		$timeStr = $timeStrD;
-		if ( $timeStr < 2 ) {
-			$timeStr .= $timeStrH;
-			$timeStr .= $timeStrM;
-			if ( !$timeStr ) {
-				$timeStr .= $timeStrS;
-			}
-		}
-		if ( !$timeStr ) {
-			$timeStr = wfMessage( 'userboard-time-seconds', 1 )->parse();
-		}
-		return $timeStr;
+		return CommentFunctions::getTimeAgo( $time );
 	}
 
 	/**
@@ -587,11 +562,11 @@ class UserBoard {
             'flyout-params' => array( 'agent', 'b2b', 'main-title-text' ),
             'payload' => array( 'summary' ),
             'email-subject-message' => 'notification-board-email-subject',
-            'email-subject-params' => array( 'agent' ),
+            'email-subject-params' => array( 'agent', 'b2b', 'main-title-text' ),
             'email-body-message' => 'notification-board-email-body',
             'email-body-params' => array( 'agent', 'b2b', 'main-title-text', 'email-footer' ),
             'email-body-batch-message' => 'notification-board-email-batch-body',
-            'email-body-batch-params' => array( 'agent', 'main-title-text' ),
+            'email-body-batch-params' => array( 'agent', 'b2b', 'main-title-text' ),
             'icon' => 'chat',
         );
         return true;
@@ -608,7 +583,14 @@ class UserBoard {
 	 	switch ( $event->getType() ) {
 	 		case 'board-msg':
 	 			$extra = $event->getExtra();
-	 			if ( !$extra || !isset( $extra['board-user-id'] ) ) {
+	 			if ( !$extra ){
+	 				break;
+	 			}
+	 			if ( !isset( $extra['board-user-id'] ) ) {
+	 				break;
+	 			}
+	 			if ( isset( $extra['mentioned-users'] ) ){
+	 				$users = $extra['mentioned-users'];
 	 				break;
 	 			}
 	 			$recipientId = $extra['board-user-id'];
@@ -621,6 +603,21 @@ class UserBoard {
 
 }
 class EchoBoardFormatter extends EchoCommentFormatter {
+
+	protected function formatPayload( $payload, $event, $user ) {
+		switch ( $payload ) {
+		   	case 'summary': 
+				$eventData = $event->getExtra();
+	        	if ( !isset( $eventData['board-content']) ) {
+	                return;
+	            }
+			    return $eventData['board-content'];
+		        break;
+		   	default:
+		        return parent::formatPayload( $payload, $event, $user );
+		        break;
+		}
+	}
    /**
      * @param $event EchoEvent
      * @param $param
@@ -634,18 +631,35 @@ class EchoBoardFormatter extends EchoCommentFormatter {
                 $message->params( '' );
                 return;
             }
-            $this->setTitleLink(
-                $event,
-                $message,
-                array(
-                    'class' => 'mw-echo-board-msg',
-                    'linkText' => wfMessage( 'notification-board-msg-link' )->text(),
-                    'param' => array(
-                        'user' => $eventData['board-user'],
-                        'conv' => $eventData['board-user-conv'],
-                    )
-                )
-            );
+            if ( isset( $eventData['mentioned-users'])){
+	            $this->setTitleLink(
+	                $event,
+	                $message,
+	                array(
+	                    'class' => 'mw-echo-board-msg',
+	                    'linkText' => wfMessage( 'notification-board-msg-mention-link' )->text(),
+	                    'param' => array(
+	                        'user' => $eventData['board-user'],
+	                        'conv' => $eventData['board-user-conv'],
+	                    )
+	                )
+	            );             	
+
+            } else {
+	            $this->setTitleLink(
+	                $event,
+	                $message,
+	                array(
+	                    'class' => 'mw-echo-board-msg',
+	                    'linkText' => wfMessage( 'notification-board-msg-link' )->text(),
+	                    'param' => array(
+	                        'user' => $eventData['board-user'],
+	                        'conv' => $eventData['board-user-conv'],
+	                    )
+	                )
+	            );            	
+            } 
+
         } else {
             parent::processParam( $event, $param, $message, $user );
         }
