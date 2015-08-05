@@ -7,14 +7,14 @@
  * @author slx
  */
 
-class SpecialSendToAllUser extends UnlistedSpecialPage {
+class SpecialsendToAllUsers extends UnlistedSpecialPage {
 
 	/**
 	 * Constructor
 	 */
 	public function __construct() {
 		set_time_limit(0);
-		parent::__construct( 'SendToAllUser' );
+		parent::__construct( 'sendToAllUsers' );
 	}
 
 	/**
@@ -26,9 +26,9 @@ class SpecialSendToAllUser extends UnlistedSpecialPage {
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$user = $this->getUser();
-		// If the user doesn't have the required 'SendToAllUser' permission, display an error
-		if ( !$user->isAllowed( 'SendToAllUser' ) ) {
-			$out->permissionRequired( 'SendToAllUser' );
+		// If the user doesn't have the required 'sendToAllUsers' permission, display an error
+		if ( !$user->isAllowed( 'sendToAllUsers' ) ) {
+			$out->permissionRequired( 'sendToAllUsers' );
 			return;
 		}
 
