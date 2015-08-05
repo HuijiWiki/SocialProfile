@@ -289,7 +289,7 @@ class UserProfilePage extends Article {
 			wfDebug( __METHOD__ . ": UserProfileBeginLeft messed up profile!\n" );
 		}
 		if ($this->user_id != $wgUser->getId()) {
-			$wgOut->addHTML( $this->getCommonInterest( $user_id,$target_user_id) );
+			$wgOut->addHTML( $this->getCommonInterest( $wgUser->getId(),$this->user_id) );
 		}
 
 		$wgOut->addHTML( $this->getRelationships( $this->user_name, 1 ) );
@@ -2185,7 +2185,7 @@ class UserProfilePage extends Article {
 		} else {
 			$genderIcon = 'TA';
 		}
-		$output .= '<div class="panel panel-default"><div class="user-section-heading panel-heading">
+		$output = '<div class="panel panel-default"><div class="user-section-heading panel-heading">
 				<div class="user-section-title">我和'.$genderIcon.'的共同兴趣:
 				</div>
 				<div class="user-section-actions">

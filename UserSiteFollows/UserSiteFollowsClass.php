@@ -471,7 +471,7 @@ class UserSiteFollow{
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'all_sites_user_following', $user->getName() );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
-			wfDebug( "Got top followed $data ( User = {$user} ) from cache\n" );
+			wfDebug( "Got top followed data ( User = {$user->getName()} ) from cache\n" );
 			return $data;
 		}		
 	}
