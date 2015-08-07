@@ -27,7 +27,7 @@ class UserSystemGifts {
 	public function sendSystemGift( $gift_id, $email = true ) {
 		global $wgMemc;
 		// 
-		$repeatableGift = array( 1,2,3,4,5,6 );
+		$repeatableGift = array( 13,14,15,15,9,10 );
 		if ( !in_array( $gift_id, $repeatableGift) || $this->doesUserHaveGift( $this->user_id, $gift_id ) ) {
 			return '';
 		}
