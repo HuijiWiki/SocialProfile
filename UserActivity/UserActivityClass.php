@@ -40,8 +40,8 @@ class UserActivity {
 	 */
 	public function __construct( $username, $filter, $item_max ) {
 		if ( $username ) {
-			$title1 = Title::newFromDBkey( $username );
-			$this->user_name = $title1->getText();
+			//$title1 = Title::newFromDBkey( $username );
+			$this->user_name = $username;
 			$this->user_id = User::idFromName( $this->user_name );
 		}
 		$this->setFilter( $filter );
@@ -112,9 +112,7 @@ class UserActivity {
 		if ( !empty( $this->show_following )){
 			$users = $dbr->select(
 				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
+				'f_target_user_id',
 				array(
 					'f_user_id' => $this->user_id,
 				),
@@ -122,7 +120,7 @@ class UserActivity {
 			);
 			$userArray = array();
 			foreach ( $users as $user ) {
-				$userArray[] = $user;
+				$userArray[] = $user->f_target_user_id;
 			}
 			$userIDs = implode( ',', $userArray );
 			if ( !empty( $userIDs ) ) {
@@ -237,7 +235,7 @@ class UserActivity {
 			);
 			$userArray = array();
 			foreach ( $users as $user ) {
-				$userArray[] = $user;
+				$userArray[] = $user->f_target_user_id;
 			}
 			$userIDs = implode( ',', $userArray );
 			if ( !empty( $userIDs ) ) {
@@ -323,7 +321,7 @@ class UserActivity {
 			);
 			$userArray = array();
 			foreach ( $users as $user ) {
-				$userArray[] = $user;
+				$userArray[] = $user->f_target_user_id;
 			}
 			$userIDs = implode( ',', $userArray );
 			if ( !empty( $userIDs ) ) {
@@ -411,7 +409,7 @@ class UserActivity {
 			);
 			$userArray = array();
 			foreach ( $users as $user ) {
-				$userArray[] = $user;
+				$userArray[] = $user->f_target_user_id;
 			}
 			$userIDs = implode( ',', $userArray );
 			if ( !empty( $userIDs ) ) {
@@ -503,7 +501,7 @@ class UserActivity {
 			);
 			$userArray = array();
 			foreach ( $users as $user ) {
-				$userArray[] = $user;
+				$userArray[] = $user->f_target_user_id;
 			}
 			$userIDs = implode( ',', $userArray );
 			if ( !empty( $userIDs ) ) {
@@ -617,7 +615,7 @@ class UserActivity {
 			);
 			$userArray = array();
 			foreach ( $users as $user ) {
-				$userArray[] = $user;
+				$userArray[] = $user->f_target_user_id;
 			}
 			$userIDs = implode( ',', $userArray );
 			if ( !empty( $userIDs ) ) {
@@ -703,7 +701,7 @@ class UserActivity {
 			);
 			$userArray = array();
 			foreach ( $users as $user ) {
-				$userArray[] = $user;
+				$userArray[] = $user->f_target_user_id;
 			}
 			$userIDs = implode( ',', $userArray );
 			if ( !empty( $userIDs ) ) {
@@ -818,11 +816,11 @@ class UserActivity {
 			);
 			$userArray = array();
 			foreach ( $users as $user ) {
-				$userArray[] = $user;
+				$userArray[] = $user->f_target_user_id;
 			}
 			$userIDs = implode( ',', $userArray );
 			if ( !empty( $userIDs ) ) {
-				$where[] = "sg_user_id_to IN ($userIDs)";
+				$where[] = "sg_user_id IN ($userIDs)";
 			}			
 		}
 
@@ -929,11 +927,11 @@ class UserActivity {
 			);
 			$userArray = array();
 			foreach ( $users as $user ) {
-				$userArray[] = $user;
+				$userArray[] = $user->f_target_user_id;
 			}
 			$userIDs = implode( ',', $userArray );
 			if ( !empty( $userIDs ) ) {
-				$where[] = "r_user_id_to IN ($userIDs)";
+				$where[] = "r_user_id IN ($userIDs)";
 			}			
 		}
 
@@ -1040,7 +1038,7 @@ class UserActivity {
 			);
 			$userArray = array();
 			foreach ( $users as $user ) {
-				$userArray[] = $user;
+				$userArray[] = $user->f_target_user_id;
 			}
 			$userIDs = implode( ',', $userArray );
 			if ( !empty( $userIDs ) ) {
@@ -1152,7 +1150,7 @@ class UserActivity {
 			);
 			$userArray = array();
 			foreach ( $users as $user ) {
-				$userArray[] = $user;
+				$userArray[] = $user->f_target_user_id;
 			}
 			$userIDs = implode( ',', $userArray );
 			if ( !empty( $userIDs ) ) {
@@ -1251,7 +1249,7 @@ class UserActivity {
 			);
 			$userArray = array();
 			foreach ( $users as $user ) {
-				$userArray[] = $user;
+				$userArray[] = $user->f_target_user_id;
 			}
 			$userIDs = implode( ',', $userArray );
 			if ( !empty( $userIDs ) ) {
