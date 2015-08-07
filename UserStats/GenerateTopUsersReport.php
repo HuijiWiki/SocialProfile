@@ -189,15 +189,15 @@ class GenerateTopUsersReport extends SpecialPage {
 					if( $period == 'weekly' ){
 						$systemGiftID = 11;
 					}elseif ( $period == 'monthly' ) {
-						$systemGiftID = 12;
+						$systemGiftID = 21;
 					}
 					$sg = new UserSystemGifts( $user['user_name'] );
 					$sg->sendSystemGift( $systemGiftID );
 				}else{
 					if( $period == 'weekly' ){
-						$systemGiftID = 11;
+						$systemGiftID = 31;
 					}elseif ( $period == 'monthly' ) {
-						$systemGiftID = 12;
+						$systemGiftID = 41;
 					}
 					$sg = new UserSystemGifts( $user['user_name'] );
 					$sg->sendSystemGift( $systemGiftID );

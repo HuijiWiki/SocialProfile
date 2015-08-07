@@ -52,7 +52,8 @@ class SystemGiftManager extends SpecialPage {
 
 		if ( $request->wasPosted() ) {
 			$g = new SystemGifts();
-
+			$gift_category = $request->getVal( 'gift_category' );
+			$un_update = array(15, 16, 17, 18, 19);
 			if ( !$request->getInt( 'id' ) ) {
 				// Add the new system gift to the database
 				$gift_id = $g->addGift(
@@ -81,7 +82,9 @@ class SystemGiftManager extends SpecialPage {
 					'</span><br /><br />'
 				);
 			}
-			$g->update_system_gifts();
+			if ( !in_array( $gift_category, $un_update ) ){
+				$g->update_system_gifts();
+			}
 			$out->addHTML( $this->displayForm( $gift_id ) );
 		} else {
 			$gift_id = $request->getInt( 'id' );
