@@ -30,6 +30,8 @@ class SystemGifts {
 		'others' => 19
 	);
 
+	private $repeatableGifts = array( 12, 13, 15, 16, 17, 18, 19 );
+
 	/**
 	 * Accessor for the private $categories variable; used by
 	 * SpecialSystemGiftManager.php at least.
@@ -37,15 +39,11 @@ class SystemGifts {
 	public function getCategories() {
 		return $this->categories;
 	}
-	//unset the key which unneed
-	static function escapeRepeatableGift( $arr ){
 
-		$key = array( 'points_finalist_weekly', 'points_finalist_monthly', 'points_firstthree_weekly', 'points_firstthree_monthly', 'others' );
-		foreach ($key as $k) {
-			unset($arr[$k]);
-		}
-		return $arr;
+	public function getRepeatableGifts() {
+		return $this->repeatableGifts;
 	}
+
 
 	/**
 	 * Adds awards for all registered users, updates statistics and purges
@@ -66,10 +64,9 @@ class SystemGifts {
 			__METHOD__,
 			array( 'ORDER BY' => 'gift_category, gift_threshold ASC' )
 		);
-		// $row = self::escapeRepeatableGift($row);
 		$x = 0;
 		foreach ( $res as $row ) {
-			if ( $row->gift_category ) {
+			if ( $row->gift_category && !in_array( $row->gift_category, $this->repeatableGifts ) ) {
 				$res2 = $dbw->select(
 					'user_stats',
 					array( 'stats_user_id', 'stats_user_name' ),

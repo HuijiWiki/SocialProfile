@@ -53,7 +53,7 @@ class SystemGiftManager extends SpecialPage {
 		if ( $request->wasPosted() ) {
 			$g = new SystemGifts();
 			$gift_category = $request->getVal( 'gift_category' );
-			$un_update = array(12, 13, 15, 16, 17, 18, 19);
+			$un_update = $g->getRepeatableGifts();
 			if ( !$request->getInt( 'id' ) ) {
 				// Add the new system gift to the database
 				$gift_id = $g->addGift(
