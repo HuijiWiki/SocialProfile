@@ -24,7 +24,10 @@ class SystemGifts {
 		'points_winner_monthly' => 13,
 		'quiz_points' => 14,
 		'points_finalist_weekly' => 15,
-		'points_finalist_monthly' => 16
+		'points_finalist_monthly' => 16,
+		'points_firstthree_weekly' => 17,
+		'points_firstthree_monthly' => 18,
+		'others' => 19
 	);
 
 	/**
