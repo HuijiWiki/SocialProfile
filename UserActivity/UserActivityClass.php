@@ -13,6 +13,7 @@ class UserActivity {
 	private $user_name;		# Text form (spaces not underscores) of the main part
 	private $items;         # Text form (spaces not underscores) of the main part
 	private $rel_type;
+	private $show_following = false;
 	private $show_current_user = false;
 	private $show_edits = 1;
 	private $show_votes = 0;
@@ -60,6 +61,9 @@ class UserActivity {
 		if ( strtoupper( $filter ) == 'FOES' ) {
 			$this->rel_type = 2;
 		}
+		if ( strtoupper( $filter ) == 'FOLLOWING' ){
+			$this->show_following = true;
+		}
 		if ( strtoupper( $filter ) == 'ALL' ) {
 			$this->show_all = true;
 		}
@@ -103,6 +107,27 @@ class UserActivity {
 
 		if ( !empty( $this->show_current_user ) ) {
 			$where['rc_user'] = $this->user_id;
+		}
+
+		if ( !empty( $this->show_following )){
+			$users = $dbr->select(
+				'user_user_follow',
+				array(
+					'f_target_user_id',
+				),
+				array(
+					'f_user_id' => $this->user_id,
+				),
+				__METHOD__
+			);
+			$userArray = array();
+			foreach ( $users as $user ) {
+				$userArray[] = $user;
+			}
+			$userIDs = implode( ',', $userArray );
+			if ( !empty( $userIDs ) ) {
+				$where[] = "rc_user IN ($userIDs)";
+			}			
 		}
 
 		$res = $dbr->select(
@@ -199,6 +224,27 @@ class UserActivity {
 			$where['f_user_id'] = $this->user_id;
 		}
 
+		if ( !empty( $this->show_following )){
+			$users = $dbr->select(
+				'user_user_follow',
+				array(
+					'f_target_user_id',
+				),
+				array(
+					'f_user_id' => $this->user_id,
+				),
+				__METHOD__
+			);
+			$userArray = array();
+			foreach ( $users as $user ) {
+				$userArray[] = $user;
+			}
+			$userIDs = implode( ',', $userArray );
+			if ( !empty( $userIDs ) ) {
+				$where[] = "f_user_id IN ($userIDs)";
+			}			
+		}
+
 		$res = $dbr->select(
 			'user_site_follow',
 			array(
@@ -262,6 +308,27 @@ class UserActivity {
 
 		if ( !empty( $this->show_current_user ) ) {
 			$where['f_user_id'] = $this->user_id;
+		}
+
+		if ( !empty( $this->show_following )){
+			$users = $dbr->select(
+				'user_user_follow',
+				array(
+					'f_target_user_id',
+				),
+				array(
+					'f_user_id' => $this->user_id,
+				),
+				__METHOD__
+			);
+			$userArray = array();
+			foreach ( $users as $user ) {
+				$userArray[] = $user;
+			}
+			$userIDs = implode( ',', $userArray );
+			if ( !empty( $userIDs ) ) {
+				$where[] = "f_user_id IN ($userIDs)";
+			}			
 		}
 
 		$res = $dbr->select(
@@ -330,6 +397,26 @@ class UserActivity {
 		}
 		if ( $this->show_current_user ) {
 			$where['vote_user_id'] = $this->user_id;
+		}
+		if ( !empty( $this->show_following )){
+			$users = $dbr->select(
+				'user_user_follow',
+				array(
+					'f_target_user_id',
+				),
+				array(
+					'f_user_id' => $this->user_id,
+				),
+				__METHOD__
+			);
+			$userArray = array();
+			foreach ( $users as $user ) {
+				$userArray[] = $user;
+			}
+			$userIDs = implode( ',', $userArray );
+			if ( !empty( $userIDs ) ) {
+				$where[] = "vote_user_id IN ($userIDs)";
+			}			
 		}
 
 		$res = $dbr->select(
@@ -402,6 +489,26 @@ class UserActivity {
 
 		if ( !empty( $this->show_current_user ) ) {
 			$where['Comment_user_id'] = $this->user_id;
+		}
+		if ( !empty( $this->show_following )){
+			$users = $dbr->select(
+				'user_user_follow',
+				array(
+					'f_target_user_id',
+				),
+				array(
+					'f_user_id' => $this->user_id,
+				),
+				__METHOD__
+			);
+			$userArray = array();
+			foreach ( $users as $user ) {
+				$userArray[] = $user;
+			}
+			$userIDs = implode( ',', $userArray );
+			if ( !empty( $userIDs ) ) {
+				$where[] = "Comment_user_id IN ($userIDs)";
+			}			
 		}
 
 		$res = $dbr->select(
@@ -497,6 +604,26 @@ class UserActivity {
 		if( $this->show_current_user ) {
 			$where['ug_user_id_from'] = $this->user_id;
 		}
+		if ( !empty( $this->show_following )){
+			$users = $dbr->select(
+				'user_user_follow',
+				array(
+					'f_target_user_id',
+				),
+				array(
+					'f_user_id' => $this->user_id,
+				),
+				__METHOD__
+			);
+			$userArray = array();
+			foreach ( $users as $user ) {
+				$userArray[] = $user;
+			}
+			$userIDs = implode( ',', $userArray );
+			if ( !empty( $userIDs ) ) {
+				$where[] = "ug_user_id_to IN ($userIDs)";
+			}			
+		}
 
 		$res = $dbr->select(
 			array( 'user_gift', 'gift' ),
@@ -562,6 +689,26 @@ class UserActivity {
 
 		if ( !empty( $this->show_current_user ) ) {
 			$where['ug_user_id_to'] = $this->user_id;
+		}
+		if ( !empty( $this->show_following )){
+			$users = $dbr->select(
+				'user_user_follow',
+				array(
+					'f_target_user_id',
+				),
+				array(
+					'f_user_id' => $this->user_id,
+				),
+				__METHOD__
+			);
+			$userArray = array();
+			foreach ( $users as $user ) {
+				$userArray[] = $user;
+			}
+			$userIDs = implode( ',', $userArray );
+			if ( !empty( $userIDs ) ) {
+				$where[] = "ug_user_id_to IN ($userIDs)";
+			}			
 		}
 
 		$res = $dbr->select(
@@ -658,6 +805,26 @@ class UserActivity {
 		if ( !empty( $this->show_current_user ) ) {
 			$where['sg_user_id'] = $this->user_id;
 		}
+		if ( !empty( $this->show_following )){
+			$users = $dbr->select(
+				'user_user_follow',
+				array(
+					'f_target_user_id',
+				),
+				array(
+					'f_user_id' => $this->user_id,
+				),
+				__METHOD__
+			);
+			$userArray = array();
+			foreach ( $users as $user ) {
+				$userArray[] = $user;
+			}
+			$userIDs = implode( ',', $userArray );
+			if ( !empty( $userIDs ) ) {
+				$where[] = "sg_user_id_to IN ($userIDs)";
+			}			
+		}
 
 		$res = $dbr->select(
 			array( 'user_system_gift', 'system_gift' ),
@@ -749,6 +916,26 @@ class UserActivity {
 		if ( !empty( $this->show_current_user ) ) {
 			$where['r_user_id'] = $this->user_id;
 		}
+		if ( !empty( $this->show_following )){
+			$users = $dbr->select(
+				'user_user_follow',
+				array(
+					'f_target_user_id',
+				),
+				array(
+					'f_user_id' => $this->user_id,
+				),
+				__METHOD__
+			);
+			$userArray = array();
+			foreach ( $users as $user ) {
+				$userArray[] = $user;
+			}
+			$userIDs = implode( ',', $userArray );
+			if ( !empty( $userIDs ) ) {
+				$where[] = "r_user_id_to IN ($userIDs)";
+			}			
+		}
 
 		$res = $dbr->select(
 			'user_relationship',
@@ -839,6 +1026,26 @@ class UserActivity {
 
 		if ( !empty( $this->show_current_user ) ) {
 			$where['ub_user_id_from'] = $this->user_id;
+		}
+		if ( !empty( $this->show_following )){
+			$users = $dbr->select(
+				'user_user_follow',
+				array(
+					'f_target_user_id',
+				),
+				array(
+					'f_user_id' => $this->user_id,
+				),
+				__METHOD__
+			);
+			$userArray = array();
+			foreach ( $users as $user ) {
+				$userArray[] = $user;
+			}
+			$userIDs = implode( ',', $userArray );
+			if ( !empty( $userIDs ) ) {
+				$where[] = "ub_user_id_from IN ($userIDs)";
+			}			
 		}
 
 		$res = $dbr->select(
@@ -932,6 +1139,26 @@ class UserActivity {
 		if ( !empty( $this->show_current_user ) ) {
 			$where['um_user_id'] = $this->user_id;
 		}
+		if ( !empty( $this->show_following )){
+			$users = $dbr->select(
+				'user_user_follow',
+				array(
+					'f_target_user_id',
+				),
+				array(
+					'f_user_id' => $this->user_id,
+				),
+				__METHOD__
+			);
+			$userArray = array();
+			foreach ( $users as $user ) {
+				$userArray[] = $user;
+			}
+			$userIDs = implode( ',', $userArray );
+			if ( !empty( $userIDs ) ) {
+				$where[] = "um_user_id IN ($userIDs)";
+			}			
+		}
 
 		$res = $dbr->select(
 			'user_system_messages',
@@ -1010,6 +1237,26 @@ class UserActivity {
 
 		if ( $this->show_current_user ) {
 			$where['us_user_id'] = $this->user_id;
+		}
+		if ( !empty( $this->show_following )){
+			$users = $dbr->select(
+				'user_user_follow',
+				array(
+					'f_target_user_id',
+				),
+				array(
+					'f_user_id' => $this->user_id,
+				),
+				__METHOD__
+			);
+			$userArray = array();
+			foreach ( $users as $user ) {
+				$userArray[] = $user;
+			}
+			$userIDs = implode( ',', $userArray );
+			if ( !empty( $userIDs ) ) {
+				$where[] = "us_user_id IN ($userIDs)";
+			}			
 		}
 
 		$res = $dbr->select(
