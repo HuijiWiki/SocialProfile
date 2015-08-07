@@ -34,7 +34,7 @@ function getSiteActivity( $input, $args, $parser ) {
 		$data = $wgMemc->get( $key );
 		if ( !$data ) {
 			wfDebug( "Got site activity from DB\n" );
-			$rel = new UserActivity( '', 'FOLLOWING', $fixedLimit, $wgUser->getName() );
+			$rel = new UserActivity( $wgUser->getName(), 'FOLLOWING', $fixedLimit );
 
 			$rel->setActivityToggle( 'show_votes', 0 );
 			$activity = $rel->getActivityListGrouped();
