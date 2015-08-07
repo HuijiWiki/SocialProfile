@@ -185,6 +185,22 @@ class GenerateTopUsersReport extends SpecialPage {
 					}
 					$winners .= "[[{$localizedUserNS}:{$user['user_name']}|{$user['user_name']}]]";
 					$winner_count++;
+				}elseif ( $user['rank'] == 2 || $user['rank'] == 3 ) {
+					if( $period == 'weekly' ){
+						$systemGiftID = 11;
+					}elseif ( $period == 'monthly' ) {
+						$systemGiftID = 12;
+					}
+					$sg = new UserSystemGifts( $user['user_name'] );
+					$sg->sendSystemGift( $systemGiftID );
+				}else{
+					if( $period == 'weekly' ){
+						$systemGiftID = 11;
+					}elseif ( $period == 'monthly' ) {
+						$systemGiftID = 12;
+					}
+					$sg = new UserSystemGifts( $user['user_name'] );
+					$sg->sendSystemGift( $systemGiftID );
 				}
 			}
 		}
