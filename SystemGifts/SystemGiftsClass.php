@@ -22,7 +22,9 @@ class SystemGifts {
 		'gift_rec' => 11,
 		'points_winner_weekly' => 12,
 		'points_winner_monthly' => 13,
-		'quiz_points' => 14
+		'quiz_points' => 14,
+		'points_finalist_weekly' => 15,
+		'points_finalist_monthly' => 16
 	);
 
 	/**
@@ -181,17 +183,26 @@ class SystemGifts {
 		if ( isset( $this->categories[$category] ) ) {
 			$awardCategory = $this->categories[$category];
 		}
-
-		$s = $dbr->selectRow(
-			'system_gift',
-			array( 'gift_id' ),
-			array(
-				'gift_category' => $awardCategory,
-				'gift_threshold' => $threshold
-			),
-			__METHOD__
-		);
-
+		if ( $category == 'points_winner_weekly' || $category == 'points_winner_monthly' || $category == 'points_finalist_weekly' || $category == 'points_finalist_monthly' ){
+			$s = $dbr->selectRow(
+				'system_gift',
+				array( 'gift_id' ),
+				array(
+					'gift_category' => $awardCategory
+				),
+				__METHOD__
+			);
+		}else{
+			$s = $dbr->selectRow(
+				'system_gift',
+				array( 'gift_id' ),
+				array(
+					'gift_category' => $awardCategory,
+					'gift_threshold' => $threshold
+				),
+				__METHOD__
+			);
+		}		
 		if ( $s === false ) {
 			return false;
 		} else {

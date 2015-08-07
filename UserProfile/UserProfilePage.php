@@ -104,6 +104,8 @@ class UserProfilePage extends Article {
 		$uuf = new UserUserFollow();
 		$topFollowedSites = $usf->getTopFollowedSites( $this->user );
 		$temp = array();
+		$res = array();
+		$count = array();
 
 		foreach( $topFollowedSites as $key => $value ){
 			// if ( $wgUser->isLoggedIn() ) {
@@ -242,10 +244,13 @@ class UserProfilePage extends Article {
         	$Tname[] = $value['name'];
         	$Tcount[] = $value['count'];
         }
-        $num = ( count($Tname) > 3 )?3:count($Tname);
-        for ($i=0; $i < $num; $i++) { 
-           	$wgOut->addHTML('<li><a href="'.$Turl[$i].'">'.$Tname[$i].'</a></li>');
+        if(isset($Tname)){
+        	$num = ( count($Tname) > 3 )?3:count($Tname);
+	        for ($i=0; $i < $num; $i++) { 
+	           	$wgOut->addHTML('<li><a href="'.$Turl[$i].'">'.$Tname[$i].'</a></li>');
+	        }
         }
+        
         $wgOut->addHTML(' </ul>
 
         ');
