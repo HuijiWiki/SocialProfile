@@ -37,6 +37,15 @@ class SystemGifts {
 	public function getCategories() {
 		return $this->categories;
 	}
+	//unset the key which unneed
+	static function escapeRepeatableGift( $arr ){
+
+		$key = array( 'points_finalist_weekly', 'points_finalist_monthly', 'points_firstthree_weekly', 'points_firstthree_monthly', 'others' );
+		foreach ($key as $k) {
+			unset($arr[$k]);
+		}
+		return $arr;
+	}
 
 	/**
 	 * Adds awards for all registered users, updates statistics and purges
@@ -57,7 +66,7 @@ class SystemGifts {
 			__METHOD__,
 			array( 'ORDER BY' => 'gift_category, gift_threshold ASC' )
 		);
-
+		// $row = self::escapeRepeatableGift($row);
 		$x = 0;
 		foreach ( $res as $row ) {
 			if ( $row->gift_category ) {
