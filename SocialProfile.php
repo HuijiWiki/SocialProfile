@@ -242,7 +242,7 @@ require_once( "$IP/extensions/SocialProfile/UserGifts/Gifts.php" ); // UserGifts
 require_once( "$IP/extensions/SocialProfile/SystemGifts/SystemGifts.php" ); // SystemGifts (awards functionality) loader file
 require_once( "$IP/extensions/SocialProfile/UserBoard/UserBoard.php" ); // UserBoard loader file
 require_once( "$IP/extensions/SocialProfile/UserActivity/UserActivity.php" ); // UserActivity - recent social changes
-require_once( "$IP/extensions/SocialProfile/userEditRecord.php.php");
+require_once( "$IP/extensions/SocialProfile/userEditRecord.php");
 
 $wgHooks['CanonicalNamespaces'][] = 'SocialProfileHooks::onCanonicalNamespaces';
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'SocialProfileHooks::onLoadExtensionSchemaUpdates';
