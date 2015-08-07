@@ -20,7 +20,7 @@ function wfSiteActivity( &$parser ) {
 }
 
 function getSiteActivity( $input, $args, $parser ) {
-	global $wgMemc, $wgExtensionAssetsPath;
+	global $wgMemc, $wgExtensionAssetsPath, $wgUser;
 
 	$parser->disableCache();
 
@@ -29,19 +29,36 @@ function getSiteActivity( $input, $args, $parser ) {
 	// so that <siteactivity limit=5 /> will return 5 items instead of 4...
 	$fixedLimit = $limit + 1;
 
-	$key = wfMemcKey( 'site_activity', 'all', $fixedLimit );
-	$data = $wgMemc->get( $key );
-	if ( !$data ) {
-		wfDebug( "Got site activity from DB\n" );
-		$rel = new UserActivity( '', 'ALL', $fixedLimit );
+	if ($wgUser->isLoggedIn()){
+		$key = wfMemcKey( 'site_activity', 'FOLLOWING', $fixedLimit, $wgUser->getName() );
+		$data = $wgMemc->get( $key );
+		if ( !$data ) {
+			wfDebug( "Got site activity from DB\n" );
+			$rel = new UserActivity( $wgUser->getName(), 'FOLLOWING', $fixedLimit );
 
-		$rel->setActivityToggle( 'show_votes', 0 );
-		$activity = $rel->getActivityListGrouped();
-		$wgMemc->set( $key, $activity, 60 * 2 );
+			$rel->setActivityToggle( 'show_votes', 0 );
+			$activity = $rel->getActivityListGrouped();
+			$wgMemc->set( $key, $activity, 60 * 2 );
+		} else {
+			wfDebug( "Got site activity from cache\n" );
+			$activity = $data;
+		}		
 	} else {
-		wfDebug( "Got site activity from cache\n" );
-		$activity = $data;
+		$key = wfMemcKey( 'site_activity', 'ALL', $fixedLimit );
+		$data = $wgMemc->get( $key );
+		if ( !$data ) {
+			wfDebug( "Got site activity from DB\n" );
+			$rel = new UserActivity( '', 'ALL', $fixedLimit );
+
+			$rel->setActivityToggle( 'show_votes', 0 );
+			$activity = $rel->getActivityListGrouped();
+			$wgMemc->set( $key, $activity, 60 * 2 );
+		} else {
+			wfDebug( "Got site activity from cache\n" );
+			$activity = $data;
+		}		
 	}
+
 
 	$output = '';
 	if ( $activity ) {
