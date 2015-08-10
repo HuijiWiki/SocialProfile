@@ -192,7 +192,7 @@ class SystemGifts {
 		if ( isset( $this->categories[$category] ) ) {
 			$awardCategory = $this->categories[$category];
 		}
-		if ( $category == 'points_winner_weekly' || $category == 'points_winner_monthly' || $category == 'points_finalist_weekly' || $category == 'points_finalist_monthly' ){
+		if ( in_array( $awardCategory, $this->repeatableGifts ) ){
 			$s = $dbr->selectRow(
 				'system_gift',
 				array( 'gift_id' ),
@@ -227,6 +227,7 @@ class SystemGifts {
 	 */
 	static function getGift( $id ) {
 		$dbr = wfGetDB( DB_SLAVE );
+		$gift = array();
 		$res = $dbr->select(
 			'system_gift',
 			array(
