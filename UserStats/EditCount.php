@@ -31,7 +31,14 @@ function incEditCount( $article, $revision, $baseRevId ) {
 		$stats = new UserStatsTrack( $wgUser->getID(), $wgUser->getName() );
 		$stats->incStatField( 'edit' );
 	}
-
+	$dbr = wfGetDB( DB_SLAVE );
+	$counter = new SiteStatsInit( $dbr );
+	$num = $counter->edits();
+	$sg = SystemGifts::checkEditsCounts($num);
+	if($sg){
+		$usg = new UserSystemGifts( $wgUser->getName() );
+		$usg->sendSystemGift( 17 );
+	}
 	$key = wfForeignMemcKey( 'huiji', '', 'revision', 'high_edit_site_followed', $wgUser->getName(), $wgHuijiPrefix );
 	$wgMemc->incr( $key );
 	$key = wfForeignMemcKey( 'huiji', '', 'revision', 'last_edit_user', $article->getTitle()->getArticleId(), $wgHuijiPrefix );

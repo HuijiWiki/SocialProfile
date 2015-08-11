@@ -27,7 +27,7 @@ class SystemGifts {
 		'points_finalist_monthly' => 16,
 		'points_firstthree_weekly' => 17,
 		'points_firstthree_monthly' => 18,
-		'others' => 19
+		'42' => 19
 	);
 
 	private $repeatableGifts = array( 12, 13, 15, 16, 17, 18, 19 );
@@ -337,5 +337,36 @@ class SystemGifts {
 			$gift_count = $s->count;
 		}
 		return $gift_count;
+	}
+
+	/**
+	 *check if the total edits 42424242 
+	 */
+	static function checkEditsCounts( $num ){
+		$num = ''.$num;
+		$arr = str_split($num);
+		$x = 0;
+		foreach($arr as $val){
+		    if ($val == 4){
+		        if($x == 1){
+		            return false;
+		        }else{
+		            $x++;
+		        }
+		    }elseif($val == 2){
+		        if($x == 0){
+		            return false;
+		        }else{
+		            $x--;
+		        }        
+		    }elseif($val ==0){
+		        if($x == 1){
+		            return false;
+		        }
+		    }else{
+		        return false;
+		    }
+		}
+		return true;
 	}
 }
