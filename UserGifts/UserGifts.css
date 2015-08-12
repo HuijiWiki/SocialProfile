@@ -91,7 +91,8 @@
 }
 
 .g-description-container {
-	width: 480px;
+	max-width: 480px;
+	width : 100%;
 	margin: 20px 0px;
 }
 

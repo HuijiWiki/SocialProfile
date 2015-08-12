@@ -69,7 +69,8 @@
 }
 
 .ga-description-container {
-	width: 480px;
+	max-width: 480px;
+	width: 99%;
 	margin: 20px 0px;
 }
 
