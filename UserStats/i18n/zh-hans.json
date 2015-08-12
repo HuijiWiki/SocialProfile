@@ -18,5 +18,6 @@
     "top-fans-weekly-points-link": "周排行榜",
     "top-fans-monthly-points-link": "月排行榜",
     "topusers": "用户排行",
-	"level-advanced-to": "已升至第<span style=\"font-weight:800;\">$1</span>级"
+	"level-advanced-to": "已升至第<span style=\"font-weight:800;\">$1</span>级",
+	"top-fans-points": "公里"
 }
