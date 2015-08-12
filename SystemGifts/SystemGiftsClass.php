@@ -27,8 +27,10 @@ class SystemGifts {
 		'points_finalist_monthly' => 16,
 		'points_firstthree_weekly' => 17,
 		'points_firstthree_monthly' => 18,
-		'others' => 19
+		'42' => 19
 	);
+
+	private $repeatableGifts = array( 12, 13, 15, 16, 17, 18, 19 );
 
 	/**
 	 * Accessor for the private $categories variable; used by
@@ -37,6 +39,11 @@ class SystemGifts {
 	public function getCategories() {
 		return $this->categories;
 	}
+
+	public function getRepeatableGifts() {
+		return $this->repeatableGifts;
+	}
+
 
 	/**
 	 * Adds awards for all registered users, updates statistics and purges
@@ -57,10 +64,9 @@ class SystemGifts {
 			__METHOD__,
 			array( 'ORDER BY' => 'gift_category, gift_threshold ASC' )
 		);
-
 		$x = 0;
 		foreach ( $res as $row ) {
-			if ( $row->gift_category ) {
+			if ( $row->gift_category && !in_array( $row->gift_category, $this->repeatableGifts ) ) {
 				$res2 = $dbw->select(
 					'user_stats',
 					array( 'stats_user_id', 'stats_user_name' ),
@@ -186,7 +192,7 @@ class SystemGifts {
 		if ( isset( $this->categories[$category] ) ) {
 			$awardCategory = $this->categories[$category];
 		}
-		if ( $category == 'points_winner_weekly' || $category == 'points_winner_monthly' || $category == 'points_finalist_weekly' || $category == 'points_finalist_monthly' ){
+		if ( in_array( $awardCategory, $this->repeatableGifts ) ){
 			$s = $dbr->selectRow(
 				'system_gift',
 				array( 'gift_id' ),
@@ -221,6 +227,7 @@ class SystemGifts {
 	 */
 	static function getGift( $id ) {
 		$dbr = wfGetDB( DB_SLAVE );
+		$gift = array();
 		$res = $dbr->select(
 			'system_gift',
 			array(
@@ -330,5 +337,36 @@ class SystemGifts {
 			$gift_count = $s->count;
 		}
 		return $gift_count;
+	}
+
+	/**
+	 *check if the total edits 42424242 
+	 */
+	static function checkEditsCounts( $num ){
+		$num = ''.$num;
+		$arr = str_split($num);
+		$x = 0;
+		foreach($arr as $val){
+		    if ($val == 4){
+		        if($x == 1){
+		            return false;
+		        }else{
+		            $x++;
+		        }
+		    }elseif($val == 2){
+		        if($x == 0){
+		            return false;
+		        }else{
+		            $x--;
+		        }        
+		    }elseif($val ==0){
+		        if($x == 1){
+		            return false;
+		        }
+		    }else{
+		        return false;
+		    }
+		}
+		return true;
 	}
 }

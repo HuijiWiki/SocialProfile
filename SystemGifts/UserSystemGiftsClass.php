@@ -26,12 +26,12 @@ class UserSystemGifts {
 	 */
 	public function sendSystemGift( $gift_id, $email = true ) {
 		global $wgMemc;
-		// 
-		$repeatableGift = array( 1,2,3,4,5,6 );
-		if ( !in_array( $gift_id, $repeatableGift) || $this->doesUserHaveGift( $this->user_id, $gift_id ) ) {
-			return '';
+		$repeatableGift = array( 9, 10, 13, 14, 15, 16, 17 );
+		if(!in_array( $gift_id,$repeatableGift )){
+			if ( $this->doesUserHaveGift( $this->user_id, $gift_id ) ) {
+				return '';
+			}	
 		}
-
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->insert(
 			'user_system_gift',
