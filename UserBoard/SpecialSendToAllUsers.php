@@ -27,8 +27,8 @@ class SpecialsendToAllUsers extends UnlistedSpecialPage {
 		$request = $this->getRequest();
 		$user = $this->getUser();
 		// If the user doesn't have the required 'sendToAllUsers' permission, display an error
-		if ( !$user->isAllowed( 'sendToAllUsers' ) ) {
-			$out->permissionRequired( 'sendToAllUsers' );
+		if ( !$user->isAllowed( 'SendToAllUsers' ) ) {
+			$out->permissionRequired( 'SendToAllUsers' );
 			return;
 		}
 

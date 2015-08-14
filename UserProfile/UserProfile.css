@@ -860,12 +860,15 @@ span.span-color{
    float: right;
 }
 .profile-interactive>li{
-    display: inline;
+    display: inline-block;
     padding: 8px 10px;
     background: #f9f9f9;
     cursor: pointer;
     border: 1px solid #999;
     border-radius: 2px;
+}
+.profile-interactive .mw-ui-button{
+    min-width: 0;
 }
 .profile-interactive a{
     color: #333;
@@ -992,7 +995,7 @@ span.span-color{
     margin-bottom: 0!important;
  }
 #wiki-body ul.profile-interactive li{
-  line-height: 34px;
+  line-height: normal!important;
 }
 .user-page-message-form .form-group{
     margin-bottom: 0;
