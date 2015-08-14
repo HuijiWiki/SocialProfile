@@ -16,26 +16,26 @@ class ResponseGenerator{
 
 	public static function getJson($num){
 		switch ($num) {
-			case SUCCESS:
+			case self::SUCCESS:
 				$data = '{"success": true,"message": "'.wfMessage('socialprofile-success')->text().'"}';
 				return $data;
-			case ERROR_NOT_LOGGED_IN:
+			case self::ERROR_NOT_LOGGED_IN:
 				$data = '{
 			  		"success": false,"message": "'.wfMessage('socialprofile-error-not-logged-in')->text().'"}';
 				return $data;
-			case ERROR_BLOCKED:
+			case self::ERROR_BLOCKED:
 				$data = '{
 			  		"success": false,
 			  		"message": "'.wfMessage('socialprofile-error-blocked')->text()
 					.'"}';
 				return $data;
-			case ERROR_READ_ONLY:
+			case self::ERROR_READ_ONLY:
 				$data = '{
 			  		"success": false,
 			  		"message": "'.wfMessage('socialprofile-error-read_only')->text()
 					.'"}';
 				return $data;
-			case ERROR_NOT_ALLOWED:
+			case self::ERROR_NOT_ALLOWED:
 				$data = '{
 			  		"success": false,
 			  		"message": "'.wfMessage('socialprofile-error-not-allowed')->text()

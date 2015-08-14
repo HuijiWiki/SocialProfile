@@ -303,7 +303,6 @@ class UserUserFollow{
 		// $data = $wgMemc->get( $key );
 		$data = self::getFollowedByUserCache( $username );
 		if ( $data != '' ) {
-			wfDebug( "Got user count of $data ( User = {$username} ) from cache\n" );
 			return $data;
 		}else {
 			return self::getFollowedByUserDB( $username );
