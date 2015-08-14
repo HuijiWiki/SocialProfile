@@ -1089,14 +1089,16 @@ class UserProfilePage extends Article {
                       </div>
                     </div>';
 		// Show the user's level and the amount of points they have if
-		// UserLevels has been configured
+		// UserLevels has been configured contributions
+		$notice = SpecialPage::getTitleFor('ViewFollows');
+		$contributions = SpecialPage::getTitleFor('Contributions');
         $output .='<div>
 					    <ul class="user-follow-msg">
-					        <li><h5>编辑</h5><span>'.$stats_data['edits'].'</span></li>
+					        <li><h5>编辑</h5>'.Linker::link( $contributions, $stats_data['edits'], array(), array( 'target' => $user,'contribs' => 'user' ) ).'</li>
 					        <li><h4>|</h4></li>
-					        <li><h5>关注</h5><span id="user-followed-count">'.UserUserFollow::getFollowingCount(User::newFromName($user)).'</span></li>
+					        <li><h5>关注</h5>'.Linker::link( $notice, UserUserFollow::getFollowingCount(User::newFromName($user)), array(  'id' => 'user-following-count'  ), array( 'user' => $user,'rel_type' => 1 ) ).'</li>
 					        <li><h4>|</h4></li>
-					        <li><h5>被关注</h5><span id="user-following-count">'.UserUserFollow::getFollowerCount(User::newFromName($user)).'</span></li>
+					        <li><h5>被关注</h5>'.Linker::link( $notice, UserUserFollow::getFollowerCount(User::newFromName($user)), array( 'id' => 'user-follower-count' ), array( 'user' => $user,'rel_type' => 2 ) ).'</li>
                         </ul>
                         <div class="cleared"></div>
                     </div>

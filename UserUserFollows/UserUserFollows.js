@@ -26,9 +26,9 @@ function requestUserUserFollowsResponse( follower, followee, action,btn ) {
                 if (res.success){
                     btn.html('<a><i class="fa fa-minus-square-o"></i> 取关</a>');
                     btn.addClass('unfollow');
-                    var count = jQuery( '#user-following-count').html();
+                    var count = jQuery( '#user-follower-count').html();
                     count = parseInt(count)+1;
-                    jQuery( '#user-following-count').html(count.toString());
+                    jQuery( '#user-follower-count').html(count.toString());
                 }else{
                     alertime();
                     alertp.text(res.message);
@@ -49,12 +49,12 @@ function requestUserUserFollowsResponse( follower, followee, action,btn ) {
                 if (res.success){
                     btn.html('<a><i class="fa fa-plus-square-o"></i> 关注</a>');
                     btn.removeClass('unfollow');
-                    var count = btn.html();
+                    var count = jQuery( '#user-follower-count').html();
                     count = parseInt(count)-1;
                     if (count >= 0){
-                        jQuery( '#user-following-count').html(count.toString());
+                        jQuery( '#user-follower-count').html(count.toString());
                     }else{
-                        jQuery( '#user-following-count').html(0);
+                        jQuery( '#user-follower-count').html(0);
                     }
                 }else{
                     alertime();

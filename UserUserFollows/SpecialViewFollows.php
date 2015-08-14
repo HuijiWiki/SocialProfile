@@ -35,6 +35,7 @@ class SpecialViewFollows extends SpecialPage {
 	 * @param $params Mixed: parameter(s) passed to the page or null
 	 */
 	public function execute( $params ) {
+		global $wgUser;
 		$lang = $this->getLanguage();
 		$out = $this->getOutput();
 		$request = $this->getRequest();
@@ -123,7 +124,13 @@ class SpecialViewFollows extends SpecialPage {
 		$query1 = array('user' => $user_name, 'rel_type' => 1);
 		$query2 = array('user' => $user_name, 'rel_type' => 2);
 		$blast = SpecialPage::getTitleFor('SendBoardBlast');
-
+		if( $user_name == $wgUser->getName() ){
+			$noticestr = '关注我的人';
+			$noticedstr = '我关注的人';
+		}else{
+			$noticestr = '关注'.$user_name.'的人';
+			$noticedstr = $user_name.'关注的人';
+		}
 		if ( $rel_type == 1 ) {
 			$out->setPageTitle( $this->msg( 'ur-title-friend', $user_name )->parse() );
 
@@ -135,7 +142,7 @@ class SpecialViewFollows extends SpecialPage {
 			$output .= '<div class="back-links">
 			<a href="' . htmlspecialchars( $back_link->getFullURL() ) . '">' .
 				$this->msg( 'ur-backlink', $user_name )->parse() .
-			'</a> | '.Linker::LinkKnown($target, '关注我的人', array(), $query2).'
+			'</a> | '.Linker::LinkKnown($target, $noticestr, array(), $query2).'
 		</div>
 		<div class="relationship-wrapper"><div class="relationship-count">' .
 			$this->msg(
@@ -153,8 +160,11 @@ class SpecialViewFollows extends SpecialPage {
 			$output .= '<div class="back-links">
 			<a href="' . htmlspecialchars( $back_link->getFullURL() ) . '">' .
 				$this->msg( 'ur-backlink', $user_name )->parse() .
-			'</a> | '.Linker::LinkKnown($target, '我关注的人', array(), $query1).' | '.Linker::LinkKnown($blast, '向关注我的人群发信息').'
-		</div>
+			'</a> | '.Linker::LinkKnown($target, $noticedstr, array(), $query1);
+			if( $user_name == $wgUser->getName() ){
+				$output .='| '.Linker::LinkKnown($blast, '向关注我的人群发信息');
+			}
+		$output .= '</div>
 		<div class="relationship-wrapper"><div class="relationship-count">'
 			. $this->msg(
 				'ur-relationship-count-foes',
@@ -185,10 +195,8 @@ class SpecialViewFollows extends SpecialPage {
 				} else {
 					$followButton = '<li class="user-user-follow" data-username="'.$allinfo['username'].'"><i class="fa fa-plus-square-o"></i></i>关注</li> ';
 				}
-
 				$userPageURL = htmlspecialchars( $userPage->getFullURL() );
 				// $avatar = new wAvatar( $follow['user_id'], 'ml' );
-
 				// $avatar_img = $avatar->getAvatarURL();
 				$avatar_img = $allinfo['url'];
 				$user_gender = $allinfo['gender'];
@@ -229,7 +237,11 @@ class SpecialViewFollows extends SpecialPage {
 					$output .= '<div>'.$user_status.'</div>';
 				}
 				$output .= '<div>关注数:'.$user_count.' | 被关注:'.$user_counted.' | 编辑:'.$editcount.'</div>';
-				$output .= '<ul class="relationship-list-btn">'.$followButton;
+				if ( $allinfo['username'] != $wgUser->getName()){
+					$output .= '<ul class="relationship-list-btn">'.$followButton;
+				}else{
+					$output .= '<ul class="relationship-list-btn">';
+				}
 				$target = SpecialPage::getTitleFor( 'GiveGift' );
 				$query = array('user' => $follow['user_name']);
 				$output .= '<li>'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>礼物</a>', array(), $query).'</li> </ul>';

@@ -78,7 +78,7 @@ class TopUsersPoints extends SpecialPage {
 		$recent_title = SpecialPage::getTitleFor( 'TopUsersRecent' );
 
 		$output = '<div class="top-fan-nav">
-			<h1>' . $this->msg( 'top-fans-by-points-nav-header' )->plain() . '</h1>
+			<h3>' . $this->msg( 'top-fans-by-points-nav-header' )->plain() . '</h3>
 			<p><b>' . $this->msg( 'top-fans-total-points-link' )->plain() . '</b></p>';
 
 		if ( $wgUserStatsTrackWeekly ) {
@@ -140,15 +140,15 @@ class TopUsersPoints extends SpecialPage {
 			$commentIcon = $avatar->getAvatarURL();
 
 			// Break list into sections based on User Level if it's defined for this site
-			if ( is_array( $wgUserLevels ) ) {
-				$user_level = new UserLevel( number_format( $user['points'] ) );
-				if ( $user_level->getLevelName() != $last_level ) {
-					$output .= "<div class=\"top-fan-row\"><div class=\"top-fan-level\">
-						{$user_level->getLevelName()}
-						</div></div>";
-				}
-				$last_level = $user_level->getLevelName();
-			}
+			// if ( is_array( $wgUserLevels ) ) {
+			// 	$user_level = new UserLevel( number_format( $user['points'] ) );
+			// 	if ( $user_level->getLevelName() != $last_level ) {
+			// 		$output .= "<div class=\"top-fan-row\"><div class=\"top-fan-level\">
+			// 			{$user_level->getLevelName()}
+			// 			</div></div>";
+			// 	}
+			// 	$last_level = $user_level->getLevelName();
+			// }
 
 			$output .= "<div class=\"top-fan-row\">
 				<span class=\"top-fan-num\">{$x}.</span>
