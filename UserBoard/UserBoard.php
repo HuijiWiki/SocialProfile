@@ -10,3 +10,5 @@ $wgAvailableRights[] = 'SendToFollowers';
 $wgGroupPermissions['sysop']['SendToFollowers'] = true;
 $wgAvailableRights[] = 'SendToAllUsers';
 $wgGroupPermissions['staff']['SendToAllUsers'] = true;
+
+$wgJobClasses['boardBlastJobs'] = 'BoardBlastJobs';

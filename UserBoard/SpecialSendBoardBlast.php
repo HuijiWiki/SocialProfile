@@ -59,24 +59,11 @@ class SpecialBoardBlast extends UnlistedSpecialPage {
 
 		if ( $request->wasPosted() ) {
 			$out->setPageTitle( $this->msg( 'messagesenttitle' )->plain() );
-			$b = new UserBoard();
-
-			$count = 0;
+			$message = $request->getVal( 'message' );
 			$user_ids_to = explode( ',', $request->getVal( 'ids' ) );
-			foreach ( $user_ids_to as $user_id ) {
-				$user_to = User::newFromId( $user_id );
-				$user->loadFromId();
-				$user_name = $user_to->getName();
-				$b->sendBoardMessage(
-					$user->getID(),
-					$user->getName(),
-					$user_id,
-					$user_name,
-					$request->getVal( 'message' ),
-					1
-				);
-				$count++;
-			}
+			$jobParams = array( 'user_ids_to' => $user_ids_to, 'message' => $message );
+			$job = new BoardBlastJobs($this->getTitle(), $jobParams);
+			JobQueueGroup::singleton()->push( $job );
 			$output .= $this->msg( 'messagesentsuccess' )->plain();
 		} else {
 			$out->setPageTitle( $this->msg( 'boardblasttitle' )->plain() );

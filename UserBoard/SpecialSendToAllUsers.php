@@ -62,36 +62,11 @@ class SpecialsendToAllUsers extends UnlistedSpecialPage {
 
 		if ( $request->wasPosted() ) {
 			$out->setPageTitle( $this->msg( 'messagesenttitle' )->plain() );
-			$b = new UserBoard();
-
-			$count = 0;
+			$message = $request->getVal( 'message' );
 			$user_ids_to = explode( ',', $request->getVal( 'ids' ) );
-			$i = count($user_ids_to);
-			$per_num = 100;
-			$num = $i/$per_num;
-			$int_num = ceil($num);
-			for($k=1;$k<=$int_num;$k++){
-				$star = $per_num*($k-1);
-				$res_arr = array_slice($user_ids_to, $star, $per_num);
-				foreach ( $res_arr as $user_id ) {
-					$user_to = User::newFromId( $user_id );
-					$user->loadFromId();
-					$user_name = $user_to->getName();
-					$b->sendBoardMessage(
-						$user->getID(),
-						$user->getName(),
-						$user_id,
-						$user_name,
-						$request->getVal( 'message' ),
-						1
-					);
-					// $count++;
-				}
-				ob_flush();
-			    flush();
-			    sleep(2);
-			}
-			
+			$jobParams = array( 'user_ids_to' => $user_ids_to, 'message' => $message );
+			$job = new BoardBlastJobs($this->getTitle(), $jobParams);
+			JobQueueGroup::singleton()->push( $job );
 			$output .= $this->msg( 'messagesentsuccess' )->plain();
 		} else {
 			$out->setPageTitle( $this->msg( 'boardblasttitle' )->plain() );
@@ -167,4 +142,5 @@ class SpecialsendToAllUsers extends UnlistedSpecialPage {
 
 		return $output;
 	}
+
 }
