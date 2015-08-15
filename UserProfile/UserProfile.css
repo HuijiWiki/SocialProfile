@@ -997,6 +997,12 @@ span.span-color{
 #wiki-body ul.profile-interactive li{
   line-height: normal!important;
 }
+.profile-interactive #user-user-follow{
+    width: auto;
+    padding: 8px 10px;
+    height: auto;
+    margin-bottom: 10px!important;
+}
 .user-page-message-form .form-group{
     margin-bottom: 0;
 }
