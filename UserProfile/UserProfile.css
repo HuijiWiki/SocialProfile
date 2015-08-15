@@ -691,6 +691,9 @@
     word-wrap: break-word;
     word-break: break-all;
 }
+.profile-page{
+    padding-top:50px;
+}
 @media screen and (min-width: 768px) {
     .profile-page .jumbotron {
         padding:30px 50px!important;
