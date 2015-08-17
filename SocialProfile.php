@@ -365,6 +365,7 @@ $wgResourceModules['ext.guidedTour.tour.newuser'] = array(
 		'guidedtour-tour-firstedit-save-description',
 		'guidedtour-tour-firstedit-save-title',
 		'guidedtour-tour-firsteditve-save-description',
+		'guidedtour-tour-firstedit-save-description',
 	),
         // localBasePath and remoteExtPath should match what your extension normally uses.
 	'localBasePath' => __DIR__ . '/resources',
