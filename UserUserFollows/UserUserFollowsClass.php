@@ -331,6 +331,7 @@ class UserUserFollow{
 			),
 			__METHOD__
 		);
+		$req = array();
 		foreach ($res as $value) {
 			$req[] = $value->f_target_user_name;
 		}

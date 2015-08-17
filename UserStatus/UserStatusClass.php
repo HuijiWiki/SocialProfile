@@ -241,11 +241,14 @@ class UserStatus{
 			$cfollow = array();
 			$t_user = $this->username;
 			$ufollower = UserUserFollow::getFollowedByUser( $t_user );
-
-			foreach ($follower as $valuea) {
-				if(in_array($valuea, $ufollower)){
-					$cfollow[] = $valuea; 
+			if($ufollower != null){
+				foreach ($follower as $valuea) {
+					if(in_array($valuea, $ufollower)){
+						$cfollow[] = $valuea; 
+					}
 				}
+			} else {
+				$cfollow = array();
 			}
 			$result['commonfollow'] = $cfollow;
 			//我关注的谁也关注他
