@@ -19,6 +19,8 @@ class BoardBlastJobs extends Job {
 
 		$user_ids_to = $this->params['user_ids_to'];
 		$message = $this->params['message'];
+		$sender = $this->params['sender'];
+		$user = User::newFromId($sender);
 		$b = new UserBoard();
 		$count = 0;
 		$i = count($user_ids_to);
