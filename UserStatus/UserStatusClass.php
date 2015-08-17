@@ -127,7 +127,8 @@ class UserStatus{
 			
 		}
 		$wgMemc->set( $key, $data );
-		return data;
+		return $data;
+	}
 		
     /**
      * GET ALL INFO FROM CACHE
