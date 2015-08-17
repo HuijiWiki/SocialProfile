@@ -509,7 +509,6 @@ class UserSiteFollow{
 	public static function getSiteFollowedUser( $user,$sitename ) {
 		$data = self::getSiteFollowedUserCache( $user,$sitename );
 		if ( $data != '' ) {
-			wfDebug( "Got user count of $data ( User = {$user} ) from cache\n" );
 			return $data;
 		}else {
 			return self::getSiteFollowedUserDB( $user,$sitename );
@@ -520,7 +519,6 @@ class UserSiteFollow{
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'site_followed_list', $sitename );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
-			wfDebug( "Got top followed $data ( User = {$user} ) from cache\n" );
 			return $data;
 		}
 	}

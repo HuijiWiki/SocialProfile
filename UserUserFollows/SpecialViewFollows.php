@@ -114,7 +114,7 @@ class SpecialViewFollows extends SpecialPage {
 		 * Get all relationships
 		 */
 		$uuf = new UserUserFollow();
-		$follows = $uuf->getFollowList( $target_user, $rel_type, $perpage, $page);
+		$follows = $uuf->getFollowList( $target_user, $rel_type, $per_page, $page);
 		$star_page = $per_page*($page-1);
 		$per_follow = array_slice($follows,$star_page ,$per_page );
 		$followerCount = UserUserFollow::getFollowerCount($target_user);

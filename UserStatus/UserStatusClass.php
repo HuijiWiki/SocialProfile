@@ -100,23 +100,35 @@ class UserStatus{
 			),
 			__METHOD__
 		);
-		$data = '{"name":"'
-			.$this->user->getName()
-			.'","gender":"'
-			.$gender
-			.'","province":"'
-			.$res->up_location_state
-			.'","city":"'
-			.$res->up_location_city
-			.'","birthday":"'
-			.$res->up_birthday
-			.'","status":"'
-			.$res->up_about
-			.'"}';
-
+		if ($res != null){
+			$data = '{"name":"'
+				.$this->user->getName()
+				.'","gender":"'
+				.$gender
+				.'","province":"'
+				.$res->up_location_state
+				.'","city":"'
+				.$res->up_location_city
+				.'","birthday":"'
+				.$res->up_birthday
+				.'","status":"'
+				.$res->up_about
+				.'"}';
+		} else {
+			$data = '{"name":"'
+				.$this->user->getName()
+				.'","gender":"'
+				.$gender
+				.'","province":"'
+				.'","city":"'
+				.'","birthday":"'
+				.'","status":"'
+				.'"}';
+			
+		}
 		$wgMemc->set( $key, $data );
-		return $data;
-	}
+		return data;
+		
     /**
      * GET ALL INFO FROM CACHE
      * @param user User object
