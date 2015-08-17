@@ -6,7 +6,7 @@
 class BoardBlastJobs extends Job {
 	public function __construct( $title, $params ) {
 		// Replace synchroniseThreadArticleData with an identifier for your job.
-		parent::__construct( 'boardBlastJob', $title, $params );
+		parent::__construct( 'boardBlastJobs', $title, $params );
 	}
 	/**
 	 * Execute the job
@@ -14,7 +14,6 @@ class BoardBlastJobs extends Job {
 	 * @return bool
 	 */
 	public function run() {
-		global $wgMemc;
 		// Load data from $this->params and $this->title
 		$article = new WikiPage( $this->title );
 
