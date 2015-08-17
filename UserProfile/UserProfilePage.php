@@ -1770,7 +1770,7 @@ class UserProfilePage extends Article {
 		$data = $wgMemc->get( $sg_key );
 		if ( !$data ) {
 			wfDebug( "Got profile awards for user {$user_name} from DB\n" );
-			$system_gifts = $sg->getUserGiftList( 0, 4 );
+			$system_gifts = $sg->getUserGiftList( 0, 5 );
 			$wgMemc->set( $sg_key, $system_gifts, 60 * 60 * 4 );
 		} else {
 			wfDebug( "Got profile awards for user {$user_name} from cache\n" );
@@ -1779,7 +1779,7 @@ class UserProfilePage extends Article {
 
 		$system_gift_count = $sg->getGiftCountByUsername( $user_name );
 		$system_gift_link = SpecialPage::getTitleFor( 'ViewSystemGifts' );
-		$per_row = 4;
+		$per_row = 5;
 
 		if ( $system_gifts ) {
 			$x = 1;
@@ -1790,14 +1790,14 @@ class UserProfilePage extends Article {
 				'</div>
 				<div class="user-section-actions">
 					<div class="action-right">';
-			if ( $system_gift_count > 4 ) {
+			if ( $system_gift_count > 5 ) {
 				$output .= '<a href="' . htmlspecialchars( $system_gift_link->getFullURL( 'user=' . $user_name ) ) . '" rel="nofollow">' .
 					wfMessage( 'user-view-all' )->escaped() . '</a>';
 			}
 			$output .= '</div>
 					<div class="action-left">';
-			if ( $system_gift_count > 4 ) {
-				$output .= wfMessage( 'user-count-separator', '4', $system_gift_count )->escaped();
+			if ( $system_gift_count > 5 ) {
+				$output .= wfMessage( 'user-count-separator', '5', $system_gift_count )->escaped();
 			} else {
 				$output .= wfMessage( 'user-count-separator', $system_gift_count, $system_gift_count )->escaped();
 			}

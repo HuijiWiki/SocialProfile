@@ -116,7 +116,7 @@ class ViewSystemGifts extends SpecialPage {
 						$rel->clearUserGiftStatus( $gift['id'] );
 						$rel->decNewSystemGiftCount( $user->getID() );
 					}
-					$output .= '<span class="ga-new">' .
+					$output .= '&nbsp<span class="label label-success">' .
 						$this->msg( 'ga-new' )->plain() . '</span>';
 				}
 

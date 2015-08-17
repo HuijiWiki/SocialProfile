@@ -19,5 +19,7 @@
     "top-fans-monthly-points-link": "月排行榜",
     "topusers": "用户排行",
 	"level-advanced-to": "已升至第<span style=\"font-weight:800;\">$1</span>级",
-	"top-fans-points": "公里"
+	"top-fans-points": "公里",
+	"generatetopusersreport": "生成用户排行报告",
+	"user-stats-report-points":"$1 公里"
 }
