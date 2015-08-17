@@ -1783,7 +1783,6 @@ class UserProfilePage extends Article {
 
 		if ( $system_gifts ) {
 			$x = 1;
-
 			$output .= '<div class="panel panel-default"><div class="user-section-heading panel-heading">
 				<div class="user-section-title">' .
 					wfMessage( 'user-awards-title' )->escaped() .

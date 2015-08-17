@@ -35,10 +35,24 @@ function incEditCount( $article, $revision, $baseRevId ) {
 	$counter = new SiteStatsInit( $dbr );
 	$num = $counter->edits();
 	$sg = SystemGifts::checkEditsCounts($num);
+	$usg = new UserSystemGifts( $wgUser->getName() );
 	if($sg){
-		$usg = new UserSystemGifts( $wgUser->getName() );
 		$usg->sendSystemGift( 17 );
 	}
+	//7xi rem del next day
+	$nowTime = time();
+	$sevenxi = strtotime("2015-08-20 00:00:00");
+	if($now >= $sevenxi){
+		$dayCount = SystemGifts::getOneDayPageEditCountOnAllWikisFromUserId( $wgUser->getId() );
+		if ($dayCount == 1) {
+			$usg->sendSystemGift( 19 );
+		}elseif ($dayCount == 7) {
+			$usg->sendSystemGift( 17 );
+		}elseif ($dayCount == 77) {
+			$usg->sendSystemGift( 16 );
+		}
+	}
+
 	$key = wfForeignMemcKey( 'huiji', '', 'revision', 'high_edit_site_followed', $wgUser->getName(), $wgHuijiPrefix );
 	$wgMemc->incr( $key );
 	$key = wfForeignMemcKey( 'huiji', '', 'revision', 'last_edit_user', $article->getTitle()->getArticleId(), $wgHuijiPrefix );
