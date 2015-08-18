@@ -34,22 +34,24 @@ function incEditCount( $article, $revision, $baseRevId ) {
 	$dbr = wfGetDB( DB_SLAVE );
 	$counter = new SiteStatsInit( $dbr );
 	$num = $counter->edits();
+	// $num = 4242;
 	$sg = SystemGifts::checkEditsCounts($num);
 	$usg = new UserSystemGifts( $wgUser->getName() );
 	if($sg){
 		$usg->sendSystemGift( 17 );
 	}
-	//7xi rem del next day
+	//7xi gift-- del next day
 	$nowTime = time();
-	$sevenxi = strtotime("2015-08-20 00:00:00");
-	if($now >= $sevenxi){
+	$sevenXi = strtotime("2015-08-20 00:00:00");
+	$endTime = strtotime("2015-08-21 00:00:00");
+	if( $nowTime >= $sevenXi && $nowTime < $endTime ){
 		$dayCount = SystemGifts::getOneDayPageEditCountOnAllWikisFromUserId( $wgUser->getId() );
 		if ($dayCount == 1) {
-			$usg->sendSystemGift( 19 );
+			$usg->sendSystemGift( 30 );
 		}elseif ($dayCount == 7) {
-			$usg->sendSystemGift( 17 );
+			$usg->sendSystemGift( 31 );
 		}elseif ($dayCount == 77) {
-			$usg->sendSystemGift( 16 );
+			$usg->sendSystemGift( 32 );
 		}
 	}
 
