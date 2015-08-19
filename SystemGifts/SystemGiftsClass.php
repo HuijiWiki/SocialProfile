@@ -346,6 +346,10 @@ class SystemGifts {
 	static function checkEditsCounts( $num ){
 		$num = ''.$num;
 		$arr = str_split($num);
+		$arrlen = count($arr);
+		if( $arr[$arrlen-1] == 4 ){
+			return false;
+		}
 		$x = 0;
 		foreach($arr as $val){
 		    if ($val == 4){
