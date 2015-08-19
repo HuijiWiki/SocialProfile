@@ -61,7 +61,7 @@ class SpecialBoardBlast extends UnlistedSpecialPage {
 			$out->setPageTitle( $this->msg( 'messagesenttitle' )->plain() );
 			$message = $request->getVal( 'message' );
 			$user_ids_to = explode( ',', $request->getVal( 'ids' ) );
-			$jobParams = array( 'user_ids_to' => $user_ids_to, 'message' => $message );
+			$jobParams = array( 'user_ids_to' => $user_ids_to, 'message' => $message, 'sender' => $user->getId() );
 			$job = new BoardBlastJobs($this->getTitle(), $jobParams);
 			JobQueueGroup::singleton()->push( $job );
 			$output .= $this->msg( 'messagesentsuccess' )->plain();
