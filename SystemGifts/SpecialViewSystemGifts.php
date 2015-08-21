@@ -35,6 +35,9 @@ class ViewSystemGifts extends SpecialPage {
 
 		$output = '';
 		$user_name = $request->getVal( 'user' );
+		if ($user_name) {
+			$user_current = User::newFromName( $user_name );
+		}
 		$page = $request->getInt( 'page', 1 );
 
 		/**
@@ -87,7 +90,7 @@ class ViewSystemGifts extends SpecialPage {
 		$output .= '<div class="back-links">' .
 			$this->msg(
 				'ga-back-link',
-				htmlspecialchars( $user->getUserPage()->getFullURL() ),
+				htmlspecialchars( $user_current->getUserPage()->getFullURL() ),
 				$rel->user_name
 			)->text() . '</div>';
 
