@@ -28,7 +28,11 @@ class UserSystemGifts {
 		global $wgMemc;
 		$g = new SystemGifts();
 		$repeatableGift = $g->getRepeatableGifts();
-		if(!in_array( $gift_id,$repeatableGift )){
+		$gift_info = SystemGifts::getGift( $gift_id );
+		if( $gift_info ){
+			$gift_category = $gift_info['gift_category'];
+		}
+		if(!in_array( $gift_category,$repeatableGift )){
 			if ( $this->doesUserHaveGift( $this->user_id, $gift_id ) ) {
 				return '';
 			}	
