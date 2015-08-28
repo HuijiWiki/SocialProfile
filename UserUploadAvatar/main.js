@@ -67,7 +67,7 @@
 
     initTooltip: function () {
       this.$avatarView.tooltip({
-        placement: 'bottom'
+        placement: 'top'
       });
     },
 

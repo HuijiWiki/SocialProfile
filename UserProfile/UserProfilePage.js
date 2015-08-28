@@ -135,7 +135,7 @@ jQuery( document ).ready( function() {
 		UserProfilePage.deleteMessage( jQuery( this ).data( 'message-id' ) );
 	} );
 
-    $('.upload-tool').tooltip();
+
 
     //修改个人资料
     $(".form-change").click(function(){
