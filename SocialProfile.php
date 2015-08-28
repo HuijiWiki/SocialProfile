@@ -77,6 +77,7 @@ $wgAutoloadClasses['UserUserFollow'] = __DIR__ . '/UserUserFollows/UserUserFollo
 $wgAutoloadClasses['UserStatus'] = __DIR__ . '/UserStatus/UserStatusClass.php';
 $wgAutoloadClasses['HuijiPrefix'] = __DIR__ . '/HuijiPrefixClass.php';
 $wgAutoloadClasses['ResponseGenerator'] = __DIR__ . '/ResponseGeneratorClass.php';
+$wgAutoloadClasses['CropAvatar'] = __DIR__ . '/UserUploadAvatar/crop.php';
 
 // New special pages
 $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';

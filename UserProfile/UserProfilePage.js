@@ -135,14 +135,8 @@ jQuery( document ).ready( function() {
 		UserProfilePage.deleteMessage( jQuery( this ).data( 'message-id' ) );
 	} );
 
-    //Upload img
-    $(".profile-image-container").on('mouseenter',function(){
-        var wrap = "<div class='upload-img-wrap'><a href='/wiki/Special:UploadAvatar'>上传头像</a></div>"
-        $(this).append(wrap);
-    });
-    $(".profile-image-container").on('mouseleave',function(){
-        $(".profile-image-container .upload-img-wrap").remove();
-    });
+    $('.upload-tool').tooltip();
+
     //修改个人资料
     $(".form-change").click(function(){
         var location = $(".form-location").text();
@@ -319,4 +313,5 @@ jQuery( document ).ready( function() {
             }
         );
     });
+
 });

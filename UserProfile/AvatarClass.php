@@ -53,6 +53,17 @@ class wAvatar {
 		}
 		return $avatar_filename;
 	}
+	/**
+	 * Fetches the avatar image's name from the filesystem
+	 * @return Avatar image's file name (i.e. default_l.gif or wikidb_3_l.jpg;
+	 *			first part for non-default images is the database name, second
+	 *			part is the user's ID number and third part is the letter for
+	 *			image size (s, m, ml or l)
+	 */
+	function getAvatarUrlPath() {
+		return '/uploads/avatars/'.$this->getAvatarImage();
+	}
+
 
 	/**
 	 * @param Array $extraParams: array of extra parameters to give to the image
