@@ -167,12 +167,14 @@
 	margin: 0px 20px 0px 0px;
 }
 
-#profile-image img {
+#profile-image .avatar-view>img {
 	border: 1px solid #dcdcdc;
-	background-color: #fff;
-	padding: 3px;
-    margin-right: 10px;
+    background-color: #fff;
+    padding: 3px;
     cursor: pointer;
+}
+#profile-image .upload-tool{
+    margin-right: 10px;
 }
 
 #profile-right {
@@ -681,7 +683,7 @@
 #profile-title{
     font-size: 24px;
 }
-.jumbotron h1 img{
+.jumbotron h1 .avatar-view img{
     top: 0!important;
     width: 100px;
     height: 100px;
@@ -952,7 +954,7 @@ span.span-color{
     .user-follow-msg li{
         margin-right:4px;
     }
-    #profile-image,#profile-image img{
+    #profile-image,#profile-image .upload-tool{
         margin-right: 0;
     }
     span.span-color{
