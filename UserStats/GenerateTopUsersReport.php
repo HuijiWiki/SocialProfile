@@ -141,12 +141,16 @@ class GenerateTopUsersReport extends SpecialPage {
 				$last_rank = $x;
 				$last_total = $row->stats_total_points;
 				$x++;
-				$users[] = array(
-					'user_id' => $row->stats_user_id,
-					'user_name' => $row->stats_user_name,
-					'points' => $row->stats_total_points,
-					'rank' => $rank
-				);
+				$userObj = User::newFromId( $row->stats_user_id );
+                $user_group = $userObj->getEffectiveGroups();
+				if ( !in_array('bot', $user_group) && !in_array('bot-global',$user_group)  ) {
+					$users[] = array(
+						'user_id' => $row->stats_user_id,
+						'user_name' => $row->stats_user_name,
+						'points' => $row->stats_total_points,
+						'rank' => $rank
+					);
+				}
 			}
 		} else {
 			$output = '<div class="top-users">';
@@ -160,12 +164,16 @@ class GenerateTopUsersReport extends SpecialPage {
 				$last_rank = $x;
 				$last_total = $row->up_points;
 				$x++;
-				$users[] = array(
-					'user_id' => $row->up_user_id,
-					'user_name' => $row->up_user_name,
-					'points' => $row->up_points,
-					'rank' => $rank
-				);
+				$userObj = User::newFromId( $row->up_user_id );
+                $user_group = $userObj->getEffectiveGroups();
+				if ( !in_array('bot', $user_group) && !in_array('bot-global',$user_group)  ) {
+					$users[] = array(
+						'user_id' => $row->up_user_id,
+						'user_name' => $row->up_user_name,
+						'points' => $row->up_points,
+						'rank' => $rank
+					);
+				}
 			}
 		}
 

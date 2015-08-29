@@ -72,11 +72,15 @@ class TopFansRecent extends UnlistedSpecialPage {
 			);
 
 			foreach ( $res as $row ) {
-				$user_list[] = array(
-					'user_id' => $row->up_user_id,
-					'user_name' => $row->up_user_name,
-					'points' => $row->up_points
-				);
+				$userObj = User::newFromId( $row->up_user_id );
+                $user_group = $userObj->getEffectiveGroups();
+				if ( !in_array('bot', $user_group) && !in_array('bot-global',$user_group)  ) {
+					$user_list[] = array(
+						'user_id' => $row->up_user_id,
+						'user_name' => $row->up_user_name,
+						'points' => $row->up_points
+					);
+				}
 			}
 
 			$wgMemc->set( $key, $user_list, 60 * 5 );
