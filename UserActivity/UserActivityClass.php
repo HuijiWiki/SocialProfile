@@ -177,11 +177,12 @@ class UserActivity {
 				$where[] = "rc_user IN ($userIDs)";
 			}			
 		}
+		$tables = $this->getAllRecentChangesTables();
 		$oldDBprefix = $wgDBprefix;
 		$wgDBprefix = ''; 
 
 		$res = $dbr->select(
-			$this->getAllRecentChangesTables(),
+			$tables,
 			array(
 				'UNIX_TIMESTAMP(rc_timestamp) AS item_date', 'rc_title',
 				'rc_user', 'rc_user_text', 'rc_comment', 'rc_id', 'rc_minor',
