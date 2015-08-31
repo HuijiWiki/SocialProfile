@@ -245,7 +245,8 @@ class UserActivity {
 					'prefix' => $table
 				);
 				// set prefix
-				if (!in_array($table, $this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['prefix'])){
+				if ($this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['prefix'] == null 
+					|| !in_array($table, $this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['prefix'])){
 					$this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['prefix'][] = $table;
 				}
 			}
@@ -262,6 +263,7 @@ class UserActivity {
 	 * appropriate class member variables.
 	 */
 	private function setUserSiteFollows() {
+		global $wgLang;
 		$dbr = wfGetDB( DB_SLAVE );
 
 		$where = array();
@@ -364,6 +366,7 @@ class UserActivity {
 	 * appropriate class member variables.
 	 */
 	private function setUserUserFollows() {
+		global $wgLang;
 		$dbr = wfGetDB( DB_SLAVE );
 
 		$where = array();
