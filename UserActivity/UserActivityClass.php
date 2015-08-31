@@ -324,6 +324,22 @@ class UserActivity {
 		);
 
 		foreach ( $res as $row ) {
+			$user_name_short = $wgLang->truncate( $row->f_user_name, 25 );
+			$this->items_grouped['user_user_follow'][$row->f_wiki_domain]['users'][$row->f_user_name][] = array(
+				'id' => $row->f_id,
+				'type' => 'user_user_follow',
+				'timestamp' => $row->item_date,
+				'pagetitle' => '',
+				'namespace' => '',
+				'username' => $user_name_short,
+				'userid' => $row->f_user_id,
+				'comment' => '',
+				'site' => $row->f_wiki_domain,
+				'minor' => 0,
+				'new' => 0
+			);
+			// set last timestamp
+			$this->items_grouped['user_user_follow'][$row->f_wiki_domain]['timestamp'] = $row->item_date;
 			$this->items[] = array(
 				'id' => 0,
 				'type' => 'user_site_follow',
@@ -410,6 +426,23 @@ class UserActivity {
 		);
 
 		foreach ( $res as $row ) {
+			$user_name_short = $wgLang->truncate( $row->f_user_name, 25 );
+			$this->items_grouped['user_user_follow'][$row->f_target_user_name]['users'][$row->f_user_name][] = array(
+				'id' => $row->f_id,
+				'type' => 'user_user_follow',
+				'timestamp' => $row->item_date,
+				'pagetitle' => '',
+				'namespace' => '',
+				'username' => $user_name_short,
+				'userid' => $row->f_user_id,
+				'comment' => $row->f_target_user_name,
+				'minor' => 0,
+				'new' => 0
+			);
+			// set last timestamp
+			$this->items_grouped['user_user_follow'][$row->f_target_user_name]['timestamp'] = $row->item_date;
+
+
 			$this->items[] = array(
 				'id' => 0,
 				'type' => 'user_user_follow',
@@ -1641,6 +1674,12 @@ class UserActivity {
 		if ( $this->show_messages_sent ) {
 			$this->simplifyPageActivity( 'user_message' );
 		}
+		if ( $this->show_user_user_follows ) {
+			$this->simplifyPageActivity( 'user_user_follow' );
+		}
+		if ( $this->show_user_site_follows ) {
+			$this->simplifyPageActivity( 'user_site_follow' );
+		}
 
 		if ( !isset( $this->activityLines ) ) {
 			$this->activityLines = array();
@@ -1668,11 +1707,13 @@ class UserActivity {
 			$users = '';
 			$pages = '';
 
-			if ( $type == 'friend' || $type == 'foe' || $type == 'user_message' ) {
+			if ( $type == 'friend' || $type == 'foe' || $type == 'user_message' || $type == 'user_user_follow') {
 				$page_title = Title::newFromText( $page_name, NS_USER );
+			} elseif ($type = 'user_site_follow'){
+				$page_title = Title::newFromText( $page_name.':' );
 			} else {
 				$page_title = Title::newFromText( $page_name );
-			}
+			} 
 
 			$count_users = count( $page_data['users'] );
 			$user_index = 0;
@@ -1738,6 +1779,7 @@ class UserActivity {
 										)->text() . ')';
 									}
 									$pages_count++;
+									$page_data['prefix'] = array_merge($page_data['prefix'], $page_data2['prefix']);
 
 									$this->displayed[$type][$page_name2] = 1;
 								}

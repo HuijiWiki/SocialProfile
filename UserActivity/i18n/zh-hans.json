@@ -21,6 +21,8 @@
 	"useractivity-user_message": "$1向$3{{PLURAL:$4|发送了1条信息|发送了信息}}",
 	"user-board-title": "留言墙",
     "useractivity-comment": "$1 {{PLURAL:$4|评论了页面|评论了以下页面:}} $3",
-    "useractivity-domain-creation":"$1创建了$2"
+    "useractivity-domain-creation":"$1创建了$2",
+    "useractivity-user_user_follow":"$1{{PLURAL:$2|关注了|关注了}}$3",
+    "useractivity-user_site_follow":"$1{{PLURAL:$2|关注了|关注了}}$3"
 
 }
