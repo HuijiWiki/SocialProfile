@@ -131,7 +131,7 @@ class UserActivity {
 	 * appropriate class member variables.
 	 */
 	private function setEdits() {
-		global $wgDBprefix;
+		global $wgDBprefix, $wgDBname;
 
 		$dbr = wfGetDB( DB_SLAVE );
 
@@ -181,6 +181,7 @@ class UserActivity {
 		}
 		$tables = $this->getAllRecentChangesTables();
 		$oldDBprefix = $wgDBprefix;
+		$oldDB = $wgDBname;
 		$dbr->tablePrefix('');
 		foreach ($tables as $table){
 			if ( $table == 'www'){
@@ -253,7 +254,7 @@ class UserActivity {
 
 		}
 		$dbr->tablePrefix($oldDBprefix);
-
+		$dbr->selectDB($oldDB);
 
 	}
 
