@@ -77,10 +77,14 @@ class UserActivity {
 		$this->$name = $value;
 	}
 
-	private function getAllRecentChangesTables(){
+	/**
+	 * return a join argument for setEdits().
+	 *
+	 */
+	private function getAllRecentChangesJoinConds(){
 		global $wgHuijiPrefix;
 		$dbr = wfGetDB( DB_SLAVE );
-		$values = $dbr->selectFieldValues(
+		$values = $dbr->selectField(
 			'domain',
 			'domain_prefix',
 			'domain_status = 0',
@@ -96,6 +100,31 @@ class UserActivity {
 			$tables[$thatname] = array( 'INNER JOIN', array("{$thatname}.rc_user={$thisname}.rc_user"));
 		}
 		return $tables;
+	}
+	/**
+	 * return a join argument for setEdits().
+	 *
+	 */
+	private function getAllRecentChangesTables(){
+		global $wgHuijiPrefix;
+		$dbr = wfGetDB( DB_SLAVE );
+		$values = $dbr->selectFieldValues(
+			'domain',
+			'domain_prefix',
+			'domain_status = 0',
+			__METHOD__
+		);
+		return $values;
+		// $tables = array();
+		// foreach( $values as $value ){
+		// 	if ($value == $wgHuijiPrefix){
+		// 		continue;
+		// 	}
+		// 	$thatname = $value.'recentchanges';
+		// 	$thisname = $wgHuijiPrefix.'recentchanges';
+		// 	$tables[$thatname] = array( 'INNER JOIN', array("{$thatname}.rc_user={$thisname}.rc_user"));
+		// }
+		// return $tables;
 	}
 
 	/**
@@ -152,7 +181,7 @@ class UserActivity {
 		}
 
 		$res = $dbr->select(
-			'recentchanges',
+			$this->getAllRecentChangesTables(),
 			array(
 				'UNIX_TIMESTAMP(rc_timestamp) AS item_date', 'rc_title',
 				'rc_user', 'rc_user_text', 'rc_comment', 'rc_id', 'rc_minor',
