@@ -57,8 +57,8 @@ class TopUsersPoints extends SpecialPage {
 
 			foreach ( $res as $row ) {
 				$user = User::newFromId( $row->stats_user_id );
-
-				if ( !$user->isBlocked() ) {
+                $user_group = $user->getEffectiveGroups();
+				if ( !$user->isBlocked() && !in_array('bot', $user_group) && !in_array('bot-global',$user_group)  ) {
 					$user_list[] = array(
 						'user_id' => $row->stats_user_id,
 						'user_name' => $row->stats_user_name,
