@@ -1545,7 +1545,7 @@ class UserProfilePage extends Article {
 				}
 
 				$page_link = '<b><a href="' . htmlspecialchars( $title->getFullURL() ) .
-					"{$comment_url}\">" . $title->getPrefixedText() . '</a></b> ';
+					"{$comment_url}\">" . $title->getText() . '</a></b> ';
 				$b = new UserBoard(); // Easier than porting the time-related functions here
 				$item_time = '<span class="item-small">' .
 					wfMessage( 'user-time-ago', $b->getTimeAgo( $item['timestamp'] ) )->escaped() .
