@@ -85,7 +85,7 @@ class UserActivity {
 		global $wgHuijiPrefix;
 		$dbr = wfGetDB( DB_SLAVE );
 		$values = $dbr->selectField(
-			'huiji-domain',
+			'domain',
 			'domain_prefix',
 			'domain_status = 0',
 			__METHOD__
@@ -109,7 +109,7 @@ class UserActivity {
 		global $wgHuijiPrefix;
 		$dbr = wfGetDB( DB_SLAVE );
 		$values = $dbr->selectField(
-			'huiji-domain',
+			'domain',
 			'domain_prefix',
 			'domain_status = 0',
 			__METHOD__
@@ -140,8 +140,7 @@ class UserActivity {
 					'r_user_id' => $this->user_id,
 					'r_type' => $this->rel_type
 				),
-				__METHOD__,
-				$this->getAllRecentChangesTables()
+				__METHOD__
 			);
 			$userArray = array();
 			foreach ( $users as $user ) {
@@ -192,7 +191,8 @@ class UserActivity {
 				'ORDER BY' => 'rc_id DESC',
 				'LIMIT' => $this->item_max,
 				'OFFSET' => 0
-			)
+			),
+			$this->getAllRecentChangesJoinConds()
 		);
 
 		$wgDBprefix = $oldDBprefix;
