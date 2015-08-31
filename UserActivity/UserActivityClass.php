@@ -28,6 +28,7 @@ class UserActivity {
 	private $show_user_user_follows = 1;
 	private $show_user_site_follows = 1;
 	private $show_user_update_status = 1;
+	private $show_domain_creations = 1;
 
 	/**
 	 * Constructor
@@ -76,6 +77,27 @@ class UserActivity {
 		$this->$name = $value;
 	}
 
+	private function getAllRecentChangesTables(){
+		global $wgHuijiPrefix;
+		$dbr = wfGetDB( DB_SLAVE );
+		$values = $dbr->selectFieldValues(
+			'domain',
+			'domain_prefix',
+			'domain_status = 0',
+			__METHOD__
+		);
+		$tables = array();
+		foreach( $values as $value ){
+			if ($value == $wgHuijiPrefix){
+				continue;
+			}
+			$thatname = $value.'recentchanges';
+			$thisname = $wgHuijiPrefix.'recentchanges';
+			$tables[$thatname] = array( 'INNER JOIN', array("{$thatname}.rc_user={$thisname}.rc_user"));
+		}
+		return $tables;
+	}
+
 	/**
 	 * Get recent edits from the recentchanges table and set them in the
 	 * appropriate class member variables.
@@ -93,7 +115,8 @@ class UserActivity {
 					'r_user_id' => $this->user_id,
 					'r_type' => $this->rel_type
 				),
-				__METHOD__
+				__METHOD__,
+				$this->getAllRecentChangesTables()
 			);
 			$userArray = array();
 			foreach ( $users as $user ) {
@@ -1199,7 +1222,7 @@ class UserActivity {
 	}
 
 	/**
-	 * Get recent network updates (but only if the SportsTeams extension is
+	 * Get recent status updates (but only if the SportsTeams extension is
 	 * installed) and set them in the appropriate class member variables.
 	 */
 	private function setNetworkUpdates() {
@@ -1323,6 +1346,129 @@ class UserActivity {
 			);
 		}
 	}
+	/**
+	 * Get recent wiki creations and set them in the appropriate class member variables.
+	 */
+	private function setDomainCreations() {
+		global $wgLang;
+
+		// if ( !class_exists( 'SportsTeams' ) ) {
+		// 	return;
+		// }
+
+		$dbr = wfGetDB( DB_SLAVE );
+
+		$where = array();
+
+		if ( !empty( $this->rel_type ) ) {
+			$users = $dbr->select(
+				'user_relationship',
+				'r_user_id_relation',
+				array(
+					'r_user_id' => $this->user_id,
+					'r_type' => $this->rel_type
+				),
+				__METHOD__
+			);
+			$userArray = array();
+			foreach ( $users as $user ) {
+				$userArray[] = $user;
+			}
+			$userIDs = implode( ',', $userArray );
+			if ( !empty( $userIDs ) ) {
+				$where[] = "domain_founder_id IN ($userIDs)";
+			}
+		}
+
+		if ( $this->show_current_user ) {
+			$where['domain_founder_id'] = $this->user_id;
+		}
+		if ( !empty( $this->show_following )){
+			$users = $dbr->select(
+				'user_user_follow',
+				array(
+					'f_target_user_id',
+				),
+				array(
+					'f_user_id' => $this->user_id,
+				),
+				__METHOD__
+			);
+			$userArray = array();
+			foreach ( $users as $user ) {
+				$userArray[] = $user->f_target_user_id;
+			}
+			$userIDs = implode( ',', $userArray );
+			if ( !empty( $userIDs ) ) {
+				$where[] = "domain_founder_id IN ($userIDs)";
+			}			
+		}
+
+		$res = $dbr->select(
+			'domain',
+			array(
+				'domain_id', 'domain_prefix', 'domain_name', 'domain_dsp',
+				'UNIX_TIMESTAMP(domain_date) AS item_date', 'domain_founder_id',
+				'domain_founder_name'
+			),
+			$where,
+			__METHOD__,
+			array(
+				'ORDER BY' => 'domain_id DESC',
+				'LIMIT' => $this->item_max,
+				'OFFSET' => 0
+			)
+		);
+
+		foreach ( $res as $row ) {
+			// if ( $row->us_team_id ) {
+			// 	$team = SportsTeams::getTeam( $row->us_team_id );
+			// 	$network_name = $team['name'];
+			// } else {
+			// 	$sport = SportsTeams::getSport( $row->us_sport_id );
+			// 	$network_name = $sport['name'];
+			// }
+
+			$this->items[] = array(
+				'id' => $row->domain_id,
+				'type' => 'domain_creation',
+				'timestamp' => $row->item_date,
+				'pagetitle' => '',
+				'namespace' => '',
+				'username' => $row->domain_founder_name,
+				'userid' => $row->domain_founder_id,
+				'comment' => $row->domain_dsp,
+				'domainprefix' => $row->domain_prefix,
+				'domainname' => $row->domain_name
+			);
+
+			$domainUrl = HuijiPrefix::prefixToUrl($row->domain_prefix);
+			$user_name_short = $wgLang->truncate( $row->domain_founder_name, 15 );
+			$user_title = Title::makeTitle( NS_USER, $row->domain_founder_name );
+			$founder_link = '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b>";
+
+			$page_link = '<a href="' . $domainUrl .
+				"\" rel=\"nofollow\">{$row->domain_name}</a>";
+			//$network_image = SportsTeams::getLogo( $row->us_sport_id, $row->us_team_id, 's' );
+
+			$html = wfMessage(
+				'useractivity-domain-creation',
+				$founder_link,
+				$page_link
+			)->text() .
+					'<div class="item">
+						<a href="' . $domainUrl . "\" rel=\"nofollow\">
+							\"{$row->domain_dsp}\"
+						</a>
+					</div>";
+
+			$this->activityLines[] = array(
+				'type' => 'domain_creation',
+				'timestamp' => $row->item_date,
+				'data' => $html,
+			);
+		}
+	}
 
 	public function getEdits() {
 		$this->setEdits();
@@ -1384,6 +1530,11 @@ class UserActivity {
 		return $this->items;
 	}
 
+	public function getDomainCreations() {
+		$this->setDomainCreations();
+		return $this->items;
+	}
+
 	public function getActivityList() {
 		if ( $this->show_edits ) {
 			$this->setEdits();
@@ -1420,6 +1571,9 @@ class UserActivity {
 		}		
 		if ( $this->show_user_site_follows ) {
 			$this->getUserSiteFollows();
+		}
+		if ( $this->show_domain_creations ) {
+			$this->getDomainCreations();
 		}
 		if ( $this->items ) {
 			usort( $this->items, array( 'UserActivity', 'sortItems' ) );
@@ -1613,6 +1767,8 @@ class UserActivity {
 			case 'user_user_follow':
 				return '<i class="fa fa-paper-plane"></i>';
 			case 'user_site_follow':
+				return '<i class="fa fa-paper-plane-o"></i>';
+			case 'domain_creation':
 				return '<i class="fa fa-paper-plane-o"></i>';
 		}
 	}

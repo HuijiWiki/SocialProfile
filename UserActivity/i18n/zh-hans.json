@@ -20,6 +20,7 @@
 	"useractivity-title": "好友动态",
 	"useractivity-user_message": "$1向$3{{PLURAL:$4|发送了1条信息|发送了信息}}",
 	"user-board-title": "留言墙",
-    "useractivity-comment": "$1 {{PLURAL:$4|评论了页面|评论了以下页面:}} $3"
+    "useractivity-comment": "$1 {{PLURAL:$4|评论了页面|评论了以下页面:}} $3",
+    "useractivity-domain-creation":"$1创建了$2"
 
 }

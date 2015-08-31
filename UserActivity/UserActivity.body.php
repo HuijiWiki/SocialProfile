@@ -50,24 +50,24 @@ class UserHome extends SpecialPage {
 		// undefined variables when the filtering feature (described below) is
 		// active and we're viewing a filtered-down feed
 		$edits = $votes = $comments = $comments = $gifts = $relationships =
-			$messages = $system_gifts = $messages_sent = $network_updates = 0;
+			$messages = $system_gifts = $messages_sent = $network_updates = $domain_creations = 0;
 
-		$rel_type = $request->getVal( 'rel_type' );
+		$filter = $request->getVal( 'filter' );
 		$item_type = $request->getVal( 'item_type' );
 
-		if ( !$rel_type ) {
-			$rel_type = 1;
+		if ( !$filter ) {
+			$filter = "FOLLOWING";
 		}
 		if ( !$item_type ) {
 			$item_type = 'all';
 		}
 
-		// If not otherwise specified, display everything but votes in the feed
+		// If not otherwise specified, display everything but *votes* in the feed
 		if ( $item_type == 'edits' || $item_type == 'all' ) {
 			$edits = 1;
 		}
 		if ( $item_type == 'votes' || $item_type == 'all' ) {
-			$votes = 0;
+			$votes = 1;
 		}
 		if ( $item_type == 'comments' || $item_type == 'all' ) {
 			$comments = 1;
@@ -89,6 +89,9 @@ class UserHome extends SpecialPage {
 		}
 		if ( $item_type == 'thoughts' || $item_type == 'all' ) {
 			$network_updates = 1;
+		}
+		if ( $item_type == 'domain_creations' || $item_type == 'all' ) {
+			$domain_creations = 1;
 		}
 
 		// Filtering feature, if enabled
@@ -139,7 +142,8 @@ class UserHome extends SpecialPage {
 
 		$output .= '<div class="user-home-feed">';
 
-		$rel = new UserActivity( $user->getName(), ( ( $rel_type == 1 ) ? ' friends' : 'foes' ), 50 );
+		// $rel = new UserActivity( $user->getName(), ( ( $rel_type == 1 ) ? ' friends' : 'foes' ), 50 );
+		$rel = new UserActivity( $user->getName(), $filter , 50 );
 		$rel->setActivityToggle( 'show_edits', $edits );
 		$rel->setActivityToggle( 'show_votes', $votes );
 		$rel->setActivityToggle( 'show_comments', $comments );
@@ -149,6 +153,7 @@ class UserHome extends SpecialPage {
 		$rel->setActivityToggle( 'show_system_gifts', $system_gifts );
 		$rel->setActivityToggle( 'show_messages_sent', $messages_sent );
 		$rel->setActivityToggle( 'show_network_updates', $network_updates );
+		$rel->setActivityToggle( 'show_domain_creations', $domain_creations );
 
 		/**
 		 * Get all relationship activity
@@ -169,8 +174,11 @@ class UserHome extends SpecialPage {
 					}
 
 					$typeIcon = UserActivity::getTypeIcon( $item['type'] );
+					// $output .= "<div class=\"user-home-activity{$border_fix}\">
+					// 	<img src=\"{$wgExtensionAssetsPath}/SocialProfile/images/" . $typeIcon . "\" alt=\"\" border=\"0\" />
+					// 	{$item['data']}
+					// </div>";
 					$output .= "<div class=\"user-home-activity{$border_fix}\">
-						<img src=\"{$wgExtensionAssetsPath}/SocialProfile/images/" . $typeIcon . "\" alt=\"\" border=\"0\" />
 						{$item['data']}
 					</div>";
 					$x++;
