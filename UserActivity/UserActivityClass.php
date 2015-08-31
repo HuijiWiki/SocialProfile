@@ -108,15 +108,18 @@ class UserActivity {
 	private function getAllRecentChangesTables(){
 		global $wgHuijiPrefix;
 		$dbr = wfGetDB( DB_SLAVE );
-		$values = $dbr->selectField(
+		$values = $dbr->select(
 			'domain',
 			'domain_prefix',
 			'domain_status = 0',
 			__METHOD__
 		);
+		// echo $values;
+		// die(1);
 		$tables = array();
 		foreach( $values as $value ){
-			$tables[] = $value.'recentchanges';
+			wfDebug($value);
+			$tables[] = $value->domain_prefix.'recentchanges';
 		}
 		return $tables;
 	}
@@ -191,8 +194,8 @@ class UserActivity {
 				'ORDER BY' => 'rc_id DESC',
 				'LIMIT' => $this->item_max,
 				'OFFSET' => 0
-			),
-			$this->getAllRecentChangesJoinConds()
+			)
+			// $this->getAllRecentChangesJoinConds()
 		);
 
 		$wgDBprefix = $oldDBprefix;
