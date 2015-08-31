@@ -1812,6 +1812,7 @@ class UserActivity {
 				$users .= ' <b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\" title=\"{$safeTitle}\">{$user_name_short}</a></b>";
 			}
 			$prefixToName = '';
+			$page_data['prefix'] = array_unique($page_data['prefix']);
 			$prefixCount = count($page_data['prefix']);
 			$i = 0;
 			foreach($page_data['prefix'] as $prefix){
