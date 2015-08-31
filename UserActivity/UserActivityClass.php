@@ -85,7 +85,7 @@ class UserActivity {
 		global $wgHuijiPrefix;
 		$dbr = wfGetDB( DB_SLAVE );
 		$values = $dbr->selectField(
-			'domain',
+			'huiji-domain',
 			'domain_prefix',
 			'domain_status = 0',
 			__METHOD__
@@ -109,7 +109,7 @@ class UserActivity {
 		global $wgHuijiPrefix;
 		$dbr = wfGetDB( DB_SLAVE );
 		$values = $dbr->selectField(
-			'domain',
+			'huiji-domain',
 			'domain_prefix',
 			'domain_status = 0',
 			__METHOD__
