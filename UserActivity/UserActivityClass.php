@@ -119,7 +119,7 @@ class UserActivity {
 		$tables = array();
 		foreach( $values as $value ){
 			wfDebug($value);
-			$tables[] = $value->domain_prefix.'recentchanges';
+			$tables[] = str_replace('.', '_', $value->domain_prefix).'recentchanges';
 		}
 		return $tables;
 	}
@@ -179,7 +179,7 @@ class UserActivity {
 		}
 		$tables = $this->getAllRecentChangesTables();
 		$oldDBprefix = $wgDBprefix;
-		$wgDBprefix = ''; 
+		$dbr->tablePrefix('');
 
 		$res = $dbr->select(
 			$tables,
@@ -199,7 +199,7 @@ class UserActivity {
 			// $this->getAllRecentChangesJoinConds()
 		);
 
-		$wgDBprefix = $oldDBprefix;
+		$dbr->tablePrefix($oldDBprefix);
 
 		foreach ( $res as $row ) {
 			// Special pages aren't editable, so ignore them
