@@ -1715,7 +1715,7 @@ class UserActivity {
 
 			if ( $type == 'friend' || $type == 'foe' || $type == 'user_message' || $type == 'user_user_follow') {
 				$page_title = Title::newFromText( $page_name, NS_USER );
-			} elseif ($type = 'user_site_follow'){
+			} elseif ($type == 'user_site_follow'){
 				$page_title = Title::newFromText( $page_name.':' );
 			} else {
 				$page_title = Title::newFromText( $page_name );
@@ -1769,7 +1769,9 @@ class UserActivity {
 										$type == 'user_message'
 									) {
 										$page_title2 = Title::newFromText( $page_name2, NS_USER );
-									} else {
+									}  elseif ($type == 'user_site_follow'){
+										$page_title = Title::newFromText( $page_name2.':' );
+									}  else {
 										$page_title2 = Title::newFromText( $page_name2 );
 									}
 
