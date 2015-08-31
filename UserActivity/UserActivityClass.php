@@ -184,10 +184,10 @@ class UserActivity {
 		$dbr->tablePrefix('');
 		foreach ($tables as $table){
 			if ( $table == 'www'){
-				$dbr->selectDB('huiji-home');
+				$dbr->selectDB('huiji_home');
 				$table = '';
 			} else {
-				$dbr->selectDB('huiji-sites');
+				$dbr->selectDB('huiji_sites');
 			}
 			$res = $dbr->select(
 				$table.'recentchanges',
