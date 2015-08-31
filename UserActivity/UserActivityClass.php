@@ -183,6 +183,9 @@ class UserActivity {
 		$oldDBprefix = $wgDBprefix;
 		$dbr->tablePrefix('');
 		foreach ($tables as $table){
+			if ( $table == 'www'){
+				continue;
+			}
 			$res = $dbr->select(
 				$table.'recentchanges',
 				array(
