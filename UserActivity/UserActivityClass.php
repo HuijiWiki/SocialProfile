@@ -77,32 +77,34 @@ class UserActivity {
 		$this->$name = $value;
 	}
 
+	// /**
+	//  * return a join argument for setEdits().
+	//  *
+	//  */
+	// private function getAllRecentChangesJoinConds(){
+	// 	global $wgHuijiPrefix;
+	// 	$dbr = wfGetDB( DB_SLAVE );
+	// 	$values = $dbr->selectField(
+	// 		'domain',
+	// 		'domain_prefix',
+	// 		'domain_status = 0',
+	// 		__METHOD__
+	// 	);
+	// 	$tables = array();
+	// 	foreach( $values as $value ){
+	// 		if ($value == $wgHuijiPrefix){
+	// 			continue;
+	// 		}
+	// 		$thatname = $value.'recentchanges';
+	// 		$thisname = $wgHuijiPrefix.'recentchanges';
+	// 		$tables[$thatname] = array( 'INNER JOIN', array("{$thatname}.rc_user={$thisname}.rc_user"));
+	// 	}
+	// 	return $tables;
+	// }
+
+
 	/**
-	 * return a join argument for setEdits().
-	 *
-	 */
-	private function getAllRecentChangesJoinConds(){
-		global $wgHuijiPrefix;
-		$dbr = wfGetDB( DB_SLAVE );
-		$values = $dbr->selectField(
-			'domain',
-			'domain_prefix',
-			'domain_status = 0',
-			__METHOD__
-		);
-		$tables = array();
-		foreach( $values as $value ){
-			if ($value == $wgHuijiPrefix){
-				continue;
-			}
-			$thatname = $value.'recentchanges';
-			$thisname = $wgHuijiPrefix.'recentchanges';
-			$tables[$thatname] = array( 'INNER JOIN', array("{$thatname}.rc_user={$thisname}.rc_user"));
-		}
-		return $tables;
-	}
-	/**
-	 * return a join argument for setEdits().
+	 * return a join argument for setEdits(). Preferably this should only return two or three wikis recently changed by a given set of users.
 	 *
 	 */
 	private function getAllRecentChangesTables(){
@@ -226,7 +228,8 @@ class UserActivity {
 
 				// set last timestamp
 				$this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['timestamp'] = $row->item_date;
-
+				// set prefix
+				$this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['prefix'][] = $table;
 				$this->items[] = array(
 					'id' => 0,
 					'type' => 'edit',
@@ -1686,7 +1689,7 @@ class UserActivity {
 				if ( $has_page && !isset( $this->displayed[$type][$page_name] ) ) {
 					$this->displayed[$type][$page_name] = 1;
 
-					$pages .= ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_name}</a>";
+					$pages .= ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
 					if ( $count_users == 1 && $count_actions > 1 ) {
 						$pages .= wfMessage( 'word-separator' )->text();
 						$pages .= wfMessage( 'parentheses', wfMessage(
@@ -1724,7 +1727,7 @@ class UserActivity {
 										$pages .= ', ';
 									}
 									if ( $page_title2 instanceof Title ) {
-										$pages .= ' <a href="' . htmlspecialchars( $page_title2->getFullURL() ) . "\">{$page_name2}</a>";
+										$pages .= ' <a href="' . htmlspecialchars( $page_title2->getFullURL() ) . "\">{$page_title2->getText()}</a>";
 									}
 									if ( $count_actions2 > 1 ) {
 										$pages .= ' (' . wfMessage(
@@ -1755,6 +1758,19 @@ class UserActivity {
 				$safeTitle = htmlspecialchars( $user_title->getText() );
 				$users .= ' <b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\" title=\"{$safeTitle}\">{$user_name_short}</a></b>";
 			}
+			$prefixToName = '';
+			$prefixCount = count($page_data['prefix']);
+			$i = 0;
+			foreach($page_data['prefix'] as $prefix){
+				$prefixToName .= HuijiPrefix::prefixToSiteName($prefix);
+				$i++;
+				if ($i < $prefixCount){
+					$prefixToName .= wfMessage( 'comma-separator' )->text();
+				}
+				if ($i == $prefixCount && $prefixCount > 1){
+					$prefixToName .= wfMessage( 'and' )->text();
+				}
+			}
 			if ( $pages || $has_page == false ) {
 				$this->activityLines[] = array(
 					'type' => $type,
@@ -1762,7 +1778,7 @@ class UserActivity {
 					'data' => wfMessage(
 						"useractivity-{$type}",
 						$users, $count_users, $pages, $pages_count,
-						$userNameForGender
+						$userNameForGender, $prefixToName
 					)->text()
 				);
 			}

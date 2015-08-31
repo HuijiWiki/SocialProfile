@@ -8,7 +8,7 @@
 	"useractivity": "好友动态",
 	"useractivity-award": "$1获得了一个奖励",
 	"useractivity-all": "查看全部",
-	"useractivity-edit": "$1{{PLURAL:$4|编辑了页面|编辑了如下页面：}}$3",
+	"useractivity-edit": "$1{{PLURAL:$4|编辑了$6的页面|编辑了$6的如下页面：}}$3",
 	"useractivity-foe": "$1{{PLURAL:$2|现在与|现在与}}$3成为仇敌",
 	"useractivity-friend": "$1{{PLURAL:$2|现在与|现在与}}$3成为好友",
 	"useractivity-gift": "$1收到了一份来自$2的礼物",
