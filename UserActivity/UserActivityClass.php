@@ -67,7 +67,7 @@ class UserActivity {
 		}
 		if ( strtoupper( $filter ) == 'ALL' ) {
 			$this->show_all = true;
-		}
+		} 
 	}
 
 	/**
@@ -1692,7 +1692,7 @@ class UserActivity {
 				if ( $has_page && !isset( $this->displayed[$type][$page_name] ) ) {
 					$this->displayed[$type][$page_name] = 1;
 
-					$pages .= ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getBaseText()}</a>";
+					$pages .= ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getFullText()}</a>";
 					if ( $count_users == 1 && $count_actions > 1 ) {
 						$pages .= wfMessage( 'word-separator' )->text();
 						$pages .= wfMessage( 'parentheses', wfMessage(
@@ -1730,7 +1730,7 @@ class UserActivity {
 										$pages .= ', ';
 									}
 									if ( $page_title2 instanceof Title ) {
-										$pages .= ' <a href="' . htmlspecialchars( $page_title2->getFullURL() ) . "\">{$page_title2->getBaseText()}</a>";
+										$pages .= ' <a href="' . htmlspecialchars( $page_title2->getFullURL() ) . "\">{$page_title2->getFullText()}</a>";
 									}
 									if ( $count_actions2 > 1 ) {
 										$pages .= ' (' . wfMessage(

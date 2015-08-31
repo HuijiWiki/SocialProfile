@@ -1530,7 +1530,7 @@ class UserProfilePage extends Article {
 
 			foreach ( $activity as $item ) {
 				$item_html = '';
-				$title = Title::makeTitle( $item['namespace'], $item['pagetitle'] );
+				$title = Title::makeTitle( $item['namespace'], $item['pagetitle'], ’‘, $item['prefix'] );
 				$user_title = Title::makeTitle( NS_USER, $item['username'] );
 				$user_title_2 = Title::makeTitle( NS_USER, $item['comment'] );
 

@@ -5,7 +5,7 @@
 			"Xiaomingyan"
 		]
 	},
-	"useractivity": "好友动态",
+	"useractivity": "我关注的用户",
 	"useractivity-award": "$1获得了一个奖励",
 	"useractivity-all": "查看全部",
 	"useractivity-edit": "$1{{PLURAL:$4|编辑了$6的页面|编辑了$6的如下页面：}}$3",
@@ -17,7 +17,7 @@
 	"useractivity-group-user_message": "$1条信息",
 	"useractivity-group-friend": "{{PLURAL:$1|1位好友|$1位好友}}",
 	"useractivity-siteactivity": "站点动态",
-	"useractivity-title": "好友动态",
+	"useractivity-title": "我关注的用户",
 	"useractivity-user_message": "$1向$3{{PLURAL:$4|发送了1条信息|发送了信息}}",
 	"user-board-title": "留言墙",
     "useractivity-comment": "$1 {{PLURAL:$4|评论了页面|评论了以下页面:}} $3",
