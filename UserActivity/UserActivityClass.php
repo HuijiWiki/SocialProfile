@@ -241,9 +241,12 @@ class UserActivity {
 					'new' => $row->rc_new,
 					'prefix' => $table
 				);
+				// set prefix
+				if (!in_array($table, $this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['prefix'])){
+					$this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['prefix'][] = $table;
+				}
 			}
-			// set prefix
-			$this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['prefix'][] = $table;
+
 		}
 		$dbr->tablePrefix($oldDBprefix);
 
