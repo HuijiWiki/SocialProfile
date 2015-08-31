@@ -119,7 +119,7 @@ class UserActivity {
 		$tables = array();
 		foreach( $values as $value ){
 			wfDebug($value);
-			$tables[] = str_replace('.', '_', $value->domain_prefix).'recentchanges';
+			$tables[] = str_replace('.', '_', $value->domain_prefix);
 		}
 		return $tables;
 	}
@@ -180,68 +180,71 @@ class UserActivity {
 		$tables = $this->getAllRecentChangesTables();
 		$oldDBprefix = $wgDBprefix;
 		$dbr->tablePrefix('');
+		foreach ($tables as $table){
+			$res = $dbr->select(
+				$table.'recentchanges',
+				array(
+					'UNIX_TIMESTAMP(rc_timestamp) AS item_date', 'rc_title',
+					'rc_user', 'rc_user_text', 'rc_comment', 'rc_id', 'rc_minor',
+					'rc_new', 'rc_namespace', 'rc_cur_id', 'rc_this_oldid',
+					'rc_last_oldid', 'rc_log_action'
+				),
+				$where,
+				__METHOD__,
+				array(
+					'ORDER BY' => 'rc_id DESC',
+					'LIMIT' => $this->item_max,
+					'OFFSET' => 0
+				)
+				// $this->getAllRecentChangesJoinConds()
+			);
+			foreach ( $res as $row ) {
+				// Special pages aren't editable, so ignore them
+				// And blocking a vandal should not be counted as editing said
+				// vandal's user page...
+				if ( $row->rc_namespace == NS_SPECIAL || $row->rc_log_action != null ) {
+					continue;
+				}
+				// Topics need some hack in title
+				if ( $row->rc_namespace == NS_TOPIC){
+					//TODO change something!
+				}
+				$title = Title::makeTitle( $row->rc_namespace, $row->rc_title );
+				$this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['users'][$row->rc_user_text][] = array(
+					'id' => 0,
+					'type' => 'edit',
+					'timestamp' => $row->item_date,
+					'pagetitle' => $row->rc_title,
+					'namespace' => $row->rc_namespace,
+					'username' => $row->rc_user_text,
+					'userid' => $row->rc_user,
+					'comment' => $this->fixItemComment( $row->rc_comment ),
+					'minor' => $row->rc_minor,
+					'new' => $row->rc_new,
+					'prefix' => $table
+				);
 
-		$res = $dbr->select(
-			$tables,
-			array(
-				'UNIX_TIMESTAMP(rc_timestamp) AS item_date', 'rc_title',
-				'rc_user', 'rc_user_text', 'rc_comment', 'rc_id', 'rc_minor',
-				'rc_new', 'rc_namespace', 'rc_cur_id', 'rc_this_oldid',
-				'rc_last_oldid', 'rc_log_action'
-			),
-			$where,
-			__METHOD__,
-			array(
-				'ORDER BY' => 'rc_id DESC',
-				'LIMIT' => $this->item_max,
-				'OFFSET' => 0
-			)
-			// $this->getAllRecentChangesJoinConds()
-		);
+				// set last timestamp
+				$this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['timestamp'] = $row->item_date;
 
+				$this->items[] = array(
+					'id' => 0,
+					'type' => 'edit',
+					'timestamp' => ( $row->item_date ),
+					'pagetitle' => $row->rc_title,
+					'namespace' => $row->rc_namespace,
+					'username' => $row->rc_user_text,
+					'userid' => $row->rc_user,
+					'comment' => $this->fixItemComment( $row->rc_comment ),
+					'minor' => $row->rc_minor,
+					'new' => $row->rc_new,
+					'prefix' => $table
+				);
+			}
+		}
 		$dbr->tablePrefix($oldDBprefix);
 
-		foreach ( $res as $row ) {
-			// Special pages aren't editable, so ignore them
-			// And blocking a vandal should not be counted as editing said
-			// vandal's user page...
-			if ( $row->rc_namespace == NS_SPECIAL || $row->rc_log_action != null ) {
-				continue;
-			}
-			// Topics need some hack in title
-			if ( $row->rc_namespace == NS_TOPIC){
-				//TODO change something!
-			}
-			$title = Title::makeTitle( $row->rc_namespace, $row->rc_title );
-			$this->items_grouped['edit'][$title->getPrefixedText()]['users'][$row->rc_user_text][] = array(
-				'id' => 0,
-				'type' => 'edit',
-				'timestamp' => $row->item_date,
-				'pagetitle' => $row->rc_title,
-				'namespace' => $row->rc_namespace,
-				'username' => $row->rc_user_text,
-				'userid' => $row->rc_user,
-				'comment' => $this->fixItemComment( $row->rc_comment ),
-				'minor' => $row->rc_minor,
-				'new' => $row->rc_new
-			);
 
-			// set last timestamp
-			$this->items_grouped['edit'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
-
-			$this->items[] = array(
-				'id' => 0,
-				'type' => 'edit',
-				'timestamp' => ( $row->item_date ),
-				'pagetitle' => $row->rc_title,
-				'namespace' => $row->rc_namespace,
-				'username' => $row->rc_user_text,
-				'userid' => $row->rc_user,
-				'comment' => $this->fixItemComment( $row->rc_comment ),
-				'minor' => $row->rc_minor,
-				'new' => $row->rc_new
-			);
-		}
 	}
 
 
