@@ -184,7 +184,10 @@ class UserActivity {
 		$dbr->tablePrefix('');
 		foreach ($tables as $table){
 			if ( $table == 'www'){
-				continue;
+				$dbr->selectDB('huiji-home');
+				$table = '';
+			} else {
+				$dbr->selectDB('huiji-sites');
 			}
 			$res = $dbr->select(
 				$table.'recentchanges',
@@ -245,10 +248,7 @@ class UserActivity {
 					'prefix' => $table
 				);
 				// set prefix
-				if ($this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['prefix'] == null 
-					|| !in_array($table, $this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['prefix'])){
-					$this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['prefix'][] = $table;
-				}
+				$this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['prefix'][] = $table;
 			}
 
 		}
