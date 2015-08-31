@@ -228,8 +228,6 @@ class UserActivity {
 
 				// set last timestamp
 				$this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['timestamp'] = $row->item_date;
-				// set prefix
-				$this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['prefix'][] = $table;
 				$this->items[] = array(
 					'id' => 0,
 					'type' => 'edit',
@@ -244,6 +242,8 @@ class UserActivity {
 					'prefix' => $table
 				);
 			}
+			// set prefix
+			$this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['prefix'][] = $table;
 		}
 		$dbr->tablePrefix($oldDBprefix);
 
@@ -1689,7 +1689,7 @@ class UserActivity {
 				if ( $has_page && !isset( $this->displayed[$type][$page_name] ) ) {
 					$this->displayed[$type][$page_name] = 1;
 
-					$pages .= ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
+					$pages .= ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getBaseText()}</a>";
 					if ( $count_users == 1 && $count_actions > 1 ) {
 						$pages .= wfMessage( 'word-separator' )->text();
 						$pages .= wfMessage( 'parentheses', wfMessage(
@@ -1727,7 +1727,7 @@ class UserActivity {
 										$pages .= ', ';
 									}
 									if ( $page_title2 instanceof Title ) {
-										$pages .= ' <a href="' . htmlspecialchars( $page_title2->getFullURL() ) . "\">{$page_title2->getText()}</a>";
+										$pages .= ' <a href="' . htmlspecialchars( $page_title2->getFullURL() ) . "\">{$page_title2->getBaseText()}</a>";
 									}
 									if ( $count_actions2 > 1 ) {
 										$pages .= ' (' . wfMessage(
@@ -1764,10 +1764,10 @@ class UserActivity {
 			foreach($page_data['prefix'] as $prefix){
 				$prefixToName .= HuijiPrefix::prefixToSiteName($prefix);
 				$i++;
-				if ($i < $prefixCount){
+				if ($i < $prefixCount - 1 ){
 					$prefixToName .= wfMessage( 'comma-separator' )->text();
 				}
-				if ($i == $prefixCount && $prefixCount > 1){
+				if ($i == $prefixCount-1 && $prefixCount > 1){
 					$prefixToName .= wfMessage( 'and' )->text();
 				}
 			}
