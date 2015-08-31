@@ -108,23 +108,17 @@ class UserActivity {
 	private function getAllRecentChangesTables(){
 		global $wgHuijiPrefix;
 		$dbr = wfGetDB( DB_SLAVE );
-		$values = $dbr->selectFieldValues(
+		$values = $dbr->selectField(
 			'domain',
 			'domain_prefix',
 			'domain_status = 0',
 			__METHOD__
 		);
-		return $values;
-		// $tables = array();
-		// foreach( $values as $value ){
-		// 	if ($value == $wgHuijiPrefix){
-		// 		continue;
-		// 	}
-		// 	$thatname = $value.'recentchanges';
-		// 	$thisname = $wgHuijiPrefix.'recentchanges';
-		// 	$tables[$thatname] = array( 'INNER JOIN', array("{$thatname}.rc_user={$thisname}.rc_user"));
-		// }
-		// return $tables;
+		$tables = array();
+		foreach( $values as $value ){
+			$tables[] = $value.'recentchanges';
+		}
+		return $tables;
 	}
 
 	/**
@@ -132,6 +126,8 @@ class UserActivity {
 	 * appropriate class member variables.
 	 */
 	private function setEdits() {
+		global $wgDBprefix;
+
 		$dbr = wfGetDB( DB_SLAVE );
 
 		$where = array();
@@ -179,6 +175,8 @@ class UserActivity {
 				$where[] = "rc_user IN ($userIDs)";
 			}			
 		}
+		$oldDBprefix = $wgDBprefix;
+		$wgDBprefix = ''; 
 
 		$res = $dbr->select(
 			$this->getAllRecentChangesTables(),
@@ -196,6 +194,8 @@ class UserActivity {
 				'OFFSET' => 0
 			)
 		);
+
+		$wgDBprefix = $oldDBprefix;
 
 		foreach ( $res as $row ) {
 			// Special pages aren't editable, so ignore them
