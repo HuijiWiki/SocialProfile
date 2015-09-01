@@ -290,7 +290,7 @@ class UserProfilePage extends Article {
 		// }
         $wgOut->addHTML('<div id="user-page-center" class="col-md-12">
         	<div class="panel panel-default"><div class="user-section-heading panel-heading">
- 			<div class="user-section-title">编辑列表</div>
+ 			<div class="user-section-title">贡献</div>
  			<div class="action-right"></div>
 			<div class="cleared"></div></div><div class="user-gift-container panel-body check-body">');
         $ueb = new UserEditBox();
@@ -348,7 +348,9 @@ class UserProfilePage extends Article {
 	                	$wgOut->addHTML('<rect class="day" width="11" height="11" y="'.$y.'" fill="'.$color.'" data-count="'.$dataCount.'" data-date="'.$val.'" title="'.$val.' 编辑'.$dataCount.'次"></rect>');
 		            	$j=($j>=7)?0:($j+1);
 	            	}
-	            	$translate[$arrDate[0]] = $trani;
+	            	if (!empty($arrDate[0])){
+	            		$translate[$arrDate[0]] = $trani;
+	            	}
             $wgOut->addHTML('</g>');
         }
         $moninit = 1;
@@ -387,7 +389,7 @@ class UserProfilePage extends Article {
 		          </g>
 		        </svg>
 		        <div class="legend-intro">
-		        <span>少</span>
+		        <span>低</span>
 		        <ul class="legend">
 		            <li style="background-color: #eee"></li>
 		            <li style="background-color: #86beee"></li>
@@ -395,7 +397,7 @@ class UserProfilePage extends Article {
 		            <li style="background-color: #256fb1"></li>
 		            <li style="background-color: #0d5493"></li>
 	            </ul>
-	            <span>多</span>
+	            <span>高</span>
         	</div></div></div></div></div>');
 		// Left side
 		$wgOut->addHTML( '<div id="user-page-left" class="col-md-6">' );
@@ -1406,11 +1408,12 @@ class UserProfilePage extends Article {
 		$output = '';
 
 		$limit = 8;
-		$rel = new UserActivity( $user_name, 'user', $limit );
+		$rel = new UserActivity( $user_name, 'USER', $limit );
 		$rel->setActivityToggle( 'show_votes', 0 );
 		$rel->setActivityToggle( 'show_gifts_sent', 1 );
 		$rel->setActivityToggle( 'show_edits', 0 );
 		$rel->setActivityToggle( 'show_comments', 0 );
+		$rel->setActivityToggle( 'show_domain_creations', 0);
 		/**
 		 * Get all relationship activity
 		 */
@@ -1611,7 +1614,9 @@ class UserProfilePage extends Article {
 		$rel->setActivityToggle( 'show_user_site_follows', 0);		
 		$rel->setActivityToggle( 'show_user_update_status', 0);
 		$rel->setActivityToggle( 'show_gifts_sent', 0);		
-		$rel->setActivityToggle( 'show_gifts_rec', 0);		/**
+		$rel->setActivityToggle( 'show_gifts_rec', 0);		
+		$rel->setActivityToggle( 'show_domain_creations', 1);	
+		/**
 		 * Get all relationship activity
 		 */
 		$activity = $rel->getActivityList();
@@ -1640,7 +1645,7 @@ class UserProfilePage extends Article {
 
 			foreach ( $activity as $item ) {
 				$item_html = '';
-				$title = Title::makeTitle( $item['namespace'], $item['pagetitle'], ’‘, $item['prefix'] );
+				$title = Title::makeTitle( $item['namespace'], $item['pagetitle'], '', $item['prefix'] );
 				$user_title = Title::makeTitle( NS_USER, $item['username'] );
 				$user_title_2 = Title::makeTitle( NS_USER, $item['comment'] );
 
@@ -1749,6 +1754,14 @@ class UserProfilePage extends Article {
 								'<div class="item">
 									<a href="' . SportsTeams::getNetworkURL( $item['sport_id'], $item['team_id'] ) .
 									"\" rel=\"nofollow\">{$network_image} \"{$item['comment']}\"</a>
+								</div>";
+						break;
+					case 'domain_creation':
+						$domainLink = '<b><a href="' . htmlspecialchars( $title->getFullURL() ) .
+							"\">" . $item['domainname'] . '</a></b> ';
+						$item_html .= wfMessage( 'user-recent-activity-domain-creation' )->escaped() . "{$domainLink} {$item_time}".
+								'<div class="item">
+									<p>'.$item['comment']."</p>
 								</div>";
 						break;
 					}

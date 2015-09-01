@@ -143,5 +143,6 @@
 	"right-avatarremove": "移除使用者的头像",
 	"user-recent-local-activity-title":"编辑活动",
 	"user-recent-activity-follow":"关注了",
-	"user-recent-system-gift":"收到了一份奖励"
+	"user-recent-system-gift":"收到了一份奖励",
+	"user-recent-activity-domain-creation":"创建了"
 }

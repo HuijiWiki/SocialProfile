@@ -1110,11 +1110,17 @@ span.span-color{
 .check-wrapper svg{
     float: left;
 }
-.legend-intro{
+svg .day{
+    cursor: pointer;
+}
+body>.tooltip.top .tooltip-arrow{
+    margin-left: 0;
+}
+.mw-content-ltr .legend-intro{
     float: right;
     clear: both;
 }
-.legend-intro ul{
+.mw-content-ltr .legend-intro ul{
     margin: 0;
     display: inline-block;
     list-style-type: none;
