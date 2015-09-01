@@ -137,8 +137,8 @@ class UserHome extends SpecialPage {
 
 					$link_image = $line[2];
 					$output .= '<a href="' . htmlspecialchars( $this->getPageTitle()->getFullURL( "item_type={$type}" ) ) .
-						"\"><img src=\"{$wgExtensionAssetsPath}/SocialProfile/images/" .
-						UserActivity::getTypeIcon( $link_image ) . "\"/>{$link_text}</a>";
+						"\">".
+						UserActivity::getTypeIcon( $type ) . "&nbsp;{$link_text}</a>";
 				}
 			}
 

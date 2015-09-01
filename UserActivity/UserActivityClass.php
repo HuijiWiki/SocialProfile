@@ -81,32 +81,6 @@ class UserActivity {
 		$this->$name = $value;
 	}
 
-	// /**
-	//  * return a join argument for setEdits().
-	//  *
-	//  */
-	// private function getAllRecentChangesJoinConds(){
-	// 	global $wgHuijiPrefix;
-	// 	$dbr = wfGetDB( DB_SLAVE );
-	// 	$values = $dbr->selectField(
-	// 		'domain',
-	// 		'domain_prefix',
-	// 		'domain_status = 0',
-	// 		__METHOD__
-	// 	);
-	// 	$tables = array();
-	// 	foreach( $values as $value ){
-	// 		if ($value == $wgHuijiPrefix){
-	// 			continue;
-	// 		}
-	// 		$thatname = $value.'recentchanges';
-	// 		$thisname = $wgHuijiPrefix.'recentchanges';
-	// 		$tables[$thatname] = array( 'INNER JOIN', array("{$thatname}.rc_user={$thisname}.rc_user"));
-	// 	}
-	// 	return $tables;
-	// }
-
-
 	/**
 	 * return a join argument for setEdits(). Preferably this should only return two or three wikis recently changed by a given set of users.
 	 *
@@ -124,7 +98,6 @@ class UserActivity {
 		// die(1);
 		$tables = array();
 		foreach( $values as $value ){
-			wfDebug($value);
 			$tables[] = str_replace('.', '_', $value->domain_prefix);
 		}
 		return $tables;
@@ -440,6 +413,7 @@ class UserActivity {
 	 * extension) and set them in the appropriate class member variables.
 	 */
 	private function setComments() {
+		global $wgDBprefix, $wgDBname, $isProduction;
 		$dbr = wfGetDB( DB_SLAVE );
 
 		# Bail out if Comments table doesn't exist
@@ -449,65 +423,85 @@ class UserActivity {
 
 		$where = $this->where('Comment_user_id');
 		$where[] = 'comment_page_id = page_id';
-		$res = $dbr->select(
-			array( 'Comments', 'page' ),
-			array(
-				'UNIX_TIMESTAMP(comment_date) AS item_date',
-				'Comment_Username', 'Comment_IP', 'page_title', 'Comment_Text',
-				'Comment_user_id', 'page_namespace', 'CommentID'
-			),
-			$where,
-			__METHOD__,
-			array(
-				'ORDER BY' => 'comment_date DESC',
-				'LIMIT' => $this->item_max,
-				'OFFSET' => 0
-			)
-		);
 
-		foreach ( $res as $row ) {
-			$show_comment = true;
+		$tables = $this->getAllRecentChangesTables();
+		$oldDBprefix = $wgDBprefix;
+		$oldDB = $wgDBname;
+		$dbr->tablePrefix('');
 
-			global $wgFilterComments;
-			if ( $wgFilterComments ) {
-				if ( $row->vote_count <= 4 ) {
-					$show_comment = false;
+		foreach ($tables as $table){
+			if ( !$isProduction ){
+				$dbr->selectDB('huiji_'.$table);
+				$table = '';
+			} elseif ( $table == 'www'){
+				$dbr->selectDB('huiji_home');
+				$table = '';
+			} else {
+				$dbr->selectDB('huiji_sites');
+			}
+			$res = $dbr->select(
+				array( $table.'Comments', $table.'page' ),
+				array(
+					'UNIX_TIMESTAMP(comment_date) AS item_date',
+					'Comment_Username', 'Comment_IP', 'page_title', 'Comment_Text',
+					'Comment_user_id', 'page_namespace', 'CommentID'
+				),
+				$where,
+				__METHOD__,
+				array(
+					'ORDER BY' => 'comment_date DESC',
+					'LIMIT' => $this->item_max,
+					'OFFSET' => 0
+				)
+			);
+			foreach ( $res as $row ) {
+				$show_comment = true;
+
+				global $wgFilterComments;
+				if ( $wgFilterComments ) {
+					if ( $row->vote_count <= 4 ) {
+						$show_comment = false;
+					}
+				}
+
+				if ( $show_comment ) {
+					$title = Title::makeTitle( $row->page_namespace, $row->page_title );
+					$this->items_grouped['comment'][$table.':'.$title->getPrefixedText()]['users'][$row->Comment_Username][] = array(
+						'id' => $row->CommentID,
+						'type' => 'comment',
+						'timestamp' => $row->item_date,
+						'pagetitle' => $row->page_title,
+						'namespace' => $row->page_namespace,
+						'username' => $row->Comment_Username,
+						'userid' => $row->Comment_user_id,
+						'comment' => $this->fixItemComment( $row->Comment_Text ),
+						'minor' => 0,
+						'new' => 0
+					);
+
+					// set last timestamp
+					$this->items_grouped['comment'][$table.':'.$title->getPrefixedText()]['timestamp'] = $row->item_date;
+
+					$username = $row->Comment_Username;
+					$this->items[] = array(
+						'id' => $row->CommentID,
+						'type' => 'comment',
+						'timestamp' => $row->item_date,
+						'pagetitle' => $row->page_title,
+						'namespace' => $row->page_namespace,
+						'username' => $username,
+						'userid' => $row->Comment_user_id,
+						'comment' => $this->fixItemComment( $row->Comment_Text ),
+						'new' => '0',
+						'minor' => 0
+					);
+					// set prefix
+					$this->items_grouped['comment'][$table.':'.$title->getPrefixedText()]['prefix'][] = $table;
 				}
 			}
-
-			if ( $show_comment ) {
-				$title = Title::makeTitle( $row->page_namespace, $row->page_title );
-				$this->items_grouped['comment'][$title->getPrefixedText()]['users'][$row->Comment_Username][] = array(
-					'id' => $row->CommentID,
-					'type' => 'comment',
-					'timestamp' => $row->item_date,
-					'pagetitle' => $row->page_title,
-					'namespace' => $row->page_namespace,
-					'username' => $row->Comment_Username,
-					'userid' => $row->Comment_user_id,
-					'comment' => $this->fixItemComment( $row->Comment_Text ),
-					'minor' => 0,
-					'new' => 0
-				);
-
-				// set last timestamp
-				$this->items_grouped['comment'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
-
-				$username = $row->Comment_Username;
-				$this->items[] = array(
-					'id' => $row->CommentID,
-					'type' => 'comment',
-					'timestamp' => $row->item_date,
-					'pagetitle' => $row->page_title,
-					'namespace' => $row->page_namespace,
-					'username' => $username,
-					'userid' => $row->Comment_user_id,
-					'comment' => $this->fixItemComment( $row->Comment_Text ),
-					'new' => '0',
-					'minor' => 0
-				);
-			}
 		}
+		$dbr->tablePrefix($oldDBprefix);
+		$dbr->selectDB($oldDB);
 	}
 
 	/**
@@ -1360,6 +1354,8 @@ class UserActivity {
 			case 'user_site_follow':
 				return '<i class="fa fa-paper-plane-o"></i>';
 			case 'domain_creation':
+				return '<i class="fa fa-paper-plane-o"></i>';
+			case 'user_update_status':
 				return '<i class="fa fa-paper-plane-o"></i>';
 		}
 	}

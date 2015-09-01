@@ -26,7 +26,7 @@
     "useractivity-domain-creation":"$1创建了$2",
     "useractivity-user_user_follow":"$1{{PLURAL:$2|关注了|关注了}}$3",
     "useractivity-user_site_follow":"$1{{PLURAL:$2|关注了|关注了}}$3",
-    "useractivity-friendsactivity-filter":"*edits|编辑|\n*votes|投票|\n*comments|评论|blah\n*gifts|礼物|blah\n*advancements|升级|blah\n*awards|奖励|blah\n*messages|消息|blah\n*thoughts|观点|blah\n*domain_creations|wiki创建|blah\n*user_user_follow|用户关注|blah\n*user_site_follow|维基关注|blah\n*user_update_status|用户状态|blah",
+    "useractivity-friendsactivity-filter":"*edit|编辑|\n*vote|投票|\n*comment|评论|blah\n*gift-rec|礼物|blah\n*system_message|升级|blah\n*system_gift|奖励|blah\n*user_message|消息|blah\n*domain_creation|wiki创建|blah\n*user_user_follow|用户关注|blah\n*user_site_follow|维基关注|blah\n*user_update_status|用户状态|blah",
     "useractivity-filter":"过滤器"
 
 }
