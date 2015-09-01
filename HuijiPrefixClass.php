@@ -20,6 +20,9 @@ class HuijiPrefix{
 			return $prefix;
 		}
 	}
+	public static function prefixToSiteNameAnchor( $prefix ){
+		return "<a href=\"".self::prefixToUrl($prefix)."\">".self::prefixToSiteName($prefix)."</a>";
+	}
 	public static function prefixToUrl( $prefix ){
 		return 'http://'.$prefix.'.huiji.wiki/';
 	}

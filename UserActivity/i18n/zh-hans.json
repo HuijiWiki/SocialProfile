@@ -24,8 +24,8 @@
 	"user-board-title": "留言墙",
     "useractivity-comment": "$1{{PLURAL:$4|吐槽了$6的页面|吐槽了$6的以下页面:}} $3",
     "useractivity-domain-creation":"$1创建了$2",
-    "useractivity-user_user_follow":"$1{{PLURAL:$2|关注了|关注了以下用户}}$3",
-    "useractivity-user_site_follow":"$1{{PLURAL:$2|关注了|关注了以下站点}}$3",
+    "useractivity-user_user_follow":"$1{{PLURAL:$2|关注了|关注了以下用户:}}$3",
+    "useractivity-user_site_follow":"$1{{PLURAL:$2|关注了|关注了以下站点:}}$6",
     "useractivity-friendsactivity-filter":"*edit|编辑|\n*vote|投票|\n*comment|评论|blah\n*gift-rec|礼物|blah\n*system_message|升级|blah\n*system_gift|奖励|blah\n*user_message|消息|blah\n*domain_creation|wiki创建|blah\n*user_user_follow|用户关注|blah\n*user_site_follow|维基关注|blah\n*user_update_status|用户状态|blah",
     "useractivity-filter":"过滤器"
 

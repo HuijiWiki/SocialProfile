@@ -286,7 +286,7 @@ class UserActivity {
 				'username' => $user_name_short,
 				'userid' => $row->f_user_id,
 				'comment' => '',
-				'site' => $row->f_wiki_domain,
+				'prefix' => $row->f_wiki_domain,
 				'minor' => 0,
 				'new' => 0
 			);
@@ -301,7 +301,7 @@ class UserActivity {
 				'username' => $row->f_user_name,
 				'userid' => $row->f_user_id,
 				'comment' => '',
-				'site' => $row->f_wiki_domain,
+				'prefix' => $row->f_wiki_domain,
 				'minor' => 0,
 				'new' => '0'
 			);
@@ -1248,7 +1248,7 @@ class UserActivity {
 									) {
 										$page_title2 = Title::newFromText( $page_name2, NS_USER );
 									}  elseif ($type == 'user_site_follow'){
-										$page_title = Title::newFromText( $page_name2.':' );
+										$page_title2 = Title::newFromText( $page_name2.':' );
 									}  else {
 										$page_title2 = Title::newFromText( $page_name2 );
 									}
@@ -1296,7 +1296,7 @@ class UserActivity {
 				$prefixCount = count($page_data['prefix']);
 				$i = 0;
 				foreach($page_data['prefix'] as $prefix){
-					$prefixToName .= HuijiPrefix::prefixToSiteName($prefix);
+					$prefixToName .= HuijiPrefix::prefixToSiteNameAnchor($prefix);
 					$i++;
 					if ($i < $prefixCount - 1 ){
 						$prefixToName .= wfMessage( 'comma-separator' )->text();
