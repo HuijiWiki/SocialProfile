@@ -88,6 +88,9 @@ class UserProfilePage extends Article {
 		if (in_array( 'staff', $this->user->getEffectiveGroups(true))){
 			$staff = '<li>职员</li> ';
 		}
+		if (in_array( 'bot', $this->user->getEffectiveGroups(true))){
+			$staff = '<li>机器人</li> ';
+		}
 		if (in_array( 'bureaucrat', $this->user->getEffectiveGroups(true))){
 			$bureaucrat = '<li>行政员</li> ';
 		}

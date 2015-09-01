@@ -277,9 +277,9 @@ class UserActivity {
 
 		foreach ( $res as $row ) {
 			$user_name_short = $wgLang->truncate( $row->f_user_name, 25 );
-			$this->items_grouped['user_user_follow'][$row->f_wiki_domain]['users'][$row->f_user_name][] = array(
+			$this->items_grouped['user_site_follow'][$row->f_wiki_domain]['users'][$row->f_user_name][] = array(
 				'id' => $row->f_id,
-				'type' => 'user_user_follow',
+				'type' => 'user_site_follow',
 				'timestamp' => $row->item_date,
 				'pagetitle' => '',
 				'namespace' => '',
@@ -291,7 +291,7 @@ class UserActivity {
 				'new' => 0
 			);
 			// set last timestamp
-			$this->items_grouped['user_user_follow'][$row->f_wiki_domain]['timestamp'] = $row->item_date;
+			$this->items_grouped['user_site_follow'][$row->f_wiki_domain]['timestamp'] = $row->item_date;
 			$this->items[] = array(
 				'id' => 0,
 				'type' => 'user_site_follow',
