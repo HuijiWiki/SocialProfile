@@ -50,7 +50,8 @@ class UserHome extends SpecialPage {
 		// undefined variables when the filtering feature (described below) is
 		// active and we're viewing a filtered-down feed
 		$edits = $votes = $comments = $comments = $gifts = $relationships =
-			$messages = $system_gifts = $messages_sent = $network_updates = $domain_creations = 0;
+			$messages = $system_gifts = $messages_sent = $network_updates = $domain_creations =
+			$user_user_follows = $user_site_follows = $user_update_status = 0;
 
 		$filter = $request->getVal( 'filter' );
 		$item_type = $request->getVal( 'item_type' );
@@ -90,6 +91,15 @@ class UserHome extends SpecialPage {
 		if ( $item_type == 'thoughts' || $item_type == 'all' ) {
 			$network_updates = 1;
 		}
+		if ( $item_type == 'user_update_status' || $item_type == 'all' ) {
+			$user_update_status = 1;
+		}
+		if ( $item_type == 'user_user_follows' || $item_type == 'all' ) {
+			$user_user_follows = 1;
+		}
+		if ( $item_type == 'user_site_follows' || $item_type == 'all' ) {
+			$user_site_follows = 1;
+		}
 		if ( $item_type == 'domain_creations' || $item_type == 'all' ) {
 			$domain_creations = 1;
 		}
@@ -115,7 +125,7 @@ class UserHome extends SpecialPage {
 					continue;
 				} else {
 					$line = explode( '|' , trim( $line, '* ' ), 3 );
-					$filter = $line[0];
+					$type = $line[0];
 					$link_text = $line[1];
 
 					// Maybe it's the name of a MediaWiki: message? I18n is
@@ -126,7 +136,7 @@ class UserHome extends SpecialPage {
 					}
 
 					$link_image = $line[2];
-					$output .= '<a href="' . htmlspecialchars( $this->getPageTitle()->getFullURL( "item_type={$filter}" ) ) .
+					$output .= '<a href="' . htmlspecialchars( $this->getPageTitle()->getFullURL( "item_type={$type}" ) ) .
 						"\"><img src=\"{$wgExtensionAssetsPath}/SocialProfile/images/" .
 						UserActivity::getTypeIcon( $link_image ) . "\"/>{$link_text}</a>";
 				}
@@ -154,6 +164,9 @@ class UserHome extends SpecialPage {
 		$rel->setActivityToggle( 'show_messages_sent', $messages_sent );
 		$rel->setActivityToggle( 'show_network_updates', $network_updates );
 		$rel->setActivityToggle( 'show_domain_creations', $domain_creations );
+		$rel->setActivityToggle( 'show_user_user_follows', $user_user_follows );
+		$rel->setActivityToggle( 'show_user_site_follows', $user_site_follows );
+		$rel->setActivityToggle( 'show_user_update_status', $user_update_status );
 
 		/**
 		 * Get all relationship activity

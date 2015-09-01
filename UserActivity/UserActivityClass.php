@@ -15,6 +15,8 @@ class UserActivity {
 	private $rel_type;
 	private $show_following = false;
 	private $show_current_user = false;
+	private $show_all = false;
+
 	private $show_edits = 1;
 	private $show_votes = 0;
 	private $show_comments = 1;
@@ -29,6 +31,8 @@ class UserActivity {
 	private $show_user_site_follows = 1;
 	private $show_user_update_status = 1;
 	private $show_domain_creations = 1;
+
+	private $cached_where;
 
 	/**
 	 * Constructor
@@ -127,64 +131,79 @@ class UserActivity {
 	}
 
 	/**
+	 * Based on the fileter, generate the where clause.
+	 * @param $field the where clause field.
+	 * @return array where clause for sql.
+	 */
+	private function where( $field ){
+		$userArray = array();
+		$where = array();
+		$dbr = wfGetDB( DB_SLAVE );
+		if (!empty($this->cached_where)){
+			$userArray = $this->cached_where;
+		} else {
+			if ( !empty( $this->rel_type ) ) {
+				$users = $dbr->select(
+					'user_relationship',
+					'r_user_id_relation',
+					array(
+						'r_user_id' => $this->user_id,
+						'r_type' => $this->rel_type
+					),
+					__METHOD__
+				);			
+				foreach ( $users as $user ) {
+					$userArray[] = $user->r_user_id_relation;
+				}
+			}
+
+			if ( !empty( $this->show_current_user ) ) {
+				$userArray[] = $this->user_id;
+			}
+
+			if ( !empty( $this->show_following )){
+				$users = $dbr->select(
+					'user_user_follow',
+					'f_target_user_id',
+					array(
+						'f_user_id' => $this->user_id,
+					),
+					__METHOD__
+				);
+				foreach ( $users as $user ) {
+					$userArray[] = $user->f_target_user_id;
+				}
+		
+			}
+			//cache it
+			$this->cached_where = $userArray;
+		}
+		$userIDs = implode( ',', $userArray );
+		if ( !empty( $userIDs ) ) {
+			$where[] = "{$field} IN ($userIDs)";
+		}	
+		return $where;
+	}
+
+	/**
 	 * Get recent edits from the recentchanges table and set them in the
 	 * appropriate class member variables.
 	 */
 	private function setEdits() {
-		global $wgDBprefix, $wgDBname;
+		global $wgDBprefix, $wgDBname, $isProduction;
 
 		$dbr = wfGetDB( DB_SLAVE );
+		$where = $this->where('rc_user');
 
-		$where = array();
-
-		if ( !empty( $this->rel_type ) ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "rc_user IN ($userIDs)";
-			}
-		}
-
-		if ( !empty( $this->show_current_user ) ) {
-			$where['rc_user'] = $this->user_id;
-		}
-
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				'f_target_user_id',
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "rc_user IN ($userIDs)";
-			}			
-		}
 		$tables = $this->getAllRecentChangesTables();
 		$oldDBprefix = $wgDBprefix;
 		$oldDB = $wgDBname;
 		$dbr->tablePrefix('');
 		foreach ($tables as $table){
-			if ( $table == 'www'){
+			if ( !$isProduction ){
+				$dbr->selectDB('huiji_'.$table);
+				$table = '';
+			} elseif ( $table == 'www'){
 				$dbr->selectDB('huiji_home');
 				$table = '';
 			} else {
@@ -266,54 +285,7 @@ class UserActivity {
 	private function setUserSiteFollows() {
 		global $wgLang;
 		$dbr = wfGetDB( DB_SLAVE );
-
-		$where = array();
-
-		if ( !empty( $this->rel_type ) ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "f_user_id IN ($userIDs)";
-			}
-		}
-
-		if ( !empty( $this->show_current_user ) ) {
-			$where['f_user_id'] = $this->user_id;
-		}
-
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "f_user_id IN ($userIDs)";
-			}			
-		}
-
+		$where = $this->where('f_user_id');
 		$res = $dbr->select(
 			'user_site_follow',
 			array(
@@ -369,54 +341,7 @@ class UserActivity {
 	private function setUserUserFollows() {
 		global $wgLang;
 		$dbr = wfGetDB( DB_SLAVE );
-
-		$where = array();
-
-		if ( !empty( $this->rel_type ) ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "f_user_id IN ($userIDs)";
-			}
-		}
-
-		if ( !empty( $this->show_current_user ) ) {
-			$where['f_user_id'] = $this->user_id;
-		}
-
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "f_user_id IN ($userIDs)";
-			}			
-		}
-
+		$where = $this->where('f_user_id');
 		$res = $dbr->select(
 			'user_user_follow',
 			array(
@@ -475,53 +400,8 @@ class UserActivity {
 		if ( !$dbr->tableExists( 'Vote' ) ) {
 			return false;
 		}
-
-		$where = array();
+		$where = $this->where('vote_user_id');
 		$where[] = 'vote_page_id = page_id';
-
-		if ( $this->rel_type ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "vote_user_id IN ($userIDs)";
-			}
-		}
-		if ( $this->show_current_user ) {
-			$where['vote_user_id'] = $this->user_id;
-		}
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "vote_user_id IN ($userIDs)";
-			}			
-		}
-
 		$res = $dbr->select(
 			array( 'Vote', 'page' ),
 			array(
@@ -567,53 +447,8 @@ class UserActivity {
 			return false;
 		}
 
-		$where = array();
+		$where = $this->where('Comment_user_id');
 		$where[] = 'comment_page_id = page_id';
-
-		if ( !empty( $this->rel_type ) ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "Comment_user_id IN ($userIDs)";
-			}
-		}
-
-		if ( !empty( $this->show_current_user ) ) {
-			$where['Comment_user_id'] = $this->user_id;
-		}
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "Comment_user_id IN ($userIDs)";
-			}			
-		}
-
 		$res = $dbr->select(
 			array( 'Comments', 'page' ),
 			array(
@@ -682,51 +517,7 @@ class UserActivity {
 	private function setGiftsSent() {
 		$dbr = wfGetDB( DB_SLAVE );
 
-		$where = array();
-
-		if( $this->rel_type ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "ug_user_id_to IN ($userIDs)";
-			}
-		}
-
-		if( $this->show_current_user ) {
-			$where['ug_user_id_from'] = $this->user_id;
-		}
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "ug_user_id_to IN ($userIDs)";
-			}			
-		}
+		$where = $this->where('ug_user_id_from');
 
 		$res = $dbr->select(
 			array( 'user_gift', 'gift' ),
@@ -768,51 +559,7 @@ class UserActivity {
 	private function setGiftsRec() {
 		$dbr = wfGetDB( DB_SLAVE );
 
-		$where = array();
-
-		if ( !empty( $this->rel_type ) ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "ug_user_id_to IN ($userIDs)";
-			}
-		}
-
-		if ( !empty( $this->show_current_user ) ) {
-			$where['ug_user_id_to'] = $this->user_id;
-		}
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "ug_user_id_to IN ($userIDs)";
-			}			
-		}
+		$where = $this->where('ug_user_id_to');
 
 		$res = $dbr->select(
 			array( 'user_gift', 'gift' ),
@@ -883,51 +630,7 @@ class UserActivity {
 
 		$dbr = wfGetDB( DB_SLAVE );
 
-		$where = array();
-
-		if ( !empty( $this->rel_type ) ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "sg_user_id IN ($userIDs)";
-			}
-		}
-
-		if ( !empty( $this->show_current_user ) ) {
-			$where['sg_user_id'] = $this->user_id;
-		}
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "sg_user_id IN ($userIDs)";
-			}			
-		}
+		$where = $this->where('sg_user_id');
 
 		$res = $dbr->select(
 			array( 'user_system_gift', 'system_gift' ),
@@ -994,52 +697,7 @@ class UserActivity {
 
 		$dbr = wfGetDB( DB_SLAVE );
 
-		$where = array();
-
-		if ( !empty( $this->rel_type ) ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "r_user_id IN ($userIDs)";
-			}
-		}
-
-		if ( !empty( $this->show_current_user ) ) {
-			$where['r_user_id'] = $this->user_id;
-		}
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "r_user_id IN ($userIDs)";
-			}			
-		}
-
+		$where = $this->where('r_user_id');
 		$res = $dbr->select(
 			'user_relationship',
 			array(
@@ -1103,54 +761,9 @@ class UserActivity {
 	private function setMessagesSent() {
 		$dbr = wfGetDB( DB_SLAVE );
 
-		$where = array();
+		$this->where('ub_user_id_from');
 		// We do *not* want to display private messages...
 		$where['ub_type'] = 0;
-
-		if ( !empty( $this->rel_type ) ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "ub_user_id_from IN ($userIDs)";
-			}
-		}
-
-		if ( !empty( $this->show_current_user ) ) {
-			$where['ub_user_id_from'] = $this->user_id;
-		}
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "ub_user_id_from IN ($userIDs)";
-			}			
-		}
-
 		$res = $dbr->select(
 			'user_board',
 			array(
@@ -1217,51 +830,7 @@ class UserActivity {
 
 		$dbr = wfGetDB( DB_SLAVE );
 
-		$where = array();
-
-		if ( !empty( $this->rel_type ) ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "um_user_id IN ($userIDs)";
-			}
-		}
-
-		if ( !empty( $this->show_current_user ) ) {
-			$where['um_user_id'] = $this->user_id;
-		}
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "um_user_id IN ($userIDs)";
-			}			
-		}
+		$where = $this->where('um_user_id');
 
 		$res = $dbr->select(
 			'user_system_messages',
@@ -1316,52 +885,7 @@ class UserActivity {
 
 		$dbr = wfGetDB( DB_SLAVE );
 
-		$where = array();
-
-		if ( !empty( $this->rel_type ) ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "us_user_id IN ($userIDs)";
-			}
-		}
-
-		if ( $this->show_current_user ) {
-			$where['us_user_id'] = $this->user_id;
-		}
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "us_user_id IN ($userIDs)";
-			}			
-		}
-
+		$where = $this->where('us_user_id');
 		$res = $dbr->select(
 			'user_status',
 			array(
@@ -1440,51 +964,7 @@ class UserActivity {
 
 		$dbr = wfGetDB( DB_SLAVE );
 
-		$where = array();
-
-		if ( !empty( $this->rel_type ) ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "domain_founder_id IN ($userIDs)";
-			}
-		}
-
-		if ( $this->show_current_user ) {
-			$where['domain_founder_id'] = $this->user_id;
-		}
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "domain_founder_id IN ($userIDs)";
-			}			
-		}
+		$where = $this->where('domain_founder_id');
 
 		$res = $dbr->select(
 			'domain',
@@ -1767,7 +1247,8 @@ class UserActivity {
 									if (
 										$type == 'friend' ||
 										$type == 'foe' ||
-										$type == 'user_message'
+										$type == 'user_message' ||
+										$type == 'user_user_follow'
 									) {
 										$page_title2 = Title::newFromText( $page_name2, NS_USER );
 									}  elseif ($type == 'user_site_follow'){
@@ -1788,8 +1269,9 @@ class UserActivity {
 										)->text() . ')';
 									}
 									$pages_count++;
-									$page_data['prefix'] = array_merge($page_data['prefix'], $page_data2['prefix']);
-
+									if (isset($page_data['prefix'])){
+										$page_data['prefix'] = array_merge($page_data['prefix'], $page_data2['prefix']);
+									}
 									$this->displayed[$type][$page_name2] = 1;
 								}
 							}
@@ -1813,17 +1295,19 @@ class UserActivity {
 				$users .= ' <b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\" title=\"{$safeTitle}\">{$user_name_short}</a></b>";
 			}
 			$prefixToName = '';
-			$page_data['prefix'] = array_unique($page_data['prefix']);
-			$prefixCount = count($page_data['prefix']);
-			$i = 0;
-			foreach($page_data['prefix'] as $prefix){
-				$prefixToName .= HuijiPrefix::prefixToSiteName($prefix);
-				$i++;
-				if ($i < $prefixCount - 1 ){
-					$prefixToName .= wfMessage( 'comma-separator' )->text();
-				}
-				if ($i == $prefixCount-1 && $prefixCount > 1){
-					$prefixToName .= wfMessage( 'and' )->text();
+			if ( isset($page_data['prefix'])){
+				$page_data['prefix'] = array_unique($page_data['prefix']);
+				$prefixCount = count($page_data['prefix']);
+				$i = 0;
+				foreach($page_data['prefix'] as $prefix){
+					$prefixToName .= HuijiPrefix::prefixToSiteName($prefix);
+					$i++;
+					if ($i < $prefixCount - 1 ){
+						$prefixToName .= wfMessage( 'comma-separator' )->text();
+					}
+					if ($i == $prefixCount-1 && $prefixCount > 1){
+						$prefixToName .= wfMessage( 'and' )->text();
+					}
 				}
 			}
 			if ( $pages || $has_page == false ) {
