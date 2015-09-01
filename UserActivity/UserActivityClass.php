@@ -1258,7 +1258,7 @@ class UserActivity {
 										$pages .= ', ';
 									}
 									if ( $page_title2 instanceof Title ) {
-										$pages .= ' <a href="' . htmlspecialchars( $page_title2->getFullURL() ) . "\">{$page_title2->getText()}</a>";
+										$pages .= '<a href="' . htmlspecialchars( $page_title2->getFullURL() ) . "\">{$page_title2->getText()}</a>";
 									}
 									if ( $count_actions2 > 1 ) {
 										$pages .= ' (' . wfMessage(
