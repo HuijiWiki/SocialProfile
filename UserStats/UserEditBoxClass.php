@@ -39,4 +39,20 @@ class UserEditBox{
 		}
 		return $userEditInfo;
 	}
+	static function getTodayEdit($userId){
+		return $editNum = RecordStatistics::getRecentPageEditCountOnWikiSiteFromUserId($userId,'','day');
+	}
+	static function getSunday($mon,$year){
+		$i=mktime(0,0,0,$mon,1,$year);
+		$arrSun = array();
+        while(1){
+            $day=getdate($i);
+            if ($day['mon']!=$mon) 
+                break;
+            if ($day['wday']==0 ) 
+                $arrSun[] = "{$day['year']}-{$day['mon']}-{$day['mday']}";
+            $i+=24*3600;
+        }
+        return $arrSun[0];
+	}
 }
