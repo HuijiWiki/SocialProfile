@@ -1634,7 +1634,7 @@ class UserProfilePage extends Article {
 
 			foreach ( $activity as $item ) {
 				$item_html = '';
-				$title = Title::makeTitle( $item['namespace'], $item['pagetitle'] );
+				$title = Title::makeTitle( $item['namespace'], $item['pagetitle'], ’‘, $item['prefix'] );
 				$user_title = Title::makeTitle( NS_USER, $item['username'] );
 				$user_title_2 = Title::makeTitle( NS_USER, $item['comment'] );
 
@@ -1649,7 +1649,7 @@ class UserProfilePage extends Article {
 				}
 
 				$page_link = '<b><a href="' . htmlspecialchars( $title->getFullURL() ) .
-					"{$comment_url}\">" . $title->getPrefixedText() . '</a></b> ';
+					"{$comment_url}\">" . $title->getText() . '</a></b> ';
 				$b = new UserBoard(); // Easier than porting the time-related functions here
 				$item_time = '<span class="item-small">' .
 					wfMessage( 'user-time-ago', $b->getTimeAgo( $item['timestamp'] ) )->escaped() .

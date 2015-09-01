@@ -65,7 +65,7 @@
 	"user-personal-info-places-lived": "我曾居住的地方",
 	"user-personal-info-schools": "学校",
 	"user-personal-info-about-me": "关于我",
-	"user-recent-activity-title": "新鲜事",
+	"user-recent-activity-title": "最新动向",
 	"user-recent-activity-edit": "编辑了页面",
 	"user-recent-activity-comment": "评论了页面",
 	"user-recent-activity-gift-sent": "已赠送礼物给",
@@ -141,7 +141,7 @@
 	"user-profile-picture-log-entry": "上传了新头像",
 	"user-profile-picture-log-delete-entry": "删除了$1的头像",
 	"right-avatarremove": "移除使用者的头像",
-	"user-recent-local-activity-title":"本wiki上的活动",
+	"user-recent-local-activity-title":"编辑活动",
 	"user-recent-activity-follow":"关注了",
 	"user-recent-system-gift":"收到了一份奖励"
 }

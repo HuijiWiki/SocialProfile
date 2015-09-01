@@ -261,24 +261,44 @@ class UserStatus{
 		// $wgMemc->set( $key, $result );
 		return $result;
 	}
-
+	/**
+	 * Among my followings, find all the followers of the target users.
+	 * @param $current_user username of the viewer. (ie. $wgUser)
+	 * @param $username username of the target user, whose usercard is displayed on screen.
+	 * @return array of followers.
+	 *
+	 */
 	public static function getFollowingFollowsUser( $username,$current_user ){
 		$data = self::getFollowingFollowsUserCache( $username,$current_user );
 		if ( $data != '' ) {
 			wfDebug( "Got top followed $data ( User = {$username} ) from cache\n" );
 			return $data;
 		} else {
-			return self::getFollowingFollowsUserDB( $username,$current_user );
+			return self::getFollowingFollowsUserDB( $username, $current_user );
 		}
 	}
-	public static function getFollowingFollowsUserCache( $username,$current_user ){
+	/**
+	 * Among my followings, find all the followers of the target users from cache.
+	 * @param $current_user username of the viewer. (ie. $wgUser)
+	 * @param $username username of the target user, whose usercard is displayed on screen.
+	 * @return array of followers.
+	 *
+	 */
+	public static function getFollowingFollowsUserCache( $username, $current_user ){
 		global $wgMemc;
-		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'my_following_follows_him', $username );
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'my_followings_following_him', $username, $current_user );
 		$data = $wgMemc->get( $key );
 	}
-	public static function getFollowingFollowsUserDB( $username,$current_user ){
+	/**
+	 * Among my followings, find all the followers of the target users from database.
+	 * @param $current_user username of the viewer. (ie. $wgUser)
+	 * @param $username username of the target user, whose usercard is displayed on screen.
+	 * @return array of followers.
+	 *
+	 */
+	public static function getFollowingFollowsUserDB( $username, $current_user ){
 		global $wgMemc;
-		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'my_following_follows_him', $username );
+		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'my_followings_following_him', $username, $current_user );
 		// return $current_user;
 		$dbr = wfGetDB( DB_SLAVE );
 		if($current_user != NULL){

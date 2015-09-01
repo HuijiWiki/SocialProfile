@@ -15,6 +15,8 @@ class UserActivity {
 	private $rel_type;
 	private $show_following = false;
 	private $show_current_user = false;
+	private $show_all = false;
+
 	private $show_edits = 1;
 	private $show_votes = 0;
 	private $show_comments = 1;
@@ -28,6 +30,9 @@ class UserActivity {
 	private $show_user_user_follows = 1;
 	private $show_user_site_follows = 1;
 	private $show_user_update_status = 1;
+	private $show_domain_creations = 1;
+
+	private $cached_where;
 
 	/**
 	 * Constructor
@@ -66,7 +71,7 @@ class UserActivity {
 		}
 		if ( strtoupper( $filter ) == 'ALL' ) {
 			$this->show_all = true;
-		}
+		} 
 	}
 
 	/**
@@ -77,115 +82,172 @@ class UserActivity {
 	}
 
 	/**
+	 * return a join argument for setEdits(). Preferably this should only return two or three wikis recently changed by a given set of users.
+	 *
+	 */
+	private function getAllRecentChangesTables(){
+		global $wgHuijiPrefix;
+		$dbr = wfGetDB( DB_SLAVE );
+		$values = $dbr->select(
+			'domain',
+			'domain_prefix',
+			'domain_status = 0',
+			__METHOD__
+		);
+		// echo $values;
+		// die(1);
+		$tables = array();
+		foreach( $values as $value ){
+			$tables[] = str_replace('.', '_', $value->domain_prefix);
+		}
+		return $tables;
+	}
+
+	/**
+	 * Based on the fileter, generate the where clause.
+	 * @param $field the where clause field.
+	 * @return array where clause for sql.
+	 */
+	private function where( $field ){
+		$userArray = array();
+		$where = array();
+		$dbr = wfGetDB( DB_SLAVE );
+		if (!empty($this->cached_where)){
+			$userArray = $this->cached_where;
+		} else {
+			if ( !empty( $this->rel_type ) ) {
+				$users = $dbr->select(
+					'user_relationship',
+					'r_user_id_relation',
+					array(
+						'r_user_id' => $this->user_id,
+						'r_type' => $this->rel_type
+					),
+					__METHOD__
+				);			
+				foreach ( $users as $user ) {
+					$userArray[] = $user->r_user_id_relation;
+				}
+			}
+
+			if ( !empty( $this->show_current_user ) ) {
+				$userArray[] = $this->user_id;
+			}
+
+			if ( !empty( $this->show_following )){
+				$users = $dbr->select(
+					'user_user_follow',
+					'f_target_user_id',
+					array(
+						'f_user_id' => $this->user_id,
+					),
+					__METHOD__
+				);
+				foreach ( $users as $user ) {
+					$userArray[] = $user->f_target_user_id;
+				}
+		
+			}
+			//cache it
+			$this->cached_where = $userArray;
+		}
+		$userIDs = implode( ',', $userArray );
+		if ( !empty( $userIDs ) ) {
+			$where[] = "{$field} IN ($userIDs)";
+		}	
+		return $where;
+	}
+
+	/**
 	 * Get recent edits from the recentchanges table and set them in the
 	 * appropriate class member variables.
 	 */
 	private function setEdits() {
+		global $wgDBprefix, $wgDBname, $isProduction;
+
 		$dbr = wfGetDB( DB_SLAVE );
+		$where = $this->where('rc_user');
 
-		$where = array();
-
-		if ( !empty( $this->rel_type ) ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
+		$tables = $this->getAllRecentChangesTables();
+		$oldDBprefix = $wgDBprefix;
+		$oldDB = $wgDBname;
+		$dbr->tablePrefix('');
+		foreach ($tables as $table){
+			if ( !$isProduction ){
+				$dbr->selectDB('huiji_'.$table);
+				$table = '';
+			} elseif ( $table == 'www'){
+				$dbr->selectDB('huiji_home');
+				$table = '';
+			} else {
+				$dbr->selectDB('huiji_sites');
+			}
+			$res = $dbr->select(
+				$table.'recentchanges',
 				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
+					'UNIX_TIMESTAMP(rc_timestamp) AS item_date', 'rc_title',
+					'rc_user', 'rc_user_text', 'rc_comment', 'rc_id', 'rc_minor',
+					'rc_new', 'rc_namespace', 'rc_cur_id', 'rc_this_oldid',
+					'rc_last_oldid', 'rc_log_action'
 				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "rc_user IN ($userIDs)";
-			}
-		}
-
-		if ( !empty( $this->show_current_user ) ) {
-			$where['rc_user'] = $this->user_id;
-		}
-
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				'f_target_user_id',
+				$where,
+				__METHOD__,
 				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
+					'ORDER BY' => 'rc_id DESC',
+					'LIMIT' => $this->item_max,
+					'OFFSET' => 0
+				)
+				// $this->getAllRecentChangesJoinConds()
 			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
+			foreach ( $res as $row ) {
+				// Special pages aren't editable, so ignore them
+				// And blocking a vandal should not be counted as editing said
+				// vandal's user page...
+				if ( $row->rc_namespace == NS_SPECIAL || $row->rc_log_action != null ) {
+					continue;
+				}
+				// Topics need some hack in title
+				if ( $row->rc_namespace == NS_TOPIC){
+					//TODO change something!
+				}
+				$title = Title::makeTitle( $row->rc_namespace, $row->rc_title );
+				$this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['users'][$row->rc_user_text][] = array(
+					'id' => 0,
+					'type' => 'edit',
+					'timestamp' => $row->item_date,
+					'pagetitle' => $row->rc_title,
+					'namespace' => $row->rc_namespace,
+					'username' => $row->rc_user_text,
+					'userid' => $row->rc_user,
+					'comment' => $this->fixItemComment( $row->rc_comment ),
+					'minor' => $row->rc_minor,
+					'new' => $row->rc_new,
+					'prefix' => $table
+				);
+
+				// set last timestamp
+				$this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['timestamp'] = $row->item_date;
+				$this->items[] = array(
+					'id' => 0,
+					'type' => 'edit',
+					'timestamp' => ( $row->item_date ),
+					'pagetitle' => $row->rc_title,
+					'namespace' => $row->rc_namespace,
+					'username' => $row->rc_user_text,
+					'userid' => $row->rc_user,
+					'comment' => $this->fixItemComment( $row->rc_comment ),
+					'minor' => $row->rc_minor,
+					'new' => $row->rc_new,
+					'prefix' => $table
+				);
+				// set prefix
+				$this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['prefix'][] = $table;
 			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "rc_user IN ($userIDs)";
-			}			
+
 		}
+		$dbr->tablePrefix($oldDBprefix);
+		$dbr->selectDB($oldDB);
 
-		$res = $dbr->select(
-			'recentchanges',
-			array(
-				'UNIX_TIMESTAMP(rc_timestamp) AS item_date', 'rc_title',
-				'rc_user', 'rc_user_text', 'rc_comment', 'rc_id', 'rc_minor',
-				'rc_new', 'rc_namespace', 'rc_cur_id', 'rc_this_oldid',
-				'rc_last_oldid', 'rc_log_action'
-			),
-			$where,
-			__METHOD__,
-			array(
-				'ORDER BY' => 'rc_id DESC',
-				'LIMIT' => $this->item_max,
-				'OFFSET' => 0
-			)
-		);
-
-		foreach ( $res as $row ) {
-			// Special pages aren't editable, so ignore them
-			// And blocking a vandal should not be counted as editing said
-			// vandal's user page...
-			if ( $row->rc_namespace == NS_SPECIAL || $row->rc_log_action != null ) {
-				continue;
-			}
-			// Topics need some hack in title
-			if ( $row->rc_namespace == NS_TOPIC){
-				//TODO change something!
-			}
-			$title = Title::makeTitle( $row->rc_namespace, $row->rc_title );
-			$this->items_grouped['edit'][$title->getPrefixedText()]['users'][$row->rc_user_text][] = array(
-				'id' => 0,
-				'type' => 'edit',
-				'timestamp' => $row->item_date,
-				'pagetitle' => $row->rc_title,
-				'namespace' => $row->rc_namespace,
-				'username' => $row->rc_user_text,
-				'userid' => $row->rc_user,
-				'comment' => $this->fixItemComment( $row->rc_comment ),
-				'minor' => $row->rc_minor,
-				'new' => $row->rc_new
-			);
-
-			// set last timestamp
-			$this->items_grouped['edit'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
-
-			$this->items[] = array(
-				'id' => 0,
-				'type' => 'edit',
-				'timestamp' => ( $row->item_date ),
-				'pagetitle' => $row->rc_title,
-				'namespace' => $row->rc_namespace,
-				'username' => $row->rc_user_text,
-				'userid' => $row->rc_user,
-				'comment' => $this->fixItemComment( $row->rc_comment ),
-				'minor' => $row->rc_minor,
-				'new' => $row->rc_new
-			);
-		}
 	}
 
 
@@ -194,55 +256,9 @@ class UserActivity {
 	 * appropriate class member variables.
 	 */
 	private function setUserSiteFollows() {
+		global $wgLang;
 		$dbr = wfGetDB( DB_SLAVE );
-
-		$where = array();
-
-		if ( !empty( $this->rel_type ) ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "f_user_id IN ($userIDs)";
-			}
-		}
-
-		if ( !empty( $this->show_current_user ) ) {
-			$where['f_user_id'] = $this->user_id;
-		}
-
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "f_user_id IN ($userIDs)";
-			}			
-		}
-
+		$where = $this->where('f_user_id');
 		$res = $dbr->select(
 			'user_site_follow',
 			array(
@@ -259,6 +275,22 @@ class UserActivity {
 		);
 
 		foreach ( $res as $row ) {
+			$user_name_short = $wgLang->truncate( $row->f_user_name, 25 );
+			$this->items_grouped['user_user_follow'][$row->f_wiki_domain]['users'][$row->f_user_name][] = array(
+				'id' => $row->f_id,
+				'type' => 'user_user_follow',
+				'timestamp' => $row->item_date,
+				'pagetitle' => '',
+				'namespace' => '',
+				'username' => $user_name_short,
+				'userid' => $row->f_user_id,
+				'comment' => '',
+				'site' => $row->f_wiki_domain,
+				'minor' => 0,
+				'new' => 0
+			);
+			// set last timestamp
+			$this->items_grouped['user_user_follow'][$row->f_wiki_domain]['timestamp'] = $row->item_date;
 			$this->items[] = array(
 				'id' => 0,
 				'type' => 'user_site_follow',
@@ -280,55 +312,9 @@ class UserActivity {
 	 * appropriate class member variables.
 	 */
 	private function setUserUserFollows() {
+		global $wgLang;
 		$dbr = wfGetDB( DB_SLAVE );
-
-		$where = array();
-
-		if ( !empty( $this->rel_type ) ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "f_user_id IN ($userIDs)";
-			}
-		}
-
-		if ( !empty( $this->show_current_user ) ) {
-			$where['f_user_id'] = $this->user_id;
-		}
-
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "f_user_id IN ($userIDs)";
-			}			
-		}
-
+		$where = $this->where('f_user_id');
 		$res = $dbr->select(
 			'user_user_follow',
 			array(
@@ -345,6 +331,23 @@ class UserActivity {
 		);
 
 		foreach ( $res as $row ) {
+			$user_name_short = $wgLang->truncate( $row->f_user_name, 25 );
+			$this->items_grouped['user_user_follow'][$row->f_target_user_name]['users'][$row->f_user_name][] = array(
+				'id' => $row->f_id,
+				'type' => 'user_user_follow',
+				'timestamp' => $row->item_date,
+				'pagetitle' => '',
+				'namespace' => '',
+				'username' => $user_name_short,
+				'userid' => $row->f_user_id,
+				'comment' => $row->f_target_user_name,
+				'minor' => 0,
+				'new' => 0
+			);
+			// set last timestamp
+			$this->items_grouped['user_user_follow'][$row->f_target_user_name]['timestamp'] = $row->item_date;
+
+
 			$this->items[] = array(
 				'id' => 0,
 				'type' => 'user_user_follow',
@@ -370,53 +373,8 @@ class UserActivity {
 		if ( !$dbr->tableExists( 'Vote' ) ) {
 			return false;
 		}
-
-		$where = array();
+		$where = $this->where('vote_user_id');
 		$where[] = 'vote_page_id = page_id';
-
-		if ( $this->rel_type ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "vote_user_id IN ($userIDs)";
-			}
-		}
-		if ( $this->show_current_user ) {
-			$where['vote_user_id'] = $this->user_id;
-		}
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "vote_user_id IN ($userIDs)";
-			}			
-		}
-
 		$res = $dbr->select(
 			array( 'Vote', 'page' ),
 			array(
@@ -455,6 +413,7 @@ class UserActivity {
 	 * extension) and set them in the appropriate class member variables.
 	 */
 	private function setComments() {
+		global $wgDBprefix, $wgDBname, $isProduction;
 		$dbr = wfGetDB( DB_SLAVE );
 
 		# Bail out if Comments table doesn't exist
@@ -462,112 +421,87 @@ class UserActivity {
 			return false;
 		}
 
-		$where = array();
+		$where = $this->where('Comment_user_id');
 		$where[] = 'comment_page_id = page_id';
 
-		if ( !empty( $this->rel_type ) ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
+		$tables = $this->getAllRecentChangesTables();
+		$oldDBprefix = $wgDBprefix;
+		$oldDB = $wgDBname;
+		$dbr->tablePrefix('');
+
+		foreach ($tables as $table){
+			if ( !$isProduction ){
+				$dbr->selectDB('huiji_'.$table);
+				$table = '';
+			} elseif ( $table == 'www'){
+				$dbr->selectDB('huiji_home');
+				$table = '';
+			} else {
+				$dbr->selectDB('huiji_sites');
+			}
+			$res = $dbr->select(
+				array( $table.'Comments', $table.'page' ),
 				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
+					'UNIX_TIMESTAMP(comment_date) AS item_date',
+					'Comment_Username', 'Comment_IP', 'page_title', 'Comment_Text',
+					'Comment_user_id', 'page_namespace', 'CommentID'
 				),
-				__METHOD__
+				$where,
+				__METHOD__,
+				array(
+					'ORDER BY' => 'comment_date DESC',
+					'LIMIT' => $this->item_max,
+					'OFFSET' => 0
+				)
 			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "Comment_user_id IN ($userIDs)";
-			}
-		}
+			foreach ( $res as $row ) {
+				$show_comment = true;
 
-		if ( !empty( $this->show_current_user ) ) {
-			$where['Comment_user_id'] = $this->user_id;
-		}
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "Comment_user_id IN ($userIDs)";
-			}			
-		}
+				global $wgFilterComments;
+				if ( $wgFilterComments ) {
+					if ( $row->vote_count <= 4 ) {
+						$show_comment = false;
+					}
+				}
 
-		$res = $dbr->select(
-			array( 'Comments', 'page' ),
-			array(
-				'UNIX_TIMESTAMP(comment_date) AS item_date',
-				'Comment_Username', 'Comment_IP', 'page_title', 'Comment_Text',
-				'Comment_user_id', 'page_namespace', 'CommentID'
-			),
-			$where,
-			__METHOD__,
-			array(
-				'ORDER BY' => 'comment_date DESC',
-				'LIMIT' => $this->item_max,
-				'OFFSET' => 0
-			)
-		);
+				if ( $show_comment ) {
+					$title = Title::makeTitle( $row->page_namespace, $row->page_title );
+					$this->items_grouped['comment'][$table.':'.$title->getPrefixedText()]['users'][$row->Comment_Username][] = array(
+						'id' => $row->CommentID,
+						'type' => 'comment',
+						'timestamp' => $row->item_date,
+						'pagetitle' => $row->page_title,
+						'namespace' => $row->page_namespace,
+						'username' => $row->Comment_Username,
+						'userid' => $row->Comment_user_id,
+						'comment' => $this->fixItemComment( $row->Comment_Text ),
+						'minor' => 0,
+						'new' => 0
+					);
 
-		foreach ( $res as $row ) {
-			$show_comment = true;
+					// set last timestamp
+					$this->items_grouped['comment'][$table.':'.$title->getPrefixedText()]['timestamp'] = $row->item_date;
 
-			global $wgFilterComments;
-			if ( $wgFilterComments ) {
-				if ( $row->vote_count <= 4 ) {
-					$show_comment = false;
+					$username = $row->Comment_Username;
+					$this->items[] = array(
+						'id' => $row->CommentID,
+						'type' => 'comment',
+						'timestamp' => $row->item_date,
+						'pagetitle' => $row->page_title,
+						'namespace' => $row->page_namespace,
+						'username' => $username,
+						'userid' => $row->Comment_user_id,
+						'comment' => $this->fixItemComment( $row->Comment_Text ),
+						'new' => '0',
+						'minor' => 0
+					);
+					// set prefix
+					$this->items_grouped['comment'][$table.':'.$title->getPrefixedText()]['prefix'][] = $table;
 				}
 			}
-
-			if ( $show_comment ) {
-				$title = Title::makeTitle( $row->page_namespace, $row->page_title );
-				$this->items_grouped['comment'][$title->getPrefixedText()]['users'][$row->Comment_Username][] = array(
-					'id' => $row->CommentID,
-					'type' => 'comment',
-					'timestamp' => $row->item_date,
-					'pagetitle' => $row->page_title,
-					'namespace' => $row->page_namespace,
-					'username' => $row->Comment_Username,
-					'userid' => $row->Comment_user_id,
-					'comment' => $this->fixItemComment( $row->Comment_Text ),
-					'minor' => 0,
-					'new' => 0
-				);
-
-				// set last timestamp
-				$this->items_grouped['comment'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
-
-				$username = $row->Comment_Username;
-				$this->items[] = array(
-					'id' => $row->CommentID,
-					'type' => 'comment',
-					'timestamp' => $row->item_date,
-					'pagetitle' => $row->page_title,
-					'namespace' => $row->page_namespace,
-					'username' => $username,
-					'userid' => $row->Comment_user_id,
-					'comment' => $this->fixItemComment( $row->Comment_Text ),
-					'new' => '0',
-					'minor' => 0
-				);
-			}
 		}
+		$dbr->tablePrefix($oldDBprefix);
+		$dbr->selectDB($oldDB);
 	}
 
 	/**
@@ -577,51 +511,7 @@ class UserActivity {
 	private function setGiftsSent() {
 		$dbr = wfGetDB( DB_SLAVE );
 
-		$where = array();
-
-		if( $this->rel_type ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "ug_user_id_to IN ($userIDs)";
-			}
-		}
-
-		if( $this->show_current_user ) {
-			$where['ug_user_id_from'] = $this->user_id;
-		}
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "ug_user_id_to IN ($userIDs)";
-			}			
-		}
+		$where = $this->where('ug_user_id_from');
 
 		$res = $dbr->select(
 			array( 'user_gift', 'gift' ),
@@ -663,51 +553,7 @@ class UserActivity {
 	private function setGiftsRec() {
 		$dbr = wfGetDB( DB_SLAVE );
 
-		$where = array();
-
-		if ( !empty( $this->rel_type ) ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "ug_user_id_to IN ($userIDs)";
-			}
-		}
-
-		if ( !empty( $this->show_current_user ) ) {
-			$where['ug_user_id_to'] = $this->user_id;
-		}
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "ug_user_id_to IN ($userIDs)";
-			}			
-		}
+		$where = $this->where('ug_user_id_to');
 
 		$res = $dbr->select(
 			array( 'user_gift', 'gift' ),
@@ -778,51 +624,7 @@ class UserActivity {
 
 		$dbr = wfGetDB( DB_SLAVE );
 
-		$where = array();
-
-		if ( !empty( $this->rel_type ) ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "sg_user_id IN ($userIDs)";
-			}
-		}
-
-		if ( !empty( $this->show_current_user ) ) {
-			$where['sg_user_id'] = $this->user_id;
-		}
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "sg_user_id IN ($userIDs)";
-			}			
-		}
+		$where = $this->where('sg_user_id');
 
 		$res = $dbr->select(
 			array( 'user_system_gift', 'system_gift' ),
@@ -889,52 +691,7 @@ class UserActivity {
 
 		$dbr = wfGetDB( DB_SLAVE );
 
-		$where = array();
-
-		if ( !empty( $this->rel_type ) ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "r_user_id IN ($userIDs)";
-			}
-		}
-
-		if ( !empty( $this->show_current_user ) ) {
-			$where['r_user_id'] = $this->user_id;
-		}
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "r_user_id IN ($userIDs)";
-			}			
-		}
-
+		$where = $this->where('r_user_id');
 		$res = $dbr->select(
 			'user_relationship',
 			array(
@@ -998,54 +755,9 @@ class UserActivity {
 	private function setMessagesSent() {
 		$dbr = wfGetDB( DB_SLAVE );
 
-		$where = array();
+		$this->where('ub_user_id_from');
 		// We do *not* want to display private messages...
 		$where['ub_type'] = 0;
-
-		if ( !empty( $this->rel_type ) ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "ub_user_id_from IN ($userIDs)";
-			}
-		}
-
-		if ( !empty( $this->show_current_user ) ) {
-			$where['ub_user_id_from'] = $this->user_id;
-		}
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "ub_user_id_from IN ($userIDs)";
-			}			
-		}
-
 		$res = $dbr->select(
 			'user_board',
 			array(
@@ -1112,51 +824,7 @@ class UserActivity {
 
 		$dbr = wfGetDB( DB_SLAVE );
 
-		$where = array();
-
-		if ( !empty( $this->rel_type ) ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "um_user_id IN ($userIDs)";
-			}
-		}
-
-		if ( !empty( $this->show_current_user ) ) {
-			$where['um_user_id'] = $this->user_id;
-		}
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "um_user_id IN ($userIDs)";
-			}			
-		}
+		$where = $this->where('um_user_id');
 
 		$res = $dbr->select(
 			'user_system_messages',
@@ -1199,7 +867,7 @@ class UserActivity {
 	}
 
 	/**
-	 * Get recent network updates (but only if the SportsTeams extension is
+	 * Get recent status updates (but only if the SportsTeams extension is
 	 * installed) and set them in the appropriate class member variables.
 	 */
 	private function setNetworkUpdates() {
@@ -1211,52 +879,7 @@ class UserActivity {
 
 		$dbr = wfGetDB( DB_SLAVE );
 
-		$where = array();
-
-		if ( !empty( $this->rel_type ) ) {
-			$users = $dbr->select(
-				'user_relationship',
-				'r_user_id_relation',
-				array(
-					'r_user_id' => $this->user_id,
-					'r_type' => $this->rel_type
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "us_user_id IN ($userIDs)";
-			}
-		}
-
-		if ( $this->show_current_user ) {
-			$where['us_user_id'] = $this->user_id;
-		}
-		if ( !empty( $this->show_following )){
-			$users = $dbr->select(
-				'user_user_follow',
-				array(
-					'f_target_user_id',
-				),
-				array(
-					'f_user_id' => $this->user_id,
-				),
-				__METHOD__
-			);
-			$userArray = array();
-			foreach ( $users as $user ) {
-				$userArray[] = $user->f_target_user_id;
-			}
-			$userIDs = implode( ',', $userArray );
-			if ( !empty( $userIDs ) ) {
-				$where[] = "us_user_id IN ($userIDs)";
-			}			
-		}
-
+		$where = $this->where('us_user_id');
 		$res = $dbr->select(
 			'user_status',
 			array(
@@ -1323,6 +946,85 @@ class UserActivity {
 			);
 		}
 	}
+	/**
+	 * Get recent wiki creations and set them in the appropriate class member variables.
+	 */
+	private function setDomainCreations() {
+		global $wgLang;
+
+		// if ( !class_exists( 'SportsTeams' ) ) {
+		// 	return;
+		// }
+
+		$dbr = wfGetDB( DB_SLAVE );
+
+		$where = $this->where('domain_founder_id');
+
+		$res = $dbr->select(
+			'domain',
+			array(
+				'domain_id', 'domain_prefix', 'domain_name', 'domain_dsp',
+				'UNIX_TIMESTAMP(domain_date) AS item_date', 'domain_founder_id',
+				'domain_founder_name'
+			),
+			$where,
+			__METHOD__,
+			array(
+				'ORDER BY' => 'domain_id DESC',
+				'LIMIT' => $this->item_max,
+				'OFFSET' => 0
+			)
+		);
+
+		foreach ( $res as $row ) {
+			// if ( $row->us_team_id ) {
+			// 	$team = SportsTeams::getTeam( $row->us_team_id );
+			// 	$network_name = $team['name'];
+			// } else {
+			// 	$sport = SportsTeams::getSport( $row->us_sport_id );
+			// 	$network_name = $sport['name'];
+			// }
+
+			$this->items[] = array(
+				'id' => $row->domain_id,
+				'type' => 'domain_creation',
+				'timestamp' => $row->item_date,
+				'pagetitle' => '',
+				'namespace' => '',
+				'username' => $row->domain_founder_name,
+				'userid' => $row->domain_founder_id,
+				'comment' => $row->domain_dsp,
+				'domainprefix' => $row->domain_prefix,
+				'domainname' => $row->domain_name
+			);
+
+			$domainUrl = HuijiPrefix::prefixToUrl($row->domain_prefix);
+			$user_name_short = $wgLang->truncate( $row->domain_founder_name, 15 );
+			$user_title = Title::makeTitle( NS_USER, $row->domain_founder_name );
+			$founder_link = '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b>";
+
+			$page_link = '<a href="' . $domainUrl .
+				"\" rel=\"nofollow\">{$row->domain_name}</a>";
+			//$network_image = SportsTeams::getLogo( $row->us_sport_id, $row->us_team_id, 's' );
+
+			$html = wfMessage(
+				'useractivity-domain-creation',
+				$founder_link,
+				$page_link
+			)->text() .
+					'<div class="item">
+						<a href="' . $domainUrl . "\" rel=\"nofollow\">
+							\"{$row->domain_dsp}\"
+						</a>
+					</div>";
+
+			$this->activityLines[] = array(
+				'type' => 'domain_creation',
+				'timestamp' => $row->item_date,
+				'data' => $html,
+			);
+		}
+	}
 
 	public function getEdits() {
 		$this->setEdits();
@@ -1384,6 +1086,11 @@ class UserActivity {
 		return $this->items;
 	}
 
+	public function getDomainCreations() {
+		$this->setDomainCreations();
+		return $this->items;
+	}
+
 	public function getActivityList() {
 		if ( $this->show_edits ) {
 			$this->setEdits();
@@ -1421,6 +1128,9 @@ class UserActivity {
 		if ( $this->show_user_site_follows ) {
 			$this->getUserSiteFollows();
 		}
+		if ( $this->show_domain_creations ) {
+			$this->getDomainCreations();
+		}
 		if ( $this->items ) {
 			usort( $this->items, array( 'UserActivity', 'sortItems' ) );
 		}
@@ -1444,6 +1154,12 @@ class UserActivity {
 		}
 		if ( $this->show_messages_sent ) {
 			$this->simplifyPageActivity( 'user_message' );
+		}
+		if ( $this->show_user_user_follows ) {
+			$this->simplifyPageActivity( 'user_user_follow' );
+		}
+		if ( $this->show_user_site_follows ) {
+			$this->simplifyPageActivity( 'user_site_follow' );
 		}
 
 		if ( !isset( $this->activityLines ) ) {
@@ -1472,11 +1188,13 @@ class UserActivity {
 			$users = '';
 			$pages = '';
 
-			if ( $type == 'friend' || $type == 'foe' || $type == 'user_message' ) {
+			if ( $type == 'friend' || $type == 'foe' || $type == 'user_message' || $type == 'user_user_follow') {
 				$page_title = Title::newFromText( $page_name, NS_USER );
+			} elseif ($type == 'user_site_follow'){
+				$page_title = Title::newFromText( $page_name.':' );
 			} else {
 				$page_title = Title::newFromText( $page_name );
-			}
+			} 
 
 			$count_users = count( $page_data['users'] );
 			$user_index = 0;
@@ -1496,7 +1214,7 @@ class UserActivity {
 				if ( $has_page && !isset( $this->displayed[$type][$page_name] ) ) {
 					$this->displayed[$type][$page_name] = 1;
 
-					$pages .= ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_name}</a>";
+					$pages .= ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
 					if ( $count_users == 1 && $count_actions > 1 ) {
 						$pages .= wfMessage( 'word-separator' )->text();
 						$pages .= wfMessage( 'parentheses', wfMessage(
@@ -1523,10 +1241,13 @@ class UserActivity {
 									if (
 										$type == 'friend' ||
 										$type == 'foe' ||
-										$type == 'user_message'
+										$type == 'user_message' ||
+										$type == 'user_user_follow'
 									) {
 										$page_title2 = Title::newFromText( $page_name2, NS_USER );
-									} else {
+									}  elseif ($type == 'user_site_follow'){
+										$page_title = Title::newFromText( $page_name2.':' );
+									}  else {
 										$page_title2 = Title::newFromText( $page_name2 );
 									}
 
@@ -1534,7 +1255,7 @@ class UserActivity {
 										$pages .= ', ';
 									}
 									if ( $page_title2 instanceof Title ) {
-										$pages .= ' <a href="' . htmlspecialchars( $page_title2->getFullURL() ) . "\">{$page_name2}</a>";
+										$pages .= ' <a href="' . htmlspecialchars( $page_title2->getFullURL() ) . "\">{$page_title2->getText()}</a>";
 									}
 									if ( $count_actions2 > 1 ) {
 										$pages .= ' (' . wfMessage(
@@ -1542,7 +1263,9 @@ class UserActivity {
 										)->text() . ')';
 									}
 									$pages_count++;
-
+									if (isset($page_data['prefix'])){
+										$page_data['prefix'] = array_merge($page_data['prefix'], $page_data2['prefix']);
+									}
 									$this->displayed[$type][$page_name2] = 1;
 								}
 							}
@@ -1565,6 +1288,22 @@ class UserActivity {
 				$safeTitle = htmlspecialchars( $user_title->getText() );
 				$users .= ' <b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\" title=\"{$safeTitle}\">{$user_name_short}</a></b>";
 			}
+			$prefixToName = '';
+			if ( isset($page_data['prefix'])){
+				$page_data['prefix'] = array_unique($page_data['prefix']);
+				$prefixCount = count($page_data['prefix']);
+				$i = 0;
+				foreach($page_data['prefix'] as $prefix){
+					$prefixToName .= HuijiPrefix::prefixToSiteName($prefix);
+					$i++;
+					if ($i < $prefixCount - 1 ){
+						$prefixToName .= wfMessage( 'comma-separator' )->text();
+					}
+					if ($i == $prefixCount-1 && $prefixCount > 1){
+						$prefixToName .= wfMessage( 'and' )->text();
+					}
+				}
+			}
 			if ( $pages || $has_page == false ) {
 				$this->activityLines[] = array(
 					'type' => $type,
@@ -1572,7 +1311,7 @@ class UserActivity {
 					'data' => wfMessage(
 						"useractivity-{$type}",
 						$users, $count_users, $pages, $pages_count,
-						$userNameForGender
+						$userNameForGender, $prefixToName
 					)->text()
 				);
 			}
@@ -1613,6 +1352,10 @@ class UserActivity {
 			case 'user_user_follow':
 				return '<i class="fa fa-paper-plane"></i>';
 			case 'user_site_follow':
+				return '<i class="fa fa-paper-plane-o"></i>';
+			case 'domain_creation':
+				return '<i class="fa fa-paper-plane-o"></i>';
+			case 'user_update_status':
 				return '<i class="fa fa-paper-plane-o"></i>';
 		}
 	}
