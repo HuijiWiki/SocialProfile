@@ -1116,11 +1116,11 @@ svg .day{
 body>.tooltip.top .tooltip-arrow{
     margin-left: 0;
 }
-.mw-content-ltr .legend-intro{
+#wiki-body .legend-intro{
     float: right;
     clear: both;
 }
-.mw-content-ltr .legend-intro ul{
+#wiki-body .legend-intro ul{
     margin: 0;
     display: inline-block;
     list-style-type: none;
