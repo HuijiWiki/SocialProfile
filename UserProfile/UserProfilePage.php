@@ -288,117 +288,121 @@ class UserProfilePage extends Article {
 		// 	parent::view();
 		// 	return '';
 		// }
-        $wgOut->addHTML('<div id="user-page-center" class="col-md-12 hidden-xs">
+       
+        $ueb = new UserEditBox();
+        $editBox = array();
+        $userEditInfo = $ueb->getUserEditInfo($this->user_id);
+        if ($userEditInfo != false) {
+        	$wgOut->addHTML('<div id="user-page-center" class="col-md-12 hidden-xs">
         	<div class="panel panel-default"><div class="user-section-heading panel-heading">
  			<div class="user-section-title">贡献</div>
  			<div class="action-right"></div>
 			<div class="cleared"></div></div><div class="user-gift-container panel-body check-body">');
-        $ueb = new UserEditBox();
-        $editBox = array();
-        $userEditInfo = $ueb->getUserEditInfo($this->user_id);
-        foreach ($userEditInfo as $value) {
-        	$editBox[$value->_id] = $value->value;
-            // echo $value->_id.'->'.$value->value.'<br>';
-        }
-        $today = date("Y-m-d");;
-        $editBox[$today] = UserEditBox::getTodayEdit($this->user_id);
-        $wgOut->addHTML('
-            <div class="check-wrapper"><svg width="721" height="110" class=" ">
-                <g transform="translate(20, 20)">
-        ');
-        $n = 676/13;
-        $dateArr = array();
-        for($k=0;$k<365;$k++){
-			$dateArr[]= date('Y-m-d',strtotime("-$k day"));
-		}
-		$desdateArr = array_reverse($dateArr);
-		$translate = array();
-        for($i=0;$i<=$n;$i++){
-            $trani = $i*13;
-            $wgOut->addHTML('
-                <g transform="translate('.$trani.', 0)">');
-	            	$dayofweek = date('w', strtotime($desdateArr[0]));
-	            	if($i == 0){
-	            		$j = $dayofweek;
-	            		$start = 0;
-	            		$m = 7-$dayofweek;
-	            	}else{
-	            		$j=0;
-	            		$m = 7;
-	            		$start = $i*7-$dayofweek;
-	            	}
-	            	
-	            	$zoneDate = array_slice($desdateArr, $start, $m);
-	            	foreach ($zoneDate as $val) {
-	            		$arrDate[$j] = $val;
-	            		$y = $j*13;
-	            		$dataCount = (isset($editBox[$val]))?$editBox[$val]:0;
-	            		if ($dataCount == 0) {
-                                $color = '#eee';
-                            }elseif ($dataCount > 0 && $dataCount <= 8 ) {
-                                $color = '#86beee';
-                            }elseif ($dataCount > 8 && $dataCount <= 21 ){
-                                $color = '#5ea2de';
-                            }elseif ($dataCount > 21 && $dataCount <= 55 ){
-                                $color = '#256fb1';
-                            }else {
-                                $color = '#0d5493';
-                            }
-
-	                	$wgOut->addHTML('<rect class="day" width="11" height="11" y="'.$y.'" fill="'.$color.'" data-count="'.$dataCount.'" data-date="'.$val.'" title="'.$val.' 编辑'.$dataCount.'次"></rect>');
-		            	$j=($j>=7)?0:($j+1);
-	            	}
-	            	if (!empty($arrDate[0])){
-	            		$translate[$arrDate[0]] = $trani;
-	            	}
-            $wgOut->addHTML('</g>');
-        }
-        $moninit = 1;
-        // print_r($translate);
-        for ($p=0; $p < 12; $p++) {
-        	$year = date('Y')-1;
-        	$mon = date('m')+$p+1;
-		    if($mon > 12){
-		        $mon=$moninit++;
-	        	$year = date('Y');
-		    }
-		    $sunDay = UserEditBox::getSunday($mon,$year);
-		    $Stime = strtotime($sunDay);
-			$sunDay = date('Y-m-d',$Stime);
-			if (!isset($translate[$sunDay])) {
-			    $Suntime = strtotime($sunDay); 
-				$Sundate = date('Y',$Suntime)-1;
-			    $sunDay = UserEditBox::getSunday($mon,$Sundate);
+	        foreach ($userEditInfo as $value) {
+	        	$editBox[$value->_id] = $value->value;
+	            // echo $value->_id.'->'.$value->value.'<br>';
+	        }
+	        $today = date("Y-m-d");
+	        $editBox[$today] = UserEditBox::getTodayEdit($this->user_id);
+	        $wgOut->addHTML('
+	            <div class="check-wrapper"><svg width="721" height="110" class=" ">
+	                <g transform="translate(20, 20)">
+	        ');
+	        $n = 676/13;
+	        $dateArr = array();
+	        for($k=0;$k<365;$k++){
+				$dateArr[]= date('Y-m-d',strtotime("-$k day"));
 			}
-		    foreach ($translate as $key => $value) {
-		    	if ( strtotime($key) == strtotime($sunDay)) {
-		    		$x = $value;
-		    	}
-		    }
-        	$wgOut->addHTML('<text x="'.$x.'" y="-5" class="'.$year.'">'.$mon.'月</text>');
-        }
+			$desdateArr = array_reverse($dateArr);
+			$translate = array();
+	        for($i=0;$i<=$n;$i++){
+	            $trani = $i*13;
+	            $wgOut->addHTML('
+	                <g transform="translate('.$trani.', 0)">');
+		            	$dayofweek = date('w', strtotime($desdateArr[0]));
+		            	if($i == 0){
+		            		$j = $dayofweek;
+		            		$start = 0;
+		            		$m = 7-$dayofweek;
+		            	}else{
+		            		$j=0;
+		            		$m = 7;
+		            		$start = $i*7-$dayofweek;
+		            	}
+		            	
+		            	$zoneDate = array_slice($desdateArr, $start, $m);
+		            	foreach ($zoneDate as $val) {
+		            		$arrDate[$j] = $val;
+		            		$y = $j*13;
+		            		$dataCount = (isset($editBox[$val]))?$editBox[$val]:0;
+		            		if ($dataCount == 0) {
+	                                $color = '#eee';
+	                            }elseif ($dataCount > 0 && $dataCount <= 8 ) {
+	                                $color = '#86beee';
+	                            }elseif ($dataCount > 8 && $dataCount <= 21 ){
+	                                $color = '#5ea2de';
+	                            }elseif ($dataCount > 21 && $dataCount <= 55 ){
+	                                $color = '#256fb1';
+	                            }else {
+	                                $color = '#0d5493';
+	                            }
 
-        $wgOut->addHTML('
-					<text text-anchor="middle" class="wday" dx="-10" dy="9" style="display: none;">S</text>
-		            <text text-anchor="middle" class="wday" dx="-10" dy="22">M</text>
-		            <text text-anchor="middle" class="wday" dx="-10" dy="35" style="display: none;">T</text>
-		            <text text-anchor="middle" class="wday" dx="-10" dy="48">W</text>
-		            <text text-anchor="middle" class="wday" dx="-10" dy="61" style="display: none;">T</text>
-		            <text text-anchor="middle" class="wday" dx="-10" dy="74">F</text>
-		            <text text-anchor="middle" class="wday" dx="-10" dy="87" style="display: none;">S</text>
-		          </g>
-		        </svg>
-		        <div class="legend-intro">
-		        <span><b>编辑数</b> 低</span>
-		        <ul class="legend">
-		            <li style="background-color: #eee"></li>
-		            <li style="background-color: #86beee"></li>
-		            <li style="background-color: #5ea2de"></li>
-		            <li style="background-color: #256fb1"></li>
-		            <li style="background-color: #0d5493"></li>
-	            </ul>
-	            <span>高</span>
-        	</div></div></div></div></div>');
+		                	$wgOut->addHTML('<rect class="day" width="11" height="11" y="'.$y.'" fill="'.$color.'" data-count="'.$dataCount.'" data-date="'.$val.'" title="'.$val.' 编辑'.$dataCount.'次"></rect>');
+			            	$j=($j>=7)?0:($j+1);
+		            	}
+		            	if (!empty($arrDate[0])){
+		            		$translate[$arrDate[0]] = $trani;
+		            	}
+	            $wgOut->addHTML('</g>');
+	        }
+	        $moninit = 1;
+	        // print_r($translate);
+	        for ($p=0; $p < 12; $p++) {
+	        	$year = date('Y')-1;
+	        	$mon = date('m')+$p+1;
+			    if($mon > 12){
+			        $mon=$moninit++;
+		        	$year = date('Y');
+			    }
+			    $sunDay = UserEditBox::getSunday($mon,$year);
+			    $Stime = strtotime($sunDay);
+				$sunDay = date('Y-m-d',$Stime);
+				if (!isset($translate[$sunDay])) {
+				    $Suntime = strtotime($sunDay); 
+					$Sundate = date('Y',$Suntime)-1;
+				    $sunDay = UserEditBox::getSunday($mon,$Sundate);
+				}
+			    foreach ($translate as $key => $value) {
+			    	if ( strtotime($key) == strtotime($sunDay)) {
+			    		$x = $value;
+			    	}
+			    }
+	        	$wgOut->addHTML('<text x="'.$x.'" y="-5" class="'.$year.'">'.$mon.'月</text>');
+	        }
+
+	        $wgOut->addHTML('
+						<text text-anchor="middle" class="wday" dx="-10" dy="9" style="display: none;">S</text>
+			            <text text-anchor="middle" class="wday" dx="-10" dy="22">M</text>
+			            <text text-anchor="middle" class="wday" dx="-10" dy="35" style="display: none;">T</text>
+			            <text text-anchor="middle" class="wday" dx="-10" dy="48">W</text>
+			            <text text-anchor="middle" class="wday" dx="-10" dy="61" style="display: none;">T</text>
+			            <text text-anchor="middle" class="wday" dx="-10" dy="74">F</text>
+			            <text text-anchor="middle" class="wday" dx="-10" dy="87" style="display: none;">S</text>
+			          </g>
+			        </svg>
+			        <div class="legend-intro">
+			        <span><b>编辑数</b> 低</span>
+			        <ul class="legend">
+			            <li style="background-color: #eee"></li>
+			            <li style="background-color: #86beee"></li>
+			            <li style="background-color: #5ea2de"></li>
+			            <li style="background-color: #256fb1"></li>
+			            <li style="background-color: #0d5493"></li>
+		            </ul>
+		            <span>高</span>
+	        	</div></div>');
+        $wgOut->addHTML('</div></div></div>');
+    }
 		// Left side
 		$wgOut->addHTML( '<div id="user-page-left" class="col-md-6">' );
 

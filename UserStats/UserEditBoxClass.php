@@ -8,8 +8,8 @@
  */
 class UserEditBox{
 
-	public function __construct() {
-		require_once __DIR__.'/../HuijiStatistics/interface.php';
+	public function __construct( $username ) {
+		require_once('/mnt/script/php/interface.php');
 	}
 	static function getUserEditInfoCache( $userId ) {
 		global $wgMemc;
