@@ -9,12 +9,12 @@
 class UserEditBox{
 
 	public function __construct( $username ) {
-		require_once('/mnt/script/php/interface.php');
+		require_once __DIR__.'/../HuijiStatistics/interface.php';
 	}
 	static function getUserEditInfoCache( $userId ) {
 		global $wgMemc;
-		// $key = wfForeignMemcKey('huiji','', 'user_daily_edit', 'all_days', $userId );
-		// $data = $wgMemc->get( $key );
+		$key = wfForeignMemcKey('huiji','', 'user_daily_edit', 'all_days', $userId );
+		$data = $wgMemc->get( $key );
 		return $data;
 	}
 	public function getUserEditInfo($userId){
