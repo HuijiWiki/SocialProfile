@@ -22,7 +22,7 @@
 	"useractivity-title": "我关注的用户",
 	"useractivity-user_message": "$1向$3{{PLURAL:$4|发送了1条信息|发送了信息}}",
 	"user-board-title": "留言墙",
-    "useractivity-comment": "$1{{PLURAL:$4|吐槽了$6的页面|吐槽了$6的以下页面:}} $3",
+    "useractivity-comment": "$1{{PLURAL:$4|吐槽了$6的页面|吐槽了$6的以下页面:}}$3",
     "useractivity-domain-creation":"$1创建了$2",
     "useractivity-user_user_follow":"$1{{PLURAL:$2|关注了|关注了以下用户:}}$3",
     "useractivity-user_site_follow":"$1{{PLURAL:$2|关注了|关注了以下站点:}}$6",

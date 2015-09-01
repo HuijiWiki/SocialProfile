@@ -1291,7 +1291,7 @@ class UserActivity {
 				$users .= ' <b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\" title=\"{$safeTitle}\">{$user_name_short}</a></b>";
 			}
 			$prefixToName = '';
-			if ( isset($page_data['prefix'])){
+			if ( is_array($page_data['prefix'])){
 				$page_data['prefix'] = array_unique($page_data['prefix']);
 				$prefixCount = count($page_data['prefix']);
 				$i = 0;
@@ -1305,6 +1305,8 @@ class UserActivity {
 						$prefixToName .= wfMessage( 'and' )->text();
 					}
 				}
+			}elseif (is_string($page_data['prefix'])){
+				$prefixToName .= HuijiPrefix::prefixToSiteNameAnchor($prefix);
 			}
 			if ( $pages || $has_page == false ) {
 				$this->activityLines[] = array(
