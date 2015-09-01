@@ -54,6 +54,7 @@ class UserActivity {
 		$this->now = time();
 		$this->three_days_ago = $this->now - ( 60 * 60 * 24 * 3 );
 		$this->items_grouped = array();
+		$this->cached_where = false;
 	}
 
 	private function setFilter( $filter ) {
@@ -476,7 +477,8 @@ class UserActivity {
 						'userid' => $row->Comment_user_id,
 						'comment' => $this->fixItemComment( $row->Comment_Text ),
 						'minor' => 0,
-						'new' => 0
+						'new' => 0,
+						'prefix' => $table
 					);
 
 					// set last timestamp
@@ -493,7 +495,8 @@ class UserActivity {
 						'userid' => $row->Comment_user_id,
 						'comment' => $this->fixItemComment( $row->Comment_Text ),
 						'new' => '0',
-						'minor' => 0
+						'minor' => 0,
+						'prefix' => $table
 					);
 					// set prefix
 					$this->items_grouped['comment'][$table.':'.$title->getPrefixedText()]['prefix'][] = $table;
@@ -755,7 +758,7 @@ class UserActivity {
 	private function setMessagesSent() {
 		$dbr = wfGetDB( DB_SLAVE );
 
-		$this->where('ub_user_id_from');
+		$where = $this->where('ub_user_id_from');
 		// We do *not* want to display private messages...
 		$where['ub_type'] = 0;
 		$res = $dbr->select(
@@ -994,7 +997,7 @@ class UserActivity {
 				'username' => $row->domain_founder_name,
 				'userid' => $row->domain_founder_id,
 				'comment' => $row->domain_dsp,
-				'domainprefix' => $row->domain_prefix,
+				'prefix' => $row->domain_prefix,
 				'domainname' => $row->domain_name
 			);
 
@@ -1161,15 +1164,14 @@ class UserActivity {
 		if ( $this->show_user_site_follows ) {
 			$this->simplifyPageActivity( 'user_site_follow' );
 		}
-
 		if ( !isset( $this->activityLines ) ) {
 			$this->activityLines = array();
 		}
-
 		if ( isset( $this->activityLines ) && is_array( $this->activityLines ) ) {
 			usort( $this->activityLines, array( 'UserActivity', 'sortItems' ) );
 		}
-
+		// echo $this->show_comments;
+		// die(1);
 		return $this->activityLines;
 	}
 

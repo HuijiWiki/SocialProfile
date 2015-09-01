@@ -1100,3 +1100,36 @@ span.span-color{
 .c-avatar {
     top:inherit;
 }
+
+.check-body{
+    text-align: center;
+}
+.check-wrapper{
+    display: inline-block;
+}
+.check-wrapper svg{
+    float: left;
+}
+svg .day{
+    cursor: pointer;
+}
+body>.tooltip.top .tooltip-arrow{
+    margin-left: 0;
+}
+.mw-content-ltr .legend-intro{
+    float: right;
+    clear: both;
+}
+.mw-content-ltr .legend-intro ul{
+    margin: 0;
+    display: inline-block;
+    list-style-type: none;
+    padding: 0;
+}
+#wiki-body .legend-intro li{
+    float: left;
+    margin-bottom: 0;
+    margin-right: 5px;
+    height: 11px;
+    width: 11px;
+}
