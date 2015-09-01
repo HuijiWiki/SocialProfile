@@ -305,6 +305,7 @@ class UserActivity {
 				'minor' => 0,
 				'new' => '0'
 			);
+			$this->items_grouped['user_site_follow'][$row->f_wiki_domain]['prefix'][] = $row->f_wiki_domain;
 		}
 	}
 
@@ -1291,22 +1292,24 @@ class UserActivity {
 				$users .= ' <b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\" title=\"{$safeTitle}\">{$user_name_short}</a></b>";
 			}
 			$prefixToName = '';
-			if ( is_array($page_data['prefix'])){
-				$page_data['prefix'] = array_unique($page_data['prefix']);
-				$prefixCount = count($page_data['prefix']);
-				$i = 0;
-				foreach($page_data['prefix'] as $prefix){
+			if ( isset($page_data['prefix']) ){
+				if ( is_array($page_data['prefix'])){
+					$page_data['prefix'] = array_unique($page_data['prefix']);
+					$prefixCount = count($page_data['prefix']);
+					$i = 0;
+					foreach($page_data['prefix'] as $prefix){
+						$prefixToName .= HuijiPrefix::prefixToSiteNameAnchor($prefix);
+						$i++;
+						if ($i < $prefixCount - 1 ){
+							$prefixToName .= wfMessage( 'comma-separator' )->text();
+						}
+						if ($i == $prefixCount-1 && $prefixCount > 1){
+							$prefixToName .= wfMessage( 'and' )->text();
+						}
+					}
+				}elseif (is_string($page_data['prefix'])){
 					$prefixToName .= HuijiPrefix::prefixToSiteNameAnchor($prefix);
-					$i++;
-					if ($i < $prefixCount - 1 ){
-						$prefixToName .= wfMessage( 'comma-separator' )->text();
-					}
-					if ($i == $prefixCount-1 && $prefixCount > 1){
-						$prefixToName .= wfMessage( 'and' )->text();
-					}
 				}
-			}elseif (is_string($page_data['prefix'])){
-				$prefixToName .= HuijiPrefix::prefixToSiteNameAnchor($prefix);
 			}
 			if ( $pages || $has_page == false ) {
 				$this->activityLines[] = array(
