@@ -288,7 +288,7 @@ class UserProfilePage extends Article {
 		// 	parent::view();
 		// 	return '';
 		// }
-        $wgOut->addHTML('<div id="user-page-center" class="col-md-12">
+        $wgOut->addHTML('<div id="user-page-center" class="col-md-12 hidden-xs">
         	<div class="panel panel-default"><div class="user-section-heading panel-heading">
  			<div class="user-section-title">贡献</div>
  			<div class="action-right"></div>
