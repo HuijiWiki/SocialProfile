@@ -389,7 +389,7 @@ class UserProfilePage extends Article {
 		          </g>
 		        </svg>
 		        <div class="legend-intro">
-		        <span>低</span>
+		        <span><b>编辑数</b> 低</span>
 		        <ul class="legend">
 		            <li style="background-color: #eee"></li>
 		            <li style="background-color: #86beee"></li>
