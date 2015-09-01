@@ -292,7 +292,7 @@ class UserProfilePage extends Article {
         	<div class="panel panel-default"><div class="user-section-heading panel-heading">
  			<div class="user-section-title">编辑列表</div>
  			<div class="action-right"></div>
-			<div class="cleared"></div></div><div class="user-gift-container panel-body">');
+			<div class="cleared"></div></div><div class="user-gift-container panel-body check-body">');
         $ueb = new UserEditBox();
         $editBox = array();
         $userEditInfo = $ueb->getUserEditInfo($this->user_id);
@@ -303,7 +303,7 @@ class UserProfilePage extends Article {
         $today = date("Y-m-d");;
         $editBox[$today] = UserEditBox::getTodayEdit($this->user_id);
         $wgOut->addHTML('
-            <svg width="721" height="110" class=" ">
+            <div class="check-wrapper"><svg width="721" height="110" class=" ">
                 <g transform="translate(20, 20)">
         ');
         $n = 676/13;
@@ -334,13 +334,18 @@ class UserProfilePage extends Article {
 	            		$y = $j*13;
 	            		$dataCount = (isset($editBox[$val]))?$editBox[$val]:0;
 	            		if ($dataCount == 0) {
-	            			$color = '#c9c9c9';
-	            		}elseif ($dataCount > 0 && $dataCount <= 5 ) {
-	            			$color = '#d6e685';
-	            		}else{
-	            			$color = '#1e6823';
-	            		}
-	                	$wgOut->addHTML('<rect class="day" width="11" height="11" y="'.$y.'" fill="'.$color.'" data-count="'.$dataCount.'" data-date="'.$val.'"></rect>');
+                                $color = '#eee';
+                            }elseif ($dataCount > 0 && $dataCount <= 8 ) {
+                                $color = '#86beee';
+                            }elseif ($dataCount > 8 && $dataCount <= 21 ){
+                                $color = '#5ea2de';
+                            }elseif ($dataCount > 21 && $dataCount <= 55 ){
+                                $color = '#256fb1';
+                            }else {
+                                $color = '#0d5493';
+                            }
+
+	                	$wgOut->addHTML('<rect class="day" width="11" height="11" y="'.$y.'" fill="'.$color.'" data-count="'.$dataCount.'" data-date="'.$val.'" title="'.$val.' 编辑'.$dataCount.'次"></rect>');
 		            	$j=($j>=7)?0:($j+1);
 	            	}
 	            	$translate[$arrDate[0]] = $trani;
@@ -381,16 +386,17 @@ class UserProfilePage extends Article {
 		            <text text-anchor="middle" class="wday" dx="-10" dy="87" style="display: none;">S</text>
 		          </g>
 		        </svg>
-		        <span>Less</span>
+		        <div class="legend-intro">
+		        <span>少</span>
 		        <ul class="legend">
 		            <li style="background-color: #eee"></li>
-		            <li style="background-color: #d6e685"></li>
-		            <li style="background-color: #8cc665"></li>
-		            <li style="background-color: #44a340"></li>
-		            <li style="background-color: #1e6823"></li>
+		            <li style="background-color: #86beee"></li>
+		            <li style="background-color: #5ea2de"></li>
+		            <li style="background-color: #256fb1"></li>
+		            <li style="background-color: #0d5493"></li>
 	            </ul>
-	            <span>More</span>
-        	</div></div></div>');
+	            <span>多</span>
+        	</div></div></div></div></div>');
 		// Left side
 		$wgOut->addHTML( '<div id="user-page-left" class="col-md-6">' );
 

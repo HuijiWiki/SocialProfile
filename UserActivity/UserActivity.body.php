@@ -63,44 +63,45 @@ class UserHome extends SpecialPage {
 			$item_type = 'all';
 		}
 
+
 		// If not otherwise specified, display everything but *votes* in the feed
-		if ( $item_type == 'edits' || $item_type == 'all' ) {
+		if ( $item_type == 'edit' || $item_type == 'all' ) {
 			$edits = 1;
 		}
-		if ( $item_type == 'votes' || $item_type == 'all' ) {
+		if ( $item_type == 'vote' || $item_type == 'all' ) {
 			$votes = 1;
 		}
-		if ( $item_type == 'comments' || $item_type == 'all' ) {
+		if ( $item_type == 'comment' || $item_type == 'all' ) {
 			$comments = 1;
 		}
-		if ( $item_type == 'gifts' || $item_type == 'all' ) {
+		if ( $item_type == 'gift-rec' || $item_type == 'all' ) {
 			$gifts = 1;
 		}
-		if ( $item_type == 'relationships' || $item_type == 'all' ) {
+		if ( $item_type == 'friend' || $item_type == 'all' ) {
 			$relationships = 1;
 		}
-		if ( $item_type == 'advancements' || $item_type == 'all' ) {
+		if ( $item_type == 'system_message' || $item_type == 'all' ) {
 			$messages = 1;
 		}
-		if ( $item_type == 'awards' || $item_type == 'all' ) {
+		if ( $item_type == 'system_gift' || $item_type == 'all' ) {
 			$system_gifts = 1;
 		}
-		if ( $item_type == 'messages' || $item_type == 'all' ) {
+		if ( $item_type == 'user_message' || $item_type == 'all' ) {
 			$messages_sent = 1;
 		}
-		if ( $item_type == 'thoughts' || $item_type == 'all' ) {
+		if ( $item_type == 'network_update' || $item_type == 'all' ) {
 			$network_updates = 1;
 		}
 		if ( $item_type == 'user_update_status' || $item_type == 'all' ) {
 			$user_update_status = 1;
 		}
-		if ( $item_type == 'user_user_follows' || $item_type == 'all' ) {
+		if ( $item_type == 'user_user_follow' || $item_type == 'all' ) {
 			$user_user_follows = 1;
 		}
-		if ( $item_type == 'user_site_follows' || $item_type == 'all' ) {
+		if ( $item_type == 'user_site_follow' || $item_type == 'all' ) {
 			$user_site_follows = 1;
 		}
-		if ( $item_type == 'domain_creations' || $item_type == 'all' ) {
+		if ( $item_type == 'domain_creation' || $item_type == 'all' ) {
 			$domain_creations = 1;
 		}
 

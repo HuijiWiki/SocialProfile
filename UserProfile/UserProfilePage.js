@@ -313,5 +313,5 @@ jQuery( document ).ready( function() {
             }
         );
     });
-
+    $('svg .day').tooltip();
 });

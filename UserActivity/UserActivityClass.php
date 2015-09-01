@@ -1161,15 +1161,14 @@ class UserActivity {
 		if ( $this->show_user_site_follows ) {
 			$this->simplifyPageActivity( 'user_site_follow' );
 		}
-
 		if ( !isset( $this->activityLines ) ) {
 			$this->activityLines = array();
 		}
-
 		if ( isset( $this->activityLines ) && is_array( $this->activityLines ) ) {
 			usort( $this->activityLines, array( 'UserActivity', 'sortItems' ) );
 		}
-
+		// echo $this->show_comments;
+		// die(1);
 		return $this->activityLines;
 	}
 
