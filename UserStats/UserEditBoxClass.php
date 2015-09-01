@@ -8,7 +8,7 @@
  */
 class UserEditBox{
 
-	public function __construct() {
+	public function __construct( $username ) {
 		require_once __DIR__.'/../HuijiStatistics/interface.php';
 	}
 	static function getUserEditInfoCache( $userId ) {
@@ -24,23 +24,39 @@ class UserEditBox{
 		if($userEditInfo == ''){
 			$today = date("Y-m-d");
 			$oneYearAgo = date("Y-m-d",strtotime("-1 year"));
-			$userEditInfo = RecordStatistics::getEditRecordsFromUserIdGroupByDay( $userId, $oneYearAgo, $today );
-			$wgMemc->set( $key, $userEditInfo );
+			$receive = RecordStatistics::getEditRecordsFromUserIdGroupByDay( $userId, $oneYearAgo, $today );
+			if($receive->status == 'success'){
+			    $userEditInfo = $receive->result;
+				$wgMemc->set( $key, $userEditInfo );
+			}else{
+			 	$userEditInfo = false;
+			}
 		}else{
 			$num = (count($userEditInfo) >= 1)?(count($userEditInfo)-1):0;
 			$yesterday = date("Y-m-d",strtotime("-1 day"));
-			$yesterdayEdit = RecordStatistics::getPageEditCountOnWikiSiteFromUserId( $userId, '', $yesterday, $yesterday );
-			if( $yesterdayEdit > 0 && $yesterday != $userEditInfo[$num]->_id ){
-				$addEdit = array('_id'=>$yesterday,'value'=>$yesterdayEdit);
-				$userEditInfo = $wgMemc->get( $key );
-				$userEditInfo[] = (object)$addEdit;
-				$wgMemc->set( $key, $userEditInfo );
+			$receive = RecordStatistics::getPageEditCountOnWikiSiteFromUserId( $userId, '', $yesterday, $yesterday );
+			if($receive->status == 'success'){
+			    $yesterdayEdit = $receive->result;
+				if( $yesterdayEdit > 0 && $yesterday != $userEditInfo[$num]->_id ){
+					$addEdit = array('_id'=>$yesterday,'value'=>$yesterdayEdit);
+					$userEditInfo = $wgMemc->get( $key );
+					$userEditInfo[] = (object)$addEdit;
+					$wgMemc->set( $key, $userEditInfo );
+				}
+			}else{
+				$userEditInfo = false;
 			}
 		}
 		return $userEditInfo;
 	}
 	static function getTodayEdit($userId){
-		return $editNum = RecordStatistics::getRecentPageEditCountOnWikiSiteFromUserId($userId,'','day');
+		$receive = RecordStatistics::getRecentPageEditCountOnWikiSiteFromUserId($userId,'','day');
+		if($receive->status == 'success'){
+			$editNum = $receive->result;
+		}else{
+			$editNum = false;
+		}
+		return $editNum;
 	}
 	static function getSunday($mon,$year){
 		$i=mktime(0,0,0,$mon,1,$year);
