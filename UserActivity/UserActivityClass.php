@@ -758,7 +758,7 @@ class UserActivity {
 	private function setMessagesSent() {
 		$dbr = wfGetDB( DB_SLAVE );
 
-		$this->where('ub_user_id_from');
+		$where = $this->where('ub_user_id_from');
 		// We do *not* want to display private messages...
 		$where['ub_type'] = 0;
 		$res = $dbr->select(
