@@ -41,7 +41,7 @@ class UserEditBox{
 			if($receive->status == 'success'){
 				$EditSinceLastSeen = $receive->result;
 				$userEditInfo += $EditSinceLastSeen;
-				$userEditInfo['lastSeen'] = $yesterday;
+				$userEditInfo['lastSeen'] = $today;
 				$wgMemc->set( $key, $userEditInfo );		
 			}else{
 				$userEditInfo = false;
