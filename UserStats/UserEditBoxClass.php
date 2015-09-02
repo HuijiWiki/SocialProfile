@@ -8,7 +8,7 @@
  */
 class UserEditBox{
 
-	public function __construct( $username ) {
+	public function __construct() {
 		require_once __DIR__.'/../HuijiStatistics/interface.php';
 	}
 	static function getUserEditInfoCache( $userId ) {
@@ -20,29 +20,29 @@ class UserEditBox{
 	public function getUserEditInfo($userId){
 		global $wgMemc;
 		$key = wfForeignMemcKey('huiji','', 'user_daily_edit', 'all_days', $userId );
+		$today = date("Y-m-d");
+		$oneYearAgo = date("Y-m-d",strtotime("-1 year"));
+		$yesterday = date("Y-m-d",strtotime("-1 day"));
 		$userEditInfo = self::getUserEditInfoCache( $userId );
 		if($userEditInfo == ''){
-			$today = date("Y-m-d");
-			$oneYearAgo = date("Y-m-d",strtotime("-1 year"));
-			$receive = RecordStatistics::getEditRecordsFromUserIdGroupByDay( $userId, $oneYearAgo, $today );
+			$receive = RecordStatistics::getEditRecordsFromUserIdGroupByDay( $userId, $oneYearAgo, $yesterday );
 			if($receive->status == 'success'){
-			    $userEditInfo = $receive->result;
+				$userEditInfo = $receive->result;
+				$userEditInfo['lastSeen'] = $yesterday;
 				$wgMemc->set( $key, $userEditInfo );
 			}else{
 			 	$userEditInfo = false;
 			}
 		}else{
-			$num = (count($userEditInfo) >= 1)?(count($userEditInfo)-1):0;
-			$yesterday = date("Y-m-d",strtotime("-1 day"));
-			$receive = RecordStatistics::getPageEditCountOnWikiSiteFromUserId( $userId, '', $yesterday, $yesterday );
+			if ($yesterday == $userEditInfo['lastSeen']){
+				return $userEditInfo;
+			}
+			$receive = RecordStatistics::getEditRecordsFromUserIdGroupByDay( $userId, $userEditInfo['lastSeen'], $yesterday );
 			if($receive->status == 'success'){
-			    $yesterdayEdit = $receive->result;
-				if( $yesterdayEdit > 0 && $yesterday != $userEditInfo[$num]->_id ){
-					$addEdit = array('_id'=>$yesterday,'value'=>$yesterdayEdit);
-					$userEditInfo = $wgMemc->get( $key );
-					$userEditInfo[] = (object)$addEdit;
-					$wgMemc->set( $key, $userEditInfo );
-				}
+				$EditSinceLastSeen = $receive->result;
+				$userEditInfo += $EditSinceLastSeen;
+				$userEditInfo['lastSeen'] = $yesterday;
+				$wgMemc->set( $key, $userEditInfo );		
 			}else{
 				$userEditInfo = false;
 			}
