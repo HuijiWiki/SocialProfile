@@ -28,13 +28,13 @@ class UserEditBox{
 			$receive = RecordStatistics::getEditRecordsFromUserIdGroupByDay( $userId, $oneYearAgo, $yesterday );
 			if($receive->status == 'success'){
 				$userEditInfo = $receive->result;
-				$userEditInfo['lastSeen'] = $yesterday;
+				$userEditInfo['lastSeen'] = $today;
 				$wgMemc->set( $key, $userEditInfo );
 			}else{
 			 	$userEditInfo = false;
 			}
 		}else{
-			if ($yesterday == $userEditInfo['lastSeen']){
+			if ($today == $userEditInfo['lastSeen']){
 				return $userEditInfo;
 			}
 			$receive = RecordStatistics::getEditRecordsFromUserIdGroupByDay( $userId, $userEditInfo['lastSeen'], $yesterday );
