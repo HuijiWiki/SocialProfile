@@ -40,7 +40,7 @@ class UserEditBox{
 			$receive = RecordStatistics::getEditRecordsFromUserIdGroupByDay( $userId, $userEditInfo['lastSeen'], $yesterday );
 			if($receive->status == 'success'){
 				$EditSinceLastSeen = $receive->result;
-				$userEditInfo += $EditSinceLastSeen;
+				$userEditInfo = array_merge($userEditInfo, $EditSinceLastSeen);
 				$userEditInfo['lastSeen'] = $today;
 				$wgMemc->set( $key, $userEditInfo );		
 			}else{
