@@ -943,7 +943,7 @@ class UserStats {
 		global $wgMemc,$isProduction;
 		$key = wfForeignMemcKey( 'huiji', '', 'revision', 'high_edit_site_followed', $user,$prefix );
 		if ($prefix != null) {
-			if( $isProduction == true && $prefix == 'www'){
+			if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
 				$prefix = 'huiji_home';
 			}elseif ( $isProduction == true ) {
 				$prefix = 'huiji_sites-'.str_replace('.', '_', $prefix);
