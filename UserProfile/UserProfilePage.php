@@ -1490,9 +1490,8 @@ class UserProfilePage extends Article {
 				if ( $item['type'] == 'comment' ) {
 					$comment_url = "#comment-{$item['id']}";
 				}
-				if (array_key_exists('site', $item)){
-					$site_link = '<b><a href="' . HuijiPrefix::prefixToUrl($item['site']) .
-						"{$comment_url}\">" . HuijiPrefix::prefixToSiteName($item['site'])  . '</a></b> ';					
+				if (array_key_exists('prefix', $item)){
+					$site_link = '<b><a href="' . HuijiPrefix::prefixToUrl($item['prefix']).HuijiPrefix::prefixToSiteName($item['prefix'])  . '</a></b> ';					
 				}
 				$page_link = '<b><a href="' . htmlspecialchars( $title->getFullURL() ) .
 					"{$comment_url}\">" . $title->getPrefixedText() . '</a></b> ';
@@ -1599,6 +1598,10 @@ class UserProfilePage extends Article {
 						$item_html .= wfMessage( 'user-recent-activity-follow' )->escaped() .
 							" <b>{$site_link}</b> {$item_time}";
 						break;						
+					case 'domain_creation':
+						$item_html .= wfMessage( 'user-recent-activity-create')->escaped() .
+							" <b>{$site_link}</b> {$item_time}";
+						break;
 					}
 
 					$item_html .= '</div>';
