@@ -1317,7 +1317,7 @@ class UserActivity {
 				if ( $has_page && !isset( $this->displayed[$type][$page_name] ) ) {
 					$this->displayed[$type][$page_name] = 1;
 					if ($page_title->inNamespace( NS_FILE )){
-						$pages .= ' <a href="' . '';
+						$pages .= ' <img href="' . '"></img>';
 					} else {
 						$pages .= ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
 					}
