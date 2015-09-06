@@ -183,6 +183,7 @@ class UserActivity {
 				$DBprefix = '';
 			} else {
 				$dbr->selectDB('huiji_sites');
+				$DBprefix = $table;
 			}
 			$res = $dbr->select(
 				$DBprefix.'recentchanges',
@@ -418,11 +419,6 @@ class UserActivity {
 		global $wgDBprefix, $wgDBname, $isProduction;
 		$dbr = wfGetDB( DB_SLAVE );
 
-		# Bail out if Comments table doesn't exist
-		if ( !$dbr->tableExists( 'image' ) ) {
-			return false;
-		}
-
 		$where = $this->where('img_user');
 		//$where[] = 'comment_page_id = page_id';
 
@@ -440,6 +436,7 @@ class UserActivity {
 				$DBprefix = '';
 			} else {
 				$dbr->selectDB('huiji_sites');
+				$DBprefix = $table;
 			}
 			$res = $dbr->select(
 				array( $DBprefix.'image' ),
@@ -538,6 +535,7 @@ class UserActivity {
 				$DBprefix = '';
 			} else {
 				$dbr->selectDB('huiji_sites');
+				$DBprefix = $table;
 			}
 			$res = $dbr->select(
 				array( $DBprefix.'Comments', $DBprefix.'page' ),
