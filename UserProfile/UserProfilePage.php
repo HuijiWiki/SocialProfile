@@ -302,11 +302,36 @@ class UserProfilePage extends Article {
  			<div class="action-right"></div>
 			<div class="cleared"></div></div><div class="user-gift-container panel-body check-body">');
 	        foreach ($userEditInfo as $value) {
-	        	$editBox[$value->_id] = $value->value;
+	        	if (!empty($value->_id)) {
+		        	$editBox[$value->_id] = $value->value;
+		        	$editData[] = $value->_id;
+	        	}
 	            // echo $value->_id.'->'.$value->value.'<br>';
 	        }
 	        $today = date("Y-m-d");
 	        $editBox[$today] = UserEditBox::getTodayEdit($this->user_id);
+	        if (!empty($editBox[$today])) {
+	        	$editData[] = $today;
+	        }
+	        $totalEdit = count($editData);
+	        $resArr[] = strtotime($editData[0]);
+	        $maxlen = 1;
+	        for($k=1;$k<count($editData);$k++){
+	        	if(in_array(strtotime($editData[$k])-86400, $resArr)){
+	        		$resArr[] = strtotime($editData[$k]);
+	        		if(count($resArr) > $maxlen){
+	        			$maxlen = count($resArr);
+	        		}
+	        	}else{
+	        		$resArr = array();
+	        		$resArr[] = strtotime($editData[$k]);
+	        	}
+	        	if($resArr[count($resArr)-1] == strtotime($today)){
+	        		$currentMaxlen = count($resArr);
+	        	}else{
+	        		$currentMaxlen = 0;
+	        	}
+	        }
 	        $wgOut->addHTML('
 	            <div class="check-wrapper"><svg width="721" height="110" class=" ">
 	                <g transform="translate(20, 20)">
@@ -359,7 +384,6 @@ class UserProfilePage extends Article {
 	            $wgOut->addHTML('</g>');
 	        }
 	        $moninit = 1;
-	        // print_r($translate);
 	        for ($p=0; $p < 12; $p++) {
 	        	$year = date('Y')-1;
 	        	$mon = date('m')+$p+1;
@@ -404,6 +428,9 @@ class UserProfilePage extends Article {
 		            </ul>
 		            <span>高</span>
 	        	</div></div>');
+			$wgOut->addHTML(
+				'<a>最高连击'.$maxlen.'</a><a>过去一年编辑天数'.$totalEdit.'</a><a>当前连击'.$currentMaxlen.'</a>'
+			);
         $wgOut->addHTML('</div></div></div>');
     }
 		// Left side
