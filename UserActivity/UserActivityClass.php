@@ -31,6 +31,7 @@ class UserActivity {
 	private $show_user_site_follows = 1;
 	private $show_user_update_status = 1;
 	private $show_domain_creations = 1;
+	private $show_image_uploads = 0;
 
 	private $cached_where;
 
@@ -176,15 +177,15 @@ class UserActivity {
 		foreach ($tables as $table){
 			if ( !$isProduction ){
 				$dbr->selectDB('huiji_'.$table);
-				$table = '';
+				$DBprefix = '';
 			} elseif ( $table == 'www'){
 				$dbr->selectDB('huiji_home');
-				$table = '';
+				$DBprefix = '';
 			} else {
 				$dbr->selectDB('huiji_sites');
 			}
 			$res = $dbr->select(
-				$table.'recentchanges',
+				$DBprefix.'recentchanges',
 				array(
 					'UNIX_TIMESTAMP(rc_timestamp) AS item_date', 'rc_title',
 					'rc_user', 'rc_user_text', 'rc_comment', 'rc_id', 'rc_minor',
@@ -409,6 +410,103 @@ class UserActivity {
 			);
 		}
 	}
+	/**
+	 * Get recent uploads from the image table (provided by the Comments
+	 * extension) and set them in the appropriate class member variables.
+	 */
+	private function setImageUploads() {
+		global $wgDBprefix, $wgDBname, $isProduction;
+		$dbr = wfGetDB( DB_SLAVE );
+
+		# Bail out if Comments table doesn't exist
+		if ( !$dbr->tableExists( 'image' ) ) {
+			return false;
+		}
+
+		$where = $this->where('img_user');
+		//$where[] = 'comment_page_id = page_id';
+
+		$tables = $this->getAllRecentChangesTables();
+		$oldDBprefix = $wgDBprefix;
+		$oldDB = $wgDBname;
+		$dbr->tablePrefix('');
+
+		foreach ($tables as $table){
+			if ( !$isProduction ){
+				$dbr->selectDB('huiji_'.$table);
+				$DBprefix = '';
+			} elseif ( $table == 'www'){
+				$dbr->selectDB('huiji_home');
+				$DBprefix = '';
+			} else {
+				$dbr->selectDB('huiji_sites');
+			}
+			$res = $dbr->select(
+				array( $DBprefix.'image' ),
+				array(
+					'UNIX_TIMESTAMP(img_timestamp) AS item_date',
+					'img_user_text', 'img_media_type', 'img_name', 'img_description',
+					'img_user', 'img_minor_mime', 'img_sha1'
+				),
+				$where,
+				__METHOD__,
+				array(
+					'ORDER BY' => 'img_timestamp DESC',
+					'LIMIT' => $this->item_max,
+					'OFFSET' => 0
+				)
+			);
+			foreach ( $res as $row ) {
+				$show_upload = true;
+
+				// global $wgFilterComments;
+				// if ( $wgFilterComments ) {
+				// 	if ( $row->vote_count <= 4 ) {
+				// 		$show_comment = false;
+				// 	}
+				// }
+
+				if ( $show_upload ) {
+					$title = Title::makeTitle( NS_FILE, $row->img_name );
+					$this->items_grouped['image_upload'][$table.':'.$title->getPrefixedText()]['users'][$row->image_user_text][] = array(
+						'id' => $row->img_sha1,
+						'type' => 'image_upload',
+						'timestamp' => $row->item_date,
+						'pagetitle' => $row->page_title,
+						'namespace' => NS_FILE,
+						'username' => $row->img_user_text,
+						'userid' => $row->img_user,
+						'comment' => $img->img_description,
+						'minor' => 0,
+						'new' => 0,
+						'prefix' => $table
+					);
+
+					// set last timestamp
+					$this->items_grouped['image_upload'][$table.':'.$title->getPrefixedText()]['timestamp'] = $row->item_date;
+
+					$username = $row->Comment_Username;
+					$this->items[] = array(
+						'id' => $row->img_sha1,
+						'type' => 'image_upload',
+						'timestamp' => $row->item_date,
+						'pagetitle' => $row->page_title,
+						'namespace' => NS_FILE,
+						'username' => $row->img_user_text,
+						'userid' => $row->img_user,
+						'comment' => $img->img_description,
+						'minor' => 0,
+						'new' => 0,
+						'prefix' => $table
+					);
+					// set prefix
+					$this->items_grouped['image_upload'][$table.':'.$title->getPrefixedText()]['prefix'][] = $table;
+				}
+			}
+		}
+		$dbr->tablePrefix($oldDBprefix);
+		$dbr->selectDB($oldDB);
+	}
 
 	/**
 	 * Get recent comments from the Comments table (provided by the Comments
@@ -434,15 +532,15 @@ class UserActivity {
 		foreach ($tables as $table){
 			if ( !$isProduction ){
 				$dbr->selectDB('huiji_'.$table);
-				$table = '';
+				$DBprefix = '';
 			} elseif ( $table == 'www'){
 				$dbr->selectDB('huiji_home');
-				$table = '';
+				$DBprefix = '';
 			} else {
 				$dbr->selectDB('huiji_sites');
 			}
 			$res = $dbr->select(
-				array( $table.'Comments', $table.'page' ),
+				array( $DBprefix.'Comments', $DBprefix.'page' ),
 				array(
 					'UNIX_TIMESTAMP(comment_date) AS item_date',
 					'Comment_Username', 'Comment_IP', 'page_title', 'Comment_Text',
@@ -1195,6 +1293,8 @@ class UserActivity {
 				$page_title = Title::newFromText( $page_name, NS_USER );
 			} elseif ($type == 'user_site_follow'){
 				$page_title = Title::newFromText( $page_name.':' );
+			} elseif ($type == 'image_upload'){
+				$page_title = Title::newFromText( $page_name, NS_FILE );
 			} else {
 				$page_title = Title::newFromText( $page_name );
 			} 
@@ -1216,8 +1316,11 @@ class UserActivity {
 
 				if ( $has_page && !isset( $this->displayed[$type][$page_name] ) ) {
 					$this->displayed[$type][$page_name] = 1;
-
-					$pages .= ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
+					if ($page_title->inNamespace( NS_FILE )){
+						$pages .= ' <a href="' . '';
+					} else {
+						$pages .= ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
+					}
 					if ( $count_users == 1 && $count_actions > 1 ) {
 						$pages .= wfMessage( 'word-separator' )->text();
 						$pages .= wfMessage( 'parentheses', wfMessage(

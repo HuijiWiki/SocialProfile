@@ -427,10 +427,9 @@ class UserProfilePage extends Article {
 			            <li style="background-color: #0d5493"></li>
 		            </ul>
 		            <span>高</span>
-	        	</div></div>');
-			$wgOut->addHTML(
-				'<a>最高连击'.$maxlen.'</a><a>过去一年编辑天数'.$totalEdit.'</a><a>当前连击'.$currentMaxlen.'</a>'
-			);
+		            </div>
+		            <div class="edit-statistics"><p>连续编辑纪录<span>'.$maxlen.'</span></p><p>总编辑天数<span>'.$totalEdit.'</span></p><p>当前连续编辑<span>'.$currentMaxlen.'<span></p></div>
+	        	</div>');
         $wgOut->addHTML('</div></div></div>');
     }
 		// Left side

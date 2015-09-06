@@ -1119,6 +1119,7 @@ body>.tooltip.top .tooltip-arrow{
 #wiki-body .legend-intro{
     float: right;
     clear: both;
+    margin-bottom: 10px;
 }
 #wiki-body .legend-intro ul{
     margin: 0;
@@ -1132,4 +1133,26 @@ body>.tooltip.top .tooltip-arrow{
     margin-right: 5px;
     height: 11px;
     width: 11px;
+}
+.edit-statistics{
+    clear: both;
+    width: 90%;
+    margin: 0 auto;
+}
+.edit-statistics:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+.edit-statistics p{
+    width: 33.3%;
+    margin: 0;
+    font-size: 18px;
+    float: left;
+    border: none;
+    color: #333;
+}
+.edit-statistics span {
+    display: block;
+    color: #09c;
 }
