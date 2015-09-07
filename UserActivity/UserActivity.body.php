@@ -185,10 +185,10 @@ class UserHome extends SpecialPage {
 				if ( $x < 40 ) {
 					if (
 						( ( count( $activity ) > 40 ) && ( $x == 39 ) ) ||
-						( ( count( $activity ) < 40 ) && ( $x == ( count( $activity ) - 1 ) ) )
+						( ( count( $activity ) < 40 ) && ( $x == ( count( $activity ) ) ) )
 					) {
 						$border_fix = ' border-fix';
-					}
+					} 
 
 					$typeIcon = UserActivity::getTypeIcon( $item['type'] );
 					// $output .= "<div class=\"user-home-activity{$border_fix}\">

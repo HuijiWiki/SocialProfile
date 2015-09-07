@@ -71,7 +71,6 @@ function getSiteActivity( $input, $args, $parser ) {
 			if ( $x < $fixedLimit ) {
 				$typeIcon = UserActivity::getTypeIcon( $item['type'] );
 				$output .= '<li class="mp-activity' . ( ( $x == $fixedLimit ) ? ' mp-activity-border-fix' : '' ) . '">'
-				. $typeIcon 
 				. $item['data'] .
 				'</li>';
 				$x++;
