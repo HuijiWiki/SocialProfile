@@ -706,12 +706,11 @@ class UserActivity {
 								)->text(),
 					'hasShowcase' => true,
 					'showcase' =>  
-								"<div class=\"item\">
-									<a href=\"" . htmlspecialchars( $view_gift_link->getFullURL( 'gift_id=' . $row->ug_id ) ) . "\" rel=\"nofollow\">
+								"<a href=\"" . htmlspecialchars( $view_gift_link->getFullURL( 'gift_id=' . $row->ug_id ) ) . "\" rel=\"nofollow\">
 										{$gift_image}
 										{$row->gift_name}
 									</a>
-								</div>",
+								",
 				)
 			);
 			$this->activityLines[] = array(
@@ -792,12 +791,11 @@ class UserActivity {
 									)->text(),
 					'hasShowcase' => true,
 					'showcase' =>  
-								'<div class="item">
-									<a href="' . htmlspecialchars( $system_gift_link->getFullURL( 'gift_id=' . $row->sg_id ) ) . "\" rel=\"nofollow\">
+								'<a href="' . htmlspecialchars( $system_gift_link->getFullURL( 'gift_id=' . $row->sg_id ) ) . "\" rel=\"nofollow\">
 										{$system_gift_image}
 										{$row->gift_name}
-									</a>
-								</div>",
+								</a>
+								",
 				)
 			);
 			$this->activityLines[] = array(
@@ -1615,7 +1613,7 @@ class UserActivity {
 				return array(
 				    'class' => 'ForeignDBRepo',
 				    'name' => $dotPrefix,
-				    'url' => "http://cdn.huijiwiki.com/uploads",
+				    'url' => "http://cdn.huijiwiki.com/{$dotPrefix}/uploads",
 				    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
 				    'hashLevels' => 2, // This must be the same for the other family member
 				    'dbType' => $wgDBtype,
@@ -1634,7 +1632,7 @@ class UserActivity {
 				return array(
 				    'class' => 'ForeignDBRepo',
 				    'name' => $dotPrefix,
-				    'url' => "http://cdn.huijiwiki.com/uploads",
+				    'url' => "http://cdn.huijiwiki.com/{$dotPrefix}/uploads",
 				    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
 				    'hashLevels' => 2, // This must be the same for the other family member
 				    'dbType' => $wgDBtype,
