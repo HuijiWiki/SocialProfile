@@ -309,6 +309,7 @@ class UserProfilePage extends Article {
 	            // echo $value->_id.'->'.$value->value.'<br>';
 	        }
 	        $today = date("Y-m-d");
+	        $yesterday = date("Y-m-d",strtotime("-1 day"));
 	        $editBox[$today] = UserEditBox::getTodayEdit($this->user_id);
 	        if (!empty($editBox[$today])) {
 	        	$editData[] = $today;
@@ -326,7 +327,7 @@ class UserProfilePage extends Article {
 	        		$resArr = array();
 	        		$resArr[] = strtotime($editData[$k]);
 	        	}
-	        	if($resArr[count($resArr)-1] == strtotime($today)){
+	        	if( $resArr[count($resArr)-1] == strtotime($today) || $resArr[count($resArr)-1] == strtotime($yesterday) ){
 	        		$currentMaxlen = count($resArr);
 	        	}else{
 	        		$currentMaxlen = 0;
