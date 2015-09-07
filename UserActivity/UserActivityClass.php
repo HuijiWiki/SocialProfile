@@ -345,7 +345,7 @@ class UserActivity {
 		);
 
 		foreach ( $res as $row ) {
-			$user_name_short = $wgLang->truncate( $row->f_user_name, 25 );
+			$user_name_short = $wgLang->truncate( $row->f_user_name, 15 );
 			$this->items_grouped['user_user_follow'][$row->f_target_user_name]['users'][$row->f_user_name][] = array(
 				'id' => $row->f_id,
 				'type' => 'user_user_follow',
@@ -360,7 +360,6 @@ class UserActivity {
 			);
 			// set last timestamp
 			$this->items_grouped['user_user_follow'][$row->f_target_user_name]['timestamp'] = $row->item_date;
-
 
 			$this->items[] = array(
 				'id' => 0,
@@ -1387,6 +1386,7 @@ class UserActivity {
 			return '';
 		}
 
+
 		foreach ( $this->items_grouped[$type] as $page_name => $page_data ) {
 			$users = '';
 			$pages = '';
@@ -1408,17 +1408,16 @@ class UserActivity {
 			// Init empty variable to be used later on for GENDER processing
 			// if the event is only for one user.
 			$userNameForGender = '';
-
 			foreach ( $page_data['users'] as $user_name => $action ) {
 				/* get User Avatar for display */
 				$avatar = new wAvatar(User::idFromName($user_name), 'l');
 				$avatarUrl = $avatar->getAvatarURL();
 				$timeago = CommentFunctions::getTimeAgo($page_data['timestamp']).'前';
-
 				/* get rid of same actions more than 3 days ago */
 				if ( $page_data['timestamp'] < $this->three_days_ago ) {
 					continue;
 				}
+
 
 				$count_actions = count( $action );
 
@@ -1430,6 +1429,7 @@ class UserActivity {
 						$pages .= ' <a href="'.$f->getDescriptionUrl().'"><img src="' .$f->getFullUrl(). '"></img></a>';
 					} else {
 						$pages .= ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
+
 					}
 					if ( $count_users == 1 && $count_actions > 1 ) {
 						$pages .= wfMessage( 'word-separator' )->text();
@@ -1447,6 +1447,10 @@ class UserActivity {
 				if ( $count_users == 1 ) {
 					$userNameForGender = $user_name;
 					foreach ( $this->items_grouped[$type] as $page_name2 => $page_data2 ) {
+						//change since sept.7: only group pages with same prefix.
+						if (isset($page_data['prefix']) && $page_data['prefix'][0] != $page_data2['prefix'][0] ){
+							continue;
+						}
 						if ( !isset( $this->displayed[$type][$page_name2] ) &&
 							count( $page_data2['users'] ) == 1
 						) {
@@ -1585,7 +1589,7 @@ class UserActivity {
 				return '<i class="fa fa-level-up"></i>';
 			case 'system_gift':
 				return '<i class="fa fa-heart"></i>';
-			case 'user_message':
+			case 'message_sent':
 				return '<i class="fa fa-comments-o"></i>';
 			case 'network_update':
 				return '<i class="fa fa-laptop"></i>';
@@ -1597,7 +1601,7 @@ class UserActivity {
 				return '<i class="fa fa-paper-plane-o"></i>';
 			case 'user_update_status':
 				return '<i class="fa fa-paper-plane-o"></i>';
-			case 'user_image_upload':
+			case 'image_upload':
 				return '<i class="fa fa-paper-plane-o"></i>';
 		}
 	}
