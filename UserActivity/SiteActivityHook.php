@@ -37,6 +37,7 @@ function getSiteActivity( $input, $args, $parser ) {
 			$rel = new UserActivity( $wgUser->getName(), 'FOLLOWING', $fixedLimit );
 
 			$rel->setActivityToggle( 'show_votes', 0 );
+			$rel->setActivityToggle( 'show_image_uploads', 0 );
 			$activity = $rel->getActivityListGrouped();
 			$wgMemc->set( $key, $activity, 60 * 2 );
 		} else {
@@ -51,6 +52,7 @@ function getSiteActivity( $input, $args, $parser ) {
 			$rel = new UserActivity( '', 'ALL', $fixedLimit );
 
 			$rel->setActivityToggle( 'show_votes', 0 );
+			$rel->setActivityToggle( 'show_image_uploads', 0 );
 			$activity = $rel->getActivityListGrouped();
 			$wgMemc->set( $key, $activity, 60 * 2 );
 		} else {

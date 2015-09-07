@@ -82,3 +82,8 @@
 	padding: 1px;
 	background-color: #fff;
 }
+.user-home-activity:after{
+    content: '';
+    display: block;
+    clear: both;
+}

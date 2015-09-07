@@ -51,7 +51,7 @@ class UserHome extends SpecialPage {
 		// active and we're viewing a filtered-down feed
 		$edits = $votes = $comments = $comments = $gifts = $relationships =
 			$messages = $system_gifts = $messages_sent = $network_updates = $domain_creations =
-			$user_user_follows = $user_site_follows = $user_update_status = 0;
+			$user_user_follows = $user_site_follows = $user_update_status = $image_uploads = 0;
 
 		$filter = $request->getVal( 'filter' );
 		$item_type = $request->getVal( 'item_type' );
@@ -103,6 +103,9 @@ class UserHome extends SpecialPage {
 		}
 		if ( $item_type == 'domain_creation' || $item_type == 'all' ) {
 			$domain_creations = 1;
+		}
+		if ( $item_type == 'image_upload' || $item_type == 'all' ) {
+			$image_uploads = 1;
 		}
 
 		// Filtering feature, if enabled
@@ -168,7 +171,7 @@ class UserHome extends SpecialPage {
 		$rel->setActivityToggle( 'show_user_user_follows', $user_user_follows );
 		$rel->setActivityToggle( 'show_user_site_follows', $user_site_follows );
 		$rel->setActivityToggle( 'show_user_update_status', $user_update_status );
-
+		$rel->setActivityToggle( 'show_image_uploads', $image_uploads );
 		/**
 		 * Get all relationship activity
 		 */
