@@ -338,6 +338,13 @@ $wgResourceModules['ext.socialprofile.useruserfollows.css'] = array(
 	'remoteExtPath' => 'SocialProfile/UserUserFollows',
 	'position' => 'top',
 );
+// SiteActivity
+$wgResourceModules['ext.socialprofile.siteactivity.css'] = array(
+	'styles' => 'SiteActivityHook.css',
+	'localBasePath' => __DIR__ . '/UserActivity',
+	'remoteExtPath' => 'SocialProfile/UserActivity',
+	'position' => 'top' // just in case
+);
 $wgResourceModules['ext.guidedTour.tour.newuser'] = array(
 	'scripts' => 'tours/newuser.js',
 	// Note that you should have an explicit dependency on the GuidedTour library.

@@ -21,7 +21,7 @@ function wfSiteActivity( &$parser ) {
 
 function getSiteActivity( $input, $args, $parser ) {
 	global $wgMemc, $wgExtensionAssetsPath, $wgUser;
-
+	$parser->getOutput()->addModules('ext.socialprofile.siteactivity.css');
 	$parser->disableCache();
 
 	$limit = ( isset( $args['limit'] ) && is_numeric( $args['limit'] ) ) ? $args['limit'] : 10;
@@ -36,7 +36,7 @@ function getSiteActivity( $input, $args, $parser ) {
 		$rel = new UserActivity( $wgUser->getName(), 'THIS_SITE', $fixedLimit );
 
 		$rel->setActivityToggle( 'show_votes', 0 );
-		$rel->setActivityToggle( 'show_image_uploads', 0 );
+		$rel->setActivityToggle( 'show_comments', 0 );
 		$activity = $rel->getActivityListGrouped();
 		$wgMemc->set( $key, $activity, 60 * 2 );
 	} else {
