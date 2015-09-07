@@ -1448,6 +1448,7 @@ class UserProfilePage extends Article {
 		$rel->setActivityToggle( 'show_edits', 0 );
 		$rel->setActivityToggle( 'show_comments', 0 );
 		$rel->setActivityToggle( 'show_domain_creations', 0);
+		$rel->setActivityToggle( 'show_image_uploads', 0);
 		/**
 		 * Get all relationship activity
 		 */
@@ -1653,6 +1654,7 @@ class UserProfilePage extends Article {
 		$rel->setActivityToggle( 'show_gifts_sent', 0);		
 		$rel->setActivityToggle( 'show_gifts_rec', 0);		
 		$rel->setActivityToggle( 'show_domain_creations', 1);	
+		$rel->setActivityToggle( 'show_image_uploads', 0);	
 		/**
 		 * Get all relationship activity
 		 */
