@@ -1,4 +1,5 @@
 <?php
+define("UTCTOBEIJING", 3600 * 8);
 /**
  * UserActivity class
  * step1: determine where clasue.
@@ -8,7 +9,7 @@
  * step5: build html
  */
 class UserActivity {
-	define("UTCTOBEIJING", 3600 * 8);
+	
 
 	/**
 	 * All member variables should be considered private
