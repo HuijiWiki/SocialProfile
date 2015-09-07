@@ -29,38 +29,20 @@ function getSiteActivity( $input, $args, $parser ) {
 	// so that <siteactivity limit=5 /> will return 5 items instead of 4...
 	$fixedLimit = $limit + 1;
 
-	if ($wgUser->isLoggedIn()){
-		$key = wfMemcKey( 'site_activity', 'FOLLOWING', $fixedLimit, $wgUser->getName() );
-		$data = $wgMemc->get( $key );
-		if ( !$data ) {
-			wfDebug( "Got site activity from DB\n" );
-			$rel = new UserActivity( $wgUser->getName(), 'FOLLOWING', $fixedLimit );
+	$key = wfMemcKey( 'site_activity', 'THIS_SITE', $fixedLimit, $wgUser->getName() );
+	$data = $wgMemc->get( $key );
+	if ( !$data ) {
+		wfDebug( "Got site activity from DB\n" );
+		$rel = new UserActivity( $wgUser->getName(), 'THIS_SITE', $fixedLimit );
 
-			$rel->setActivityToggle( 'show_votes', 0 );
-			$rel->setActivityToggle( 'show_image_uploads', 0 );
-			$activity = $rel->getActivityListGrouped();
-			$wgMemc->set( $key, $activity, 60 * 2 );
-		} else {
-			wfDebug( "Got site activity from cache\n" );
-			$activity = $data;
-		}		
+		$rel->setActivityToggle( 'show_votes', 0 );
+		$rel->setActivityToggle( 'show_image_uploads', 0 );
+		$activity = $rel->getActivityListGrouped();
+		$wgMemc->set( $key, $activity, 60 * 2 );
 	} else {
-		$key = wfMemcKey( 'site_activity', 'ALL', $fixedLimit );
-		$data = $wgMemc->get( $key );
-		if ( !$data ) {
-			wfDebug( "Got site activity from DB\n" );
-			$rel = new UserActivity( '', 'ALL', $fixedLimit );
-
-			$rel->setActivityToggle( 'show_votes', 0 );
-			$rel->setActivityToggle( 'show_image_uploads', 0 );
-			$activity = $rel->getActivityListGrouped();
-			$wgMemc->set( $key, $activity, 60 * 2 );
-		} else {
-			wfDebug( "Got site activity from cache\n" );
-			$activity = $data;
-		}		
-	}
-
+		wfDebug( "Got site activity from cache\n" );
+		$activity = $data;
+	}		
 
 	$output = '';
 	if ( $activity ) {

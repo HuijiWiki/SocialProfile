@@ -23,6 +23,8 @@ class UserActivity {
 	private $show_following = false;
 	private $show_current_user = false;
 	private $show_all = false;
+	private $show_following_sites = false;
+	private $show_this_site = false;
 
 	private $show_edits = 1;
 	private $show_votes = 0;
@@ -82,7 +84,35 @@ class UserActivity {
 		}
 		if ( strtoupper( $filter ) == 'ALL' ) {
 			$this->show_all = true;
-		} 
+		}
+		if ( strtoupper( $filter ) == 'FOLLOWING_SITES' ) {
+			$this->show_following_sites = true;
+			$this->show_relationships = 0;
+			$this->show_gifts_sent = 0;
+			$this->show_gifts_rec = 0;
+			$this->show_system_gifts = 0;
+			$this->show_system_messages = 0;
+			$this->show_messages_sent = 0;
+			$this->show_network_updates = 0;
+			$this->show_user_user_follows = 0;
+			$this->show_user_site_follows = 0;
+			$this->show_user_update_status = 0;
+			$this->show_domain_creations = 0;
+		}
+		if ( strtoupper( $filter ) == 'THIS_SITE' ) {
+			$this->show_this_site = true;
+			$this->show_relationships = 0;
+			$this->show_gifts_sent = 0;
+			$this->show_gifts_rec = 0;
+			$this->show_system_gifts = 0;
+			$this->show_system_messages = 0;
+			$this->show_messages_sent = 0;
+			$this->show_network_updates = 0;
+			$this->show_user_user_follows = 0;
+			$this->show_user_site_follows = 0;
+			$this->show_user_update_status = 0;
+			$this->show_domain_creations = 0;			
+		}
 	}
 
 	/**
@@ -97,20 +127,40 @@ class UserActivity {
 	 *
 	 */
 	private function getAllRecentChangesTables(){
-		global $wgHuijiPrefix;
+		global $wgHuijiPrefix, $wgUser;
 		$dbr = wfGetDB( DB_SLAVE );
-		$values = $dbr->select(
-			'domain',
-			'domain_prefix',
-			'domain_status = 0',
-			__METHOD__
-		);
-		// echo $values;
-		// die(1);
-		$tables = array();
-		foreach( $values as $value ){
-			$tables[] = $value->domain_prefix;
+		$user = $wgUser;
+		if ($this->show_this_site){
+			$tables = array();
+			$tables[] = $wgHuijiPrefix;
+		} elseif ($this->show_following_sites){
+			$values = $dbr->select(
+				'user_site_follow',
+				'f_wiki_domain',
+				'f_user_id = '.$user->getId(),
+				__METHOD__
+			);
+			// echo $values;
+			// die(1);
+			$tables = array();
+			foreach( $values as $value ){
+				$tables[] = $value->f_wiki_domain;
+			}				
+		} else {
+			$values = $dbr->select(
+				'domain',
+				'domain_prefix',
+				'domain_status = 0',
+				__METHOD__
+			);
+			// echo $values;
+			// die(1);
+			$tables = array();
+			foreach( $values as $value ){
+				$tables[] = $value->domain_prefix;
+			}			
 		}
+
 		return $tables;
 	}
 
@@ -1330,7 +1380,7 @@ class UserActivity {
 		if ( $this->show_domain_creations ) {
 			$this->getDomainCreations();
 		}
-		if ( $this->show_domain_creations ) {
+		if ( $this->show_image_uploads ) {
 			$this->getImageUploads();
 		}
 		if ( $this->items ) {
@@ -1417,8 +1467,6 @@ class UserActivity {
 				if ( $page_data['timestamp'] < $this->three_days_ago ) {
 					continue;
 				}
-
-
 				$count_actions = count( $action );
 
 				if ( $has_page && !isset( $this->displayed[$type][$page_name] ) ) {
@@ -1589,7 +1637,7 @@ class UserActivity {
 				return '<i class="fa fa-level-up"></i>';
 			case 'system_gift':
 				return '<i class="fa fa-heart"></i>';
-			case 'message_sent':
+			case 'user_message':
 				return '<i class="fa fa-comments-o"></i>';
 			case 'network_update':
 				return '<i class="fa fa-laptop"></i>';
