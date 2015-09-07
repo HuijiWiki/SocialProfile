@@ -1491,7 +1491,7 @@ class UserProfilePage extends Article {
 					$comment_url = "#comment-{$item['id']}";
 				}
 				if (array_key_exists('prefix', $item)){
-					$site_link = '<b><a href="' . HuijiPrefix::prefixToUrl($item['prefix']).HuijiPrefix::prefixToSiteName($item['prefix'])  . '</a></b> ';					
+					$site_link = '<b><a href="' . HuijiPrefix::prefixToUrl($item['prefix']).'">'.HuijiPrefix::prefixToSiteName($item['prefix'])  . '</a></b> ';					
 				}
 				$page_link = '<b><a href="' . htmlspecialchars( $title->getFullURL() ) .
 					"{$comment_url}\">" . $title->getPrefixedText() . '</a></b> ';
