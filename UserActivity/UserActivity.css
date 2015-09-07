@@ -106,6 +106,9 @@
         width: 100%;
         float: none;
     }
+    .user-home-links-container h2{
+        padding-top: 0;
+    }
     .user-home-links-container a{
         display: inline-block;
         margin-right: 5px;
@@ -114,13 +117,13 @@
         width: 100%;
         float: none;
     }
-    .user-home-item-owner-avatar{
+    .user-home-feed .user-home-item-owner-avatar{
         padding: 0;
     }
     .user-home-item-owner-avatar img{
         width: 100%;
     }
-    .user-home-item-body{
+    .user-home-feed .user-home-item-body{
         padding-right: 0;
     }
 }
