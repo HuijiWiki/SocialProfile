@@ -1466,16 +1466,15 @@ class UserActivity {
 									}
 
 									if ( $pages ) {
-										$pages .= ', ';
+										$pages .= $page_title2->inNamespace( NS_FILE )?'':'，';
 									}
-									if ( $page_title2 instanceof Title ) {
-										if ($page_title2->inNamespace( NS_FILE )){
-											$repo = new ForeignDBRepo($this->streamlineForeignDBRepo($page_data2['prefix'][0]));
-											$f =  ForeignDBFile::newFromTitle($page_title2, $repo);
-											$pages .= ' <img src="' .$f->getFullUrl(). '"></img>';
-										} else {
-											$pages .= ' <a href="' . htmlspecialchars( $page_title2->getFullURL() ) . "\">{$page_title2->getText()}</a>";
-										}									}
+									if ($page_title2->inNamespace( NS_FILE )){
+										$repo = new ForeignDBRepo($this->streamlineForeignDBRepo($page_data2['prefix'][0]));
+										$f =  ForeignDBFile::newFromTitle($page_title2, $repo);
+										$pages .= ' <a href="'.$f->getDescriptionUrl().'"><img src="' .$f->getFullUrl(). '"></img></a>';
+									} else {
+										$pages .= ' <a href="' . htmlspecialchars( $page_title2->getFullURL() ) . "\">{$page_title2->getText()}</a>";
+									}									
 									if ( $count_actions2 > 1 ) {
 										$pages .= ' (' . wfMessage(
 											"useractivity-group-{$type}", $count_actions2
