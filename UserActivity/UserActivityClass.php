@@ -1,6 +1,11 @@
 <?php
 /**
  * UserActivity class
+ * step1: determine where clasue.
+ * step2: read database
+ * step3: set item data and item(grouped) data.
+ * step4: prepare formated output
+ * step5: build html
  */
 class UserActivity {
 
@@ -31,9 +36,10 @@ class UserActivity {
 	private $show_user_site_follows = 1;
 	private $show_user_update_status = 1;
 	private $show_domain_creations = 1;
-	private $show_image_uploads = 0;
+	private $show_image_uploads = 1;
 
 	private $cached_where;
+	private $templateParser;
 
 	/**
 	 * Constructor
@@ -56,6 +62,7 @@ class UserActivity {
 		$this->three_days_ago = $this->now - ( 60 * 60 * 24 * 3 );
 		$this->items_grouped = array();
 		$this->cached_where = false;
+		$this->templateParser = new TemplateParser(  __DIR__ . '/html' );
 	}
 
 	private function setFilter( $filter ) {
@@ -100,7 +107,7 @@ class UserActivity {
 		// die(1);
 		$tables = array();
 		foreach( $values as $value ){
-			$tables[] = str_replace('.', '_', $value->domain_prefix);
+			$tables[] = $value->domain_prefix;
 		}
 		return $tables;
 	}
@@ -176,14 +183,14 @@ class UserActivity {
 		$dbr->tablePrefix('');
 		foreach ($tables as $table){
 			if ( !$isProduction ){
-				$dbr->selectDB('huiji_'.$table);
+				$dbr->selectDB('huiji_'.str_replace('.', '_', $table));
 				$DBprefix = '';
 			} elseif ( $table == 'www'){
 				$dbr->selectDB('huiji_home');
 				$DBprefix = '';
 			} else {
 				$dbr->selectDB('huiji_sites');
-				$DBprefix = $table;
+				$DBprefix = str_replace('.', '_', $table);
 			}
 			$res = $dbr->select(
 				$DBprefix.'recentchanges',
@@ -429,14 +436,14 @@ class UserActivity {
 
 		foreach ($tables as $table){
 			if ( !$isProduction ){
-				$dbr->selectDB('huiji_'.$table);
+				$dbr->selectDB('huiji_'.str_replace('.', '_', $table));
 				$DBprefix = '';
 			} elseif ( $table == 'www'){
 				$dbr->selectDB('huiji_home');
 				$DBprefix = '';
 			} else {
 				$dbr->selectDB('huiji_sites');
-				$DBprefix = $table;
+				$DBprefix = str_replace('.', '_', $table);
 			}
 			$res = $dbr->select(
 				array( $DBprefix.'image' ),
@@ -465,39 +472,39 @@ class UserActivity {
 
 				if ( $show_upload ) {
 					$title = Title::makeTitle( NS_FILE, $row->img_name );
-					$this->items_grouped['image_upload'][$table.':'.$title->getPrefixedText()]['users'][$row->image_user_text][] = array(
+					$this->items_grouped['image_upload'][$title->getPrefixedText()]['users'][$row->img_user_text][] = array(
 						'id' => $row->img_sha1,
 						'type' => 'image_upload',
 						'timestamp' => $row->item_date,
-						'pagetitle' => $row->page_title,
+						'pagetitle' => $row->img_name,
 						'namespace' => NS_FILE,
 						'username' => $row->img_user_text,
 						'userid' => $row->img_user,
-						'comment' => $img->img_description,
+						'comment' => $row->img_description,
 						'minor' => 0,
 						'new' => 0,
 						'prefix' => $table
 					);
 
 					// set last timestamp
-					$this->items_grouped['image_upload'][$table.':'.$title->getPrefixedText()]['timestamp'] = $row->item_date;
+					$this->items_grouped['image_upload'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
 
-					$username = $row->Comment_Username;
+					//$username = $row->Comment_Username;
 					$this->items[] = array(
 						'id' => $row->img_sha1,
 						'type' => 'image_upload',
 						'timestamp' => $row->item_date,
-						'pagetitle' => $row->page_title,
+						'pagetitle' => $row->img_name,
 						'namespace' => NS_FILE,
 						'username' => $row->img_user_text,
 						'userid' => $row->img_user,
-						'comment' => $img->img_description,
+						'comment' => $row->img_description,
 						'minor' => 0,
 						'new' => 0,
 						'prefix' => $table
 					);
 					// set prefix
-					$this->items_grouped['image_upload'][$table.':'.$title->getPrefixedText()]['prefix'][] = $table;
+					$this->items_grouped['image_upload'][$title->getPrefixedText()]['prefix'][] = $table;
 				}
 			}
 		}
@@ -528,14 +535,14 @@ class UserActivity {
 
 		foreach ($tables as $table){
 			if ( !$isProduction ){
-				$dbr->selectDB('huiji_'.$table);
+				$dbr->selectDB('huiji_'.str_replace('.', '_', $table));
 				$DBprefix = '';
 			} elseif ( $table == 'www'){
 				$dbr->selectDB('huiji_home');
 				$DBprefix = '';
 			} else {
 				$dbr->selectDB('huiji_sites');
-				$DBprefix = $table;
+				$DBprefix = str_replace('.', '_', $table);
 			}
 			$res = $dbr->select(
 				array( $DBprefix.'Comments', $DBprefix.'page' ),
@@ -651,6 +658,7 @@ class UserActivity {
 	 * tables and set them in the appropriate class member variables.
 	 */
 	private function setGiftsRec() {
+		global $wgLang;
 		$dbr = wfGetDB( DB_SLAVE );
 
 		$where = $this->where('ug_user_id_to');
@@ -681,23 +689,41 @@ class UserActivity {
 				Gifts::getGiftImage( $row->gift_id, 'm' ) .
 				'" border="0" alt="" />';
 			$view_gift_link = SpecialPage::getTitleFor( 'ViewGift' );
-
-			$html = wfMessage( 'useractivity-gift',
-				'<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$row->ug_user_name_to}</a></b>",
-				'<a href="' . htmlspecialchars( $user_title_from->getFullURL() ) . "\">{$user_title_from->getText()}</a>"
-			)->text() .
-			"<div class=\"item\">
-				<a href=\"" . htmlspecialchars( $view_gift_link->getFullURL( 'gift_id=' . $row->ug_id ) ) . "\" rel=\"nofollow\">
-					{$gift_image}
-					{$row->gift_name}
-				</a>
-			</div>";
-
+			$avatar = new wAvatar($row->ug_user_id_to, 'l');
+			$avatarUrl = $avatar->getAvatarURL();
+			$user_name_short = $wgLang->truncate( $row->ug_user_name_to, 25 );
+			$timeago = CommentFunctions::getTimeAgo($row->item_date);
+			/* build html */
+			$html = $this->templateParser->processTemplate(
+				'user-home-item',
+				array(
+					'userAvatar' => $avatarUrl,
+					'userName'  => '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b>",
+					'timestamp' => $timeago,
+					'description' => wfMessage( 'useractivity-gift',
+									'<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$row->ug_user_name_to}</a></b>",
+									'<a href="' . htmlspecialchars( $user_title_from->getFullURL() ) . "\">{$user_title_from->getText()}</a>"
+								)->text(),
+					'hasShowcase' => true,
+					'showcase' =>  
+								"<div class=\"item\">
+									<a href=\"" . htmlspecialchars( $view_gift_link->getFullURL( 'gift_id=' . $row->ug_id ) ) . "\" rel=\"nofollow\">
+										{$gift_image}
+										{$row->gift_name}
+									</a>
+								</div>",
+				)
+			);
 			$this->activityLines[] = array(
 				'type' => 'gift-rec',
 				'timestamp' => $row->item_date,
-				'data' => ' ' . $html
+				'data' => $html
 			);
+			// $this->activityLines[] = array(
+			// 	'type' => 'gift-rec',
+			// 	'timestamp' => $row->item_date,
+			// 	'data' => ' ' . $html
+			// );
 
 			$this->items[] = array(
 				'id' => $row->ug_id,
@@ -720,7 +746,7 @@ class UserActivity {
 	 * variables.
 	 */
 	private function setSystemGiftsRec() {
-		global $wgUploadPath;
+		global $wgUploadPath, $wgLang;
 
 		$dbr = wfGetDB( DB_SLAVE );
 
@@ -748,24 +774,55 @@ class UserActivity {
 				SystemGifts::getGiftImage( $row->gift_id, 'm' ) .
 				'" border="0" alt="" />';
 			$system_gift_link = SpecialPage::getTitleFor( 'ViewSystemGift' );
-
-			$html = wfMessage(
-				'useractivity-award',
-				'<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$row->sg_user_name}</a></b>",
-				$row->sg_user_name
-			)->text() .
-			'<div class="item">
-				<a href="' . htmlspecialchars( $system_gift_link->getFullURL( 'gift_id=' . $row->sg_id ) ) . "\" rel=\"nofollow\">
-					{$system_gift_image}
-					{$row->gift_name}
-				</a>
-			</div>";
-
-			$this->activityLines[] = array(
-				'type' => 'system_gift',
-				'timestamp' => $row->item_date,
-				'data' => ' ' . $html
+			$user_name_short = $wgLang->truncate( $row->sg_user_name, 25 );
+			$avatar = new wAvatar( $row->sg_user_id, 'l');
+			$avatarUrl = $avatar->getAvatarURL();
+			$timeago = CommentFunctions::getTimeAgo($row->item_date).'前';
+						/* build html */
+			$html = $this->templateParser->processTemplate(
+				'user-home-item',
+				array(
+					'userAvatar' => $avatarUrl,
+					'userName'  => '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b>",
+					'timestamp' => $timeago,
+					'description' => wfMessage(
+										'useractivity-award',
+										'<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$row->sg_user_name}</a></b>",
+										$row->sg_user_name
+									)->text(),
+					'hasShowcase' => true,
+					'showcase' =>  
+								'<div class="item">
+									<a href="' . htmlspecialchars( $system_gift_link->getFullURL( 'gift_id=' . $row->sg_id ) ) . "\" rel=\"nofollow\">
+										{$system_gift_image}
+										{$row->gift_name}
+									</a>
+								</div>",
+				)
 			);
+			$this->activityLines[] = array(
+				'type' => 'system_gift-rec',
+				'timestamp' => $row->item_date,
+				'data' => $html
+			);
+
+			// $html = wfMessage(
+			// 	'useractivity-award',
+			// 	'<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$row->sg_user_name}</a></b>",
+			// 	$row->sg_user_name
+			// )->text() .
+			// '<div class="item">
+			// 	<a href="' . htmlspecialchars( $system_gift_link->getFullURL( 'gift_id=' . $row->sg_id ) ) . "\" rel=\"nofollow\">
+			// 		{$system_gift_image}
+			// 		{$row->gift_name}
+			// 	</a>
+			// </div>";
+
+			// $this->activityLines[] = array(
+			// 	'type' => 'system_gift',
+			// 	'timestamp' => $row->item_date,
+			// 	'data' => ' ' . $html
+			// );
 
 			$this->items[] = array(
 				'id' => $row->sg_id,
@@ -944,12 +1001,30 @@ class UserActivity {
 		foreach ( $res as $row ) {
 			$user_title = Title::makeTitle( NS_USER, $row->um_user_name );
 			$user_name_short = $wgLang->truncate( $row->um_user_name, 15 );
-
+			$avatar = new wAvatar( $row->um_user_id, 'l');
+			$avatarUrl = $avatar->getAvatarURL();
+			$timeago = CommentFunctions::getTimeAgo($row->item_date).'前';
+			/* build html */
+			$html = $this->templateParser->processTemplate(
+				'user-home-item',
+				array(
+					'userAvatar' => $avatarUrl,
+					'userName'  => '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b>",
+					'timestamp' => $timeago,
+					'description' => ' ' . '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b> {$row->um_message}",
+					'hasShowcase' => false,
+				)
+			);
 			$this->activityLines[] = array(
 				'type' => 'system_message',
 				'timestamp' => $row->item_date,
-				'data' => ' ' . '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b> {$row->um_message}"
+				'data' => $html
 			);
+			// $this->activityLines[] = array(
+			// 	'type' => 'system_message',
+			// 	'timestamp' => $row->item_date,
+			// 	'data' => ' ' . '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b> {$row->um_message}"
+			// );
 
 			$this->items[] = array(
 				'id' => $row->um_id,
@@ -1060,6 +1135,7 @@ class UserActivity {
 
 		$where = $this->where('domain_founder_id');
 
+		/* reading database */
 		$res = $dbr->select(
 			'domain',
 			array(
@@ -1085,6 +1161,7 @@ class UserActivity {
 			// 	$network_name = $sport['name'];
 			// }
 
+			/* set item data */
 			$this->items[] = array(
 				'id' => $row->domain_id,
 				'type' => 'domain_creation',
@@ -1097,26 +1174,42 @@ class UserActivity {
 				'prefix' => $row->domain_prefix,
 				'domainname' => $row->domain_name
 			);
-
+			/* prepare data */
 			$domainUrl = HuijiPrefix::prefixToUrl($row->domain_prefix);
 			$user_name_short = $wgLang->truncate( $row->domain_founder_name, 15 );
 			$user_title = Title::makeTitle( NS_USER, $row->domain_founder_name );
 			$founder_link = '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b>";
-
+			$timeago = CommentFunctions::getTimeAgo($row->item_date).'前';
 			$page_link = '<a href="' . $domainUrl .
 				"\" rel=\"nofollow\">{$row->domain_name}</a>";
-			//$network_image = SportsTeams::getLogo( $row->us_sport_id, $row->us_team_id, 's' );
-
-			$html = wfMessage(
-				'useractivity-domain-creation',
-				$founder_link,
-				$page_link
-			)->text() .
-					'<div class="item">
-						<a href="' . $domainUrl . "\" rel=\"nofollow\">
-							\"{$row->domain_dsp}\"
-						</a>
-					</div>";
+			$avatar = new wAvatar($row->domain_founder_id, 'l');
+			$avatarUrl = $avatar->getAvatarURL();
+			/* build html */
+			$html = $this->templateParser->processTemplate(
+				'user-home-item',
+				array(
+					'userAvatar' => $avatarUrl,
+					'userName'  => $founder_link,
+					'timestamp' => $timeago,
+					'description' => wfMessage(
+										'useractivity-domain-creation',
+										$founder_link,
+										$page_link
+									)->text(),
+					'hasShowcase' => strlen($row->domain_dsp) > 0,
+					'showcase' => $row->domain_dsp
+				)
+			);
+			// $html = wfMessage(
+			// 	'useractivity-domain-creation',
+			// 	$founder_link,
+			// 	$page_link
+			// )->text() .
+			// 		'<div class="item">
+			// 			<a href="' . $domainUrl . "\" rel=\"nofollow\">
+			// 				\"{$row->domain_dsp}\"
+			// 			</a>
+			// 		</div>";
 
 			$this->activityLines[] = array(
 				'type' => 'domain_creation',
@@ -1191,6 +1284,11 @@ class UserActivity {
 		return $this->items;
 	}
 
+	public function getImageUploads() {
+		$this->setImageUploads();
+		return $this->items;
+	}
+
 	public function getActivityList() {
 		if ( $this->show_edits ) {
 			$this->setEdits();
@@ -1231,6 +1329,9 @@ class UserActivity {
 		if ( $this->show_domain_creations ) {
 			$this->getDomainCreations();
 		}
+		if ( $this->show_domain_creations ) {
+			$this->getImageUploads();
+		}
 		if ( $this->items ) {
 			usort( $this->items, array( 'UserActivity', 'sortItems' ) );
 		}
@@ -1261,14 +1362,15 @@ class UserActivity {
 		if ( $this->show_user_site_follows ) {
 			$this->simplifyPageActivity( 'user_site_follow' );
 		}
+		if ( $this->show_image_uploads ) {
+			$this->simplifyPageActivity( 'image_upload' );
+		}
 		if ( !isset( $this->activityLines ) ) {
 			$this->activityLines = array();
 		}
 		if ( isset( $this->activityLines ) && is_array( $this->activityLines ) ) {
 			usort( $this->activityLines, array( 'UserActivity', 'sortItems' ) );
 		}
-		// echo $this->show_comments;
-		// die(1);
 		return $this->activityLines;
 	}
 
@@ -1306,6 +1408,12 @@ class UserActivity {
 			$userNameForGender = '';
 
 			foreach ( $page_data['users'] as $user_name => $action ) {
+				/* get User Avatar for display */
+				$avatar = new wAvatar(User::idFromName($user_name), 'l');
+				$avatarUrl = $avatar->getAvatarURL();
+				$timeago = CommentFunctions::getTimeAgo($page_data['timestamp']).'前';
+
+				/* get rid of same actions more than 3 days ago */
 				if ( $page_data['timestamp'] < $this->three_days_ago ) {
 					continue;
 				}
@@ -1315,7 +1423,9 @@ class UserActivity {
 				if ( $has_page && !isset( $this->displayed[$type][$page_name] ) ) {
 					$this->displayed[$type][$page_name] = 1;
 					if ($page_title->inNamespace( NS_FILE )){
-						$pages .= ' <img href="' . '"></img>';
+						$repo = new ForeignDBRepo($this->streamlineForeignDBRepo($page_data['prefix'][0]));
+						$f =  ForeignDBFile::newFromTitle($page_title, $repo);
+						$pages .= ' <img src="' .$f->getFullUrl(). '"></img>';
 					} else {
 						$pages .= ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
 					}
@@ -1351,6 +1461,8 @@ class UserActivity {
 										$page_title2 = Title::newFromText( $page_name2, NS_USER );
 									}  elseif ($type == 'user_site_follow'){
 										$page_title2 = Title::newFromText( $page_name2.':' );
+									}  elseif ($type == 'image_upload'){
+										$page_title2 = Title::newFromText( $page_name2, NS_FILE );
 									}  else {
 										$page_title2 = Title::newFromText( $page_name2 );
 									}
@@ -1359,8 +1471,13 @@ class UserActivity {
 										$pages .= ', ';
 									}
 									if ( $page_title2 instanceof Title ) {
-										$pages .= '<a href="' . htmlspecialchars( $page_title2->getFullURL() ) . "\">{$page_title2->getText()}</a>";
-									}
+										if ($page_title2->inNamespace( NS_FILE )){
+											$repo = new ForeignDBRepo($this->streamlineForeignDBRepo($page_data2['prefix'][0]));
+											$f =  ForeignDBFile::newFromTitle($page_title2, $repo);
+											$pages .= ' <img src="' .$f->getFullUrl(). '"></img>';
+										} else {
+											$pages .= ' <a href="' . htmlspecialchars( $page_title2->getFullURL() ) . "\">{$page_title2->getText()}</a>";
+										}									}
 									if ( $count_actions2 > 1 ) {
 										$pages .= ' (' . wfMessage(
 											"useractivity-group-{$type}", $count_actions2
@@ -1412,15 +1529,29 @@ class UserActivity {
 					$prefixToName .= HuijiPrefix::prefixToSiteNameAnchor($prefix);
 				}
 			}
+			/* prepare format */
+
+			/* build html */
+			$html = $this->templateParser->processTemplate(
+				'user-home-item',
+				array(
+					'userAvatar' => $avatarUrl,
+					'userName'  => $users,
+					'timestamp' => $timeago,
+					'description' => wfMessage(
+										"useractivity-{$type}",
+										$users, $count_users, $pages, $pages_count,
+										$userNameForGender, $prefixToName
+									)->text(),
+					'hasShowcase' => false,
+				)
+			);
 			if ( $pages || $has_page == false ) {
+
 				$this->activityLines[] = array(
 					'type' => $type,
 					'timestamp' => $page_data['timestamp'],
-					'data' => wfMessage(
-						"useractivity-{$type}",
-						$users, $count_users, $pages, $pages_count,
-						$userNameForGender, $prefixToName
-					)->text()
+					'data' => $html
 				);
 			}
 		}
@@ -1465,7 +1596,82 @@ class UserActivity {
 				return '<i class="fa fa-paper-plane-o"></i>';
 			case 'user_update_status':
 				return '<i class="fa fa-paper-plane-o"></i>';
+			case 'user_image_upload':
+				return '<i class="fa fa-paper-plane-o"></i>';
 		}
+	}
+
+	/**
+	 * Generate an array that can be used to construct foreignDBRepo.
+	 * @param $prefix :string, the HuijiPrefix, with no dot (use '_')
+	 * @return array
+	 */
+	private function streamlineForeignDBRepo( $prefix ){
+		global $wgDBtype, $wgDBserver, $wgDBuser, $wgDBpassword, $isProduction;
+		$lowDashPrefix = str_replace('.', '_', $prefix);
+		$dotPrefix = str_replace('_', '.', $prefix);
+		if ($isProduction){
+			if ($prefix != 'www'){
+				return array(
+				    'class' => 'ForeignDBRepo',
+				    'name' => $dotPrefix,
+				    'url' => "http://cdn.huijiwiki.com/uploads",
+				    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
+				    'hashLevels' => 2, // This must be the same for the other family member
+				    'dbType' => $wgDBtype,
+				    'dbServer' => $wgDBserver,
+				    'dbUser' => $wgDBuser,
+				    'dbPassword' => $wgDBpassword,
+				    'dbFlags' => DBO_DEFAULT,
+				    'dbName' => "huiji_sites",
+				    'tablePrefix' => $lowDashPrefix,
+				    'hasSharedCache' => false,
+				    'descBaseUrl' => "http://{$dotPrefix}.huiji.wiki/wiki/File:",
+				    'fetchDescription' => false,
+				    'backend' => 'local-backend'				
+				);
+			} else {
+				return array(
+				    'class' => 'ForeignDBRepo',
+				    'name' => $dotPrefix,
+				    'url' => "http://cdn.huijiwiki.com/uploads",
+				    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
+				    'hashLevels' => 2, // This must be the same for the other family member
+				    'dbType' => $wgDBtype,
+				    'dbServer' => $wgDBserver,
+				    'dbUser' => $wgDBuser,
+				    'dbPassword' => $wgDBpassword,
+				    'dbFlags' => DBO_DEFAULT,
+				    'dbName' => "huiji_home",
+				    'tablePrefix' => '',
+				    'hasSharedCache' => false,
+				    'descBaseUrl' => "http://{$dotPrefix}.huiji.wiki/wiki/File:",
+				    'fetchDescription' => false,
+				    'backend' => 'local-backend'				
+				);
+			}
+
+		}
+		$dbname = 'huiji_'.$lowDashPrefix;
+		return array(
+		    'class' => 'ForeignDBRepo',
+		    'name' => $dotPrefix,
+		    'url' => "http://{$dotPrefix}.huiji.wiki/uploads",
+		    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
+		    'hashLevels' => 0, // This must be the same for the other family member
+		    'dbType' => $wgDBtype,
+		    'dbServer' => $wgDBserver,
+		    'dbUser' => $wgDBuser,
+		    'dbPassword' => $wgDBpassword,
+		    'dbFlags' => DBO_DEFAULT,
+		    'dbName' => $dbname,
+		    'tablePrefix' => '',
+		    'hasSharedCache' => false,
+		    'descBaseUrl' => "http://{$dotPrefix}.huiji.wiki/wiki/File:",
+		    'fetchDescription' => false,
+		    'backend' => 'local-backend'
+		);
+
 	}
 
 	/**
