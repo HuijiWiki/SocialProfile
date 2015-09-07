@@ -141,18 +141,19 @@ class ViewSystemGifts extends SpecialPage {
 		$page_link = $this->getPageTitle();
 
 		if ( $numofpages > 1 ) {
-			$output .= '<div class="page-nav">';
+			$output .= '<nav class="page-nav pagination">';
 
 			if ( $page > 1 ) {
-				$output .= Linker::link(
+				$output .= '<li>'.Linker::link(
 					$page_link,
-					$this->msg( 'ga-previous' )->plain(),
+					'<span aria-hidden="true">&laquo;</span>',
 					array(),
 					array(
 						'user' => $user_name,
+						'rel_type' => $rel_type,
 						'page' => ( $page - 1 )
 					)
-				) . $this->msg( 'word-separator' )->plain();
+				) . '</li>';
 			}
 
 			if ( ( $total % $per_page ) != 0 ) {
@@ -161,15 +162,15 @@ class ViewSystemGifts extends SpecialPage {
 			if ( $numofpages >= 9 && $page < $total ) {
 				$numofpages = 9 + $page;
 			}
-			if ( $numofpages >= ( $total / $per_page ) ) {
-				$numofpages = ( $total / $per_page ) + 1;
-			}
+			// if ( $numofpages >= ( $total / $per_page ) ) {
+			// 	$numofpages = ( $total / $per_page ) + 1;
+			// }
 
 			for ( $i = 1; $i <= $numofpages; $i++ ) {
 				if ( $i == $page ) {
-					$output .= ( $i . ' ' );
+					$output .= ( '<li class="active"><a href="#">'.$i.' <span class="sr-only">(current)</span></a></li>' );
 				} else {
-					$output .= Linker::link(
+					$output .= '<li>' .Linker::link(
 						$page_link,
 						$i,
 						array(),
@@ -177,24 +178,25 @@ class ViewSystemGifts extends SpecialPage {
 							'user' => $user_name,
 							'page' => $i
 						)
-					) . $this->msg( 'word-separator' )->plain();
+					);
 				}
 			}
 
 			if ( ( $total - ( $per_page * $page ) ) > 0 ) {
-				$output .= $this->msg( 'word-separator' )->plain() .
+				$output .= '<li>' .
 					Linker::link(
 						$page_link,
-						$this->msg( 'ga-next' )->plain(),
+						'<span aria-hidden="true">&raquo;</span>',
 						array(),
 						array(
 							'user' => $user_name,
+							'rel_type' => $rel_type,
 							'page' => ( $page + 1 )
 						)
-					);
+					).'</li>';	
 			}
 
-			$output .= '</div>';
+			$output .= '</nav>';
 		}
 
 		/**
