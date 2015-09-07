@@ -8,6 +8,7 @@
  * step5: build html
  */
 class UserActivity {
+	define("UTCTOBEIJING", 3600 * 8);
 
 	/**
 	 * All member variables should be considered private
@@ -195,7 +196,7 @@ class UserActivity {
 			$res = $dbr->select(
 				$DBprefix.'recentchanges',
 				array(
-					'UNIX_TIMESTAMP(rc_timestamp) AS item_date', 'rc_title',
+					'UNIX_TIMESTAMP(rc_timestamp + '.UTCTOBEIJING.') AS item_date', 'rc_title',
 					'rc_user', 'rc_user_text', 'rc_comment', 'rc_id', 'rc_minor',
 					'rc_new', 'rc_namespace', 'rc_cur_id', 'rc_this_oldid',
 					'rc_last_oldid', 'rc_log_action'
@@ -448,7 +449,7 @@ class UserActivity {
 			$res = $dbr->select(
 				array( $DBprefix.'image' ),
 				array(
-					'UNIX_TIMESTAMP(img_timestamp) AS item_date',
+					'UNIX_TIMESTAMP(img_timestamp + '.UTCTOBEIJING.') AS item_date',
 					'img_user_text', 'img_media_type', 'img_name', 'img_description',
 					'img_user', 'img_minor_mime', 'img_sha1'
 				),

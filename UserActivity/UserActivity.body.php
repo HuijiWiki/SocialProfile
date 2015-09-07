@@ -31,7 +31,7 @@ class UserHome extends SpecialPage {
 	 * @param $par Mixed: parameter passed to the page or null
 	 */
 	public function execute( $par ) {
-		global $wgExtensionAssetsPath;
+		global $wgExtensionAssetsPath, $wgMemc;
 
 		$out = $this->getOutput();
 		$request = $this->getRequest();
@@ -157,7 +157,8 @@ class UserHome extends SpecialPage {
 		$output .= '<div class="user-home-feed">';
 
 		// $rel = new UserActivity( $user->getName(), ( ( $rel_type == 1 ) ? ' friends' : 'foes' ), 50 );
-		$rel = new UserActivity( $user->getName(), $filter , 50 );
+		$fixedLimit = 50;
+		$rel = new UserActivity( $user->getName(), $filter , $fixedLimit );
 		$rel->setActivityToggle( 'show_edits', $edits );
 		$rel->setActivityToggle( 'show_votes', $votes );
 		$rel->setActivityToggle( 'show_comments', $comments );
@@ -175,7 +176,15 @@ class UserHome extends SpecialPage {
 		/**
 		 * Get all relationship activity
 		 */
-		$activity = $rel->getActivityListGrouped();
+		$key = wfForeignMemcKey( 'huiji',' ','site_activity', $filter, $item_type, $fixedLimit, $user->getName() );
+		$data = $wgMemc->get($key);
+		if ($data != ''){
+			$activity = $data;
+		} else {
+			$activity = $rel->getActivityListGrouped();
+			$wgMemc->set($key, $activity, 60 * 2);
+		}
+		
 		$border_fix = '';
 
 		if ( $activity ) {

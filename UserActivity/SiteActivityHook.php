@@ -64,20 +64,20 @@ function getSiteActivity( $input, $args, $parser ) {
 
 	$output = '';
 	if ( $activity ) {
-		$output .= '<ul class="mp-site-activity">';
+		$output .= '<div class="mp-site-activity">';
 
 		$x = 1;
 		foreach ( $activity as $item ) {
 			if ( $x < $fixedLimit ) {
 				$typeIcon = UserActivity::getTypeIcon( $item['type'] );
-				$output .= '<li class="mp-activity' . ( ( $x == $fixedLimit ) ? ' mp-activity-border-fix' : '' ) . '">'
+				$output .= '<div class="mp-activity' . ( ( $x == $fixedLimit ) ? ' mp-activity-border-fix' : '' ) . '">'
 				. $item['data'] .
-				'</li>';
+				'</div>';
 				$x++;
 			}
 		}
 
-		$output .= '</ul>';
+		$output .= '</div>';
 	}
 
 	return $output;
