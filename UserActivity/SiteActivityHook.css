@@ -1,3 +1,8 @@
+.mp-activity:after {
+    content: '';
+    display: block;
+    clear: both;
+}
 
 .mp-site-activity .user-home-item-owner-avatar{
     padding: 0;
