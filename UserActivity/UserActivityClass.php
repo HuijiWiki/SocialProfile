@@ -63,7 +63,7 @@ class UserActivity {
 		$this->setFilter( $filter );
 		$this->item_max = $item_max;
 		$this->now = time();
-		$this->three_days_ago = $this->now - ( 60 * 60 * 24 * 3 );
+		$this->half_day_ago = $this->now - ( 60 * 60 * 12 );
 		$this->items_grouped = array();
 		$this->cached_where = false;
 		$this->templateParser = new TemplateParser(  __DIR__ . '/html' );
@@ -1468,7 +1468,7 @@ class UserActivity {
 				$avatarUrl = $avatar->getAvatarURL();
 				$timeago = CommentFunctions::getTimeAgo($page_data['timestamp']).'前';
 				/* get rid of same actions more than 3 days ago */
-				if ( $page_data['timestamp'] < $this->three_days_ago ) {
+				if ( $page_data['timestamp'] < $this->half_day_ago ) {
 					continue;
 				}
 				$count_actions = count( $action );
