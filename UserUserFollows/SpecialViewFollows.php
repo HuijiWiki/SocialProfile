@@ -10,16 +10,13 @@
  * @copyright Copyright © 2007, Wikia Inc.
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License 2.0 or later
  */
-
 class SpecialViewFollows extends SpecialPage {
-
 	/**
 	 * Constructor -- set up the new special page
 	 */
 	public function __construct() {
 		parent::__construct( 'ViewFollows' );
 	}
-
 	/**
 	 * Group this special page under the correct header in Special:SpecialPages.
 	 *
@@ -28,7 +25,6 @@ class SpecialViewFollows extends SpecialPage {
 	function getGroupName() {
 		return 'users';
 	}
-
 	/**
 	 * Show the special page
 	 *
@@ -40,25 +36,19 @@ class SpecialViewFollows extends SpecialPage {
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$user = $this->getUser();
-
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
-
 		// Add CSS
 		$out->addModuleStyles( 'ext.socialprofile.useruserfollows.css' );
-
 		// Add JS
 		$out->addModuleScripts( 'ext.socialprofile.useruserfollows.js');
-
 		$output = '';
-
 		/**
 		 * Get query string variables
 		 */
 		$user_name = $request->getVal( 'user' );
 		$rel_type = $request->getInt( 'rel_type' );
 		$page = $request->getInt( 'page' );
-
 		/**
 		 * Redirect Non-logged in users to Login Page
 		 * It will automatically return them to the ViewRelationships page
@@ -69,7 +59,6 @@ class SpecialViewFollows extends SpecialPage {
 		// 	$out->redirect( htmlspecialchars( $login->getFullURL( 'returnto=Special:ViewFollows' ) ) );
 		// 	return false;
 		// }
-
 		/**
 		 * Set up config for page / default values
 		 */
@@ -81,7 +70,6 @@ class SpecialViewFollows extends SpecialPage {
 		}
 		$per_page = 10;
 		$per_row = 2;
-
 		/**
 		 * If no user is set in the URL, we assume its the current user
 		 */
@@ -91,7 +79,6 @@ class SpecialViewFollows extends SpecialPage {
 		$user_id = User::idFromName( $user_name );
 		$target_user = User::newFromId( $user_id );
 		$userPage = Title::makeTitle( NS_USER, $user_name );
-
 		/**
 		 * Error message for username that does not exist (from URL)
 		 */
@@ -109,7 +96,6 @@ class SpecialViewFollows extends SpecialPage {
 			$out->addHTML( $output );
 			return false;
 		}
-
 		/**
 		 * Get all relationships
 		 */
@@ -133,7 +119,6 @@ class SpecialViewFollows extends SpecialPage {
 		}
 		if ( $rel_type == 1 ) {
 			$out->setPageTitle( $this->msg( 'ur-title-friend', $user_name )->parse() );
-
 			$total = $followingCount;
 			$target = SpecialPage::getTitleFor('ViewFollows');
 			$query1 = array('user' => $user_name, 'rel_type' => 1);
@@ -152,11 +137,8 @@ class SpecialViewFollows extends SpecialPage {
 			)->text() . '</div><div class="relationship-list">';
 		} else {
 			$out->setPageTitle( $this->msg( 'ur-title-foe', $user_name )->parse() );
-
 			$total = $followerCount;
-
 			$rem = $this->msg( 'ur-remove-relationship-foe' )->plain();
-
 			$output .= '<div class="back-links">
 			<a href="' . htmlspecialchars( $back_link->getFullURL() ) . '">' .
 				$this->msg( 'ur-backlink', $user_name )->parse() .
@@ -174,18 +156,15 @@ class SpecialViewFollows extends SpecialPage {
 		}
 		if ( $per_follow ) {
 			$x = 1;
-
 			foreach ( $per_follow as $follow ) {
 				// $indivRelationship = UserRelationship::getUserRelationshipByID(
 				// 	$relationship['user_id'],
 				// 	$user->getID()
 				// );
-
 				$username = $follow['user_name'];
 				$userobj = User::newFromName($username);
 				$ust = new UserStatus($userobj);
 				$allinfo = $ust->getUserAllInfo( );
-
 				// Safe titles
 				$userPage = Title::makeTitle( NS_USER, $allinfo['username'] );
 				// $indivFollow = $uuf->checkUserUserFollow($user, User::newFromId($follow['user_id']));
@@ -207,10 +186,8 @@ class SpecialViewFollows extends SpecialPage {
 				// $commonfollow = $allinfo['commonfollow'];
 				// $minefollowerhim = $allinfo['minefollowerhim'];
 				$user_level = $allinfo['level'];
-
 				$username_length = strlen( $allinfo['username'] );
 				$username_space = stripos( $allinfo['username'], ' ' );
-
 				if ( ( $username_space == false || $username_space >= "30" ) && $username_length > 30 ) {
 					$user_name_display = substr( $allinfo['username'], 0, 30 ) .
 						' ' . substr( $allinfo['username'], 30, 50 );
@@ -248,7 +225,6 @@ class SpecialViewFollows extends SpecialPage {
 				$output .= '</div>
 					<div class="cleared"></div>
 				</div>';
-
 				$output .= '</div>';
 				if ( $x == count( $follows ) || $x != 1 && $x % $per_row == 0 ) {
 					$output .= '<div class="cleared"></div>';
@@ -256,15 +232,12 @@ class SpecialViewFollows extends SpecialPage {
 				$x++;
 			}
 		}
-
 		/**
 		 * Build next/prev nav
 		 */
 		$total = intval( str_replace( ',', '', $total ) );
 		$numofpages = $total / $per_page;
-
 		$pageLink = $this->getPageTitle();
-
 		if ( $numofpages > 1 ) {
 			$output .= '<nav class="page-nav pagination">';
 			if ( $page > 1 ) {
@@ -279,7 +252,6 @@ class SpecialViewFollows extends SpecialPage {
 					)
 				) . '</li>';
 			}
-
 			if ( ( $total % $per_page ) != 0 ) {
 				$numofpages++;
 			}
@@ -289,7 +261,6 @@ class SpecialViewFollows extends SpecialPage {
 			// if ( $numofpages >= ( $total / $per_page ) ) {
 			// 	$numofpages = ( $total / $per_page ) + 1;
 			// }
-
 			for ( $i = 1; $i <= $numofpages; $i++ ) {
 				if ( $i == $page ) {
 					$output .= ( '<li class="active"><a href="#">'.$i.' <span class="sr-only">(current)</span></a></li>' );
@@ -306,7 +277,6 @@ class SpecialViewFollows extends SpecialPage {
 					) . '</li>';
 				}
 			}
-
 			if ( ( $total - ( $per_page * $page ) ) > 0 ) {
 				$output .= '<li>' .
 					Linker::link(
@@ -322,7 +292,6 @@ class SpecialViewFollows extends SpecialPage {
 			}
 			$output .= '</nav></div></div></div></div>';
 		}
-
 		$out->addHTML( $output );
 	}
 }

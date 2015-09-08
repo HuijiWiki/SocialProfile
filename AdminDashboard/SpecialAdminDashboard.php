@@ -21,8 +21,8 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 	 * @param $par Mixed: parameter passed to the page or null
 	 */
 	public function execute( $par ) {
-		global $wgUploadPath;
-
+		global $wgUploadPath, $wgUser, $wgHuijiPrefix;
+		$templateParser = new TemplateParser(  __DIR__ . '/pages' );
 		$out = $this->getOutput();
 		$user = $this->getUser();
 
@@ -36,7 +36,22 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		$out->addModules( 'ext.socialprofile.admindashboard.js' );
 
 		$output = ''; // Prevent E_NOTICE
-		$output .= file_get_contents(__DIR__.'/pages/index.php');
+	    $yesterday = date("Y-m-d",strtotime("-1 day"));
+	    $dbr = wfGetDB( DB_SLAVE );
+        $counter = new SiteStatsInit( $dbr );
+		$totaledit = $counter->edits();
+		$ueb = new UserEditBox();
+		$output .= $templateParser->processTemplate(
+				    'admin_index',
+				    array(
+				        'yesterdayCount' => UserSiteFollow::getSiteCountOnedayDB( $wgHuijiPrefix, $yesterday ),
+				        'totalCount' => UserSiteFollow::getSiteCount( $wgHuijiPrefix ),
+				        'yesterdayEdit' => $ueb->getSiteEditCountOneday( $wgHuijiPrefix, $yesterday ),
+				        'totalEdit' => $totaledit,
+				        'totalView' => $ueb->getSiteViewCountTotal( $wgHuijiPrefix ),
+				        'yesterdayView' => $ueb->getSiteViewCountOneday( $wgHuijiPrefix,$yesterday )
+				    )
+				);
 		$out->addHtml($output);
 	}
 }
