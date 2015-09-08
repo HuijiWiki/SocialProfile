@@ -308,7 +308,7 @@ class UserActivity {
 					'prefix' => $table
 				);
 				// set prefix
-				$this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['prefix'][] = $table;
+				$this->items_grouped['edit'][$title->getPrefixedText()]['prefix'][] = $table;
 			}
 
 		}
