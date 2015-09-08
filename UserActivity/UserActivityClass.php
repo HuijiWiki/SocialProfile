@@ -1,4 +1,5 @@
 <?php
+define("UTCTOBEIJING", 3600 * 8);
 /**
  * UserActivity class
  * step1: determine where clasue.
@@ -8,6 +9,7 @@
  * step5: build html
  */
 class UserActivity {
+	
 
 	/**
 	 * All member variables should be considered private
@@ -21,6 +23,8 @@ class UserActivity {
 	private $show_following = false;
 	private $show_current_user = false;
 	private $show_all = false;
+	private $show_following_sites = false;
+	private $show_this_site = false;
 
 	private $show_edits = 1;
 	private $show_votes = 0;
@@ -80,7 +84,35 @@ class UserActivity {
 		}
 		if ( strtoupper( $filter ) == 'ALL' ) {
 			$this->show_all = true;
-		} 
+		}
+		if ( strtoupper( $filter ) == 'FOLLOWING_SITES' ) {
+			$this->show_following_sites = true;
+			$this->show_relationships = 0;
+			$this->show_gifts_sent = 0;
+			$this->show_gifts_rec = 0;
+			$this->show_system_gifts = 0;
+			$this->show_system_messages = 0;
+			$this->show_messages_sent = 0;
+			$this->show_network_updates = 0;
+			$this->show_user_user_follows = 0;
+			$this->show_user_site_follows = 0;
+			$this->show_user_update_status = 0;
+			$this->show_domain_creations = 0;
+		}
+		if ( strtoupper( $filter ) == 'THIS_SITE' ) {
+			$this->show_this_site = true;
+			$this->show_relationships = 0;
+			$this->show_gifts_sent = 0;
+			$this->show_gifts_rec = 0;
+			$this->show_system_gifts = 0;
+			$this->show_system_messages = 0;
+			$this->show_messages_sent = 0;
+			$this->show_network_updates = 0;
+			$this->show_user_user_follows = 0;
+			$this->show_user_site_follows = 0;
+			$this->show_user_update_status = 0;
+			$this->show_domain_creations = 0;			
+		}
 	}
 
 	/**
@@ -95,20 +127,40 @@ class UserActivity {
 	 *
 	 */
 	private function getAllRecentChangesTables(){
-		global $wgHuijiPrefix;
+		global $wgHuijiPrefix, $wgUser;
 		$dbr = wfGetDB( DB_SLAVE );
-		$values = $dbr->select(
-			'domain',
-			'domain_prefix',
-			'domain_status = 0',
-			__METHOD__
-		);
-		// echo $values;
-		// die(1);
-		$tables = array();
-		foreach( $values as $value ){
-			$tables[] = $value->domain_prefix;
+		$user = $wgUser;
+		if ($this->show_this_site){
+			$tables = array();
+			$tables[] = $wgHuijiPrefix;
+		} elseif ($this->show_following_sites){
+			$values = $dbr->select(
+				'user_site_follow',
+				'f_wiki_domain',
+				'f_user_id = '.$user->getId(),
+				__METHOD__
+			);
+			// echo $values;
+			// die(1);
+			$tables = array();
+			foreach( $values as $value ){
+				$tables[] = $value->f_wiki_domain;
+			}				
+		} else {
+			$values = $dbr->select(
+				'domain',
+				'domain_prefix',
+				'domain_status = 0',
+				__METHOD__
+			);
+			// echo $values;
+			// die(1);
+			$tables = array();
+			foreach( $values as $value ){
+				$tables[] = $value->domain_prefix;
+			}			
 		}
+
 		return $tables;
 	}
 
@@ -210,6 +262,7 @@ class UserActivity {
 				// $this->getAllRecentChangesJoinConds()
 			);
 			foreach ( $res as $row ) {
+				$row->item_date = strtotime('+8 hour', $row->item_date);
 				// Special pages aren't editable, so ignore them
 				// And blocking a vandal should not be counted as editing said
 				// vandal's user page...
@@ -342,7 +395,7 @@ class UserActivity {
 		);
 
 		foreach ( $res as $row ) {
-			$user_name_short = $wgLang->truncate( $row->f_user_name, 25 );
+			$user_name_short = $wgLang->truncate( $row->f_user_name, 15 );
 			$this->items_grouped['user_user_follow'][$row->f_target_user_name]['users'][$row->f_user_name][] = array(
 				'id' => $row->f_id,
 				'type' => 'user_user_follow',
@@ -357,7 +410,6 @@ class UserActivity {
 			);
 			// set last timestamp
 			$this->items_grouped['user_user_follow'][$row->f_target_user_name]['timestamp'] = $row->item_date;
-
 
 			$this->items[] = array(
 				'id' => 0,
@@ -461,6 +513,7 @@ class UserActivity {
 				)
 			);
 			foreach ( $res as $row ) {
+				$row->item_date = strtotime('+8 hour', $row->item_date);
 				$show_upload = true;
 
 				// global $wgFilterComments;
@@ -1327,7 +1380,7 @@ class UserActivity {
 		if ( $this->show_domain_creations ) {
 			$this->getDomainCreations();
 		}
-		if ( $this->show_domain_creations ) {
+		if ( $this->show_image_uploads ) {
 			$this->getImageUploads();
 		}
 		if ( $this->items ) {
@@ -1383,6 +1436,7 @@ class UserActivity {
 			return '';
 		}
 
+
 		foreach ( $this->items_grouped[$type] as $page_name => $page_data ) {
 			$users = '';
 			$pages = '';
@@ -1404,18 +1458,15 @@ class UserActivity {
 			// Init empty variable to be used later on for GENDER processing
 			// if the event is only for one user.
 			$userNameForGender = '';
-
 			foreach ( $page_data['users'] as $user_name => $action ) {
 				/* get User Avatar for display */
 				$avatar = new wAvatar(User::idFromName($user_name), 'l');
 				$avatarUrl = $avatar->getAvatarURL();
 				$timeago = CommentFunctions::getTimeAgo($page_data['timestamp']).'前';
-
 				/* get rid of same actions more than 3 days ago */
 				if ( $page_data['timestamp'] < $this->three_days_ago ) {
 					continue;
 				}
-
 				$count_actions = count( $action );
 
 				if ( $has_page && !isset( $this->displayed[$type][$page_name] ) ) {
@@ -1423,9 +1474,10 @@ class UserActivity {
 					if ($page_title->inNamespace( NS_FILE )){
 						$repo = new ForeignDBRepo($this->streamlineForeignDBRepo($page_data['prefix'][0]));
 						$f =  ForeignDBFile::newFromTitle($page_title, $repo);
-						$pages .= ' <img src="' .$f->getFullUrl(). '"></img>';
+						$pages .= ' <a href="'.$f->getDescriptionUrl().'"><img src="' .$f->getFullUrl(). '"></img></a>';
 					} else {
 						$pages .= ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
+
 					}
 					if ( $count_users == 1 && $count_actions > 1 ) {
 						$pages .= wfMessage( 'word-separator' )->text();
@@ -1443,6 +1495,10 @@ class UserActivity {
 				if ( $count_users == 1 ) {
 					$userNameForGender = $user_name;
 					foreach ( $this->items_grouped[$type] as $page_name2 => $page_data2 ) {
+						//change since sept.7: only group pages with same prefix.
+						if (isset($page_data['prefix']) && $page_data['prefix'][0] != $page_data2['prefix'][0] ){
+							continue;
+						}
 						if ( !isset( $this->displayed[$type][$page_name2] ) &&
 							count( $page_data2['users'] ) == 1
 						) {
@@ -1466,16 +1522,15 @@ class UserActivity {
 									}
 
 									if ( $pages ) {
-										$pages .= ', ';
+										$pages .= $page_title2->inNamespace( NS_FILE )?'':'，';
 									}
-									if ( $page_title2 instanceof Title ) {
-										if ($page_title2->inNamespace( NS_FILE )){
-											$repo = new ForeignDBRepo($this->streamlineForeignDBRepo($page_data2['prefix'][0]));
-											$f =  ForeignDBFile::newFromTitle($page_title2, $repo);
-											$pages .= ' <img src="' .$f->getFullUrl(). '"></img>';
-										} else {
-											$pages .= ' <a href="' . htmlspecialchars( $page_title2->getFullURL() ) . "\">{$page_title2->getText()}</a>";
-										}									}
+									if ($page_title2->inNamespace( NS_FILE )){
+										$repo = new ForeignDBRepo($this->streamlineForeignDBRepo($page_data2['prefix'][0]));
+										$f =  ForeignDBFile::newFromTitle($page_title2, $repo);
+										$pages .= ' <a href="'.$f->getDescriptionUrl().'"><img src="' .$f->getFullUrl(). '"></img></a>';
+									} else {
+										$pages .= ' <a href="' . htmlspecialchars( $page_title2->getFullURL() ) . "\">{$page_title2->getText()}</a>";
+									}									
 									if ( $count_actions2 > 1 ) {
 										$pages .= ' (' . wfMessage(
 											"useractivity-group-{$type}", $count_actions2
@@ -1594,7 +1649,7 @@ class UserActivity {
 				return '<i class="fa fa-paper-plane-o"></i>';
 			case 'user_update_status':
 				return '<i class="fa fa-paper-plane-o"></i>';
-			case 'user_image_upload':
+			case 'image_upload':
 				return '<i class="fa fa-paper-plane-o"></i>';
 		}
 	}

@@ -101,3 +101,29 @@
     margin-top: 10px;
     max-height: 100px;
 }
+@media screen and (max-width: 768px) {
+    .user-home-links-container{
+        width: 100%;
+        float: none;
+    }
+    .user-home-links-container h2{
+        padding-top: 0;
+    }
+    .user-home-links-container a{
+        display: inline-block;
+        margin-right: 5px;
+    }
+    .user-home-feed{
+        width: 100%;
+        float: none;
+    }
+    .user-home-feed .user-home-item-owner-avatar{
+        padding: 0;
+    }
+    .user-home-item-owner-avatar img{
+        width: 100%;
+    }
+    .user-home-feed .user-home-item-body{
+        padding-right: 0;
+    }
+}

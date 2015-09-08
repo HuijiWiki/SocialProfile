@@ -1,0 +1,31 @@
+.mp-activity:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.mp-site-activity .user-home-item-owner-avatar{
+    padding: 0;
+}
+.mp-site-activity .user-home-item-owner-avatar img{
+    max-width: 100%;
+}
+.user-home-activity:after{
+    content: '';
+    display: block;
+    clear: both;
+}
+.user-home-item-timestamp p{
+    margin-bottom: 10px;
+    display: inline;
+}
+.user-home-item-timestamp{
+    display: inline-block;
+}
+.user-home-item-description{
+    display: inline;
+}
+.user-home-item-body img{
+    margin-top: 10px;
+    max-height: 100px;
+}

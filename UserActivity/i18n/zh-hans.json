@@ -22,12 +22,12 @@
 	"useractivity-title": "我关注的用户",
 	"useractivity-user_message": "$1向$3{{PLURAL:$4|发送了1条信息|发送了信息}}",
 	"user-board-title": "留言墙",
-    "useractivity-comment": "$1{{PLURAL:$4|吐槽了$6的页面|吐槽了$6的以下页面：}}\n$3",
+    "useractivity-comment": "$1{{PLURAL:$4|吐槽了$6的页面|吐槽了$6的以下页面：<br />}}$3",
     "useractivity-domain-creation":"$1创建了$2",
-    "useractivity-user_user_follow":"$1{{PLURAL:$2|关注了|关注了以下用户：}}\n$3",
-    "useractivity-user_site_follow":"$1{{PLURAL:$2|关注了|关注了以下站点：}}\n$6",
-    "useractivity-friendsactivity-filter":"*edit|编辑|\n*vote|投票|\n*comment|评论|blah\n*gift-rec|礼物|blah\n*system_message|升级|blah\n*system_gift|奖励|blah\n*user_message|消息|blah\n*domain_creation|wiki创建|blah\n*user_user_follow|用户关注|blah\n*user_site_follow|维基关注|blah\n*user_update_status|用户状态|blah\n*user_update_status|图片上传|blah",
+    "useractivity-user_user_follow":"$1{{PLURAL:$2|关注了|关注了以下用户：<br />}}$3",
+    "useractivity-user_site_follow":"$1{{PLURAL:$2|关注了|关注了以下站点：<br />}}$6",
+    "useractivity-friendsactivity-filter":"*edit|编辑|\n*vote|投票|\n*comment|评论|blah\n*gift-rec|礼物|blah\n*system_message|升级|blah\n*system_gift|奖励|blah\n*user_message|消息|blah\n*domain_creation|wiki创建|blah\n*user_user_follow|用户关注|blah\n*user_site_follow|维基关注|blah\n*user_update_status|用户状态|blah\n*image_upload|图片上传|blah",
     "useractivity-filter":"过滤器",
-    "useractivity-image_upload":"$1{{PLURAL:$4|在$6上传了|在$6分别上传了以下图片：}}image\n$3"
+    "useractivity-image_upload":"$1{{PLURAL:$4|在$6上传了|在$6上传了$4张图片：}}<br />$3"
 
 }
