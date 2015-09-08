@@ -45,7 +45,6 @@ class UserHome extends SpecialPage {
 
 		$out->setPageTitle( $this->msg( 'useractivity-title' )->plain() );
 
-		$output = '';
 		// Initialize all of these or otherwise we get a lot of E_NOTICEs about
 		// undefined variables when the filtering feature (described below) is
 		// active and we're viewing a filtered-down feed
@@ -60,9 +59,16 @@ class UserHome extends SpecialPage {
 			$filter = "FOLLOWING";
 		}
 		if ( !$item_type ) {
-			$item_type = 'all';
+			$item_type = 'default';
 		}
-
+		$output = '
+		<!-- Nav tabs -->
+		<ul class="nav nav-tabs" role="tablist">
+			<li role="presentation"><a href="/wiki/Special:UserActivity?filter=FOLLOWING_SITES" aria-controls="following_sites" role="tab" >我关注的站点</a></li>
+			<li role="presentation"><a href="/wiki/Special:UserActivity?filter=FOLLOWING" aria-controls="following" role="tab" >我关注的用户</a></li>
+			<li role="presentation"><a href="/wiki/Special:UserActivity?filter=USER" aria-controls="user" role="tab" >我自己</a></li>
+			<li role="presentation"><a href="/wiki/Special:UserActivity?filter=ALL" aria-controls="all" role="tab" >精彩推荐</a></li>
+		</ul>';
 
 		// If not otherwise specified, display everything but *votes* in the feed
 		if ( $item_type == 'edit' || $item_type == 'all' ) {
@@ -159,20 +165,22 @@ class UserHome extends SpecialPage {
 		// $rel = new UserActivity( $user->getName(), ( ( $rel_type == 1 ) ? ' friends' : 'foes' ), 50 );
 		$fixedLimit = 50;
 		$rel = new UserActivity( $user->getName(), $filter , $fixedLimit );
-		$rel->setActivityToggle( 'show_edits', $edits );
-		$rel->setActivityToggle( 'show_votes', $votes );
-		$rel->setActivityToggle( 'show_comments', $comments );
-		$rel->setActivityToggle( 'show_gifts_rec', $gifts );
-		$rel->setActivityToggle( 'show_relationships', $relationships );
-		$rel->setActivityToggle( 'show_system_messages', $messages );
-		$rel->setActivityToggle( 'show_system_gifts', $system_gifts );
-		$rel->setActivityToggle( 'show_messages_sent', $messages_sent );
-		$rel->setActivityToggle( 'show_network_updates', $network_updates );
-		$rel->setActivityToggle( 'show_domain_creations', $domain_creations );
-		$rel->setActivityToggle( 'show_user_user_follows', $user_user_follows );
-		$rel->setActivityToggle( 'show_user_site_follows', $user_site_follows );
-		$rel->setActivityToggle( 'show_user_update_status', $user_update_status );
-		$rel->setActivityToggle( 'show_image_uploads', $image_uploads );
+		if ($item_type != 'default'){
+			$rel->setActivityToggle( 'show_edits', $edits );
+			$rel->setActivityToggle( 'show_votes', $votes );
+			$rel->setActivityToggle( 'show_comments', $comments );
+			$rel->setActivityToggle( 'show_gifts_rec', $gifts );
+			$rel->setActivityToggle( 'show_relationships', $relationships );
+			$rel->setActivityToggle( 'show_system_messages', $messages );
+			$rel->setActivityToggle( 'show_system_gifts', $system_gifts );
+			$rel->setActivityToggle( 'show_messages_sent', $messages_sent );
+			$rel->setActivityToggle( 'show_network_updates', $network_updates );
+			$rel->setActivityToggle( 'show_domain_creations', $domain_creations );
+			$rel->setActivityToggle( 'show_user_user_follows', $user_user_follows );
+			$rel->setActivityToggle( 'show_user_site_follows', $user_site_follows );
+			$rel->setActivityToggle( 'show_user_update_status', $user_update_status );
+			$rel->setActivityToggle( 'show_image_uploads', $image_uploads );
+		}
 		/**
 		 * Get all relationship activity
 		 */
