@@ -351,13 +351,21 @@ $wgResourceModules['ext.socialprofile.siteactivity.css'] = array(
 // AdminDashboard
 $wgResourceModules['ext.socialprofile.admindashboard.less'] = array(
 	'styles' => array(
-					'timeline.css',
 					'minxins.less',
 					'sb-admin-2.less',
 					'variables.less',
 				),
 	'localBasePath' => __DIR__ . '/AdminDashboard/less',
 	'remoteExtPath' => 'SocialProfile/AdminDashboard/less',
+	'position' => 'top' // just in case
+);
+// AdminDashboard
+$wgResourceModules['ext.socialprofile.admindashboard.css'] = array(
+	'styles' => array(
+					'timeline.css',
+				),
+	'localBasePath' => __DIR__ . '/AdminDashboard/css',
+	'remoteExtPath' => 'SocialProfile/AdminDashboard/css',
 	'position' => 'top' // just in case
 );
 // AdminDashboard

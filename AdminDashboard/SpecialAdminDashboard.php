@@ -28,9 +28,10 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
-		$out->addScript( 'http://cdn.jsdelivr.net/jquery.flot/0.8.4/jquery.flot.min.js' );
-		// Add CSS
+		// Add Less
 		$out->addModuleStyles( 'ext.socialprofile.admindashboard.less' );
+		// Add CSS
+		$out->addModuleStyles( 'ext.socialprofile.admindashboard.css' );		
 		// Add js and messages
 		$out->addModules( 'ext.socialprofile.admindashboard.js' );
 
