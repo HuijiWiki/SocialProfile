@@ -5,6 +5,8 @@
  * getRecentPageEditCountOnWikiSiteFromUserId 当天
  * getPageEditCountOnWikiSiteFromUserId一段时间内所有
  *  getRecentPageEditCountOnWikiSiteFromUserId 某天 某月 某日
+ *  getPageViewCountOnWikiSiteFromUserId($userId,$wikiSite,$fromTime,$toTime) pv
+ *  getPageEditCountOnWikiSiteFromUserId($userId,$wikiSite,$fromTime,$toTime) pe
  */
 class UserEditBox{
 
@@ -70,5 +72,31 @@ class UserEditBox{
             $i+=24*3600;
         }
         return $arrSun[0];
+	}
+	//pe
+	public function getSiteEditCountOneday( $wikiSite, $yesterday ){
+		$receive = RecordStatistics::getPageEditCountOnWikiSiteFromUserId('',$wikiSite,$yesterday, $yesterday);
+		if ($receive->status == 'success') {
+			return $receive->result;
+		}else{
+			return false;
+		}
+	}
+	//pv
+	public function getSiteViewCountTotal( $wikiSite ){
+		$receive = RecordStatistics::getPageViewCountOnWikiSiteFromUserId(-1,$wikiSite,'', '');
+		if ($receive->status == 'success') {
+			return $receive->result;
+		}else{
+			return false;
+		}
+	}
+	public function getSiteViewCountOneday( $wikiSite, $yesterday ){
+		$receive = RecordStatistics::getPageViewCountOnWikiSiteFromUserId(-1,$wikiSite,$yesterday, $yesterday);
+		if ($receive->status == 'success') {
+			return $receive->result;
+		}else{
+			return false;
+		}
 	}
 }

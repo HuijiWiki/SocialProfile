@@ -550,5 +550,68 @@ class UserSiteFollow{
 			return $data;
 		}
 	}
+	/**
+	 * get site followers in one day
+	 */
+	static function getSiteCountOneday ( $huijiPrefix, $date ){
+		$data = self::getSiteCountOnedayCache( $huijiPrefix, $date );
+		if ( $data != '' ) {
+			if ( $data == -1 ) {
+				$data = 0;
+			}
+			$count = $data;
+		} else {
+			$count = self::getSiteCountOnedayDB( $huijiPrefix, $date );
+		}
+
+		return $count;
+	}
+	/**
+	 * Get the amount of site followers from the
+	 * database and cache it.
+	 *
+	 * @param $HuijiPrefix String:
+	 * @return Integer
+	 */
+	static function getSiteCountOnedayDB( $huijiPrefix, $date ) {
+		global $wgMemc;
+
+		wfDebug( "Got site followers count (prefix={$huijiPrefix}) from DB in day:{$date}\n" );
+
+		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'follow_count', $huijiPrefix.$date );
+		$dbr = wfGetDB( DB_SLAVE );
+		$siteCount = 0;
+
+		$s = $dbr->selectRow(
+			'user_site_follow',
+			array( 'COUNT(*) AS count' ),
+			"f_wiki_domain='".$huijiPrefix."' and f_date like '".$date."%'",
+			__METHOD__
+		);
+
+		if ( $s != false ) {
+			$siteCount = $s->count;
+		}
+
+		$wgMemc->set( $key, $siteCount );
+		return $siteCount;
+	}
+
+	/**
+	 * Get the amount of site followers from cache.
+	 *
+	 * @param $huijiPrefix string: 
+	 * 
+	 * @return Integer
+	 */
+	static function getSiteCountOnedayCache( $huijiPrefix, $date ) {
+		global $wgMemc;
+		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'follow_count', $huijiPrefix.$date );
+		$data = $wgMemc->get( $key );
+		if ( $data != '' ) {
+			wfDebug( "Got site count of ( prefix = {$huijiPrefix} ) from cache in day{$date}\n" );
+			return $data;
+		}
+	}
 
 }
