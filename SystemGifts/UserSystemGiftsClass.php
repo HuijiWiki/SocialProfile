@@ -37,29 +37,36 @@ class UserSystemGifts {
 				return '';
 			}	
 		}
-		$dbw = wfGetDB( DB_MASTER );
-		$dbw->insert(
-			'user_system_gift',
-			array(
-				'sg_gift_id' => $gift_id,
-				'sg_user_id' => $this->user_id,
-				'sg_user_name' => $this->user_name,
-				'sg_status' => 1,
-				'sg_date' => date( 'Y-m-d H:i:s' ),
-			),
-			__METHOD__
-		);
-		$sg_gift_id = $dbw->insertId();
-		self::incGiftGivenCount( $gift_id );
+		//is bot
+		$user = User::newFromId( $this->user_id );
+        $user_group = $user->getEffectiveGroups();
+        if ( !in_array('bot', $user_group) && !in_array('bot-global',$user_group) ) {
+			$dbw = wfGetDB( DB_MASTER );
+			$dbw->insert(
+				'user_system_gift',
+				array(
+					'sg_gift_id' => $gift_id,
+					'sg_user_id' => $this->user_id,
+					'sg_user_name' => $this->user_name,
+					'sg_status' => 1,
+					'sg_date' => date( 'Y-m-d H:i:s' ),
+				),
+				__METHOD__
+			);
+			$sg_gift_id = $dbw->insertId();
+			self::incGiftGivenCount( $gift_id );
 
-		// Add to new gift count cache for receiving user
-		$this->incNewSystemGiftCount( $this->user_id );
+			// Add to new gift count cache for receiving user
+			$this->incNewSystemGiftCount( $this->user_id );
 
-		if ( $email && !empty( $sg_gift_id ) ) {
-			$this->sendGiftNotificationEmail( $this->user_id, $sg_gift_id );
+			if ( $email && !empty( $sg_gift_id ) ) {
+				$this->sendGiftNotificationEmail( $this->user_id, $sg_gift_id );
+			}
+			$wgMemc->delete( wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'system_gifts', $this->user_id ) );
+			return $sg_gift_id;
+		}else{
+			return '';
 		}
-		$wgMemc->delete( wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'system_gifts', $this->user_id ) );
-		return $sg_gift_id;
 	}
 
 	/**
