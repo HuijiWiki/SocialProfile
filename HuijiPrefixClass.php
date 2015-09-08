@@ -4,21 +4,29 @@
  */
 class HuijiPrefix{
 	public static function prefixToSiteName( $prefix ){
-		$dbr = wfGetDB( DB_SLAVE );
-		$s = $dbr->selectRow(
-			'domain',
-			array( 'domain_id', 'domain_name' ),
-			array(
-				'domain_prefix' => $prefix,
-			),
-			__METHOD__
-		);
-
-		if ( $s !== false ) {
-			return $s->domain_name;
-		}else{
-			return $prefix;
+		global $wgMemc;
+		$key = wfForeignMemcKey( 'huiji',' ','prefixToSiteName', $prefix );
+		$data = $wgMemc->get($key);
+		if ($data != ''){
+			return $data;
+		} else {
+			$dbr = wfGetDB( DB_SLAVE );
+			$s = $dbr->selectRow(
+				'domain',
+				array( 'domain_id', 'domain_name' ),
+				array(
+					'domain_prefix' => $prefix,
+				),
+				__METHOD__
+			);
+			if ( $s !== false ) {
+				$wgMemc->set($key, $s->domain_name);
+				return $s->domain_name;
+			}else{
+				return $prefix;
+			}			
 		}
+
 	}
 	public static function prefixToSiteNameAnchor( $prefix ){
 		return "<a href=\"".self::prefixToUrl($prefix)."\">".self::prefixToSiteName($prefix)."</a>";

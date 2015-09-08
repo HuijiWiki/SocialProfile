@@ -32,8 +32,7 @@ function incEditCount( $article, $revision, $baseRevId ) {
 		$stats->incStatField( 'edit' );
 	}
 	$dbr = wfGetDB( DB_SLAVE );
-	$counter = new SiteStatsInit( $dbr );
-	$num = $counter->edits();
+	$num = SiteStats::edits();
 	$sg = SystemGifts::checkEditsCounts($num);
 	$usg = new UserSystemGifts( $wgUser->getName() );
 	if($sg){

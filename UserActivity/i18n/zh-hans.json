@@ -5,7 +5,7 @@
 			"Xiaomingyan"
 		]
 	},
-	"useractivity": "我关注的用户",
+	"useractivity": "用户动态",
 	"useractivity-award": "$1获得了一个奖励",
 	"useractivity-all": "查看全部",
 	"useractivity-edit": "$1{{PLURAL:$4|编辑了$6的页面|编辑了$6的如下页面：}}$3",
