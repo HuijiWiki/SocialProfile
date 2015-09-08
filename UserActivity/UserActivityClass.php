@@ -273,7 +273,11 @@ class UserActivity {
 				if ( $row->rc_namespace == NS_TOPIC){
 					//TODO change something!
 				}
-				$title = Title::makeTitle( $row->rc_namespace, $row->rc_title );
+
+				// Please aware that a project namespace in other wikis can not be localised as [[sitename:blahblah]].
+				// We must add a prefix argument.
+				$title = Title::makeTitle( $row->rc_namespace, $row->rc_title, '', $table);
+				
 				$this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['users'][$row->rc_user_text][] = array(
 					'id' => 0,
 					'type' => 'edit',
@@ -524,7 +528,7 @@ class UserActivity {
 				// }
 
 				if ( $show_upload ) {
-					$title = Title::makeTitle( NS_FILE, $row->img_name );
+					$title = Title::makeTitle( NS_FILE, $row->img_name, '', $table);
 					$this->items_grouped['image_upload'][$title->getPrefixedText()]['users'][$row->img_user_text][] = array(
 						'id' => $row->img_sha1,
 						'type' => 'image_upload',
@@ -623,7 +627,7 @@ class UserActivity {
 				}
 
 				if ( $show_comment ) {
-					$title = Title::makeTitle( $row->page_namespace, $row->page_title );
+					$title = Title::makeTitle( $row->page_namespace, $row->page_title, 'Comments-'.$row->CommentID, $table );
 					$this->items_grouped['comment'][$table.':'.$title->getPrefixedText()]['users'][$row->Comment_Username][] = array(
 						'id' => $row->CommentID,
 						'type' => 'comment',
@@ -1471,14 +1475,8 @@ class UserActivity {
 
 				if ( $has_page && !isset( $this->displayed[$type][$page_name] ) ) {
 					$this->displayed[$type][$page_name] = 1;
-					if ($page_title->inNamespace( NS_FILE )){
-						$repo = new ForeignDBRepo($this->streamlineForeignDBRepo($page_data['prefix'][0]));
-						$f =  ForeignDBFile::newFromTitle($page_title, $repo);
-						$pages .= ' <a href="'.$f->getDescriptionUrl().'"><img src="' .$f->getFullUrl(). '"></img></a>';
-					} else {
-						$pages .= ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
+					$pages.= $this->fixPageTitle($page_title, $page_data);
 
-					}
 					if ( $count_users == 1 && $count_actions > 1 ) {
 						$pages .= wfMessage( 'word-separator' )->text();
 						$pages .= wfMessage( 'parentheses', wfMessage(
@@ -1524,13 +1522,7 @@ class UserActivity {
 									if ( $pages ) {
 										$pages .= $page_title2->inNamespace( NS_FILE )?'':'，';
 									}
-									if ($page_title2->inNamespace( NS_FILE )){
-										$repo = new ForeignDBRepo($this->streamlineForeignDBRepo($page_data2['prefix'][0]));
-										$f =  ForeignDBFile::newFromTitle($page_title2, $repo);
-										$pages .= ' <a href="'.$f->getDescriptionUrl().'"><img src="' .$f->getFullUrl(). '"></img></a>';
-									} else {
-										$pages .= ' <a href="' . htmlspecialchars( $page_title2->getFullURL() ) . "\">{$page_title2->getText()}</a>";
-									}									
+									$pages .= $this->fixPageTitle($page_title2, $page_data2);						
 									if ( $count_actions2 > 1 ) {
 										$pages .= ' (' . wfMessage(
 											"useractivity-group-{$type}", $count_actions2
@@ -1748,6 +1740,23 @@ class UserActivity {
 		}
 		$preview = $wgLang->truncate( $comment, 75 );
 		return stripslashes( $preview );
+	}
+
+	/**
+	 * "Fixes" a site link. Don't display site name in project namespace.
+	 *
+	 * @param $comment String: link to "fix"
+	 * @return String: "fixed" comment
+	 */
+	function fixPageTitle( $page_title, $page_data ) {
+		if ($page_title->inNamespace( NS_FILE )){
+			$repo = new ForeignDBRepo($this->streamlineForeignDBRepo($page_data['prefix'][0]));
+			$f =  ForeignDBFile::newFromTitle($page_title, $repo);
+			return ' <a href="'.$f->getDescriptionUrl().'"><img src="' .$f->getFullUrl(). '"></img></a>';
+		} else {
+			return ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
+
+		}
 	}
 
 	/**
