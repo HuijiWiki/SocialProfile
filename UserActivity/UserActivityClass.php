@@ -1749,14 +1749,17 @@ class UserActivity {
 	 * @return String: "fixed" comment
 	 */
 	function fixPageTitle( $page_title, $page_data ) {
-		if ($page_title->inNamespace( NS_FILE )){
-			$repo = new ForeignDBRepo($this->streamlineForeignDBRepo($page_data['prefix'][0]));
-			$f =  ForeignDBFile::newFromTitle($page_title, $repo);
-			return ' <a href="'.$f->getDescriptionUrl().'"><img src="' .$f->getFullUrl(). '"></img></a>';
-		} else {
-			return ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
+		if ($page_title instanceOf Title){
+			if ($page_title->inNamespace( NS_FILE )){
+				$repo = new ForeignDBRepo($this->streamlineForeignDBRepo($page_data['prefix'][0]));
+				$f =  ForeignDBFile::newFromTitle($page_title, $repo);
+				return ' <a href="'.$f->getDescriptionUrl().'"><img src="' .$f->getFullUrl(). '"></img></a>';
+			} else {
+				return ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
 
+			}
 		}
+		return '';
 	}
 
 	/**
