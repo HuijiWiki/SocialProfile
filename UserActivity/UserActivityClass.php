@@ -278,7 +278,7 @@ class UserActivity {
 				// We must add a prefix argument.
 				$title = Title::makeTitle( $row->rc_namespace, $row->rc_title, '', $table);
 				
-				$this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['users'][$row->rc_user_text][] = array(
+				$this->items_grouped['edit'][$title->getPrefixedText()]['users'][$row->rc_user_text][] = array(
 					'id' => 0,
 					'type' => 'edit',
 					'timestamp' => $row->item_date,
@@ -293,7 +293,7 @@ class UserActivity {
 				);
 
 				// set last timestamp
-				$this->items_grouped['edit'][$table.':'.$title->getPrefixedText()]['timestamp'] = $row->item_date;
+				$this->items_grouped['edit'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
 				$this->items[] = array(
 					'id' => 0,
 					'type' => 'edit',
@@ -628,7 +628,7 @@ class UserActivity {
 
 				if ( $show_comment ) {
 					$title = Title::makeTitle( $row->page_namespace, $row->page_title, 'Comments-'.$row->CommentID, $table );
-					$this->items_grouped['comment'][$table.':'.$title->getPrefixedText()]['users'][$row->Comment_Username][] = array(
+					$this->items_grouped['comment'][$title->getPrefixedText()]['users'][$row->Comment_Username][] = array(
 						'id' => $row->CommentID,
 						'type' => 'comment',
 						'timestamp' => $row->item_date,
@@ -643,7 +643,7 @@ class UserActivity {
 					);
 
 					// set last timestamp
-					$this->items_grouped['comment'][$table.':'.$title->getPrefixedText()]['timestamp'] = $row->item_date;
+					$this->items_grouped['comment'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
 
 					$username = $row->Comment_Username;
 					$this->items[] = array(
@@ -660,7 +660,7 @@ class UserActivity {
 						'prefix' => $table
 					);
 					// set prefix
-					$this->items_grouped['comment'][$table.':'.$title->getPrefixedText()]['prefix'][] = $table;
+					$this->items_grouped['comment'][$title->getPrefixedText()]['prefix'][] = $table;
 				}
 			}
 		}
