@@ -78,7 +78,8 @@ $wgAutoloadClasses['UserStatus'] = __DIR__ . '/UserStatus/UserStatusClass.php';
 $wgAutoloadClasses['HuijiPrefix'] = __DIR__ . '/HuijiPrefixClass.php';
 $wgAutoloadClasses['ResponseGenerator'] = __DIR__ . '/ResponseGeneratorClass.php';
 $wgAutoloadClasses['CropAvatar'] = __DIR__ . '/UserUploadAvatar/crop.php';
-$wgAutoloadClasses['UserEditBox'] = __DIR__ . '//UserStats/UserEditBoxClass.php';
+$wgAutoloadClasses['UserEditBox'] = __DIR__ . '/UserStats/UserEditBoxClass.php';
+$wgAutoloadClasses['SpecialAdminDashboard'] = __DIR__ . '/AdminDashboard/SpecialAdminDashboard.php';
 
 // New special pages
 $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
@@ -104,6 +105,7 @@ $wgSpecialPages['ViewFollows'] = 'SpecialViewFollows';
 $wgSpecialPages['EditRank'] = 'SpecialEditRank';
 $wgSpecialPages['FollowSites'] = 'SpecialFollowSites';
 $wgSpecialPages['Randomwiki'] = 'SpecialRandomwiki';
+$wgSpecialPages['AdminDashboard'] = 'SpecialAdminDashboard';
 
 // Necessary AJAX functions
 require_once( "$IP/extensions/SocialProfile/UserBoard/UserBoard_AjaxFunctions.php" );
@@ -344,6 +346,30 @@ $wgResourceModules['ext.socialprofile.siteactivity.css'] = array(
 	'localBasePath' => __DIR__ . '/UserActivity',
 	'remoteExtPath' => 'SocialProfile/UserActivity',
 	'position' => 'top' // just in case
+);
+// AdminDashboard
+$wgResourceModules['ext.socialprofile.admindashboard.less'] = array(
+	'styles' => array(
+					'timeline.css',
+					'minxins.less',
+					'sb-admin-2.less',
+					'variables.less',
+				),
+	'localBasePath' => __DIR__ . '/AdminDashboard/less',
+	'remoteExtPath' => 'SocialProfile/AdminDashboard/less',
+	'position' => 'top' // just in case
+);
+// AdminDashboard
+$wgResourceModules['ext.socialprofile.admindashboard.js'] = array(
+	'scripts' => array(
+					'morris.min.js',
+					'raphael-min.js',
+					// 'flot-data.js',
+					'morris-data.js',
+					'sb-admin-2.js',
+				),
+	'localBasePath' => __DIR__ . '/AdminDashboard/js',
+	'remoteExtPath' => 'SocialProfile/AdminDashboard/js',
 );
 $wgResourceModules['ext.guidedTour.tour.newuser'] = array(
 	'scripts' => 'tours/newuser.js',
