@@ -528,7 +528,7 @@ class UserActivity {
 				// }
 
 				if ( $show_upload ) {
-					$title = Title::makeTitle( NS_FILE, $row->img_name, '', $table);
+					$title = Title::makeTitle( NS_FILE, $row->img_name);
 					$this->items_grouped['image_upload'][$title->getPrefixedText()]['users'][$row->img_user_text][] = array(
 						'id' => $row->img_sha1,
 						'type' => 'image_upload',
