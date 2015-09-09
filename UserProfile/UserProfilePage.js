@@ -246,7 +246,7 @@ jQuery( document ).ready( function() {
     if(reload!="0000-00-00"&&reload!='') {
         $(".form-date").text(reload);
     }
-    function   ages(str)
+    function ages(str)
     {
         var   r   =   str.match(/^(\d{1,4})(-|\/)(\d{1,2})\2(\d{1,2})$/);
         if(r==null)return   false;
@@ -314,91 +314,5 @@ jQuery( document ).ready( function() {
         );
     });
     $('svg .day').tooltip({title:"tooltip - title", container:"body"});
-    require.config({
-            paths: {
-                echarts: 'http://echarts.baidu.com/build/dist'
-            }
-        });
-        
-        // use
-        require(
-            [
-                'echarts',
-                'echarts/chart/radar' // 使用柱状图就加载bar模块，按需加载
-            ],
-            function (ec) {
-                // 基于准备好的dom，初始化echarts图表
-                var myChart = ec.init(document.getElementById('main')); 
-                
-                var option = {
-                    title : {
-                        text: '数据分析'
-                        // subtext: '完全实况球员数据'
-                    },
-                    tooltip : {
-                        trigger: 'axis'
-                    },
-                    legend: {
-                        x : 'center',
-                        data:['罗纳尔多','舍普琴科','梅西']
-                    },
-                    //工具箱
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            mark : {show: true},
-                            dataView : {show: true, readOnly: false},
-                            restore : {show: true},
-                            saveAsImage : {show: true}
-                        }
-                    },
-                    calculable : true,
-                    polar : [
-                        {
-                            indicator : [
-                                {text : '进攻', max  : 100},
-                                {text : '防守', max  : 100},
-                                {text : '体能', max  : 100},
-                                {text : '速度', max  : 100},
-                                {text : '力量', max  : 100}
-                               
-                            ],
-                            radius : 130
-                        }
-                    ],
-                    series : [
-                        {
-                            // name: '完全实况球员数据',
-                            type: 'radar',
-                            itemStyle: {
-                                normal: {
-                                    areaStyle: {
-                                        color: ['#c9c9c9','#86beee','#ff6347'],
-                                        type: 'default'
-                                    }
-                                }
-                            },
-                            data : [
-                                {
-                                    value : [50, 60, 66, 22, 14, 86],
-                                    name : '舍普琴科'
-                                },
-                                {
-                                    value : [70, 80, 74, 54, 88, 65],
-                                    name : '罗纳尔多'
-                                },
-                                {
-                                    value : [100, 80, 90, 95, 92, 99],
-                                    name : '梅西'
-                                }
-                            ]
-                        }
-                    ]
-                };
-        
-                // 为echarts对象加载数据 
-                myChart.setOption(option); 
-            }
-        );
 });
 
