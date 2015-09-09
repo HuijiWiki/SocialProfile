@@ -224,7 +224,7 @@ class UserActivity {
 	 * appropriate class member variables.
 	 */
 	private function setEdits() {
-		global $wgDBprefix, $wgDBname, $isProduction;
+		global $wgDBprefix, $wgDBname, $isProduction, $wgHuijiPrefix;
 
 		$dbr = wfGetDB( DB_SLAVE );
 		$where = $this->where('rc_user');
@@ -276,7 +276,12 @@ class UserActivity {
 
 				// Please aware that a project namespace in other wikis can not be localised as [[sitename:blahblah]].
 				// We must add a prefix argument.
-				$title = Title::makeTitle( $row->rc_namespace, $row->rc_title, '', $table);
+				if ($table != $wgHuijiPrefix){
+					$title = Title::makeTitle( $row->rc_namespace, $row->rc_title, '', $table);
+				} else {
+					$title = Title::makeTitle( $row->rc_namespace, $row->rc_title, '');
+				}
+				
 				
 				$this->items_grouped['edit'][$title->getPrefixedText()]['users'][$row->rc_user_text][] = array(
 					'id' => 0,
@@ -574,7 +579,7 @@ class UserActivity {
 	 * extension) and set them in the appropriate class member variables.
 	 */
 	private function setComments() {
-		global $wgDBprefix, $wgDBname, $isProduction;
+		global $wgDBprefix, $wgDBname, $isProduction, $wgHuijiPrefix;
 		$dbr = wfGetDB( DB_SLAVE );
 
 		# Bail out if Comments table doesn't exist
@@ -627,7 +632,11 @@ class UserActivity {
 				}
 
 				if ( $show_comment ) {
-					$title = Title::makeTitle( $row->page_namespace, $row->page_title, 'Comments-'.$row->CommentID, $table );
+					if ($table != $wgHuijiPrefix){
+						$title = Title::makeTitle( $row->page_namespace, $row->page_title, 'Comments-'.$row->CommentID, $table );
+					} else {
+						$title = Title::makeTitle( $row->page_namespace, $row->page_title, 'Comments-'.$row->CommentID );
+					}
 					$this->items_grouped['comment'][$title->getPrefixedText()]['users'][$row->Comment_Username][] = array(
 						'id' => $row->CommentID,
 						'type' => 'comment',
