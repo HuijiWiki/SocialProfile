@@ -1476,10 +1476,10 @@ class UserActivity {
 				$avatar = new wAvatar(User::idFromName($user_name), 'l');
 				$avatarUrl = $avatar->getAvatarURL();
 				$timeago = CommentFunctions::getTimeAgo($page_data['timestamp']).'前';
-				/* get rid of same actions more than 3 days ago */
-				if ( $page_data['timestamp'] < $this->half_day_ago ) {
-					continue;
-				}
+				/* get rid of same actions more than 1/2 day ago */
+				// if ( $page_data['timestamp'] < $this->half_day_ago ) {
+				// 	continue;
+				// }
 				$count_actions = count( $action );
 
 				if ( $has_page && !isset( $this->displayed[$type][$page_name] ) ) {
@@ -1505,12 +1505,18 @@ class UserActivity {
 						//change since sept.7: only group pages with same prefix.
 						if (isset($page_data['prefix']) && $page_data['prefix'][0] != $page_data2['prefix'][0] ){
 							continue;
+						} 
+						// don't stack the old ones.
+						/* get rid of same actions more than 1/2 day ago */
+						if ( $page_data['timestamp'] < $this->half_day_ago ) {
+							continue;
 						}
+						// if we find singles for this type, not displayed and not co-worked.
 						if ( !isset( $this->displayed[$type][$page_name2] ) &&
-							count( $page_data2['users'] ) == 1
+							count( $page_data2['users'] ) == 1 &&
 						) {
 							foreach ( $page_data2['users'] as $user_name2 => $action2 ) {
-								if ( $user_name2 == $user_name && $pages_count < 5 ) {
+								if ( $user_name2 == $user_name && $pages_count < 20 ) {
 									$count_actions2 = count( $action2 );
 
 									if (
