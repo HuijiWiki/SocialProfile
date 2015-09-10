@@ -129,7 +129,7 @@ class UserActivity {
 	 * return a join argument for setEdits(). Preferably this should only return two or three wikis recently changed by a given set of users.
 	 *
 	 */
-	private function getAllRecentChangesTables(){
+	private function getTables(){
 		global $wgHuijiPrefix, $wgUser;
 		$dbr = wfGetDB( DB_SLAVE );
 		$user = $wgUser;
@@ -234,39 +234,63 @@ class UserActivity {
 
 		$dbr = wfGetDB( DB_SLAVE );
 		$where = $this->where('rc_user');
+		$sqls = array();
 
-		$tables = $this->getAllRecentChangesTables();
+		$tables = $this->getTables();
 		$oldDBprefix = $wgDBprefix;
 		$oldDB = $wgDBname;
 		$dbr->tablePrefix('');
+
 		foreach ($tables as $table){
 			if ( !$isProduction ){
 				$dbr->selectDB('huiji_'.str_replace('.', '_', $table));
 				$DBprefix = '';
+				continue;
 			} elseif ( $table == 'www'){
 				$dbr->selectDB('huiji_home');
 				$DBprefix = '';
+				continue;
 			} else {
 				$dbr->selectDB('huiji_sites');
 				$DBprefix = str_replace('.', '_', $table);
 			}
-			$res = $dbr->select(
-				$DBprefix.'recentchanges',
-				array(
-					'UNIX_TIMESTAMP(rc_timestamp) AS item_date', 'rc_title',
+
+			$tableName = '`'.$DBprefix.'recentchanges'.'`';
+			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
+				array('UNIX_TIMESTAMP(rc_timestamp) AS item_date', 'rc_title',
 					'rc_user', 'rc_user_text', 'rc_comment', 'rc_id', 'rc_minor',
 					'rc_new', 'rc_namespace', 'rc_cur_id', 'rc_this_oldid',
-					'rc_last_oldid', 'rc_log_action'
-				),
-				$where,
-				__METHOD__,
-				array(
-					'ORDER BY' => 'rc_id DESC',
-					'LIMIT' => $this->item_max,
-					'OFFSET' => 0
-				)
-				// $this->getAllRecentChangesJoinConds()
+					'rc_last_oldid', 'rc_log_action', "$table AS prefix")
+				) 
 			);
+			$conds = $dbr->makeList( $where, LIST_AND );
+			$sql = "SELECT $fieldName FROM $tableName WHERE $conds";
+			$sqls[] = $sql;
+
+			// $res = $dbr->select(
+			// 	$DBprefix.'recentchanges',
+			// 	array(
+			// 		'UNIX_TIMESTAMP(rc_timestamp) AS item_date', 'rc_title',
+			// 		'rc_user', 'rc_user_text', 'rc_comment', 'rc_id', 'rc_minor',
+			// 		'rc_new', 'rc_namespace', 'rc_cur_id', 'rc_this_oldid',
+			// 		'rc_last_oldid', 'rc_log_action'
+			// 	),
+			// 	$where,
+			// 	__METHOD__,
+			// 	array(
+			// 		'ORDER BY' => 'rc_id DESC',
+			// 		'LIMIT' => $this->item_max,
+			// 		'OFFSET' => 0
+			// 	)
+			// 	// $this->getAllRecentChangesJoinConds()
+			// );
+
+		} 
+		// echo $dbr->unionQueries($sqls, true)." ORDER BY `rc_id` DESC LIMIT $this->item_max OFFSET 0";
+		// die(1);
+		if (count($sqls) > 0){
+			$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `rc_id` DESC LIMIT $this->item_max OFFSET 0");
+
 			foreach ( $res as $row ) {
 				$row->item_date = strtotime('+8 hour', $row->item_date);
 				// Special pages aren't editable, so ignore them
@@ -283,7 +307,7 @@ class UserActivity {
 				// Please aware that a project namespace in other wikis can not be localised as [[sitename:blahblah]].
 				// We must add a prefix argument.
 				if ($table != $wgHuijiPrefix){
-					$title = Title::makeTitle( $row->rc_namespace, $row->rc_title, '', $table);
+					$title = Title::makeTitle( $row->rc_namespace, $row->rc_title, '', $row->prefix);
 				} else {
 					$title = Title::makeTitle( $row->rc_namespace, $row->rc_title, '');
 				}
@@ -300,7 +324,7 @@ class UserActivity {
 					'comment' => $this->fixItemComment( $row->rc_comment ),
 					'minor' => $row->rc_minor,
 					'new' => $row->rc_new,
-					'prefix' => $table
+					'prefix' => $row->prefix
 				);
 
 				// set last timestamp
@@ -318,12 +342,11 @@ class UserActivity {
 					'comment' => $this->fixItemComment( $row->rc_comment ),
 					'minor' => $row->rc_minor,
 					'new' => $row->rc_new,
-					'prefix' => $table
+					'prefix' => $row->prefix
 				);
 				// set prefix
-				$this->items_grouped['edit'][$title->getPrefixedText()]['prefix'][] = $table;
+				$this->items_grouped['edit'][$title->getPrefixedText()]['prefix'][] = $row->prefix;
 			}
-
 		}
 		$dbr->tablePrefix($oldDBprefix);
 		$dbr->selectDB($oldDB);
@@ -504,7 +527,7 @@ class UserActivity {
 		$where = $this->where('img_user');
 		//$where[] = 'comment_page_id = page_id';
 
-		$tables = $this->getAllRecentChangesTables();
+		$tables = $this->getTables();
 		$oldDBprefix = $wgDBprefix;
 		$oldDB = $wgDBname;
 		$dbr->tablePrefix('');
@@ -606,7 +629,7 @@ class UserActivity {
 		$where = $this->where('Comment_user_id');
 		$where[] = 'comment_page_id = page_id';
 
-		$tables = $this->getAllRecentChangesTables();
+		$tables = $this->getTables();
 		$oldDBprefix = $wgDBprefix;
 		$oldDB = $wgDBname;
 		$dbr->tablePrefix('');
@@ -1018,7 +1041,7 @@ class UserActivity {
 
 		foreach ( $res as $row ) {
 			// Ignore nonexistent (for example, renamed) users
-			$uid = User::idFromName( $row->ub_user_name );
+			$uid = $row->ub_user_id_from;
 			if ( !$uid ) {
 				continue;
 			}

@@ -1854,7 +1854,7 @@ class UserProfilePage extends Article {
 
 		$gift_count = $g->getGiftCountByUsername( $user_name );
 		$gift_link = SpecialPage::getTitleFor( 'ViewGifts' );
-		$per_row = 4;
+		$per_row = 5;
 
 		if ( $gifts ) {
 			$output .= '<div class="panel panel-default"><div class="user-section-heading panel-heading">
