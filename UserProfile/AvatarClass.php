@@ -67,7 +67,7 @@ class wAvatar {
 	/**
 	 * @param Array $extraParams: array of extra parameters to give to the image
 	 * @return String: <img> HTML tag with full path to the avatar image
-	 * @deprecated 
+	 * @deprecated use getAvatarHtml instead
 	 * */
 	function getAvatarURL( $extraParams = array() ) {
 		return $this->getAvatarHtml( $extraParams );
@@ -76,9 +76,9 @@ class wAvatar {
 	/**
 	 * @param Array $extraParams: array of extra parameters to give to the image
 	 * @return String: <img> HTML tag with full path to the avatar image
-	 * @deprecated 
+	 * @deprecated use getAvatarHtml instead
 	 * */
-	function getOwnAvatarURL( $extraParams = array() ) {
+	function getOwnerAvatarURL( $extraParams = array() ) {
 		return $this->getAvatarHtml( $extraParams );
 	}
 

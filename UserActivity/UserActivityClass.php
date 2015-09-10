@@ -299,7 +299,9 @@ class UserActivity {
 				);
 
 				// set last timestamp
-				$this->items_grouped['edit'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
+				if (!isset($this->items_grouped['edit'][$title->getPrefixedText()]['timestamp'])){
+					$this->items_grouped['edit'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
+				}
 				$this->items[] = array(
 					'id' => 0,
 					'type' => 'edit',
@@ -363,7 +365,10 @@ class UserActivity {
 				'new' => 0
 			);
 			// set last timestamp
-			$this->items_grouped['user_site_follow'][$row->f_wiki_domain]['timestamp'] = $row->item_date;
+			if (!isset($this->items_grouped['user_site_follow'][$row->f_wiki_domain]['timestamp']))
+			{
+				$this->items_grouped['user_site_follow'][$row->f_wiki_domain]['timestamp'] = $row->item_date;
+			}
 			$this->items[] = array(
 				'id' => 0,
 				'type' => 'user_site_follow',
@@ -419,7 +424,10 @@ class UserActivity {
 				'new' => 0
 			);
 			// set last timestamp
-			$this->items_grouped['user_user_follow'][$row->f_target_user_name]['timestamp'] = $row->item_date;
+			if (!isset($this->items_grouped['user_user_follow'][$row->f_target_user_name]['timestamp'])){
+				$this->items_grouped['user_user_follow'][$row->f_target_user_name]['timestamp'] = $row->item_date;
+			}
+			
 
 			$this->items[] = array(
 				'id' => 0,
@@ -550,8 +558,10 @@ class UserActivity {
 					);
 
 					// set last timestamp
-					$this->items_grouped['image_upload'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
-
+					if (!isset($this->items_grouped['image_upload'][$title->getPrefixedText()]['timestamp'])){
+						$this->items_grouped['image_upload'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
+					}
+					
 					//$username = $row->Comment_Username;
 					$this->items[] = array(
 						'id' => $row->img_sha1,
@@ -653,7 +663,9 @@ class UserActivity {
 					);
 
 					// set last timestamp
-					$this->items_grouped['comment'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
+					if (!isset($this->items_grouped['comment'][$title->getPrefixedText()]['timestamp'])){
+						$this->items_grouped['comment'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
+					}
 
 					$username = $row->Comment_Username;
 					$this->items[] = array(
@@ -953,7 +965,10 @@ class UserActivity {
 			);
 
 			// set last timestamp
-			$this->items_grouped[$r_type][$row->r_user_name_relation]['timestamp'] = $row->item_date;
+			if (!isset($this->items_grouped[$r_type][$row->r_user_name_relation]['timestamp'])){
+				$this->items_grouped[$r_type][$row->r_user_name_relation]['timestamp'] = $row->item_date;
+			}
+
 
 			$this->items[] = array(
 				'id' => $row->r_id,
@@ -1019,7 +1034,9 @@ class UserActivity {
 			);
 
 			// set last timestamp
-			$this->items_grouped['user_message'][$to]['timestamp'] = $row->item_date;
+			if(!isset($this->items_grouped['user_message'][$to]['timestamp'])){
+				$this->items_grouped['user_message'][$to]['timestamp'] = $row->item_date;
+			}
 
 			$this->items[] = array(
 				'id' => $row->ub_id,
@@ -1067,7 +1084,7 @@ class UserActivity {
 			$user_title = Title::makeTitle( NS_USER, $row->um_user_name );
 			$user_name_short = $wgLang->truncate( $row->um_user_name, 15 );
 			$avatar = new wAvatar( $row->um_user_id, 'l');
-			$avatarUrl = $avatar->getAvatarURL();
+			$avatarUrl = $avatar->getAvatarHtml();
 			$timeago = CommentFunctions::getTimeAgo($row->item_date).'前';
 			/* build html */
 			$html = $this->templateParser->processTemplate(
@@ -1475,7 +1492,7 @@ class UserActivity {
 			foreach ( $page_data['users'] as $user_name => $action ) {
 				/* get User Avatar for display */
 				$avatar = new wAvatar(User::idFromName($user_name), 'l');
-				$avatarUrl = $avatar->getAvatarURL();
+				$avatarUrl = $avatar->getAvatarHtml();
 				$timeago = CommentFunctions::getTimeAgo($page_data['timestamp']).'前';
 				/* get rid of same actions more than 1/2 day ago */
 				// if ( $page_data['timestamp'] < $this->half_day_ago ) {
@@ -1546,9 +1563,9 @@ class UserActivity {
 										)->text() . ')';
 									}
 									$pages_count++;
-									if (isset($page_data['prefix'])){
-										$page_data['prefix'] = array_merge($page_data['prefix'], $page_data2['prefix']);
-									}
+									// if (isset($page_data['prefix'])){
+									// 	$page_data['prefix'] = array_merge($page_data['prefix'], $page_data2['prefix']);
+									// }
 									$this->displayed[$type][$page_name2] = 1;
 								}
 							}
