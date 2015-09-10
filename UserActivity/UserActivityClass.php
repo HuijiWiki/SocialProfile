@@ -1,5 +1,5 @@
 <?php
-define("UTCTOBEIJING", 3600 * 8);
+
 /**
  * UserActivity class
  * step1: determine where clasue.
@@ -43,6 +43,7 @@ class UserActivity {
 	private $show_image_uploads = 1;
 
 	private $cached_where;
+	private $cached_tables;
 	private $templateParser;
 
 	/**
@@ -67,6 +68,7 @@ class UserActivity {
 		$this->half_a_day = ( 60 * 60 * 12 );
 		$this->items_grouped = array();
 		$this->cached_where = false;
+		$this->cached_tables = false;
 		$this->templateParser = new TemplateParser(  __DIR__ . '/html' );
 	}
 
@@ -131,6 +133,9 @@ class UserActivity {
 		global $wgHuijiPrefix, $wgUser;
 		$dbr = wfGetDB( DB_SLAVE );
 		$user = $wgUser;
+		if ( isset($this->cached_table) ){
+			return $this->cached_tables;
+		}
 		if ($this->show_this_site){
 			$tables = array();
 			$tables[] = $wgHuijiPrefix;
@@ -161,7 +166,7 @@ class UserActivity {
 				$tables[] = $value->domain_prefix;
 			}			
 		}
-
+		$this->cached_tables = $tables;
 		return $tables;
 	}
 
