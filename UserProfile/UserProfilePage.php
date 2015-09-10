@@ -2384,7 +2384,7 @@ class UserProfilePage extends Article {
         $output = '<div class="modal fade" id="avatar-modal" aria-hidden="true" aria-labelledby="avatar-modal-label" role="dialog" tabindex="-1">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
-              <form class="avatar-form" action="/index.php" enctype="multipart/form-data" method="post">
+              <form class="avatar-form" action="/api.php" enctype="multipart/form-data" method="post">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
                   <h4 class="modal-title" id="avatar-modal-label">修改头像</h4>
@@ -2396,6 +2396,8 @@ class UserProfilePage extends Article {
                     <div class="avatar-upload">
                       <input type="hidden" class="avatar-src" name="avatar_src">
                       <input type="hidden" class="avatar-data" name="avatar_data">
+                      <input type="hidden" class="action" name="action" value="avatarsubmit">
+                      <input type="hidden" class="format" name="format" value="json"> 
                       <label for="avatarInput">本地上传</label>
                       <input type="file" class="avatar-input" id="avatarInput" name="avatar_file">
                     </div>

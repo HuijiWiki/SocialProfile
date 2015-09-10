@@ -432,3 +432,9 @@ if( !defined( 'NS_USER_PROFILE' ) ) {
 if( !defined( 'NS_USER_PROFILE_TALK' ) ) {
 	define( 'NS_USER_PROFILE_TALK', 203 );
 }
+
+//API
+$wgAutoloadClasses['ApiAvatarSubmit'] = __DIR__ . '/UserProfile/api/AvatarSubmit.api.php';
+$wgAPIModules['avatarsubmit'] = 'ApiAvatarSubmit';
+$wgAutoloadClasses['ApiAvatarShow'] = __DIR__ . '/UserProfile/api/AvatarShow.api.php';
+$wgAPIModules['avatarshow'] = 'ApiAvatarShow';
