@@ -633,7 +633,8 @@ class UserActivity {
 		}
 
 		$where = $this->where('Comment_user_id');
-		$where[] = 'comment_page_id = page_id';
+		//$where[] = 'comment_page_id = page_id';
+		$sqls = array();
 
 		$tables = $this->getTables();
 		$oldDBprefix = $wgDBprefix;
@@ -644,28 +645,35 @@ class UserActivity {
 			if ( !$isProduction ){
 				$dbr->selectDB('huiji_'.str_replace('.', '_', $table));
 				$DBprefix = '';
+				break;
 			} elseif ( $table == 'www'){
 				$dbr->selectDB('huiji_home');
 				$DBprefix = '';
+				continue;
 			} else {
 				$dbr->selectDB('huiji_sites');
 				$DBprefix = str_replace('.', '_', $table);
 			}
-			$res = $dbr->select(
-				array( $DBprefix.'Comments', $DBprefix.'page' ),
+			$tableName = '`'.$DBprefix.'Comments'.'`';
+			$joinTableName =  '`'.$DBprefix.'page'.'`';
+			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
 				array(
 					'UNIX_TIMESTAMP(comment_date) AS item_date',
 					'Comment_Username', 'Comment_IP', 'page_title', 'Comment_Text',
-					'Comment_user_id', 'page_namespace', 'CommentID'
-				),
-				$where,
-				__METHOD__,
-				array(
-					'ORDER BY' => 'comment_date DESC',
-					'LIMIT' => $this->item_max,
-					'OFFSET' => 0
+					'Comment_user_id', 'page_namespace', 'CommentID', $dbr->addQuotes($table).' AS prefix',
+					)
 				)
 			);
+			if (count($where) > 0){
+				$conds = $dbr->makeList( $where, LIST_AND );
+				$sql = "SELECT $fieldName FROM $tableName INNER JOIN $joinTableName ON comment_page_id = page_id WHERE $conds";
+			} else {
+				$sql = "SELECT $fieldName FROM $tableName INNER JOIN $joinTableName ON comment_page_id = page_id";
+			}
+			$sqls[] = $sql;
+		}
+		if (count($sqls) > 0){
+			$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->item_max OFFSET 0");
 			foreach ( $res as $row ) {
 				$show_comment = true;
 
@@ -678,7 +686,7 @@ class UserActivity {
 
 				if ( $show_comment ) {
 					if ($table != $wgHuijiPrefix){
-						$title = Title::makeTitle( $row->page_namespace, $row->page_title, 'Comments-'.$row->CommentID, $table );
+						$title = Title::makeTitle( $row->page_namespace, $row->page_title, 'Comments-'.$row->CommentID, $row->prefix );
 					} else {
 						$title = Title::makeTitle( $row->page_namespace, $row->page_title, 'Comments-'.$row->CommentID );
 					}
@@ -693,7 +701,7 @@ class UserActivity {
 						'comment' => $this->fixItemComment( $row->Comment_Text ),
 						'minor' => 0,
 						'new' => 0,
-						'prefix' => $table
+						'prefix' => $row->prefix
 					);
 
 					// set last timestamp
@@ -713,12 +721,13 @@ class UserActivity {
 						'comment' => $this->fixItemComment( $row->Comment_Text ),
 						'new' => '0',
 						'minor' => 0,
-						'prefix' => $table
+						'prefix' => $row->prefix
 					);
 					// set prefix
-					$this->items_grouped['comment'][$title->getPrefixedText()]['prefix'][] = $table;
+					$this->items_grouped['comment'][$title->getPrefixedText()]['prefix'][] = $row->prefix;
 				}
 			}
+
 		}
 		$dbr->tablePrefix($oldDBprefix);
 		$dbr->selectDB($oldDB);
