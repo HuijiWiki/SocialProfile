@@ -1513,7 +1513,7 @@ class UserActivity {
 						}
 						// if we find singles for this type, not displayed and not co-worked.
 						if ( !isset( $this->displayed[$type][$page_name2] ) &&
-							count( $page_data2['users'] ) == 1 &&
+							count( $page_data2['users'] ) == 1 
 						) {
 							foreach ( $page_data2['users'] as $user_name2 => $action2 ) {
 								if ( $user_name2 == $user_name && $pages_count < 20 ) {
