@@ -64,6 +64,7 @@ class UserActivity {
 		$this->item_max = $item_max;
 		$this->now = time();
 		$this->half_day_ago = $this->now - ( 60 * 60 * 12 );
+		$this->half_a_day = ( 60 * 60 * 12 );
 		$this->items_grouped = array();
 		$this->cached_where = false;
 		$this->templateParser = new TemplateParser(  __DIR__ . '/html' );
@@ -1513,11 +1514,11 @@ class UserActivity {
 							} 
 							// don't stack the old ones.
 							/* get rid of same actions more than 1/2 day ago */
-							if ( $page_data2['timestamp'] < $this->half_day_ago ) {
+							if ( $page_data2['timestamp'] < $page_data['timestamp'] - $this->half_a_day ) {
 								continue;
 							}
 							foreach ( $page_data2['users'] as $user_name2 => $action2 ) {
-								if ( $user_name2 == $user_name && $pages_count < 20 ) {
+								if ( $user_name2 == $user_name && $pages_count < 50 ) {
 									$count_actions2 = count( $action2 );
 
 									if (
