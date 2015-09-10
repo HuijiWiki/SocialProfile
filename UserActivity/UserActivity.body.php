@@ -163,7 +163,7 @@ class UserHome extends SpecialPage {
 		$output .= '<div class="user-home-feed">';
 
 		// $rel = new UserActivity( $user->getName(), ( ( $rel_type == 1 ) ? ' friends' : 'foes' ), 50 );
-		$fixedLimit = 50;
+		$fixedLimit = 30;
 		$rel = new UserActivity( $user->getName(), $filter , $fixedLimit );
 		if ($item_type != 'default'){
 			$rel->setActivityToggle( 'show_edits', $edits );

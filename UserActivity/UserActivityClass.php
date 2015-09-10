@@ -1540,7 +1540,7 @@ class UserActivity {
 								continue;
 							}
 							foreach ( $page_data2['users'] as $user_name2 => $action2 ) {
-								if ( $user_name2 == $user_name && $pages_count < 50 ) {
+								if ( $user_name2 == $user_name && $pages_count < $this->item_max ) {
 									$count_actions2 = count( $action2 );
 
 									if (
