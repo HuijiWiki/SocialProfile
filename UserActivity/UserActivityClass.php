@@ -264,7 +264,7 @@ class UserActivity {
 					)
 				) 
 			);
-			if count($where > 0){
+			if (count($where) > 0){
 				$conds = $dbr->makeList( $where, LIST_AND );
 				$sql = "SELECT $fieldName FROM $tableName WHERE $conds";
 			} else {
