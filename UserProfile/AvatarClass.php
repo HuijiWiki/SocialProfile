@@ -64,14 +64,22 @@ class wAvatar {
 		return '/uploads/avatars/'.$this->getAvatarImage();
 	}
 
-
 	/**
 	 * @param Array $extraParams: array of extra parameters to give to the image
 	 * @return String: <img> HTML tag with full path to the avatar image
 	 * @deprecated 
 	 * */
 	function getAvatarURL( $extraParams = array() ) {
-		$this->getAvatarHtml( $extraParams );
+		return $this->getAvatarHtml( $extraParams );
+	}
+
+	/**
+	 * @param Array $extraParams: array of extra parameters to give to the image
+	 * @return String: <img> HTML tag with full path to the avatar image
+	 * @deprecated 
+	 * */
+	function getOwnAvatarURL( $extraParams = array() ) {
+		return $this->getAvatarHtml( $extraParams );
 	}
 
 	/**
@@ -94,13 +102,6 @@ class wAvatar {
 		return Html::element( 'img', $params, '' );
 	}
 
-	/**
-	 * @param Array $extraParams: array of extra parameters to give to the image
-	 * @return String: <img> HTML tag with full path to the avatar image
-	 * @deprecated 
-	 * */
-	function getOwnAvatarURL( $extraParams = array() ) {
-		$this->getAvatarHtml( $extraParams );
-	}
+
 }
 
