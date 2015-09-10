@@ -261,6 +261,7 @@ class UserActivity {
 					'rc_user', 'rc_user_text', 'rc_comment', 'rc_id', 'rc_minor',
 					'rc_new', 'rc_namespace', 'rc_cur_id', 'rc_this_oldid',
 					'rc_last_oldid', 'rc_log_action', $dbr->addQuotes($table).' AS prefix',
+					)
 				) 
 			);
 			$conds = $dbr->makeList( $where, LIST_AND );
