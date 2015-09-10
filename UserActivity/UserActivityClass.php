@@ -531,6 +531,7 @@ class UserActivity {
 		$dbr = wfGetDB( DB_SLAVE );
 
 		$where = $this->where('img_user');
+		$sqls = array();
 		//$where[] = 'comment_page_id = page_id';
 
 		$tables = $this->getTables();
@@ -542,28 +543,35 @@ class UserActivity {
 			if ( !$isProduction ){
 				$dbr->selectDB('huiji_'.str_replace('.', '_', $table));
 				$DBprefix = '';
+				break;
 			} elseif ( $table == 'www'){
 				$dbr->selectDB('huiji_home');
 				$DBprefix = '';
+				continue;
 			} else {
 				$dbr->selectDB('huiji_sites');
 				$DBprefix = str_replace('.', '_', $table);
 			}
-			$res = $dbr->select(
-				array( $DBprefix.'image' ),
-				array(
-					'UNIX_TIMESTAMP(img_timestamp) AS item_date',
+			$tableName = '`'.$DBprefix.'image'.'`';
+			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
+				array('UNIX_TIMESTAMP(img_timestamp) AS item_date',
 					'img_user_text', 'img_media_type', 'img_name', 'img_description',
-					'img_user', 'img_minor_mime', 'img_sha1'
-				),
-				$where,
-				__METHOD__,
-				array(
-					'ORDER BY' => 'img_timestamp DESC',
-					'LIMIT' => $this->item_max,
-					'OFFSET' => 0
-				)
+					'img_user', 'img_minor_mime', 'img_sha1', $dbr->addQuotes($table).' AS prefix',
+					)
+				) 
 			);
+			if (count($where) > 0){
+				$conds = $dbr->makeList( $where, LIST_AND );
+				$sql = "SELECT $fieldName FROM $tableName WHERE $conds";
+			} else {
+				$sql = "SELECT $fieldName FROM $tableName";
+			}
+			$sqls[] = $sql;
+
+		}
+		if (count($sqls) > 0){
+			$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->item_max OFFSET 0");
+
 			foreach ( $res as $row ) {
 				$row->item_date = strtotime('+8 hour', $row->item_date);
 				$show_upload = true;
@@ -588,7 +596,7 @@ class UserActivity {
 						'comment' => $row->img_description,
 						'minor' => 0,
 						'new' => 0,
-						'prefix' => $table
+						'prefix' => $row->prefix
 					);
 
 					// set last timestamp
@@ -608,13 +616,14 @@ class UserActivity {
 						'comment' => $row->img_description,
 						'minor' => 0,
 						'new' => 0,
-						'prefix' => $table
+						'prefix' => $row->prefix
 					);
 					// set prefix
-					$this->items_grouped['image_upload'][$title->getPrefixedText()]['prefix'][] = $table;
+					$this->items_grouped['image_upload'][$title->getPrefixedText()]['prefix'][] = $row->prefix;
 				}
 			}
 		}
+		
 		$dbr->tablePrefix($oldDBprefix);
 		$dbr->selectDB($oldDB);
 	}
