@@ -295,7 +295,7 @@ class UserActivity {
 		// echo $dbr->unionQueries($sqls, true)." ORDER BY `rc_id` DESC LIMIT $this->item_max OFFSET 0";
 		// die(1);
 		if (count($sqls) > 0){
-			$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `rc_timestamp` DESC LIMIT $this->item_max OFFSET 0");
+			$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->item_max OFFSET 0");
 
 			foreach ( $res as $row ) {
 				$row->item_date = strtotime('+8 hour', $row->item_date);
