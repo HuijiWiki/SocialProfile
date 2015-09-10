@@ -260,7 +260,7 @@ class UserActivity {
 				array('UNIX_TIMESTAMP(rc_timestamp) AS item_date', 'rc_title',
 					'rc_user', 'rc_user_text', 'rc_comment', 'rc_id', 'rc_minor',
 					'rc_new', 'rc_namespace', 'rc_cur_id', 'rc_this_oldid',
-					'rc_last_oldid', 'rc_log_action', "$table AS prefix")
+					'rc_last_oldid', 'rc_log_action', $dbr->addQuotes($table).' AS prefix',
 				) 
 			);
 			$conds = $dbr->makeList( $where, LIST_AND );
