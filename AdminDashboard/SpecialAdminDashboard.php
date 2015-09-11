@@ -28,6 +28,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
+		$out->addScript( '<script src="http://echarts.baidu.com/build/dist/echarts.js"></script>' );
 		// Add Less
 		$out->addModuleStyles( 'ext.socialprofile.admindashboard.less' );
 		// Add CSS
@@ -46,10 +47,10 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				    array(
 				        'yesterdayCount' => UserSiteFollow::getSiteCountOnedayDB( $wgHuijiPrefix, $yesterday ),
 				        'totalCount' => UserSiteFollow::getSiteCount( $wgHuijiPrefix ),
-				        'yesterdayEdit' => $ueb->getSiteEditCountOneday( $wgHuijiPrefix, $yesterday ),
+				        'yesterdayEdit' => $ueb->getSiteEditCount( '', $wgHuijiPrefix, $yesterday, $yesterday ),
 				        'totalEdit' => $totaledit,
-				        'totalView' => $ueb->getSiteViewCountTotal( $wgHuijiPrefix ),
-				        'yesterdayView' => $ueb->getSiteViewCountOneday( $wgHuijiPrefix,$yesterday )
+				        'totalView' => $ueb->getSiteViewCount( -1, $wgHuijiPrefix, '', '' ),
+				        'yesterdayView' => $ueb->getSiteViewCount( -1, $wgHuijiPrefix, $yesterday, $yesterday )
 				    )
 				);
 		$out->addHtml($output);

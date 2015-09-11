@@ -34,6 +34,7 @@ $wgMessagesDirs['SocialProfileUserStats'] = __DIR__ . '/UserStats/i18n';
 $wgMessagesDirs['SocialProfileUserSiteFollows'] = __DIR__ . '/UserSiteFollows/i18n';
 $wgMessagesDirs['SocialProfileUserUserFollows'] = __DIR__ . '/UserUserFollows/i18n';
 $wgMessagesDirs['SocialProfileAdminDashboard'] = __DIR__ . '/AdminDashboard/i18n';
+$wgMessagesDirs['SocialProfileSiteStatus'] = __DIR__ . '/SiteStatus/i18n';
 $wgExtensionMessagesFiles['SocialProfileNamespaces'] = __DIR__ . '/SocialProfile.namespaces.php';
 $wgExtensionMessagesFiles['AvatarMagic'] = __DIR__ . '/UserProfile/Avatar.magic.i18n.php';
 
@@ -81,6 +82,8 @@ $wgAutoloadClasses['ResponseGenerator'] = __DIR__ . '/ResponseGeneratorClass.php
 $wgAutoloadClasses['CropAvatar'] = __DIR__ . '/UserUploadAvatar/crop.php';
 $wgAutoloadClasses['UserEditBox'] = __DIR__ . '/UserStats/UserEditBoxClass.php';
 $wgAutoloadClasses['SpecialAdminDashboard'] = __DIR__ . '/AdminDashboard/SpecialAdminDashboard.php';
+$wgAutoloadClasses['SpecialSiteRank'] = __DIR__ . '/SiteStatus/SpecialSiteRank.php';
+$wgAutoloadClasses['AllSitesInfo'] = __DIR__ . '/SiteStatus/AllSitesInfoClass.php';
 
 // New special pages
 $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
@@ -107,6 +110,7 @@ $wgSpecialPages['EditRank'] = 'SpecialEditRank';
 $wgSpecialPages['FollowSites'] = 'SpecialFollowSites';
 $wgSpecialPages['Randomwiki'] = 'SpecialRandomwiki';
 $wgSpecialPages['AdminDashboard'] = 'SpecialAdminDashboard';
+$wgSpecialPages['SiteRank'] = 'SpecialSiteRank';
 
 // Necessary AJAX functions
 require_once( "$IP/extensions/SocialProfile/UserBoard/UserBoard_AjaxFunctions.php" );

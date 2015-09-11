@@ -74,8 +74,8 @@ class UserEditBox{
         return $arrSun[0];
 	}
 	//pe
-	public function getSiteEditCountOneday( $wikiSite, $yesterday ){
-		$receive = RecordStatistics::getPageEditCountOnWikiSiteFromUserId('',$wikiSite,$yesterday, $yesterday);
+	public function getSiteEditCount( $userId,$wikiSite,$fromTime,$toTime ){
+		$receive = RecordStatistics::getPageEditCountOnWikiSiteFromUserId(-1,$wikiSite,$fromTime, $toTime);
 		if ($receive->status == 'success') {
 			return $receive->result;
 		}else{
@@ -83,20 +83,13 @@ class UserEditBox{
 		}
 	}
 	//pv
-	public function getSiteViewCountTotal( $wikiSite ){
-		$receive = RecordStatistics::getPageViewCountOnWikiSiteFromUserId(-1,$wikiSite,'', '');
+	public function getSiteViewCount( $userId, $wikiSite, $fromTime, $toTime ){
+		$receive = RecordStatistics::getPageViewCountOnWikiSiteFromUserId(-1,$wikiSite,$fromTime, $toTime);
 		if ($receive->status == 'success') {
 			return $receive->result;
 		}else{
 			return false;
 		}
 	}
-	public function getSiteViewCountOneday( $wikiSite, $yesterday ){
-		$receive = RecordStatistics::getPageViewCountOnWikiSiteFromUserId(-1,$wikiSite,$yesterday, $yesterday);
-		if ($receive->status == 'success') {
-			return $receive->result;
-		}else{
-			return false;
-		}
-	}
+
 }

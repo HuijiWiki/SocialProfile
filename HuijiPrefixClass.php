@@ -55,4 +55,22 @@ class HuijiPrefix{
 			return '';
 		}
 	}
+	static function getAllPrefix(){
+
+		$dbr = wfGetDB( DB_SLAVE );
+		$res = $dbr->select(
+			'domain',
+			array( 'domain_prefix' ),
+			array( 'domain_status' => 0, ),
+			__METHOD__
+		);
+		if( $res !== false ){
+			foreach ($res as $value) {
+				$result[] = $value->domain_prefix;
+			}
+			return $result;
+		}else{
+			return '';
+		}
+	}
 }
