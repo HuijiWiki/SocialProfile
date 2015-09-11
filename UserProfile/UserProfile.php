@@ -83,6 +83,7 @@ $wgResourceModules['ext.socialprofile.userprofile.js'] = array(
 	'scripts' => array(
 	    '../UserUploadAvatar/cropper.min.js',
         '../UserUploadAvatar/main.js',
+        'huiji.collectPageViewRecord.js',
         'UserProfilePage.js'
 	),
 	'localBasePath' => __DIR__,

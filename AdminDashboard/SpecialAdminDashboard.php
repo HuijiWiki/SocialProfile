@@ -33,7 +33,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		$out->addModuleStyles( 'ext.socialprofile.admindashboard.less' );
 		// Add CSS
 		$out->addModuleStyles( 'ext.socialprofile.admindashboard.css' );		
-		// Add js and messages
+		// Add js and message
 		$out->addModules( 'ext.socialprofile.admindashboard.js' );
 
 		$output = ''; // Prevent E_NOTICE

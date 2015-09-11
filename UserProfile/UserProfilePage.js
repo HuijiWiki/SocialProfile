@@ -125,6 +125,11 @@ var UserProfilePage = {
 };
 
 jQuery( document ).ready( function() {
+
+    getViewRecordsFromUserIdGroupByWikiSite('-1','','',alerta);
+    function alerta(data){
+        console.log(data)
+    }
 	// "Send message" button on (other users') profile pages
 	jQuery( 'div.user-page-message-box-button input[type="button"]' ).on( 'click', function() {
 		UserProfilePage.sendMessage();

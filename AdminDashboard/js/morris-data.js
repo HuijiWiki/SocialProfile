@@ -1,3 +1,173 @@
+function insertRecordIntoDB(url,navigatorInfo,fromSource,userId,userName,wikiSite,siteName,titleName,articleId) {
+    jQuery.post(
+        url,
+        {
+            navigatorInfo:navigatorInfo,
+            fromSource:clearSourceUrl(fromSource),
+            userId:userId,
+            userName:userName,
+            articleId:articleId,
+            titleName:titleName,
+            siteName:siteName,
+            wikiSite:wikiSite,
+        }
+    )
+}
+
+function clearSourceUrl(sourceUrl){
+    var e = new RegExp('^(?:(?:https?|ftp):)/*(?:[^@]+@)?([^:/#]+)'),
+        matches = e.exec(sourceUrl);
+    return matches ? matches[1]:sourceUrl;
+}
+
+
+function getViewRecordsFromUserIdGroupByWikiSite(userId,fromTime,toTime,callback){
+    var url = 'http://test.huiji.wiki:50007/getViewRecordsFromUserIdGroupByWikiSite/';
+    jQuery.post(
+        url,
+        {
+            userId:userId,
+            fromTime:fromTime,
+            toTime:toTime,
+        },
+        function(data){
+            //	console.log(data);
+            if(callback != null) {
+                callback(data);
+            }else{
+                return data;
+            }
+        }
+    ).error(function(){
+            //console.log("error");
+            var errInfo = {'status':'fail'};
+            if(callback != null){
+                callback(errInfo);
+            }else{
+                return errInfo;
+            }
+        });
+}
+
+function getEditRecordsFromUserIdGroupByWikiSite(userId,fromTime,toTime,callback){
+    var url = 'http://test.huiji.wiki:50007/getEditRecordsFromUserIdGroupByWikiSite/';
+    jQuery.post(
+        url,
+        {
+            userId:userId,
+            fromTime:fromTime,
+            toTime:toTime,
+        },
+        function(data){
+            //	console.log(data);
+            if(callback != null){
+                callback(data);
+            }else{
+                return data;
+            }
+        }
+    ).error(function(){
+            //console.log("error");
+            var errInfo = {'status':'fail'};
+            if(callback != null) {
+                callback(errInfo);
+            }else{
+                return errInfo;
+            }
+        });
+}
+
+function getEditorCountGroupByWikiSite(fromTime,toTime,callback){
+    var url = 'http://test.huiji.wiki:50007/getEditorCountGroupByWikiSite/';
+    jQuery.post(
+        url,
+        {
+            fromTime:fromTime,
+            toTime:toTime,
+        },
+        function(data){
+            //	console.log(data);
+            if(callback != null) {
+                callback(data);
+            }else{
+                return data;
+            }
+        }
+    ).error(function(){
+            //console.log("error");
+            var result = {'status':'fail'};
+            if(callback != null) {
+                callback(result);
+            }else{
+                return result;
+            }
+        });
+}
+
+function getEditRecordsOnWikiSiteFromUserIdGroupByDay(userId,wikiSite,fromTime,toTime,callback)
+{
+    var url = 'http://test.huiji.wiki:50007/getEditRecordsOnWikiSiteFromUserIdGroupByDay/';
+    jQuery.post(
+        url,
+        {
+            userId:userId,
+            wikiSite:wikiSite,
+            fromTime:fromTime,
+            toTime:toTime,
+        },
+        function(data){
+            //	console.log(data);
+            if(callback != null) {
+                callback(data);
+            }else{
+                return data;
+            }
+        }
+    ).error(function(){
+            //console.log("error");
+            var result = {'status':'fail'};
+            if(callback != null){
+                callback();
+            }else{
+                return result;
+            }
+        });
+
+}
+
+
+
+function getViewRecordsOnWikiSiteFromUserIdGroupByDay(userId,wikiSite,fromTime,toTime,callback)
+{
+    var url = 'http://test.huiji.wiki:50007/getViewRecordsOnWikiSiteFromUserIdGroupByDay/';
+    jQuery.post(
+        url,
+        {
+            userId:userId,
+            wikiSite:wikiSite,
+            fromTime:fromTime,
+            toTime:toTime
+        },
+        function(data){
+//			console.log(data);
+            if(callback != null) {
+                callback(data);
+            }else{
+                data
+                return data;
+            }
+        }
+    ).error(function(){
+            //console.log("error");
+            var result = {'status':'fail'};
+            if(callback != null){
+                callback();
+            }else{
+                return result;
+            }
+        });
+
+}
 jQuery( document ).ready( function() {
 
     // Morris.Area({
@@ -129,8 +299,7 @@ jQuery( document ).ready( function() {
             ],
             function (ec) {
                 // 基于准备好的dom，初始化echarts图表
-                var  myChart = ec.init(document.getElementById('morris-area-echart')); 
-                // console.log(getViewRecordsFromUserIdGroupByWikiSite(-1,'',''));
+                var  myChart = ec.init(document.getElementById('morris-area-echart'));
                 var  option = {
                         tooltip : {
                             trigger: 'axis'
@@ -154,12 +323,12 @@ jQuery( document ).ready( function() {
                             {
                                 type : 'category',
                                 boundaryGap : false,
-                                data : ['周一','周二','周三','周四','周五','周六','周日','a','b','c','d']
+                                data : []
                             }
                         ],
                         yAxis : [
                             {
-                                type : 'value',
+                                type : 'value'
                                 // min: 0,
                                 // max: 1000,
                                 // splitNumber: 500
@@ -182,8 +351,7 @@ jQuery( document ).ready( function() {
                                         }
                                     }
                                 },
-                                data:[100, 13, 10, 13, 90, 30, 21,12,22,33,44],
-                                // data: getViewRecordsFromUserIdGroupByWikiSite(-1,'',''),
+                                data:[],
 
                                 // 系列中的数据标注内容 series.markPoint  
                                 markPoint:{  
@@ -203,64 +371,79 @@ jQuery( document ).ready( function() {
                                 name:'关注人数',
                                 type:'line',
                                 // stack: '总量',
-                                data:[200, 182, 191, 234, 290, 330, 310,222,111,333,223],
-                                // 系列中的数据标注内容 series.markPoint  
-                                markPoint:{  
-                                    data:[  
-                                        {type:'max',name:'最大值'},  
-                                        {type:'min',name:'最小值'}  
-                                    ]  
-                                },  
-                                //系列中的数据标线内容 series.markLine  
-                                markLine:{  
-                                    data:[  
-                                        {type:'average',name:'平均值'}  
-                                    ]  
+                                data:[],
+                                // 系列中的数据标注内容 series.markPoint
+                                markPoint:{
+                                    data:[
+                                        {type:'max',name:'最大值'},
+                                        {type:'min',name:'最小值'}
+                                    ]
+                                },
+                                //系列中的数据标线内容 series.markLine
+                                markLine:{
+                                    data:[
+                                        {type:'average',name:'平均值'}
+                                    ]
                                 }
                             },
                             {
                                 name:'浏览次数',
                                 type:'line',
                                 // stack: '总量',
-                                data:[300, 232, 201, 154, 190, 330, 410,234,555,433,233],
-                                //系列中的数据标注内容 series.markPoint  
-                                markPoint:{  
-                                    data:[  
-                                        {type:'max',name:'最大值'},  
-                                        {type:'min',name:'最小值'}  
-                                    ]  
-                                },  
-                                //系列中的数据标线内容 series.markLine  
-                                markLine:{  
-                                    data:[  
-                                        {type:'average',name:'平均值'}  
-                                    ]  
+                                data:[],
+                                //系列中的数据标注内容 series.markPoint
+                                markPoint:{
+                                    data:[
+                                        {type:'max',name:'最大值'},
+                                        {type:'min',name:'最小值'}
+                                    ]
+                                },
+                                //系列中的数据标线内容 series.markLine
+                                markLine:{
+                                    data:[
+                                        {type:'average',name:'平均值'}
+                                    ]
                                 }
                             },
                             {
                                 name:'编辑次数',
                                 type:'line',
                                 // stack: '总量',
-                                data:[500, 332, 301, 334, 390, 330, 320,123,321,432,433],
-                                //系列中的数据标注内容 series.markPoint  
-                                markPoint:{  
-                                    data:[  
-                                        {type:'max',name:'最大值'},  
-                                        {type:'min',name:'最小值'}  
-                                    ]  
-                                },  
-                                //系列中的数据标线内容 series.markLine  
-                                markLine:{  
-                                    data:[  
-                                        {type:'average',name:'平均值'}  
-                                    ]  
+                                data:[],
+                                //系列中的数据标注内容 series.markPoint
+                                markPoint:{
+                                    data:[
+                                        {type:'max',name:'最大值'},
+                                        {type:'min',name:'最小值'}
+                                    ]
+                                },
+                                //系列中的数据标线内容 series.markLine
+                                markLine:{
+                                    data:[
+                                        {type:'average',name:'平均值'}
+                                    ]
                                 }
                             }
                         ]
                     };
                 // };
-                // 为echarts对象加载数据 
-                myChart.setOption(option); 
+                // 为echarts对象加载数据
+
+                getViewRecordsOnWikiSiteFromUserIdGroupByDay('-1','','','',updateData);
+                function updateData(data){
+                    if (data.status == 'success'){
+                        console.log(data.result);
+                        var res = data.result;
+
+                        for(var i=0;i<=3;i++){
+                            option.xAxis[0].data[i]=res[i]._id;
+                            option.series[0].data[i]=res[i].value;
+                        }
+                        myChart.setOption(option,false);
+                        console.log(option.xAxis[0].data);
+                        console.log(option.series[0].data);
+                    }
+                }
             }
         );
 });
