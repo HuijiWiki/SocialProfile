@@ -1,5 +1,5 @@
 <?php
-define("UTCTOBEIJING", 3600 * 8);
+
 /**
  * UserActivity class
  * step1: determine where clasue.
@@ -43,6 +43,7 @@ class UserActivity {
 	private $show_image_uploads = 1;
 
 	private $cached_where;
+	private $cached_tables;
 	private $templateParser;
 
 	/**
@@ -62,10 +63,13 @@ class UserActivity {
 		}
 		$this->setFilter( $filter );
 		$this->item_max = $item_max;
+		$this->sql_depth = $this->item_max*3;
 		$this->now = time();
 		$this->half_day_ago = $this->now - ( 60 * 60 * 12 );
+		$this->half_a_day = ( 60 * 60 * 12 );
 		$this->items_grouped = array();
 		$this->cached_where = false;
+		$this->cached_tables = false;
 		$this->templateParser = new TemplateParser(  __DIR__ . '/html' );
 	}
 
@@ -126,10 +130,13 @@ class UserActivity {
 	 * return a join argument for setEdits(). Preferably this should only return two or three wikis recently changed by a given set of users.
 	 *
 	 */
-	private function getAllRecentChangesTables(){
+	private function getTables(){
 		global $wgHuijiPrefix, $wgUser;
 		$dbr = wfGetDB( DB_SLAVE );
 		$user = $wgUser;
+		if ( isset($this->cached_table) ){
+			return $this->cached_tables;
+		}
 		if ($this->show_this_site){
 			$tables = array();
 			$tables[] = $wgHuijiPrefix;
@@ -160,7 +167,7 @@ class UserActivity {
 				$tables[] = $value->domain_prefix;
 			}			
 		}
-
+		$this->cached_tables = $tables;
 		return $tables;
 	}
 
@@ -228,39 +235,69 @@ class UserActivity {
 
 		$dbr = wfGetDB( DB_SLAVE );
 		$where = $this->where('rc_user');
+		$sqls = array();
 
-		$tables = $this->getAllRecentChangesTables();
+		$tables = $this->getTables();
 		$oldDBprefix = $wgDBprefix;
 		$oldDB = $wgDBname;
 		$dbr->tablePrefix('');
+
 		foreach ($tables as $table){
 			if ( !$isProduction ){
 				$dbr->selectDB('huiji_'.str_replace('.', '_', $table));
 				$DBprefix = '';
+				break;
 			} elseif ( $table == 'www'){
 				$dbr->selectDB('huiji_home');
 				$DBprefix = '';
+				continue;
 			} else {
 				$dbr->selectDB('huiji_sites');
 				$DBprefix = str_replace('.', '_', $table);
 			}
-			$res = $dbr->select(
-				$DBprefix.'recentchanges',
-				array(
-					'UNIX_TIMESTAMP(rc_timestamp) AS item_date', 'rc_title',
+
+			$tableName = '`'.$DBprefix.'recentchanges'.'`';
+			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
+				array('UNIX_TIMESTAMP(rc_timestamp) AS item_date', 'rc_title',
 					'rc_user', 'rc_user_text', 'rc_comment', 'rc_id', 'rc_minor',
 					'rc_new', 'rc_namespace', 'rc_cur_id', 'rc_this_oldid',
-					'rc_last_oldid', 'rc_log_action'
-				),
-				$where,
-				__METHOD__,
-				array(
-					'ORDER BY' => 'rc_id DESC',
-					'LIMIT' => $this->item_max,
-					'OFFSET' => 0
-				)
-				// $this->getAllRecentChangesJoinConds()
+					'rc_last_oldid', 'rc_log_action', $dbr->addQuotes($table).' AS prefix',
+					)
+				) 
 			);
+			if (count($where) > 0){
+				$conds = $dbr->makeList( $where, LIST_AND );
+				$sql = "SELECT $fieldName FROM $tableName WHERE $conds";
+			} else {
+				$sql = "SELECT $fieldName FROM $tableName";
+			}
+
+			$sqls[] = $sql;
+
+			// $res = $dbr->select(
+			// 	$DBprefix.'recentchanges',
+			// 	array(
+			// 		'UNIX_TIMESTAMP(rc_timestamp) AS item_date', 'rc_title',
+			// 		'rc_user', 'rc_user_text', 'rc_comment', 'rc_id', 'rc_minor',
+			// 		'rc_new', 'rc_namespace', 'rc_cur_id', 'rc_this_oldid',
+			// 		'rc_last_oldid', 'rc_log_action'
+			// 	),
+			// 	$where,
+			// 	__METHOD__,
+			// 	array(
+			// 		'ORDER BY' => 'rc_id DESC',
+			// 		'LIMIT' => $this->item_max,
+			// 		'OFFSET' => 0
+			// 	)
+			// 	// $this->getAllRecentChangesJoinConds()
+			// );
+
+		} 
+		// echo $dbr->unionQueries($sqls, true)." ORDER BY `rc_id` DESC LIMIT $this->item_max OFFSET 0";
+		// die(1);
+		if (count($sqls) > 0){
+			$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
+
 			foreach ( $res as $row ) {
 				$row->item_date = strtotime('+8 hour', $row->item_date);
 				// Special pages aren't editable, so ignore them
@@ -277,7 +314,7 @@ class UserActivity {
 				// Please aware that a project namespace in other wikis can not be localised as [[sitename:blahblah]].
 				// We must add a prefix argument.
 				if ($table != $wgHuijiPrefix){
-					$title = Title::makeTitle( $row->rc_namespace, $row->rc_title, '', $table);
+					$title = Title::makeTitle( $row->rc_namespace, $row->rc_title, '', $row->prefix);
 				} else {
 					$title = Title::makeTitle( $row->rc_namespace, $row->rc_title, '');
 				}
@@ -294,11 +331,13 @@ class UserActivity {
 					'comment' => $this->fixItemComment( $row->rc_comment ),
 					'minor' => $row->rc_minor,
 					'new' => $row->rc_new,
-					'prefix' => $table
+					'prefix' => $row->prefix
 				);
 
 				// set last timestamp
-				$this->items_grouped['edit'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
+				if (!isset($this->items_grouped['edit'][$title->getPrefixedText()]['timestamp'])){
+					$this->items_grouped['edit'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
+				}
 				$this->items[] = array(
 					'id' => 0,
 					'type' => 'edit',
@@ -310,12 +349,11 @@ class UserActivity {
 					'comment' => $this->fixItemComment( $row->rc_comment ),
 					'minor' => $row->rc_minor,
 					'new' => $row->rc_new,
-					'prefix' => $table
+					'prefix' => $row->prefix
 				);
 				// set prefix
-				$this->items_grouped['edit'][$title->getPrefixedText()]['prefix'][] = $table;
+				$this->items_grouped['edit'][$title->getPrefixedText()]['prefix'][] = $row->prefix;
 			}
-
 		}
 		$dbr->tablePrefix($oldDBprefix);
 		$dbr->selectDB($oldDB);
@@ -362,7 +400,10 @@ class UserActivity {
 				'new' => 0
 			);
 			// set last timestamp
-			$this->items_grouped['user_site_follow'][$row->f_wiki_domain]['timestamp'] = $row->item_date;
+			if (!isset($this->items_grouped['user_site_follow'][$row->f_wiki_domain]['timestamp']))
+			{
+				$this->items_grouped['user_site_follow'][$row->f_wiki_domain]['timestamp'] = $row->item_date;
+			}
 			$this->items[] = array(
 				'id' => 0,
 				'type' => 'user_site_follow',
@@ -418,7 +459,10 @@ class UserActivity {
 				'new' => 0
 			);
 			// set last timestamp
-			$this->items_grouped['user_user_follow'][$row->f_target_user_name]['timestamp'] = $row->item_date;
+			if (!isset($this->items_grouped['user_user_follow'][$row->f_target_user_name]['timestamp'])){
+				$this->items_grouped['user_user_follow'][$row->f_target_user_name]['timestamp'] = $row->item_date;
+			}
+			
 
 			$this->items[] = array(
 				'id' => 0,
@@ -488,9 +532,10 @@ class UserActivity {
 		$dbr = wfGetDB( DB_SLAVE );
 
 		$where = $this->where('img_user');
+		$sqls = array();
 		//$where[] = 'comment_page_id = page_id';
 
-		$tables = $this->getAllRecentChangesTables();
+		$tables = $this->getTables();
 		$oldDBprefix = $wgDBprefix;
 		$oldDB = $wgDBname;
 		$dbr->tablePrefix('');
@@ -499,28 +544,36 @@ class UserActivity {
 			if ( !$isProduction ){
 				$dbr->selectDB('huiji_'.str_replace('.', '_', $table));
 				$DBprefix = '';
+				break;
 			} elseif ( $table == 'www'){
 				$dbr->selectDB('huiji_home');
 				$DBprefix = '';
+				continue;
 			} else {
 				$dbr->selectDB('huiji_sites');
 				$DBprefix = str_replace('.', '_', $table);
 			}
-			$res = $dbr->select(
-				array( $DBprefix.'image' ),
-				array(
-					'UNIX_TIMESTAMP(img_timestamp) AS item_date',
+			$tableName = '`'.$DBprefix.'image'.'`';
+			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
+				array('UNIX_TIMESTAMP(img_timestamp) AS item_date',
 					'img_user_text', 'img_media_type', 'img_name', 'img_description',
-					'img_user', 'img_minor_mime', 'img_sha1'
-				),
-				$where,
-				__METHOD__,
-				array(
-					'ORDER BY' => 'img_timestamp DESC',
-					'LIMIT' => $this->item_max,
-					'OFFSET' => 0
-				)
+					'img_user', 'img_minor_mime', 'img_sha1', $dbr->addQuotes($table).' AS prefix',
+					)
+				) 
 			);
+			if (count($where) > 0){
+				$conds = $dbr->makeList( $where, LIST_AND );
+				$sql = "SELECT $fieldName FROM $tableName WHERE $conds";
+			} else {
+				$sql = "SELECT $fieldName FROM $tableName";
+			}
+			$sqls[] = $sql;
+
+		}
+		if (count($sqls) > 0){
+			
+			$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
+
 			foreach ( $res as $row ) {
 				$row->item_date = strtotime('+8 hour', $row->item_date);
 				$show_upload = true;
@@ -545,12 +598,14 @@ class UserActivity {
 						'comment' => $row->img_description,
 						'minor' => 0,
 						'new' => 0,
-						'prefix' => $table
+						'prefix' => $row->prefix
 					);
 
 					// set last timestamp
-					$this->items_grouped['image_upload'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
-
+					if (!isset($this->items_grouped['image_upload'][$title->getPrefixedText()]['timestamp'])){
+						$this->items_grouped['image_upload'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
+					}
+					
 					//$username = $row->Comment_Username;
 					$this->items[] = array(
 						'id' => $row->img_sha1,
@@ -563,13 +618,14 @@ class UserActivity {
 						'comment' => $row->img_description,
 						'minor' => 0,
 						'new' => 0,
-						'prefix' => $table
+						'prefix' => $row->prefix
 					);
 					// set prefix
-					$this->items_grouped['image_upload'][$title->getPrefixedText()]['prefix'][] = $table;
+					$this->items_grouped['image_upload'][$title->getPrefixedText()]['prefix'][] = $row->prefix;
 				}
 			}
 		}
+		
 		$dbr->tablePrefix($oldDBprefix);
 		$dbr->selectDB($oldDB);
 	}
@@ -588,9 +644,10 @@ class UserActivity {
 		}
 
 		$where = $this->where('Comment_user_id');
-		$where[] = 'comment_page_id = page_id';
+		//$where[] = 'comment_page_id = page_id';
+		$sqls = array();
 
-		$tables = $this->getAllRecentChangesTables();
+		$tables = $this->getTables();
 		$oldDBprefix = $wgDBprefix;
 		$oldDB = $wgDBname;
 		$dbr->tablePrefix('');
@@ -599,28 +656,35 @@ class UserActivity {
 			if ( !$isProduction ){
 				$dbr->selectDB('huiji_'.str_replace('.', '_', $table));
 				$DBprefix = '';
+				break;
 			} elseif ( $table == 'www'){
 				$dbr->selectDB('huiji_home');
 				$DBprefix = '';
+				continue;
 			} else {
 				$dbr->selectDB('huiji_sites');
 				$DBprefix = str_replace('.', '_', $table);
 			}
-			$res = $dbr->select(
-				array( $DBprefix.'Comments', $DBprefix.'page' ),
+			$tableName = '`'.$DBprefix.'Comments'.'`';
+			$joinTableName =  '`'.$DBprefix.'page'.'`';
+			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
 				array(
 					'UNIX_TIMESTAMP(comment_date) AS item_date',
 					'Comment_Username', 'Comment_IP', 'page_title', 'Comment_Text',
-					'Comment_user_id', 'page_namespace', 'CommentID'
-				),
-				$where,
-				__METHOD__,
-				array(
-					'ORDER BY' => 'comment_date DESC',
-					'LIMIT' => $this->item_max,
-					'OFFSET' => 0
+					'Comment_user_id', 'page_namespace', 'CommentID', $dbr->addQuotes($table).' AS prefix',
+					)
 				)
 			);
+			if (count($where) > 0){
+				$conds = $dbr->makeList( $where, LIST_AND );
+				$sql = "SELECT $fieldName FROM $tableName INNER JOIN $joinTableName ON comment_page_id = page_id WHERE $conds";
+			} else {
+				$sql = "SELECT $fieldName FROM $tableName INNER JOIN $joinTableName ON comment_page_id = page_id";
+			}
+			$sqls[] = $sql;
+		}
+		if (count($sqls) > 0){
+			$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
 			foreach ( $res as $row ) {
 				$show_comment = true;
 
@@ -633,7 +697,7 @@ class UserActivity {
 
 				if ( $show_comment ) {
 					if ($table != $wgHuijiPrefix){
-						$title = Title::makeTitle( $row->page_namespace, $row->page_title, 'Comments-'.$row->CommentID, $table );
+						$title = Title::makeTitle( $row->page_namespace, $row->page_title, 'Comments-'.$row->CommentID, $row->prefix );
 					} else {
 						$title = Title::makeTitle( $row->page_namespace, $row->page_title, 'Comments-'.$row->CommentID );
 					}
@@ -648,11 +712,13 @@ class UserActivity {
 						'comment' => $this->fixItemComment( $row->Comment_Text ),
 						'minor' => 0,
 						'new' => 0,
-						'prefix' => $table
+						'prefix' => $row->prefix
 					);
 
 					// set last timestamp
-					$this->items_grouped['comment'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
+					if (!isset($this->items_grouped['comment'][$title->getPrefixedText()]['timestamp'])){
+						$this->items_grouped['comment'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
+					}
 
 					$username = $row->Comment_Username;
 					$this->items[] = array(
@@ -666,12 +732,13 @@ class UserActivity {
 						'comment' => $this->fixItemComment( $row->Comment_Text ),
 						'new' => '0',
 						'minor' => 0,
-						'prefix' => $table
+						'prefix' => $row->prefix
 					);
 					// set prefix
-					$this->items_grouped['comment'][$title->getPrefixedText()]['prefix'][] = $table;
+					$this->items_grouped['comment'][$title->getPrefixedText()]['prefix'][] = $row->prefix;
 				}
 			}
+
 		}
 		$dbr->tablePrefix($oldDBprefix);
 		$dbr->selectDB($oldDB);
@@ -952,7 +1019,10 @@ class UserActivity {
 			);
 
 			// set last timestamp
-			$this->items_grouped[$r_type][$row->r_user_name_relation]['timestamp'] = $row->item_date;
+			if (!isset($this->items_grouped[$r_type][$row->r_user_name_relation]['timestamp'])){
+				$this->items_grouped[$r_type][$row->r_user_name_relation]['timestamp'] = $row->item_date;
+			}
+
 
 			$this->items[] = array(
 				'id' => $row->r_id,
@@ -997,7 +1067,7 @@ class UserActivity {
 
 		foreach ( $res as $row ) {
 			// Ignore nonexistent (for example, renamed) users
-			$uid = User::idFromName( $row->ub_user_name );
+			$uid = $row->ub_user_id_from;
 			if ( !$uid ) {
 				continue;
 			}
@@ -1018,7 +1088,9 @@ class UserActivity {
 			);
 
 			// set last timestamp
-			$this->items_grouped['user_message'][$to]['timestamp'] = $row->item_date;
+			if(!isset($this->items_grouped['user_message'][$to]['timestamp'])){
+				$this->items_grouped['user_message'][$to]['timestamp'] = $row->item_date;
+			}
 
 			$this->items[] = array(
 				'id' => $row->ub_id,
@@ -1066,7 +1138,7 @@ class UserActivity {
 			$user_title = Title::makeTitle( NS_USER, $row->um_user_name );
 			$user_name_short = $wgLang->truncate( $row->um_user_name, 15 );
 			$avatar = new wAvatar( $row->um_user_id, 'l');
-			$avatarUrl = $avatar->getAvatarURL();
+			$avatarUrl = $avatar->getAvatarHtml();
 			$timeago = CommentFunctions::getTimeAgo($row->item_date).'前';
 			/* build html */
 			$html = $this->templateParser->processTemplate(
@@ -1474,12 +1546,12 @@ class UserActivity {
 			foreach ( $page_data['users'] as $user_name => $action ) {
 				/* get User Avatar for display */
 				$avatar = new wAvatar(User::idFromName($user_name), 'l');
-				$avatarUrl = $avatar->getAvatarURL();
+				$avatarUrl = $avatar->getAvatarHtml();
 				$timeago = CommentFunctions::getTimeAgo($page_data['timestamp']).'前';
-				/* get rid of same actions more than 3 days ago */
-				if ( $page_data['timestamp'] < $this->half_day_ago ) {
-					continue;
-				}
+				/* get rid of same actions more than 1/2 day ago */
+				// if ( $page_data['timestamp'] < $this->half_day_ago ) {
+				// 	continue;
+				// }
 				$count_actions = count( $action );
 
 				if ( $has_page && !isset( $this->displayed[$type][$page_name] ) ) {
@@ -1502,15 +1574,22 @@ class UserActivity {
 				if ( $count_users == 1 ) {
 					$userNameForGender = $user_name;
 					foreach ( $this->items_grouped[$type] as $page_name2 => $page_data2 ) {
-						//change since sept.7: only group pages with same prefix.
-						if (isset($page_data['prefix']) && $page_data['prefix'][0] != $page_data2['prefix'][0] ){
-							continue;
-						}
+
+						// if we find singles for this type, not displayed and not co-worked.
 						if ( !isset( $this->displayed[$type][$page_name2] ) &&
-							count( $page_data2['users'] ) == 1
+							count( $page_data2['users'] ) == 1 
 						) {
+							//change since sept.7: only group pages with same prefix.
+							if (isset($page_data['prefix']) && $page_data['prefix'][0] != $page_data2['prefix'][0] ){
+								continue;
+							} 
+							// don't stack the old ones.
+							/* get rid of same actions more than 1/2 day ago */
+							if ( $page_data2['timestamp'] < $page_data['timestamp'] - $this->half_a_day ) {
+								continue;
+							}
 							foreach ( $page_data2['users'] as $user_name2 => $action2 ) {
-								if ( $user_name2 == $user_name && $pages_count < 5 ) {
+								if ( $user_name2 == $user_name && $pages_count < $this->item_max ) {
 									$count_actions2 = count( $action2 );
 
 									if (
@@ -1538,9 +1617,9 @@ class UserActivity {
 										)->text() . ')';
 									}
 									$pages_count++;
-									if (isset($page_data['prefix'])){
-										$page_data['prefix'] = array_merge($page_data['prefix'], $page_data2['prefix']);
-									}
+									// if (isset($page_data['prefix'])){
+									// 	$page_data['prefix'] = array_merge($page_data['prefix'], $page_data2['prefix']);
+									// }
 									$this->displayed[$type][$page_name2] = 1;
 								}
 							}

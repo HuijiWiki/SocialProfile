@@ -280,10 +280,10 @@
     submitDone: function (data) {
 //      console.log(data);
 
-      if ($.isPlainObject(data) && data.state === 200) {
-        if (data.result) {
-          this.url = data.result;
-          $(".navbar-right").find('.headimg').attr('src',data.result);
+      if ($.isPlainObject(data) && data.avatarsubmit.res.state === 200) {
+        if (data.avatarsubmit.res.result) {
+          this.url = data.avatarsubmit.res.result;
+          $(".navbar-right").find('.headimg').attr('src',data.avatarsubmit.res.result);
           if (this.support.datauri || this.uploaded) {
             this.uploaded = false;
             this.cropDone();
@@ -294,11 +294,11 @@
           }
 
           this.$avatarInput.val('');
-        } else if (data.message) {
-          this.alert(data.message);
+        } else if (data.avatarsubmit.res.message) {
+          this.alert(data.avatarsubmit.res.message);
         }
       } else {
-        this.alert('Failed to response');
+        this.alert('服务器无响应');
       }
     },
 

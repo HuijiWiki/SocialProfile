@@ -14,12 +14,12 @@ class CropAvatar {
   private $msg;
   private $avatarUploadDirectory;
 
-  function __construct($src, $data, $file, $output) {
+  function __construct($src, $data, $file) {
     // wfDebug('=====================================Constructing=================================');
-    $this -> setSrc($file['tmp_name']);
+    $this -> setSrc($file->getTempName());
     $this->file = $file;
     $this -> setData($data);
-    $this -> crop($file['tmp_name'], $this->file['tmp_name'], $this -> data);
+    $this -> crop($file->getTempName(), $this->file->getTempName(), $this -> data);
     $this -> setFile($this->file);     
     $responseBody = array(
       'state'  => 200,
@@ -27,18 +27,18 @@ class CropAvatar {
       'result' => $this -> getResult(),
     );
     // wfDebug('====================================='.json_encode($response).'=================================');
-    ob_start();
-    $response = $output->getRequest()->response();
-    $response->header('Status Code: 200');
-    $response->header("Content-Type: text/json");
-    $response->header("Cache-Control', 'no-cache");
-    echo json_encode($responseBody);
-    ob_end_flush();
-    $dbw = wfGetDB( DB_MASTER );
-    $dbw->begin();
-    /* Do queries */
-    $dbw->commit();
-    exit(0);
+    // ob_start();
+    // $response = $output->getRequest()->response();
+    // $response->header('Status Code: 200');
+    // $response->header("Content-Type: text/json");
+    // $response->header("Cache-Control', 'no-cache");
+    // echo json_encode($responseBody);
+    // ob_end_flush();
+    // $dbw = wfGetDB( DB_MASTER );
+    // $dbw->begin();
+    // /* Do queries */
+    // $dbw->commit();
+    // exit(0);
 
   }
 
@@ -64,12 +64,12 @@ class CropAvatar {
   private function setFile($file) {
     global $wgUploadDirectory, $wgAvatarKey, $wgMemc, $wgUser;
     $dest = $this->avatarUploadDirectory;
-    $imageInfo = getimagesize( $file['tmp_name'] );
+    $imageInfo = getimagesize( $file->getTempName() );
     $uid = $wgUser->getId();
     $avatar = new wAvatar( $uid, 'l' );
-    $errorCode = $file['error'];
+    $errorCode = $file->getError();
     if ($errorCode === UPLOAD_ERR_OK) {
-      $type = exif_imagetype( $file['tmp_name'] );
+      $type = exif_imagetype( $file->getTempName() );
 
       if ($type) {
         $extension = image_type_to_extension($type);
@@ -87,10 +87,10 @@ class CropAvatar {
             $stats = new UserStatsTrack( $uid, $wgUser->getName() );
             $stats->incStatField( 'user_image' );
           }
-          $this->createThumbnail( $file['tmp_name'] , $imageInfo, $wgAvatarKey . '_' . $uid . '_l', 75 );
-          $this->createThumbnail( $file['tmp_name'] , $imageInfo, $wgAvatarKey . '_' . $uid . '_ml', 50 );
-          $this->createThumbnail( $file['tmp_name'] , $imageInfo, $wgAvatarKey . '_' . $uid . '_m', 30 );
-          $this->createThumbnail( $file['tmp_name'] , $imageInfo, $wgAvatarKey . '_' . $uid . '_s', 16 );
+          $this->createThumbnail( $file->getTempName() , $imageInfo, $wgAvatarKey . '_' . $uid . '_l', 75 );
+          $this->createThumbnail( $file->getTempName() , $imageInfo, $wgAvatarKey . '_' . $uid . '_ml', 50 );
+          $this->createThumbnail( $file->getTempName() , $imageInfo, $wgAvatarKey . '_' . $uid . '_m', 30 );
+          $this->createThumbnail( $file->getTempName() , $imageInfo, $wgAvatarKey . '_' . $uid . '_s', 16 );
           switch ( $imageInfo[2] ) {
             case 1:
               $ext = 'gif';
