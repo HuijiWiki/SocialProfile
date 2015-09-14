@@ -28,7 +28,6 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
-		$out->addScript( '<script src="http://echarts.baidu.com/build/dist/echarts.js"></script>' );
 		// Add Less
 		$out->addModuleStyles( 'ext.socialprofile.admindashboard.less' );
 		// Add CSS
@@ -36,7 +35,6 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		// Add js and message
 		// $out->addModules( 'skin.bootstrapmediawiki.huiji.getRecordsInterface.js' );
 		$out->addModules( 'ext.socialprofile.admindashboard.js' );
-		
 
 		$output = ''; // Prevent E_NOTICE
 	    $yesterday = date("Y-m-d",strtotime("-1 day"));
@@ -56,5 +54,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				    )
 				);
 		$out->addHtml($output);
+		// $out->addScript( '<script src="http://echarts.baidu.com/build/dist/echarts.js"></script>' );
+		
 	}
 }
