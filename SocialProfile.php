@@ -381,6 +381,9 @@ $wgResourceModules['ext.socialprofile.admindashboard.js'] = array(
 					'morris-data.js',
 					'sb-admin-2.js',
 				),
+	'dependencies' => array(
+		'skin.bootstrapmediawiki.huiji.getRecordsInterface.js',
+	),
 	'localBasePath' => __DIR__ . '/AdminDashboard/js',
 	'remoteExtPath' => 'SocialProfile/AdminDashboard/js',
 );

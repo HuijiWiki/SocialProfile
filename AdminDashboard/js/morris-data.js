@@ -1,288 +1,264 @@
-function insertRecordIntoDB(url,navigatorInfo,fromSource,userId,userName,wikiSite,siteName,titleName,articleId) {
-    jQuery.post(
-        url,
-        {
-            navigatorInfo:navigatorInfo,
-            fromSource:clearSourceUrl(fromSource),
-            userId:userId,
-            userName:userName,
-            articleId:articleId,
-            titleName:titleName,
-            siteName:siteName,
-            wikiSite:wikiSite,
-        }
-    )
-}
+// function insertRecordIntoDB(url,navigatorInfo,fromSource,userId,userName,wikiSite,siteName,titleName,articleId) {
+//     jQuery.post(
+//         url,
+//         {
+//             navigatorInfo:navigatorInfo,
+//             fromSource:clearSourceUrl(fromSource),
+//             userId:userId,
+//             userName:userName,
+//             articleId:articleId,
+//             titleName:titleName,
+//             siteName:siteName,
+//             wikiSite:wikiSite,
+//         }
+//     )
+// }
 
-function clearSourceUrl(sourceUrl){
-    var e = new RegExp('^(?:(?:https?|ftp):)/*(?:[^@]+@)?([^:/#]+)'),
-        matches = e.exec(sourceUrl);
-    return matches ? matches[1]:sourceUrl;
-}
-
-
-function getViewRecordsFromUserIdGroupByWikiSite(userId,fromTime,toTime,callback){
-    var url = 'http://test.huiji.wiki:50007/getViewRecordsFromUserIdGroupByWikiSite/';
-    jQuery.post(
-        url,
-        {
-            userId:userId,
-            fromTime:fromTime,
-            toTime:toTime,
-        },
-        function(data){
-            //	console.log(data);
-            if(callback != null) {
-                callback(data);
-            }else{
-                return data;
-            }
-        }
-    ).error(function(){
-            //console.log("error");
-            var errInfo = {'status':'fail'};
-            if(callback != null){
-                callback(errInfo);
-            }else{
-                return errInfo;
-            }
-        });
-}
-
-function getEditRecordsFromUserIdGroupByWikiSite(userId,fromTime,toTime,callback){
-    var url = 'http://test.huiji.wiki:50007/getEditRecordsFromUserIdGroupByWikiSite/';
-    jQuery.post(
-        url,
-        {
-            userId:userId,
-            fromTime:fromTime,
-            toTime:toTime,
-        },
-        function(data){
-            //	console.log(data);
-            if(callback != null){
-                callback(data);
-            }else{
-                return data;
-            }
-        }
-    ).error(function(){
-            //console.log("error");
-            var errInfo = {'status':'fail'};
-            if(callback != null) {
-                callback(errInfo);
-            }else{
-                return errInfo;
-            }
-        });
-}
-
-function getEditorCountGroupByWikiSite(fromTime,toTime,callback){
-    var url = 'http://test.huiji.wiki:50007/getEditorCountGroupByWikiSite/';
-    jQuery.post(
-        url,
-        {
-            fromTime:fromTime,
-            toTime:toTime,
-        },
-        function(data){
-            //	console.log(data);
-            if(callback != null) {
-                callback(data);
-            }else{
-                return data;
-            }
-        }
-    ).error(function(){
-            //console.log("error");
-            var result = {'status':'fail'};
-            if(callback != null) {
-                callback(result);
-            }else{
-                return result;
-            }
-        });
-}
-
-function getEditRecordsOnWikiSiteFromUserIdGroupByDay(userId,wikiSite,fromTime,toTime,callback)
-{
-    var url = 'http://test.huiji.wiki:50007/getEditRecordsOnWikiSiteFromUserIdGroupByDay/';
-    jQuery.post(
-        url,
-        {
-            userId:userId,
-            wikiSite:wikiSite,
-            fromTime:fromTime,
-            toTime:toTime,
-        },
-        function(data){
-            //	console.log(data);
-            if(callback != null) {
-                callback(data);
-            }else{
-                return data;
-            }
-        }
-    ).error(function(){
-            //console.log("error");
-            var result = {'status':'fail'};
-            if(callback != null){
-                callback();
-            }else{
-                return result;
-            }
-        });
-
-}
+// function clearSourceUrl(sourceUrl){
+//     var e = new RegExp('^(?:(?:https?|ftp):)/*(?:[^@]+@)?([^:/#]+)'),
+//         matches = e.exec(sourceUrl);
+//     return matches ? matches[1]:sourceUrl;
+// }
 
 
+// function getViewRecordsFromUserIdGroupByWikiSite(userId,fromTime,toTime,callback){
+//     var url = 'http://test.huiji.wiki:50007/getViewRecordsFromUserIdGroupByWikiSite/';
+//     jQuery.post(
+//         url,
+//         {
+//             userId:userId,
+//             fromTime:fromTime,
+//             toTime:toTime,
+//         },
+//         function(data){
+//             //	console.log(data);
+//             if(callback != null) {
+//                 callback(data);
+//             }else{
+//                 return data;
+//             }
+//         }
+//     ).error(function(){
+//             //console.log("error");
+//             var errInfo = {'status':'fail'};
+//             if(callback != null){
+//                 callback(errInfo);
+//             }else{
+//                 return errInfo;
+//             }
+//         });
+// }
 
-function getViewRecordsOnWikiSiteFromUserIdGroupByDay(userId,wikiSite,fromTime,toTime,callback)
-{
-    var url = 'http://test.huiji.wiki:50007/getViewRecordsOnWikiSiteFromUserIdGroupByDay/';
-    jQuery.post(
-        url,
-        {
-            userId:userId,
-            wikiSite:wikiSite,
-            fromTime:fromTime,
-            toTime:toTime
-        },
-        function(data){
-//			console.log(data);
-            if(callback != null) {
-                callback(data);
-            }else{
-                data
-                return data;
-            }
-        }
-    ).error(function(){
-            //console.log("error");
-            var result = {'status':'fail'};
-            if(callback != null){
-                callback();
-            }else{
-                return result;
-            }
-        });
+// function getEditRecordsFromUserIdGroupByWikiSite(userId,fromTime,toTime,callback){
+//     var url = 'http://test.huiji.wiki:50007/getEditRecordsFromUserIdGroupByWikiSite/';
+//     jQuery.post(
+//         url,
+//         {
+//             userId:userId,
+//             fromTime:fromTime,
+//             toTime:toTime,
+//         },
+//         function(data){
+//             //	console.log(data);
+//             if(callback != null){
+//                 callback(data);
+//             }else{
+//                 return data;
+//             }
+//         }
+//     ).error(function(){
+//             //console.log("error");
+//             var errInfo = {'status':'fail'};
+//             if(callback != null) {
+//                 callback(errInfo);
+//             }else{
+//                 return errInfo;
+//             }
+//         });
+// }
 
-}
+// function getEditorCountGroupByWikiSite(fromTime,toTime,callback){
+//     var url = 'http://test.huiji.wiki:50007/getEditorCountGroupByWikiSite/';
+//     jQuery.post(
+//         url,
+//         {
+//             fromTime:fromTime,
+//             toTime:toTime,
+//         },
+//         function(data){
+//             //	console.log(data);
+//             if(callback != null) {
+//                 callback(data);
+//             }else{
+//                 return data;
+//             }
+//         }
+//     ).error(function(){
+//             //console.log("error");
+//             var result = {'status':'fail'};
+//             if(callback != null) {
+//                 callback(result);
+//             }else{
+//                 return result;
+//             }
+//         });
+// }
+
+// function getEditRecordsOnWikiSiteFromUserIdGroupByDay(userId,wikiSite,fromTime,toTime,callback)
+// {
+//     var url = 'http://test.huiji.wiki:50007/getEditRecordsOnWikiSiteFromUserIdGroupByDay/';
+//     jQuery.post(
+//         url,
+//         {
+//             userId:userId,
+//             wikiSite:wikiSite,
+//             fromTime:fromTime,
+//             toTime:toTime,
+//         },
+//         function(data){
+//             //	console.log(data);
+//             if(callback != null) {
+//                 callback(data);
+//             }else{
+//                 return data;
+//             }
+//         }
+//     ).error(function(){
+//             //console.log("error");
+//             var result = {'status':'fail'};
+//             if(callback != null){
+//                 callback();
+//             }else{
+//                 return result;
+//             }
+//         });
+
+// }
+
+
+
+// function getViewRecordsOnWikiSiteFromUserIdGroupByDay(userId,wikiSite,fromTime,toTime,callback)
+// {
+//     var url = 'http://test.huiji.wiki:50007/getViewRecordsOnWikiSiteFromUserIdGroupByDay/';
+//     jQuery.post(
+//         url,
+//         {
+//             userId:userId,
+//             wikiSite:wikiSite,
+//             fromTime:fromTime,
+//             toTime:toTime
+//         },
+//         function(data){
+// //			console.log(data);
+//             if(callback != null) {
+//                 callback(data);
+//             }else{
+//                 data
+//                 return data;
+//             }
+//         }
+//     ).error(function(){
+//             //console.log("error");
+//             var result = {'status':'fail'};
+//             if(callback != null){
+//                 callback();
+//             }else{
+//                 return result;
+//             }
+//         });
+
+// }
+
+
+// //new pv
+// function getPreviousViewRecords(wikiSite,dayNumber,cb)
+// {
+//         var now = moment();
+//         var date_array = new Array();
+//         var number_array = new Array();
+
+//         for(var i=1;i<=dayNumber;i++){
+//                 date_array[i-1] = moment().subtract(dayNumber-i+1,"days").format("YYYY-MM-DD");
+//         }
+
+
+//         var callback = function(data){
+
+//                 var newData = {};
+//                 if(data.result != null){
+//                         var hashtable = new Array();
+//                         for(var i=0;i<data.result.length;i++){
+//                                 hashtable[data.result[i]._id] = data.result[i].value;
+//                         }
+//                         var rs = {};
+//                         rs.date_array = date_array;
+//                         for(var i=0;i<date_array.length;i++){
+//                                 if(hashtable[date_array[i]]== null){
+//                                         number_array[i] = 0;
+//                                 }else{
+//                                         number_array[i] = hashtable[date_array[i]];
+//                                 }
+//                         }
+//                         rs.number_array = number_array;
+//                         newData.result = rs;
+//                         newData.status = data.status;
+//                 }
+//                 cb(newData);
+//         }
+
+
+//         getViewRecordsOnWikiSiteFromUserIdGroupByDay(-1,wikiSite,moment().subtract(1+dayNumber,"days").format("YYYY-MM-DD"),moment().subtract(1,"days").format("YYYY-MM-DD"),callback);
+
+
+
+// }
+
+// //new pe
+// function getPreviousEditRecords(wikiSite,dayNumber,cb)
+// {
+//         var now = moment();
+//         var date_array = new Array();
+//         var number_array = new Array();
+
+//         for(var i=1;i<=dayNumber;i++){
+//                 date_array[i-1] = moment().subtract(dayNumber-i+1,"days").format("YYYY-MM-DD");
+//         }
+
+
+//         var callback = function(data){
+
+//                 var newData = {};
+//                 if(data.result != null){
+//                         var hashtable = new Array();
+//                         for(var i=0;i<data.result.length;i++){
+//                                 hashtable[data.result[i]._id] = data.result[i].value;
+//                         }
+//                         var rs = {};
+//                         rs.date_array = date_array;
+//                         for(var i=0;i<date_array.length;i++){
+//                                 if(hashtable[date_array[i]]== null){
+//                                         number_array[i] = 0;
+//                                 }else{
+//                                         number_array[i] = hashtable[date_array[i]];
+//                                 }
+//                         }
+//                         rs.number_array = number_array;
+//                         newData.result = rs;
+//                         newData.status = data.status;
+//                 }
+//                 cb(newData);
+//         }
+
+
+//         getEditRecordsOnWikiSiteFromUserIdGroupByDay(-1,wikiSite,moment().subtract(1+dayNumber,"days").format("YYYY-MM-DD"),moment().subtract(1,"days").format("YYYY-MM-DD"),callback);
+
+
+
+// }
+
+
 jQuery( document ).ready( function() {
 
-    // Morris.Area({
-    //     element: 'morris-area-chart',
-    //     data: [{
-    //         period: '2010 Q1',
-    //         iphone: 2666,
-    //         ipad: null,
-    //         itouch: 2647
-    //     }, {
-    //         period: '2010 Q2',
-    //         iphone: 2778,
-    //         ipad: 2294,
-    //         itouch: 2441
-    //     }, {
-    //         period: '2010 Q3',
-    //         iphone: 4912,
-    //         ipad: 1969,
-    //         itouch: 2501
-    //     }, {
-    //         period: '2010 Q4',
-    //         iphone: 3767,
-    //         ipad: 3597,
-    //         itouch: 5689
-    //     }, {
-    //         period: '2011 Q1',
-    //         iphone: 6810,
-    //         ipad: 1914,
-    //         itouch: 2293
-    //     }, {
-    //         period: '2011 Q2',
-    //         iphone: 5670,
-    //         ipad: 4293,
-    //         itouch: 1881
-    //     }, {
-    //         period: '2011 Q3',
-    //         iphone: 4820,
-    //         ipad: 3795,
-    //         itouch: 1588
-    //     }, {
-    //         period: '2011 Q4',
-    //         iphone: 15073,
-    //         ipad: 5967,
-    //         itouch: 5175
-    //     }, {
-    //         period: '2012 Q1',
-    //         iphone: 10687,
-    //         ipad: 4460,
-    //         itouch: 2028
-    //     }, {
-    //         period: '2012 Q2',
-    //         iphone: 8432,
-    //         ipad: 5713,
-    //         itouch: 1791
-    //     }],
-    //     xkey: 'period',
-    //     ykeys: ['iphone', 'ipad', 'itouch'],
-    //     labels: ['iPhone', 'iPad', 'iPod Touch'],
-    //     pointSize: 2,
-    //     hideHover: 'auto',
-    //     resize: true
-    // });
-
-    // Morris.Donut({
-    //     element: 'morris-donut-chart',
-    //     data: [{
-    //         label: "Download Sales",
-    //         value: 12
-    //     }, {
-    //         label: "In-Store Sales",
-    //         value: 30
-    //     }, {
-    //         label: "Mail-Order Sales",
-    //         value: 20
-    //     }],
-    //     resize: true
-    // });
-
-    // Morris.Bar({
-    //     element: 'morris-bar-chart',
-    //     data: [{
-    //         y: '2006',
-    //         a: 100,
-    //         b: 90
-    //     }, {
-    //         y: '2007',
-    //         a: 75,
-    //         b: 65
-    //     }, {
-    //         y: '2008',
-    //         a: 50,
-    //         b: 40
-    //     }, {
-    //         y: '2009',
-    //         a: 75,
-    //         b: 65
-    //     }, {
-    //         y: '2010',
-    //         a: 50,
-    //         b: 40
-    //     }, {
-    //         y: '2011',
-    //         a: 75,
-    //         b: 65
-    //     }, {
-    //         y: '2012',
-    //         a: 100,
-    //         b: 90
-    //     }],
-    //     xkey: 'y',
-    //     ykeys: ['a', 'b'],
-    //     labels: ['Series A', 'Series B'],
-    //     hideHover: 'auto',
-    //     resize: true
-    // });
  // 路径配置
         require.config({
             paths: {
@@ -312,7 +288,7 @@ jQuery( document ).ready( function() {
                             feature : {
                                 mark : {show: false},
                                 dataView : {show: true, readOnly: true},
-                                magicType : {show: true, type: ['line', 'bar', 'tiled']},
+                                magicType : {show: true, type: ['line', 'bar']},
                                 // magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
                                 restore : {show: true},
                                 saveAsImage : {show: true}
@@ -428,22 +404,77 @@ jQuery( document ).ready( function() {
                     };
                 // };
                 // 为echarts对象加载数据
-
-                getViewRecordsOnWikiSiteFromUserIdGroupByDay('-1','','','',updateData);
+                //all pv
+                var site = mw.config.get('wgHuijiPrefix');
+                // var site = 'lotr';
+                getPreviousViewRecords(site,30,updateData);
                 function updateData(data){
-                    if (data.status == 'success'){
-                        console.log(data.result);
-                        var res = data.result;
-
-                        for(var i=0;i<=3;i++){
-                            option.xAxis[0].data[i]=res[i]._id;
-                            option.series[0].data[i]=res[i].value;
-                        }
+                     if (data.status == 'success'){
+                        // console.log(data.result);
+                        // var res = data.result;
+                        option.xAxis[0].data=data.result.date_array;
+                        option.series[2].data=data.result.number_array;
                         myChart.setOption(option,false);
-                        console.log(option.xAxis[0].data);
-                        console.log(option.series[0].data);
                     }
+                    // alert(mw.config.get('wgHuijiPrefix'));
                 }
+                //all pe
+                getPreviousEditRecords(site,30,updateDatape);
+                function updateDatape(data){
+                     if (data.status == 'success'){
+                        // console.log(data.result);
+                        // var res = data.result;
+                        // option.xAxis[0].data=data.result.date_array;
+                        option.series[3].data=data.result.number_array;
+                        myChart.setOption(option,false);
+                    }
+                    // alert(mw.config.get('wgHuijiPrefix'));
+                }
+                
+                
+                // getViewRecordsOnWikiSiteFromUserIdGroupByDay('-1','','','',updateData);
+                // function updateData(data){
+                //     if (data.status == 'success'){
+                //         console.log(data.result);
+                //         var res = data.result;
+                //         var receive = new Array();
+                //         res.forEach(function(res){
+                //             var id = res._id;
+                //             receive[id] = res.value;
+                //         });
+                //         // for (var i = 0; i <= res.length; i++) {
+                //         //     var key = res[i]._id;
+                //         //     receive[key] = res[i].value;
+                //         // };
+                //         console.log(receive);
+                //         // for(var i=0;i<=30;i++){
+                           
+                //         //     option.series[2].data[i]=res[i].value;
+                //         // }
+
+                //         function formatDate(now){     
+                //             var   year=now.getFullYear();     
+                //             var   month=now.getMonth()+1;     
+                //             var   date=now.getDate();       
+                //             return   year+"-"+month+"-"+date;     
+                //         }     
+                        
+                //         var dataArr = new Array();
+                //         for(var j=0;j<31;j++){
+                //             var dd = new Date();
+                //             var t=dd.getTime() - 24*60*60*1000*j;
+                //             var d=new Date(t);
+                //             var day= formatDate(d);
+                //             var k=30-j;
+                //             option.xAxis[0].data[k]=day;
+                //             option.series[0].data[k]=receive[k];
+                //         }
+                //         // console.log(dataArr);
+                //         myChart.setOption(option,false);
+                //         // console.log(option.xAxis[0].data);
+                //         // console.log(option.series[0].data);
+                //     }
+                // }
             }
         );
 });
