@@ -259,8 +259,7 @@ class UserActivity {
 			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
 				array('UNIX_TIMESTAMP(rc_timestamp) AS item_date', 'rc_title',
 					'rc_user', 'rc_user_text', 'rc_comment', 'rc_id', 'rc_minor',
-					'rc_new', 'rc_namespace', 'rc_cur_id', 'rc_this_oldid',
-					'rc_last_oldid', 'rc_log_action', $dbr->addQuotes($table).' AS prefix',
+					'rc_new', 'rc_namespace', $dbr->addQuotes($table).' AS prefix',
 					)
 				) 
 			);
@@ -272,24 +271,6 @@ class UserActivity {
 			}
 
 			$sqls[] = $sql;
-
-			// $res = $dbr->select(
-			// 	$DBprefix.'recentchanges',
-			// 	array(
-			// 		'UNIX_TIMESTAMP(rc_timestamp) AS item_date', 'rc_title',
-			// 		'rc_user', 'rc_user_text', 'rc_comment', 'rc_id', 'rc_minor',
-			// 		'rc_new', 'rc_namespace', 'rc_cur_id', 'rc_this_oldid',
-			// 		'rc_last_oldid', 'rc_log_action'
-			// 	),
-			// 	$where,
-			// 	__METHOD__,
-			// 	array(
-			// 		'ORDER BY' => 'rc_id DESC',
-			// 		'LIMIT' => $this->item_max,
-			// 		'OFFSET' => 0
-			// 	)
-			// 	// $this->getAllRecentChangesJoinConds()
-			// );
 
 		} 
 		// echo $dbr->unionQueries($sqls, true)." ORDER BY `rc_id` DESC LIMIT $this->item_max OFFSET 0";
@@ -555,8 +536,8 @@ class UserActivity {
 			$tableName = '`'.$DBprefix.'image'.'`';
 			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
 				array('UNIX_TIMESTAMP(img_timestamp) AS item_date',
-					'img_user_text', 'img_media_type', 'img_name', 'img_description',
-					'img_user', 'img_minor_mime', 'img_sha1', $dbr->addQuotes($table).' AS prefix',
+					'img_user_text', 'img_name', 'img_description',
+					'img_user', 'img_sha1', $dbr->addQuotes($table).' AS prefix',
 					)
 				) 
 			);
@@ -669,7 +650,7 @@ class UserActivity {
 			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
 				array(
 					'UNIX_TIMESTAMP(comment_date) AS item_date',
-					'Comment_Username', 'Comment_IP', 'page_title', 'Comment_Text',
+					'Comment_Username', 'page_title', 'Comment_Text',
 					'Comment_user_id', 'page_namespace', 'CommentID', $dbr->addQuotes($table).' AS prefix',
 					)
 				)
