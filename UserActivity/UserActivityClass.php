@@ -133,18 +133,17 @@ class UserActivity {
 	private function getTables(){
 		global $wgHuijiPrefix, $wgUser;
 		$dbr = wfGetDB( DB_SLAVE );
-		$user = $wgUser;
-		if ( isset($this->cached_table) ){
+		if ( !empty($this->cached_tables) ){
 			return $this->cached_tables;
 		}
-		if ($this->show_this_site){
+		if ( !empty($this->show_this_site) ){
 			$tables = array();
 			$tables[] = $wgHuijiPrefix;
 		} elseif ($this->show_following_sites){
 			$values = $dbr->select(
 				'user_site_follow',
 				'f_wiki_domain',
-				'f_user_id = '.$user->getId(),
+				'f_user_id = '.$this->user_id,
 				__METHOD__
 			);
 			// echo $values;
