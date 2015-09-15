@@ -137,7 +137,6 @@ jQuery( document ).ready( function() {
 	} );
 
 
-
     //修改个人资料
     $(".form-change").click(function(){
         var location = $(".form-location").text();
