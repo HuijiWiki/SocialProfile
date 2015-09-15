@@ -1524,12 +1524,7 @@ class UserActivity {
 			// if the event is only for one user.
 			$userNameForGender = '';
 			foreach ( $page_data['users'] as $user_name => $action ) {
-				/* get User Avatar for display */
-				if ( empty($avatar) ){
-					$avatar = new wAvatar(User::idFromName($user_name), 'l');
-					$avatarUrl = $avatar->getAvatarHtml();
-					$timeago = CommentFunctions::getTimeAgo($page_data['timestamp']).'前';
-				}
+
 
 				/* get rid of same actions more than 1/2 day ago */
 				// if ( $page_data['timestamp'] < $this->half_day_ago ) {
@@ -1540,7 +1535,10 @@ class UserActivity {
 				if ( $has_page && !isset( $this->displayed[$type][$page_name] ) ) {
 					$this->displayed[$type][$page_name] = 1;
 					$pages.= $this->fixPageTitle($page_title, $page_data);
-
+					/* get User Avatar for display */
+					$avatar = new wAvatar(User::idFromName($user_name), 'l');
+					$avatarUrl = $avatar->getAvatarHtml();
+					$timeago = CommentFunctions::getTimeAgo($page_data['timestamp']).'前';
 					if ( $count_users == 1 && $count_actions > 1 ) {
 						$pages .= wfMessage( 'word-separator' )->text();
 						$pages .= wfMessage( 'parentheses', wfMessage(
