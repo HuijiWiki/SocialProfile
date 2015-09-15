@@ -1525,9 +1525,12 @@ class UserActivity {
 			$userNameForGender = '';
 			foreach ( $page_data['users'] as $user_name => $action ) {
 				/* get User Avatar for display */
-				$avatar = new wAvatar(User::idFromName($user_name), 'l');
-				$avatarUrl = $avatar->getAvatarHtml();
-				$timeago = CommentFunctions::getTimeAgo($page_data['timestamp']).'前';
+				if ( empty($avatar) ){
+					$avatar = new wAvatar(User::idFromName($user_name), 'l');
+					$avatarUrl = $avatar->getAvatarHtml();
+					$timeago = CommentFunctions::getTimeAgo($page_data['timestamp']).'前';
+				}
+
 				/* get rid of same actions more than 1/2 day ago */
 				// if ( $page_data['timestamp'] < $this->half_day_ago ) {
 				// 	continue;
