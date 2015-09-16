@@ -1719,7 +1719,6 @@ class UserProfilePage extends Article {
 							<div class=\"item\">";
 						if ( $item['comment'] ) {
 							$item_html .= "\"{$item['comment']}\"";
-							$item_html .= "\"{$item['id']}\"";
 						}
 						$item_html .= '</div>';
 						break;
