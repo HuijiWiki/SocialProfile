@@ -184,14 +184,14 @@ class UserHome extends SpecialPage {
 		/**
 		 * Get all relationship activity
 		 */
-		$key = wfForeignMemcKey( 'huiji',' ','site_activity', $filter, $item_type, $fixedLimit, $user->getName() );
-		$data = $wgMemc->get($key);
-		if ($data != ''){
-			$activity = $data;
-		} else {
+		// $key = wfForeignMemcKey( 'huiji',' ','site_activity', $filter, $item_type, $fixedLimit, $user->getName() );
+		// $data = $wgMemc->get($key);
+		// if ($data != ''){
+		// 	$activity = $data;
+		// } else {
 			$activity = $rel->getActivityListGrouped();
-			$wgMemc->set($key, $activity, 60 * 2);
-		}
+		// 	$wgMemc->set($key, $activity, 60 * 2);
+		// }
 		
 		$border_fix = '';
 
