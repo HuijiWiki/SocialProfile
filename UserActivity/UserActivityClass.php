@@ -794,38 +794,46 @@ class UserActivity {
 		);
 
 		foreach ( $res as $row ) {
-			global $wgUploadPath;
-			$user_title = Title::makeTitle( NS_USER, $row->ug_user_name_to );
-			$user_title_from = Title::makeTitle( NS_USER, $row->ug_user_name_from );
+			global $wgUploadPath, $wgMemc;
+			$key = wfForeignMemcKey('huiji', '', 'setGiftsRec', $row->ug_id);
+			$html = $wgMemc->get($key);
+			if ($html != ''){
+				$html = updateTime($html);
+			} else {
+				$user_title = Title::makeTitle( NS_USER, $row->ug_user_name_to );
+				$user_title_from = Title::makeTitle( NS_USER, $row->ug_user_name_from );
 
-			$gift_image = '<img src="' . $wgUploadPath . '/awards/' .
-				Gifts::getGiftImage( $row->gift_id, 'm' ) .
-				'" border="0" alt="" />';
-			$view_gift_link = SpecialPage::getTitleFor( 'ViewGift' );
-			$avatar = new wAvatar($row->ug_user_id_to, 'l');
-			$avatarUrl = $avatar->getAvatarURL();
-			$user_name_short = $wgLang->truncate( $row->ug_user_name_to, 25 );
-			$timeago = CommentFunctions::getTimeAgo($row->item_date);
-			/* build html */
-			$html = $this->templateParser->processTemplate(
-				'user-home-item',
-				array(
-					'userAvatar' => $avatarUrl,
-					'userName'  => '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b>",
-					'timestamp' => $timeago,
-					'description' => wfMessage( 'useractivity-gift',
-									'<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$row->ug_user_name_to}</a></b>",
-									'<a href="' . htmlspecialchars( $user_title_from->getFullURL() ) . "\">{$user_title_from->getText()}</a>"
-								)->text(),
-					'hasShowcase' => true,
-					'showcase' =>  
-								"<a href=\"" . htmlspecialchars( $view_gift_link->getFullURL( 'gift_id=' . $row->ug_id ) ) . "\" rel=\"nofollow\">
-										{$gift_image}
-										{$row->gift_name}
-									</a>
-								",
-				)
-			);
+				$gift_image = '<img src="' . $wgUploadPath . '/awards/' .
+					Gifts::getGiftImage( $row->gift_id, 'm' ) .
+					'" border="0" alt="" />';
+				$view_gift_link = SpecialPage::getTitleFor( 'ViewGift' );
+				$avatar = new wAvatar($row->ug_user_id_to, 'l');
+				$avatarUrl = $avatar->getAvatarURL();
+				$user_name_short = $wgLang->truncate( $row->ug_user_name_to, 25 );
+				$timeago = CommentFunctions::getTimeAgo($row->item_date);
+				/* build html */
+				$html = $this->templateParser->processTemplate(
+					'user-home-item',
+					array(
+						'userAvatar' => $avatarUrl,
+						'userName'  => '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b>",
+						'timestamp' => $timeago,
+						'description' => wfMessage( 'useractivity-gift',
+										'<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$row->ug_user_name_to}</a></b>",
+										'<a href="' . htmlspecialchars( $user_title_from->getFullURL() ) . "\">{$user_title_from->getText()}</a>"
+									)->text(),
+						'hasShowcase' => true,
+						'showcase' =>  
+									"<a href=\"" . htmlspecialchars( $view_gift_link->getFullURL( 'gift_id=' . $row->ug_id ) ) . "\" rel=\"nofollow\">
+											{$gift_image}
+											{$row->gift_name}
+										</a>
+									",
+					)
+				);
+				$wgMemc->set($key, $html);
+			}
+			
 			$this->activityLines[] = array(
 				'type' => 'gift-rec',
 				'timestamp' => $row->item_date,
@@ -881,36 +889,44 @@ class UserActivity {
 		);
 
 		foreach ( $res as $row ) {
-			$user_title = Title::makeTitle( NS_USER, $row->sg_user_name );
-			$system_gift_image = '<img src="' . $wgUploadPath . '/awards/' .
-				SystemGifts::getGiftImage( $row->gift_id, 'm' ) .
-				'" border="0" alt="" />';
-			$system_gift_link = SpecialPage::getTitleFor( 'ViewSystemGift' );
-			$user_name_short = $wgLang->truncate( $row->sg_user_name, 25 );
-			$avatar = new wAvatar( $row->sg_user_id, 'l');
-			$avatarUrl = $avatar->getAvatarURL();
-			$timeago = CommentFunctions::getTimeAgo($row->item_date).'前';
-						/* build html */
-			$html = $this->templateParser->processTemplate(
-				'user-home-item',
-				array(
-					'userAvatar' => $avatarUrl,
-					'userName'  => '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b>",
-					'timestamp' => $timeago,
-					'description' => wfMessage(
-										'useractivity-award',
-										'<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$row->sg_user_name}</a></b>",
-										$row->sg_user_name
-									)->text(),
-					'hasShowcase' => true,
-					'showcase' =>  
-								'<a href="' . htmlspecialchars( $system_gift_link->getFullURL( 'gift_id=' . $row->sg_id ) ) . "\" rel=\"nofollow\">
-										{$system_gift_image}
-										{$row->gift_name}
-								</a>
-								",
-				)
-			);
+			global $wgMemc;
+			$key = wfForeignMemcKey('huiji', '', 'setSystemGiftsRec', $row->sg_id);
+			$html = $wgMemc->get($key);
+			if ($html != ''){
+				$html = updateTime($html);
+			} else {
+				$user_title = Title::makeTitle( NS_USER, $row->sg_user_name );
+				$system_gift_image = '<img src="' . $wgUploadPath . '/awards/' .
+					SystemGifts::getGiftImage( $row->gift_id, 'm' ) .
+					'" border="0" alt="" />';
+				$system_gift_link = SpecialPage::getTitleFor( 'ViewSystemGift' );
+				$user_name_short = $wgLang->truncate( $row->sg_user_name, 25 );
+				$avatar = new wAvatar( $row->sg_user_id, 'l');
+				$avatarUrl = $avatar->getAvatarURL();
+				$timeago = CommentFunctions::getTimeAgo($row->item_date).'前';
+				/* build html */
+				$html = $this->templateParser->processTemplate(
+					'user-home-item',
+					array(
+						'userAvatar' => $avatarUrl,
+						'userName'  => '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b>",
+						'timestamp' => $timeago,
+						'description' => wfMessage(
+											'useractivity-award',
+											'<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$row->sg_user_name}</a></b>",
+											$row->sg_user_name
+										)->text(),
+						'hasShowcase' => true,
+						'showcase' =>  
+									'<a href="' . htmlspecialchars( $system_gift_link->getFullURL( 'gift_id=' . $row->sg_id ) ) . "\" rel=\"nofollow\">
+											{$system_gift_image}
+											{$row->gift_name}
+									</a>
+									",
+					)
+				);
+				$wgMemc->set($key, $html);
+			}
 			$this->activityLines[] = array(
 				'type' => 'system_gift-rec',
 				'timestamp' => $row->item_date,
@@ -1024,6 +1040,7 @@ class UserActivity {
 	 * and set them in the appropriate class member variables.
 	 */
 	private function setMessagesSent() {
+
 		$dbr = wfGetDB( DB_SLAVE );
 
 		$where = $this->where('ub_user_id_from');
@@ -1051,7 +1068,6 @@ class UserActivity {
 			if ( !$uid ) {
 				continue;
 			}
-
 			$to = stripslashes( $row->ub_user_name );
 			$from = stripslashes( $row->ub_user_name_from );
 			$this->items_grouped['user_message'][$to]['users'][$from][] = array(
@@ -1115,22 +1131,30 @@ class UserActivity {
 		);
 
 		foreach ( $res as $row ) {
-			$user_title = Title::makeTitle( NS_USER, $row->um_user_name );
-			$user_name_short = $wgLang->truncate( $row->um_user_name, 15 );
-			$avatar = new wAvatar( $row->um_user_id, 'l');
-			$avatarUrl = $avatar->getAvatarHtml();
-			$timeago = CommentFunctions::getTimeAgo($row->item_date).'前';
-			/* build html */
-			$html = $this->templateParser->processTemplate(
-				'user-home-item',
-				array(
-					'userAvatar' => $avatarUrl,
-					'userName'  => '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b>",
-					'timestamp' => $timeago,
-					'description' => ' ' . '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b> {$row->um_message}",
-					'hasShowcase' => false,
-				)
-			);
+			global $wgMemc;
+			$key = wfForeignMemcKey('huiji', '', 'setSystemMessages', $row->um_id);
+			$html = $wgMemc->get($key);
+			if ($html != ''){
+				$html = updateTime($html);
+			} else {
+				$user_title = Title::makeTitle( NS_USER, $row->um_user_name );
+				$user_name_short = $wgLang->truncate( $row->um_user_name, 15 );
+				$avatar = new wAvatar( $row->um_user_id, 'l');
+				$avatarUrl = $avatar->getAvatarHtml();
+				$timeago = CommentFunctions::getTimeAgo($row->item_date).'前';
+				/* build html */
+				$html = $this->templateParser->processTemplate(
+					'user-home-item',
+					array(
+						'userAvatar' => $avatarUrl,
+						'userName'  => '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b>",
+						'timestamp' => $timeago,
+						'description' => ' ' . '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b> {$row->um_message}",
+						'hasShowcase' => false,
+					)
+				);
+				$html = $wgMemc->set($key, $html);
+			}
 			$this->activityLines[] = array(
 				'type' => 'system_message',
 				'timestamp' => $row->item_date,
@@ -1290,32 +1314,40 @@ class UserActivity {
 				'prefix' => $row->domain_prefix,
 				'domainname' => $row->domain_name
 			);
-			/* prepare data */
-			$domainUrl = HuijiPrefix::prefixToUrl($row->domain_prefix);
-			$user_name_short = $wgLang->truncate( $row->domain_founder_name, 15 );
-			$user_title = Title::makeTitle( NS_USER, $row->domain_founder_name );
-			$founder_link = '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b>";
-			$timeago = CommentFunctions::getTimeAgo($row->item_date).'前';
-			$page_link = '<a href="' . $domainUrl .
-				"\" rel=\"nofollow\">{$row->domain_name}</a>";
-			$avatar = new wAvatar($row->domain_founder_id, 'l');
-			$avatarUrl = $avatar->getAvatarURL();
-			/* build html */
-			$html = $this->templateParser->processTemplate(
-				'user-home-item',
-				array(
-					'userAvatar' => $avatarUrl,
-					'userName'  => $founder_link,
-					'timestamp' => $timeago,
-					'description' => wfMessage(
-										'useractivity-domain-creation',
-										$founder_link,
-										$page_link
-									)->text(),
-					'hasShowcase' => strlen($row->domain_dsp) > 0,
-					'showcase' => $row->domain_dsp
-				)
-			);
+			global $wgMemc;
+			$key = wfForeignMemcKey('huiji', '', 'setDomainCreations', $row->domain_id);
+			$html = $wgMemc->get($key);
+			if ($html != ''){
+				$html = updateTime($html);
+			} else {
+				/* prepare data */
+				$domainUrl = HuijiPrefix::prefixToUrl($row->domain_prefix);
+				$user_name_short = $wgLang->truncate( $row->domain_founder_name, 15 );
+				$user_title = Title::makeTitle( NS_USER, $row->domain_founder_name );
+				$founder_link = '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b>";
+				$timeago = CommentFunctions::getTimeAgo($row->item_date).'前';
+				$page_link = '<a href="' . $domainUrl .
+					"\" rel=\"nofollow\">{$row->domain_name}</a>";
+				$avatar = new wAvatar($row->domain_founder_id, 'l');
+				$avatarUrl = $avatar->getAvatarURL();
+				/* build html */
+				$html = $this->templateParser->processTemplate(
+					'user-home-item',
+					array(
+						'userAvatar' => $avatarUrl,
+						'userName'  => $founder_link,
+						'timestamp' => $timeago,
+						'description' => wfMessage(
+											'useractivity-domain-creation',
+											$founder_link,
+											$page_link
+										)->text(),
+						'hasShowcase' => strlen($row->domain_dsp) > 0,
+						'showcase' => $row->domain_dsp
+					)
+				);
+				$wgMemc->set($key, $html);
+			}
 			// $html = wfMessage(
 			// 	'useractivity-domain-creation',
 			// 	$founder_link,
@@ -1508,9 +1540,7 @@ class UserActivity {
 			$key = wfForeignMemcKey('huiji', '', 'simplifyPageActivity', $type, $page_name, $page_data['timestamp']);
 			$html = $wgMemc->get($key);
 			if ($html != ''){
-				// $startPoint = '<p class="time-ago"><strong>';
-				// $endPoint = '</strong></p>';
-				// $html = preg_replace('#('.preg_quote($startPoint).')(.*)('.preg_quote($endPoint).')#si', '$1'.$timeago.'$2', $html);
+				$html = updateTime($html);
 			} else {
 				$users = '';
 				$pages = '';
@@ -1799,7 +1829,12 @@ class UserActivity {
 		);
 
 	}
-
+	private function updateTime($html){
+		$startPoint = '<p class="time-ago"><strong>';
+		$endPoint = '</strong></p>';
+		$html = preg_replace('#('.preg_quote($startPoint).')(.*)('.preg_quote($endPoint).')#usi', '$1'.$timeago.'$2', $html);
+		return $html;
+	}
 	/**
 	 * "Fixes" a comment (such as a recent changes edit summary) by converting
 	 * certain characters (such as the ampersand) into their encoded
