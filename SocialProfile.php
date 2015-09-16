@@ -84,6 +84,7 @@ $wgAutoloadClasses['UserEditBox'] = __DIR__ . '/UserStats/UserEditBoxClass.php';
 $wgAutoloadClasses['SpecialAdminDashboard'] = __DIR__ . '/AdminDashboard/SpecialAdminDashboard.php';
 $wgAutoloadClasses['SpecialSiteRank'] = __DIR__ . '/SiteStatus/SpecialSiteRank.php';
 $wgAutoloadClasses['AllSitesInfo'] = __DIR__ . '/SiteStatus/AllSitesInfoClass.php';
+$wgAutoloadClasses['RecordStatistics'] = __DIR__ . '/HuijiStatistics/interface.php';
 
 // New special pages
 $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
@@ -253,7 +254,7 @@ require_once( "$IP/extensions/SocialProfile/UserGifts/Gifts.php" ); // UserGifts
 require_once( "$IP/extensions/SocialProfile/SystemGifts/SystemGifts.php" ); // SystemGifts (awards functionality) loader file
 require_once( "$IP/extensions/SocialProfile/UserBoard/UserBoard.php" ); // UserBoard loader file
 require_once( "$IP/extensions/SocialProfile/UserActivity/UserActivity.php" ); // UserActivity - recent social changes
-require_once( "$IP/extensions/SocialProfile/userEditRecord.php");
+require_once( "$IP/extensions/SocialProfile/userEditRecord.php"); // Edit Record collected to mongoDB.
 
 $wgHooks['CanonicalNamespaces'][] = 'SocialProfileHooks::onCanonicalNamespaces';
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'SocialProfileHooks::onLoadExtensionSchemaUpdates';

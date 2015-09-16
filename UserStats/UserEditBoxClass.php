@@ -10,9 +10,6 @@
  */
 class UserEditBox{
 
-	public function __construct() {
-		require_once __DIR__.'/../HuijiStatistics/interface.php';
-	}
 	static function getUserEditInfoCache( $userId ) {
 		global $wgMemc;
 		$key = wfForeignMemcKey('huiji','', 'user_daily_edit', 'all_days', $userId );
