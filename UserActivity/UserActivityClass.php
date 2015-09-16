@@ -1537,6 +1537,8 @@ class UserActivity {
 					);
 					continue;
 				}
+			} else {
+				continue;
 			}
 
 			$users = '';
