@@ -9,18 +9,11 @@
                             <i class="fa fa-comments fa-5x"></i>
                         </div>
                         <div class="col-xs-9 text-right">
-                            <div class="huge">26</div>
-                            <div>本站排名</div>
+                            <div class="huge">昨日排名{{siteRank}}</div>
+                            <div>昨日得分{{siteScore}}</div>
                         </div>
                     </div>
                 </div>
-                <a href="#">
-                    <div class="panel-footer">
-                        <span class="pull-left">View Details</span>
-                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                        <div class="clearfix"></div>
-                    </div>
-                </a>
             </div>
         </div>
         <div class="col-lg-3 col-md-6">
@@ -36,13 +29,13 @@
                         </div>
                     </div>
                 </div>
-                <a href="#">
+                <!--<a href="#">
                     <div class="panel-footer">
                         <span class="pull-left">View Details</span>
                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                         <div class="clearfix"></div>
                     </div>
-                </a>
+                </a>-->
             </div>
         </div>
         <div class="col-lg-3 col-md-6">
@@ -58,13 +51,6 @@
                         </div>
                     </div>
                 </div>
-                <a href="#">
-                    <div class="panel-footer">
-                        <span class="pull-left">View Details</span>
-                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                        <div class="clearfix"></div>
-                    </div>
-                </a>
             </div>
         </div>
         <div class="col-lg-3 col-md-6">
@@ -80,13 +66,6 @@
                         </div>
                     </div>
                 </div>
-                <a href="#">
-                    <div class="panel-footer">
-                        <span class="pull-left">View Details</span>
-                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                        <div class="clearfix"></div>
-                    </div>
-                </a>
             </div>
         </div>
     </div>
@@ -97,7 +76,7 @@
                 <div class="panel-heading">
                     <i class="fa fa-bar-chart-o fa-fw"></i> 站点数据分析
                     <div class="pull-right">
-                        <div class="btn-group">
+                        <!--<div class="btn-group">
                             <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
                                 Actions
                                 <span class="caret"></span>
@@ -113,7 +92,7 @@
                                 <li><a href="#">Separated link</a>
                                 </li>
                             </ul>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
                 <!-- /.panel-heading -->
@@ -127,29 +106,22 @@
         <div class="col-lg-4">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-bell fa-fw"></i> Notifications Panel
+                    <i class="fa fa-bell fa-fw"></i> 最近关注
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
                     <div class="list-group">
+                    {{#newFollow}}
                         <a href="#" class="list-group-item">
-                            <i class="fa fa-comment fa-fw"></i> New Comment
-                            <span class="pull-right text-muted small"><em>4 minutes ago</em>
+                            <i class="fa fa-comment fa-fw"></i> {{user_name}}
+                            <span class="pull-right text-muted small"><em>{{follow_date}}</em>
                             </span>
                         </a>
-                        <a href="#" class="list-group-item">
-                            <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-                            <span class="pull-right text-muted small"><em>12 minutes ago</em>
-                            </span>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <i class="fa fa-envelope fa-fw"></i> Message Sent
-                            <span class="pull-right text-muted small"><em>27 minutes ago</em>
-                            </span>
-                        </a>
+                    {{/newFollow}}
                     </div>
                     <!-- /.list-group -->
-                    <a href="#" class="btn btn-default btn-block">View All Alerts</a>
+                    <a href="{{showMore}}" class="btn btn-default btn-block">查看全部</a>
+                    <a href="{{sendToAll}}" class="btn btn-default btn-block">群发消息</a>
                 </div>
                 <!-- /.panel-body -->
             </div>

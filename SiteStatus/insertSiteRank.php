@@ -1,95 +1,9 @@
 <?php
 
-/**
- * all sites info ex:siterank..
- */
-class AllSitesInfo{
+require_once __DIR__ . "/Maintenance.php";
 
-	static function getAllSitesRankData( $prefix, $yesterday ){
-
-		$data = self::getAllSitesRankFromCache( $prefix, $yesterday );
-		if ( $data != '' ) {
-			$result = $data;
-		} else {
-			$result = self::getAllSitesRankFromDB( $prefix, $yesterday );
-		}
-		return $result;
-		
-	}
-
-	static function getAllSitesRankFromCache( $prefix, $yesterday ){
-
-		global $wgMemc;
-		$key = wfForeignMemcKey('huiji','', 'site_rank', 'all_site_rank', $prefix, $yesterday );
-		$data = $wgMemc->get( $key );
-		if ( $data != '' ) {
-			wfDebug( "Got site rank ( site = {$prefix},data = {$yesterday} ) from cache\n" );
-			return $data;
-		}
-		
-	}
-
-	static function getAllSitesRankFromDB( $prefix, $yesterday ){
-
-		global $wgMemc;
-		wfDebug( "Got site rank ( site = {$prefix},data = {$yesterday} ) from DB\n" );
-		$key = wfForeignMemcKey('huiji','', 'site_rank', 'all_site_rank', $prefix, $yesterday );
-		$allSiteRank = array();
-		if( $prefix == '' ){
-			$dbr = wfGetDB( DB_SLAVE );
-			$res = $dbr->select(
-				'site_rank',
-				array(
-					'site_rank',
-					'site_score',
-					'site_prefix'
-				),
-				array(
-					'site_rank_data' => $yesterday
-				),
-				__METHOD__,
-				array( 
-					'ORDER BY' => 'site_rank ASC'
-				)
-			);
-			if ( $res != false ) {
-				foreach ($res as $value) {
-					$result['site_prefix'] = $value->site_prefix;
-					$result['site_rank'] = $value->site_rank;
-					$result['site_score'] = $value->site_score;
-					$allSiteRank[] = $result;
-				}
-			}
-			$wgMemc->set( $key, $allSiteRank );
-			return $allSiteRank;
-		}else{
-			$dbr = wfGetDB( DB_SLAVE );
-			$res = $dbr->select(
-				'site_rank',
-				array(
-					'site_rank',
-					'site_score'
-				),
-				array(
-					'site_prefix' => $prefix,
-					'site_rank_data' => $yesterday
-				),
-				__METHOD__
-			);
-			if ( $res != false ) {
-				foreach ($res as $value) {
-					$result['site_rank'] = $value->site_rank;
-					$result['site_score'] = $value->site_score;
-					$allSiteRank[] = $result;
-				}
-			}
-			$wgMemc->set( $key, $allSiteRank );
-			return $allSiteRank;
-		}
-
-	}
-
-	static function getAllSitesRank(){
+class HelloWorld extends Maintenance {
+	public function execute() {
 		$allSite = HuijiPrefix::getAllPrefix();
 		$today = date('Y-m-d');
 		$yesterday = date('Y-m-d',strtotime('-1 days'));
@@ -99,7 +13,6 @@ class AllSitesInfo{
 		$editUserYesterday = $ueb->getSiteEditUserCount( $yesterday, $yesterday);
 		$editUserWeek = $ueb->getSiteEditUserCount( $lastWeek, $yesterday);
 		$editUserMonth = $ueb->getSiteEditUserCount( $lastMonth, $yesterday);
-		// print_r($editUserYesterday);
 		$viewDate = array();
 		$editDate = array();
 		$editUserDate = array();
@@ -118,7 +31,6 @@ class AllSitesInfo{
 		asort($viewDate);
 		asort($editDate);
 		asort($editUserDate);
-		// print_r($editUserDate);
 		$i=1;
 		//loop score
 		$viewRes = array();
@@ -147,14 +59,10 @@ class AllSitesInfo{
 		}
 		arsort($allRank);
 		$x = 1;
-		// print_r($allRank);
 		//final rank
 		foreach ($allRank as $key => $value) {
 			$rank = $x;
 			$score = round(100*$value/$highest, 2);
-			// $numRank['rank'] = $x;
-			// $numRank['score'] = round(100*$value/$highest, 2);
-			// $res[$key] = $numRank;
 			//insert
 			$dbw = wfGetDB( DB_MASTER );
 			$dbw->insert(
@@ -163,15 +71,14 @@ class AllSitesInfo{
 					'site_rank' => $rank,
 					'site_score' => $score,
 					'site_prefix' => $key,
-					'site_rank_data' => $yesterday
+					'site_rank_date' => $yesterday
 				), __METHOD__
 			);
 			$x++;
 		}
-		// print_r($res);
-		// if ($numRank) {
-		// 	return $numRank;
-		// }
 	}
-
 }
+
+$maintClass = 'HelloWorld';
+
+require_once RUN_MAINTENANCE_IF_MAIN;

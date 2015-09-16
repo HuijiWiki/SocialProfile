@@ -103,19 +103,18 @@ class SpecialSendToFollowers extends UnlistedSpecialPage {
 		</div>';
 
 		$usf = new UserSiteFollow();
-		$follows = $usf->getSiteFollowedUser( $user->getName(),$wgHuijiPrefix );
 
+		$res = $usf->getSiteFollowedUser( $user->getName(),$wgHuijiPrefix );
+		foreach ($res as $value) {
+			$follows[] = $value['user_name'];
+		}
 		$output .= '<div id="blast-friends-list" class="blast-friends-list">';
 
 		$x = 1;
 		$per_row = 3;
 		if ( count( $follows ) > 0 ) {
 			foreach ( $follows as $follow ) {
-				if ( $follow['type'] == 1 ) {
-					$class = 'friend';
-				} else {
-					$class = 'foe';
-				}
+				$class = 'friend';
 				if ( $follow !== $user->getName() ) {
 					$id = User::idFromName($follow);
 					$output .= '<div class="blast-' . $class . "-unselected\" id=\"user-{$id}\">

@@ -118,6 +118,7 @@ require_once( "$IP/extensions/SocialProfile/UserRelationship/Relationship_AjaxFu
 require_once( "$IP/extensions/SocialProfile/UserUserFollows/UserUserFollows_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/UserStatus/UserStatus_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/UserSiteFollows/UserSiteFollows_AjaxFunctions.php" );
+require_once( "$IP/extensions/SocialProfile/SiteStatus/SiteStatus_AjaxFunctions.php" );
 // What to display on social profile pages by default?
 $wgUserProfileDisplay['board'] = true;
 $wgUserProfileDisplay['foes'] = false;

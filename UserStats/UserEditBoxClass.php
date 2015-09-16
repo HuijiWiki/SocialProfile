@@ -91,5 +91,17 @@ class UserEditBox{
 			return false;
 		}
 	}
+	//page edit user
+	public function getSiteEditUserCount( $fromTime, $toTime ){
+		$receive = RecordStatistics::getEditorCountGroupByWikiSite( $fromTime, $toTime);
+		if ($receive->status == 'success') {
+			foreach ($receive->result as $value) {
+				$resdata[$value->_id] = $value->value;
+			}
+			return $resdata;
+		}else{
+			return false;
+		}
+	}
 
 }

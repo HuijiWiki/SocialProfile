@@ -418,9 +418,9 @@ class UserSiteFollow{
 		$dbr = wfGetDB( DB_SLAVE );
 		$request = array();
 			// $follower = UserUserFollow::getFollowedByUser( $user->getName() );
-			$res = self::getSiteFollowedUser($user,$site_name);
+			$res = self::getSiteFollowedUserDB($user,$site_name);
 			foreach ($res as $value) {
-				$u_name = $value;
+				$u_name = $value['user_name'];
 				$temp['user'] = $u_name;
 				// $temp['user'] = User::getEffectiveGroups($user);
 				$userPage = Title::makeTitle( NS_USER, $u_name );
@@ -530,12 +530,16 @@ class UserSiteFollow{
 		$res = $dbr->select(
 			'user_site_follow',
 			array(
-				'f_user_name'
+				'f_user_name',
+				'f_date'
 			),
 			array(
 				'f_wiki_domain' => $sitename
 			),
-			__METHOD__
+			__METHOD__,
+			array( 
+				'ORDER BY' => 'f_date DESC'
+			)
 		);
 		// return $res;	
 		if($res == true){
@@ -543,7 +547,9 @@ class UserSiteFollow{
 				$ruser = User::newFromName($value->f_user_name);
 				$group = $ruser->getEffectiveGroups();
 				if(!in_array( 'bot', $group) && !in_array('bot-global', $group)){
-					$data[] = $value->f_user_name;					
+					$req['user_name'] = $value->f_user_name;
+					$req['follow_date'] = $value->f_date;
+					$data[] = $req;
 				}
 			}
 			$wgMemc->set( $key, $data );
