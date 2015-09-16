@@ -63,7 +63,7 @@ class UserActivity {
 		}
 		$this->setFilter( $filter );
 		$this->item_max = $item_max;
-		$this->sql_depth = $this->item_max*2;
+		$this->sql_depth = $this->item_max*3;
 		$this->now = time();
 		$this->half_day_ago = $this->now - ( 60 * 60 * 12 );
 		$this->half_a_day = ( 60 * 60 * 12 );
@@ -263,12 +263,11 @@ class UserActivity {
 					)
 				) 
 			);
-			$option = "ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0";
 			if (count($where) > 0){
 				$conds = $dbr->makeList( $where, LIST_AND );
-				$sql = "SELECT $fieldName FROM $tableName WHERE $conds $option";
+				$sql = "SELECT $fieldName FROM $tableName WHERE $conds";
 			} else {
-				$sql = "SELECT $fieldName FROM $tableName $option";
+				$sql = "SELECT $fieldName FROM $tableName";
 			}
 
 			$sqls[] = $sql;
@@ -277,7 +276,7 @@ class UserActivity {
 		// echo $dbr->unionQueries($sqls, true)." ORDER BY `rc_id` DESC LIMIT $this->item_max OFFSET 0";
 		// die(1);
 		if (count($sqls) > 0){
-			$res = $dbr->query($dbr->unionQueries($sqls, true));
+			$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
 
 			foreach ( $res as $row ) {
 				$row->item_date = strtotime('+8 hour', $row->item_date);
@@ -542,19 +541,18 @@ class UserActivity {
 					)
 				) 
 			);
-			$option = "ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0";
 			if (count($where) > 0){
 				$conds = $dbr->makeList( $where, LIST_AND );
-				$sql = "SELECT $fieldName FROM $tableName WHERE $conds $option";
+				$sql = "SELECT $fieldName FROM $tableName WHERE $conds";
 			} else {
-				$sql = "SELECT $fieldName FROM $tableName $option";
+				$sql = "SELECT $fieldName FROM $tableName";
 			}
 			$sqls[] = $sql;
 
 		}
 		if (count($sqls) > 0){
 			
-			$res = $dbr->query($dbr->unionQueries($sqls, true));
+			$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
 
 			foreach ( $res as $row ) {
 				$row->item_date = strtotime('+8 hour', $row->item_date);
@@ -657,17 +655,16 @@ class UserActivity {
 					)
 				)
 			);
-			$option = "ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0";
 			if (count($where) > 0){
 				$conds = $dbr->makeList( $where, LIST_AND );
-				$sql = "SELECT $fieldName FROM $tableName INNER JOIN $joinTableName ON comment_page_id = page_id WHERE $conds $option";
+				$sql = "SELECT $fieldName FROM $tableName INNER JOIN $joinTableName ON comment_page_id = page_id WHERE $conds";
 			} else {
-				$sql = "SELECT $fieldName FROM $tableName INNER JOIN $joinTableName ON comment_page_id = page_id $option";
+				$sql = "SELECT $fieldName FROM $tableName INNER JOIN $joinTableName ON comment_page_id = page_id";
 			}
 			$sqls[] = $sql;
 		}
 		if (count($sqls) > 0){
-			$res = $dbr->query($dbr->unionQueries($sqls, true));
+			$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
 			foreach ( $res as $row ) {
 				$show_comment = true;
 
