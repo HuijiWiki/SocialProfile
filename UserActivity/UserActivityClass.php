@@ -1540,21 +1540,21 @@ class UserActivity {
 
 		foreach ( $this->items_grouped[$type] as $page_name => $page_data ) {
 			$timeago = CommentFunctions::getTimeAgo($page_data['timestamp']).'前';
-			$key = wfForeignMemcKey('huiji', '', 'simplifyPageActivity', $type, $page_name, $page_data['timestamp'], count( $page_data['users'] ));
-			if (!isset( $this->displayed[$type][$page_name])){
-				/* memcache checking */
-				$html = $wgMemc->get($key);
-				if ($html != '' ){
-					$html = $this->updateTime($html, $timeago);		
+			// $key = wfForeignMemcKey('huiji', '', 'simplifyPageActivity', $type, $page_name, $page_data['timestamp'], count( $page_data['users'] ));
+			// if (!isset( $this->displayed[$type][$page_name])){
+			// 	/* memcache checking */
+			// 	$html = $wgMemc->get($key);
+			// 	if ($html != '' ){
+			// 		$html = $this->updateTime($html, $timeago);		
 
-					$this->activityLines[] = array(
-						'type' => $type,
-						'timestamp' => $page_data['timestamp'],
-						'data' => $html
-					);
-					return;
-				}
-			}
+			// 		$this->activityLines[] = array(
+			// 			'type' => $type,
+			// 			'timestamp' => $page_data['timestamp'],
+			// 			'data' => $html
+			// 		);
+			// 		return;
+			// 	}
+			// }
 
 			$users = '';
 			$pages = '';
@@ -1716,7 +1716,7 @@ class UserActivity {
 					'hasShowcase' => false,
 				)
 			);
-			$wgMemc->set($key, $html);
+			// $wgMemc->set($key, $html);
 
 			if ( $pages || $has_page == false ) {
 
