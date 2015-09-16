@@ -24,7 +24,7 @@ jQuery( document ).ready( function() {
                                 trigger: 'axis'
                             },
                             legend: {
-                                data:['网站排名','关注人数','浏览次数','编辑次数']
+                                data:['网站得分','关注人数','浏览次数','编辑次数']
                             },
                             toolbox: {
                                 show : true,
@@ -48,28 +48,23 @@ jQuery( document ).ready( function() {
                             yAxis : [
                                 {
                                     type : 'value'
-                                    // min: 0,
-                                    // max: 1000,
-                                    // splitNumber: 500
-                                    // scale : true,
-                                    // splitNumber : 0,100
-                                    // show : false
                                 }
                             ],
                             series : [
                                 {
-                                    name:'网站排名',
+                                    name:'网站得分',
                                     type:'line',
                                     // stack: '总量',
                                     // color:'red',
-                                    itemStyle:{
-                                        normal:{
-                                            lineStyle:{
-                                                color:'black',
-                                                width:3
-                                            }
-                                        }
-                                    },
+                                    // line style
+                                    // itemStyle:{
+                                    //     normal:{
+                                    //         lineStyle:{
+                                    //             color:'black',
+                                    //             width:3
+                                    //         }
+                                    //     }
+                                    // },
                                     data:[],
 
                                     // 系列中的数据标注内容 series.markPoint  
@@ -147,33 +142,66 @@ jQuery( document ).ready( function() {
                         };
                     // };
                     // 为echarts对象加载数据
+                    
                     //all pv
                     var site = mw.config.get('wgHuijiPrefix');
-                    // var site = 'lotr';
                     huiji.getPreviousViewRecords(site,30,updateData);
                     function updateData(data){
                          if (data.status == 'success'){
-                            // console.log(data.result);
-                            // var res = data.result;
+                            console.log(data.result);
                             option.xAxis[0].data=data.result.date_array;
                             option.series[2].data=data.result.number_array;
                             myChart.setOption(option,false);
                         }
-                        // alert(mw.config.get('wgHuijiPrefix'));
                     }
+
                     //all pe
                     huiji.getPreviousEditRecords(site,30,updateDatape);
                     function updateDatape(data){
                          if (data.status == 'success'){
-                            // console.log(data.result);
+                            console.log(data.result);
                             var res = data.result;
                             option.xAxis[0].data=data.result.date_array;
                             option.series[3].data=data.result.number_array;
-                            console.log(data.result.number_array.length);
                             myChart.setOption(option,false);
                         }
-                        // alert(mw.config.get('wgHuijiPrefix'));
                     }
+
+                    //site rank
+                    jQuery.post(
+                        mw.util.wikiScript(), {
+                        action: 'ajax',
+                        rs: 'wfGetSiteRank',
+                        rsargs: []
+                        },
+                        function( data ) {
+                            var res = jQuery.parseJSON(data);
+                            console.log(res.result);
+                            if ( res.success ){
+                                option.xAxis[0].data=res.result.date;
+                                option.series[0].data=res.result.rank;
+                                myChart.setOption(option,false);
+                            }
+                        }
+                    );
+
+                    //site follow count
+                    jQuery.post(
+                        mw.util.wikiScript(), {
+                        action: 'ajax',
+                        rs: 'wfGetSiteFollowedUsers',
+                        rsargs: []
+                        },
+                        function( data ) {
+                            var res = jQuery.parseJSON(data);
+                            console.log(res.result);
+                            if ( res.success ){
+                                option.xAxis[0].data=res.result.date;
+                                option.series[1].data=res.result.FollowCount;
+                                myChart.setOption(option,false);
+                            }
+                        }
+                    );
 
                 }
             );

@@ -42,19 +42,38 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
         $counter = new SiteStatsInit( $dbr );
 		$totaledit = $counter->edits();
 		$ueb = new UserEditBox();
+		$rankInfo = AllSitesInfo::getAllSitesRankData( $wgHuijiPrefix, $yesterday );
+		$usf = new UserSiteFollow();
+		$follows = $usf->getSiteFollowedUser( '',$wgHuijiPrefix );
+		// print_r($follows);
+		$followCount = count($follows);
+		if($followCount >= 8){
+			$follows = array_slice($follows, 0, 8);
+		}
+		$newFollow = array();
+		foreach ($follows as $value) {
+			$arr['user_name'] = $value['user_name'];
+			$arr['follow_date'] = wfMessage( 'comments-time-ago', CommentFunctions::getTimeAgo( strtotime( $value['follow_date'] ) ) )->text();
+			$newFollow[] = $arr;
+		}
+		$sentToAll = SpecialPage::getTitleFor( 'SendToFollowers' );
+		$showMore = SpecialPage::getTitleFor( 'EditRank' );
 		$output .= $templateParser->processTemplate(
 				    'admin_index',
 				    array(
-				        'yesterdayCount' => UserSiteFollow::getSiteCountOnedayDB( $wgHuijiPrefix, $yesterday ),
+				    	'siteRank' => isset($rankInfo[0]['site_rank'])?$rankInfo[0]['site_rank']:'暂无',
+				    	'siteScore' => isset($rankInfo[0]['site_score'])?$rankInfo[0]['site_score']:'暂无',
+				        'yesterdayCount' => UserSiteFollow::getSiteCountOneday( $wgHuijiPrefix, $yesterday ),
 				        'totalCount' => UserSiteFollow::getSiteCount( $wgHuijiPrefix ),
 				        'yesterdayEdit' => $ueb->getSiteEditCount( '', $wgHuijiPrefix, $yesterday, $yesterday ),
 				        'totalEdit' => $totaledit,
 				        'totalView' => $ueb->getSiteViewCount( -1, $wgHuijiPrefix, '', '' ),
-				        'yesterdayView' => $ueb->getSiteViewCount( -1, $wgHuijiPrefix, $yesterday, $yesterday )
+				        'yesterdayView' => $ueb->getSiteViewCount( -1, $wgHuijiPrefix, $yesterday, $yesterday ),
+				        'newFollow' => $newFollow,
+				        'sendToAll' => $sentToAll,
+				        'showMore' => $showMore,
 				    )
 				);
 		$out->addHtml($output);
-		// $out->addScript( '<script src="http://echarts.baidu.com/build/dist/echarts.js"></script>' );
-		
 	}
 }
