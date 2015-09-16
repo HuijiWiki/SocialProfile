@@ -1510,7 +1510,7 @@ class UserActivity {
 			if ($html != ''){
 				$startPoint = '<p class="time-ago"><strong>';
 				$endPoint = '</strong></p>';
-				$html = preg_replace('#('.preg_quote($startPoint).')(.*)('.preg_quote($endPoint).')#si', $timeago, $html);
+				$html = preg_replace('#['.preg_quote($startPoint).'](.*)['.preg_quote($endPoint).']#si', $timeago, $html);
 			} else {
 				$users = '';
 				$pages = '';
