@@ -1552,7 +1552,7 @@ class UserActivity {
 						'timestamp' => $page_data['timestamp'],
 						'data' => $html
 					);
-					return '';
+					continue;
 				}
 			}
 
@@ -1678,49 +1678,47 @@ class UserActivity {
 				$users .= ' <b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\" title=\"{$safeTitle}\">{$user_name_short}</a></b>";
 			}
 			
-
-			$prefixToName = '';
-			if ( isset($page_data['prefix']) ){
-				if ( is_array($page_data['prefix'])){
-					$page_data['prefix'] = array_unique($page_data['prefix']);
-					$prefixCount = count($page_data['prefix']);
-					$i = 0;
-					foreach($page_data['prefix'] as $prefix){
-						$prefixToName .= HuijiPrefix::prefixToSiteNameAnchor($prefix);
-						$i++;
-						if ($i < $prefixCount - 1 ){
-							$prefixToName .= wfMessage( 'comma-separator' )->text();
-						}
-						if ($i == $prefixCount-1 && $prefixCount > 1){
-							$prefixToName .= wfMessage( 'and' )->text();
-						}
-					}
-				}elseif (is_string($page_data['prefix'])){
-					$prefixToName .= HuijiPrefix::prefixToSiteNameAnchor($prefix);
-				}
-			}
-			/* prepare format */
-
-			/* build html */
-			$html = $this->templateParser->processTemplate(
-				'user-home-item',
-				array(
-					'userAvatar' => $avatarUrl,
-					'userName'  => $users,
-					'timestamp' => $timeago,
-					'description' => wfMessage(
-										"useractivity-{$type}",
-										$users, $count_users, $pages, $pages_count,
-										$userNameForGender, $prefixToName
-									)->text(),
-					'hasShowcase' => false,
-				)
-			);
-			
-
 			if ( $pages || $has_page == false ) {
+				$prefixToName = '';
+				if ( isset($page_data['prefix']) ){
+					if ( is_array($page_data['prefix'])){
+						$page_data['prefix'] = array_unique($page_data['prefix']);
+						$prefixCount = count($page_data['prefix']);
+						$i = 0;
+						foreach($page_data['prefix'] as $prefix){
+							$prefixToName .= HuijiPrefix::prefixToSiteNameAnchor($prefix);
+							$i++;
+							if ($i < $prefixCount - 1 ){
+								$prefixToName .= wfMessage( 'comma-separator' )->text();
+							}
+							if ($i == $prefixCount-1 && $prefixCount > 1){
+								$prefixToName .= wfMessage( 'and' )->text();
+							}
+						}
+					}elseif (is_string($page_data['prefix'])){
+						$prefixToName .= HuijiPrefix::prefixToSiteNameAnchor($prefix);
+					}
+				}
+				/* prepare format */
+
+				/* build html */
+				$html = $this->templateParser->processTemplate(
+					'user-home-item',
+					array(
+						'userAvatar' => $avatarUrl,
+						'userName'  => $users,
+						'timestamp' => $timeago,
+						'description' => wfMessage(
+											"useractivity-{$type}",
+											$users, $count_users, $pages, $pages_count,
+											$userNameForGender, $prefixToName
+										)->text(),
+						'hasShowcase' => false,
+					)
+				);
+			
 				$wgMemc->set($key, $html);
-				
+
 				$this->activityLines[] = array(
 					'type' => $type,
 					'timestamp' => $page_data['timestamp'],
