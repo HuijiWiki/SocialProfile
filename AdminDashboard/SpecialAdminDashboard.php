@@ -41,9 +41,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 
 		$output = ''; // Prevent E_NOTICE
 	    $yesterday = date("Y-m-d",strtotime("-1 day"));
-	    $dbr = wfGetDB( DB_SLAVE );
-        $counter = new SiteStatsInit( $dbr );
-		$totaledit = $counter->edits();
+		$totaledit = SiteStats::edits();
 		$ueb = new UserEditBox();
 		$rankInfo = AllSitesInfo::getAllSitesRankData( $wgHuijiPrefix, $yesterday );
 		$usf = new UserSiteFollow();
@@ -56,8 +54,13 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		$newFollow = array();
 		foreach ($follows as $value) {
 			$arr['user_name'] = $value['user_name'];
+			$userPage = Title::makeTitle( NS_USER, $value['user_name'] );
+			$arr['user_url'] = htmlspecialchars( $userPage->getFullURL() );
 			$arr['follow_date'] = wfMessage( 'comments-time-ago', CommentFunctions::getTimeAgo( strtotime( $value['follow_date'] ) ) )->text();
 			$newFollow[] = $arr;
+		}
+		if(is_null($newFollow)){
+			$newFollow = false;
 		}
 		$sentToAll = SpecialPage::getTitleFor( 'SendToFollowers' );
 		$showMore = SpecialPage::getTitleFor( 'EditRank' );

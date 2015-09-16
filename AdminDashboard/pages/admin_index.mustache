@@ -112,11 +112,14 @@
                 <div class="panel-body">
                     <div class="list-group">
                     {{#newFollow}}
-                        <a href="#" class="list-group-item">
+                        <a href="{{user_url}}" class="list-group-item">
                             <i class="fa fa-comment fa-fw"></i> {{user_name}}
                             <span class="pull-right text-muted small"><em>{{follow_date}}</em>
                             </span>
                         </a>
+                    {{/newFollow}}
+                    {{^newFollow}}
+                        <span>暂时没人关注本站~</span>
                     {{/newFollow}}
                     </div>
                     <!-- /.list-group -->
