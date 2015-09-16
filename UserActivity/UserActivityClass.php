@@ -1669,6 +1669,7 @@ class UserActivity {
 						'hasShowcase' => false,
 					)
 				);
+				$wgMemc->set($key, $html);
 			} // end of if
 			if ( $pages || $has_page == false ) {
 
