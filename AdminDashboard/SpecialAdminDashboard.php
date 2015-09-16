@@ -25,7 +25,10 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		$templateParser = new TemplateParser(  __DIR__ . '/pages' );
 		$out = $this->getOutput();
 		$user = $this->getUser();
-
+		if ( !$user->isAllowed( 'AdminDashboard' ) ) {
+			$out->permissionRequired( 'AdminDashboard' );
+			return;
+		}
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
 		// Add Less
