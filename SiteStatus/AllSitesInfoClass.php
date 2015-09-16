@@ -45,7 +45,7 @@ class AllSitesInfo{
 					'site_prefix'
 				),
 				array(
-					'site_rank_data' => $yesterday
+					'site_rank_date' => $yesterday
 				),
 				__METHOD__,
 				array( 
@@ -72,7 +72,7 @@ class AllSitesInfo{
 				),
 				array(
 					'site_prefix' => $prefix,
-					'site_rank_data' => $yesterday
+					'site_rank_date' => $yesterday
 				),
 				__METHOD__
 			);
@@ -163,7 +163,7 @@ class AllSitesInfo{
 					'site_rank' => $rank,
 					'site_score' => $score,
 					'site_prefix' => $key,
-					'site_rank_data' => $yesterday
+					'site_rank_date' => $yesterday
 				), __METHOD__
 			);
 			$x++;
