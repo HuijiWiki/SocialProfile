@@ -63,7 +63,7 @@ class UserActivity {
 		}
 		$this->setFilter( $filter );
 		$this->item_max = $item_max;
-		$this->sql_depth = $this->item_max*3;
+		$this->sql_depth = $this->item_max*2;
 		$this->now = time();
 		$this->half_day_ago = $this->now - ( 60 * 60 * 12 );
 		$this->half_a_day = ( 60 * 60 * 12 );
