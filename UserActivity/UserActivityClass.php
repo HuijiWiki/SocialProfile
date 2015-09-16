@@ -1836,7 +1836,7 @@ class UserActivity {
 	private function updateTime($html, $timeago){
 		$startPoint = '<p class="time-ago"><strong>';
 		$endPoint = '</strong></p>';
-		$html = preg_replace('#('.preg_quote($startPoint).')(.*)('.preg_quote($endPoint).')#usi', '$0'.$timeago.'$1', $html);
+		$html = preg_replace('#('.preg_quote($startPoint).')(.*)('.preg_quote($endPoint).')#usi', '$1'.$timeago.'$3', $html);
 		return $html;
 	}
 	/**
