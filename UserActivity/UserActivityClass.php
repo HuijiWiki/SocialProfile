@@ -283,7 +283,7 @@ class UserActivity {
 				// Special pages aren't editable, so ignore them
 				// And blocking a vandal should not be counted as editing said
 				// vandal's user page...
-				if ( $row->rc_namespace == NS_SPECIAL || $row->rc_log_action != null ) {
+				if ( $row->rc_namespace == NS_SPECIAL || $row->rc_namespace % 2 == 1 || $row->rc_log_action != null ) {
 					continue;
 				}
 				// Topics need some hack in title
@@ -935,23 +935,6 @@ class UserActivity {
 				'data' => $html
 			);
 
-			// $html = wfMessage(
-			// 	'useractivity-award',
-			// 	'<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$row->sg_user_name}</a></b>",
-			// 	$row->sg_user_name
-			// )->text() .
-			// '<div class="item">
-			// 	<a href="' . htmlspecialchars( $system_gift_link->getFullURL( 'gift_id=' . $row->sg_id ) ) . "\" rel=\"nofollow\">
-			// 		{$system_gift_image}
-			// 		{$row->gift_name}
-			// 	</a>
-			// </div>";
-
-			// $this->activityLines[] = array(
-			// 	'type' => 'system_gift',
-			// 	'timestamp' => $row->item_date,
-			// 	'data' => ' ' . $html
-			// );
 
 			$this->items[] = array(
 				'id' => $row->sg_id,
