@@ -1605,7 +1605,8 @@ class UserActivity {
 							} 
 							// don't stack the old ones.
 							/* get rid of same actions more than 1/2 day ago */
-							if ( $page_data2['timestamp'] < $page_data['timestamp'] - $this->half_a_day ) {
+							if ( $page_data2['timestamp'] < $page_data['timestamp'] - $this->half_a_day ||
+									$page_data2['timestamp'] > $page_data['timestamp']) {
 								continue;
 							}
 							foreach ( $page_data2['users'] as $user_name2 => $action2 ) {
