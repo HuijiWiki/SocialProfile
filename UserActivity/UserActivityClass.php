@@ -1540,171 +1540,184 @@ class UserActivity {
 
 		foreach ( $this->items_grouped[$type] as $page_name => $page_data ) {
 			$timeago = CommentFunctions::getTimeAgo($page_data['timestamp']).'前';
-			/* memcache checking */
-			$key = wfForeignMemcKey('huiji', '', 'simplifyPageActivity', $type, $page_name, $page_data['timestamp']);
-			$html = $wgMemc->get($key);
-			if ($html != ''){
-				$html = $this->updateTime($html, $timeago);
+			$key = wfForeignMemcKey('huiji', '', 'simplifyPageActivity', $type, $page_name, $page_data['timestamp'], count( $page_data['users'] ));
+			if (!isset( $this->displayed[$type][$page_name])){
+				/* memcache checking */
+				$html = $wgMemc->get($key);
+				if ($html != '' ){
+					$html = $this->updateTime($html, $timeago);		
+
+					$this->activityLines[] = array(
+						'type' => $type,
+						'timestamp' => $page_data['timestamp'],
+						'data' => $html
+					);
+					return;
+				}
+			}
+
+			$users = '';
+			$pages = '';
+
+			if ( $type == 'friend' || $type == 'foe' || $type == 'user_message' || $type == 'user_user_follow') {
+				$page_title = Title::newFromText( $page_name, NS_USER );
+			} elseif ($type == 'user_site_follow'){
+				$page_title = Title::newFromText( $page_name.':' );
+			} elseif ($type == 'image_upload'){
+				$page_title = Title::newFromText( $page_name, NS_FILE );
 			} else {
-				$users = '';
-				$pages = '';
+				$page_title = Title::newFromText( $page_name );
+			} 
 
-				if ( $type == 'friend' || $type == 'foe' || $type == 'user_message' || $type == 'user_user_follow') {
-					$page_title = Title::newFromText( $page_name, NS_USER );
-				} elseif ($type == 'user_site_follow'){
-					$page_title = Title::newFromText( $page_name.':' );
-				} elseif ($type == 'image_upload'){
-					$page_title = Title::newFromText( $page_name, NS_FILE );
-				} else {
-					$page_title = Title::newFromText( $page_name );
-				} 
+			$count_users = count( $page_data['users'] );
+			$user_index = 0;
+			$pages_count = 0;
 
-				$count_users = count( $page_data['users'] );
-				$user_index = 0;
-				$pages_count = 0;
-
-				// Init empty variable to be used later on for GENDER processing
-				// if the event is only for one user.
-				$userNameForGender = '';
-				foreach ( $page_data['users'] as $user_name => $action ) {
+			// Init empty variable to be used later on for GENDER processing
+			// if the event is only for one user.
+			$userNameForGender = '';
+			foreach ( $page_data['users'] as $user_name => $action ) {
 
 
-					/* get rid of same actions more than 1/2 day ago */
-					// if ( $page_data['timestamp'] < $this->half_day_ago ) {
-					// 	continue;
-					// }
-					$count_actions = count( $action );
+				/* get rid of same actions more than 1/2 day ago */
+				// if ( $page_data['timestamp'] < $this->half_day_ago ) {
+				// 	continue;
+				// }
+				$count_actions = count( $action );
 
-					if ( $has_page && !isset( $this->displayed[$type][$page_name] ) ) {
-						$this->displayed[$type][$page_name] = 1;
-						$pages.= $this->fixPageTitle($page_title, $page_data);
-						/* get User Avatar for display */
-						$avatar = new wAvatar(User::idFromName($user_name), 'l');
-						$avatarUrl = $avatar->getAvatarHtml();
-						
-						if ( $count_users == 1 && $count_actions > 1 ) {
-							$pages .= wfMessage( 'word-separator' )->text();
-							$pages .= wfMessage( 'parentheses', wfMessage(
-								"useractivity-group-{$type}",
-								$count_actions,
-								$user_name
-							)->text() )->text();
-						}
-						$pages_count++;
+				if ( $has_page && !isset( $this->displayed[$type][$page_name] ) ) {
+
+					$this->displayed[$type][$page_name] = 1;
+					$pages.= $this->fixPageTitle($page_title, $page_data);
+					/* get User Avatar for display */
+					$avatar = new wAvatar(User::idFromName($user_name), 'l');
+					$avatarUrl = $avatar->getAvatarHtml();
+					
+					if ( $count_users == 1 && $count_actions > 1 ) {
+						$pages .= wfMessage( 'word-separator' )->text();
+						$pages .= wfMessage( 'parentheses', wfMessage(
+							"useractivity-group-{$type}",
+							$count_actions,
+							$user_name
+						)->text() )->text();
 					}
+					$pages_count++;
+				}
 
-					// Single user on this action,
-					// see if we can stack any other singles
-					if ( $count_users == 1 ) {
-						$userNameForGender = $user_name;
-						foreach ( $this->items_grouped[$type] as $page_name2 => $page_data2 ) {
+				// Single user on this action,
+				// see if we can stack any other singles
+				if ( $count_users == 1 ) {
+					$userNameForGender = $user_name;
+					foreach ( $this->items_grouped[$type] as $page_name2 => $page_data2 ) {
 
-							// if we find singles for this type, not displayed and not co-worked.
-							if ( !isset( $this->displayed[$type][$page_name2] ) &&
-								count( $page_data2['users'] ) == 1 
-							) {
-								//change since sept.7: only group pages with same prefix.
-								if (isset($page_data['prefix']) && $page_data['prefix'][0] != $page_data2['prefix'][0] ){
-									continue;
-								} 
-								// don't stack the old ones.
-								/* get rid of same actions more than 1/2 day ago */
-								if ( $page_data2['timestamp'] < $page_data['timestamp'] - $this->half_a_day ) {
-									continue;
-								}
-								foreach ( $page_data2['users'] as $user_name2 => $action2 ) {
-									if ( $user_name2 == $user_name && $pages_count < $this->item_max ) {
-										$count_actions2 = count( $action2 );
+						// if we find singles for this type, not displayed and not co-worked.
+						if ( !isset( $this->displayed[$type][$page_name2] ) &&
+							count( $page_data2['users'] ) == 1 
+						) {
+							//change since sept.7: only group pages with same prefix.
+							if (isset($page_data['prefix']) && $page_data['prefix'][0] != $page_data2['prefix'][0] ){
+								continue;
+							} 
+							// don't stack the old ones.
+							/* get rid of same actions more than 1/2 day ago */
+							if ( $page_data2['timestamp'] < $page_data['timestamp'] - $this->half_a_day ) {
+								continue;
+							}
+							foreach ( $page_data2['users'] as $user_name2 => $action2 ) {
+								if ( $user_name2 == $user_name && $pages_count < $this->item_max ) {
+									$count_actions2 = count( $action2 );
 
-										if (
-											$type == 'friend' ||
-											$type == 'foe' ||
-											$type == 'user_message' ||
-											$type == 'user_user_follow'
-										) {
-											$page_title2 = Title::newFromText( $page_name2, NS_USER );
-										}  elseif ($type == 'user_site_follow'){
-											$page_title2 = Title::newFromText( $page_name2.':' );
-										}  elseif ($type == 'image_upload'){
-											$page_title2 = Title::newFromText( $page_name2, NS_FILE );
-										}  else {
-											$page_title2 = Title::newFromText( $page_name2 );
-										}
-
-										if ( $pages ) {
-											$pages .= $page_title2->inNamespace( NS_FILE )?'':'，';
-										}
-										$pages .= $this->fixPageTitle($page_title2, $page_data2);						
-										if ( $count_actions2 > 1 ) {
-											$pages .= ' (' . wfMessage(
-												"useractivity-group-{$type}", $count_actions2
-											)->text() . ')';
-										}
-										$pages_count++;
-										// if (isset($page_data['prefix'])){
-										// 	$page_data['prefix'] = array_merge($page_data['prefix'], $page_data2['prefix']);
-										// }
-										$this->displayed[$type][$page_name2] = 1;
+									if (
+										$type == 'friend' ||
+										$type == 'foe' ||
+										$type == 'user_message' ||
+										$type == 'user_user_follow'
+									) {
+										$page_title2 = Title::newFromText( $page_name2, NS_USER );
+									}  elseif ($type == 'user_site_follow'){
+										$page_title2 = Title::newFromText( $page_name2.':' );
+									}  elseif ($type == 'image_upload'){
+										$page_title2 = Title::newFromText( $page_name2, NS_FILE );
+									}  else {
+										$page_title2 = Title::newFromText( $page_name2 );
 									}
+
+									if ( $pages ) {
+										$pages .= $page_title2->inNamespace( NS_FILE )?'':'，';
+									}
+									$pages .= $this->fixPageTitle($page_title2, $page_data2);						
+									if ( $count_actions2 > 1 ) {
+										$pages .= ' (' . wfMessage(
+											"useractivity-group-{$type}", $count_actions2
+										)->text() . ')';
+									}
+									$pages_count++;
+									// if (isset($page_data['prefix'])){
+									// 	$page_data['prefix'] = array_merge($page_data['prefix'], $page_data2['prefix']);
+									// }
+									$this->displayed[$type][$page_name2] = 1;
 								}
 							}
 						}
 					}
-
-					$user_index++;
-
-					if ( $users && $count_users > 2 ) {
-						$users .= wfMessage( 'comma-separator' )->text();
-					}
-					if ( $user_index ==  $count_users && $count_users > 1 ) {
-						$users .= wfMessage( 'and' )->text();
-					}
-
-					$user_title = Title::makeTitle( NS_USER, $user_name );
-					$user_name_short = $wgLang->truncate( $user_name, 15 );
-
-					$safeTitle = htmlspecialchars( $user_title->getText() );
-					$users .= ' <b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\" title=\"{$safeTitle}\">{$user_name_short}</a></b>";
 				}
-				$prefixToName = '';
-				if ( isset($page_data['prefix']) ){
-					if ( is_array($page_data['prefix'])){
-						$page_data['prefix'] = array_unique($page_data['prefix']);
-						$prefixCount = count($page_data['prefix']);
-						$i = 0;
-						foreach($page_data['prefix'] as $prefix){
-							$prefixToName .= HuijiPrefix::prefixToSiteNameAnchor($prefix);
-							$i++;
-							if ($i < $prefixCount - 1 ){
-								$prefixToName .= wfMessage( 'comma-separator' )->text();
-							}
-							if ($i == $prefixCount-1 && $prefixCount > 1){
-								$prefixToName .= wfMessage( 'and' )->text();
-							}
-						}
-					}elseif (is_string($page_data['prefix'])){
+
+				$user_index++;
+
+				if ( $users && $count_users > 2 ) {
+					$users .= wfMessage( 'comma-separator' )->text();
+				}
+				if ( $user_index ==  $count_users && $count_users > 1 ) {
+					$users .= wfMessage( 'and' )->text();
+				}
+
+				$user_title = Title::makeTitle( NS_USER, $user_name );
+				$user_name_short = $wgLang->truncate( $user_name, 15 );
+
+				$safeTitle = htmlspecialchars( $user_title->getText() );
+				$users .= ' <b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\" title=\"{$safeTitle}\">{$user_name_short}</a></b>";
+			}
+			
+
+			$prefixToName = '';
+			if ( isset($page_data['prefix']) ){
+				if ( is_array($page_data['prefix'])){
+					$page_data['prefix'] = array_unique($page_data['prefix']);
+					$prefixCount = count($page_data['prefix']);
+					$i = 0;
+					foreach($page_data['prefix'] as $prefix){
 						$prefixToName .= HuijiPrefix::prefixToSiteNameAnchor($prefix);
+						$i++;
+						if ($i < $prefixCount - 1 ){
+							$prefixToName .= wfMessage( 'comma-separator' )->text();
+						}
+						if ($i == $prefixCount-1 && $prefixCount > 1){
+							$prefixToName .= wfMessage( 'and' )->text();
+						}
 					}
+				}elseif (is_string($page_data['prefix'])){
+					$prefixToName .= HuijiPrefix::prefixToSiteNameAnchor($prefix);
 				}
-				/* prepare format */
+			}
+			/* prepare format */
 
-				/* build html */
-				$html = $this->templateParser->processTemplate(
-					'user-home-item',
-					array(
-						'userAvatar' => $avatarUrl,
-						'userName'  => $users,
-						'timestamp' => $timeago,
-						'description' => wfMessage(
-											"useractivity-{$type}",
-											$users, $count_users, $pages, $pages_count,
-											$userNameForGender, $prefixToName
-										)->text(),
-						'hasShowcase' => false,
-					)
-				);
-				$wgMemc->set($key, $html);
-			} // end of if
+			/* build html */
+			$html = $this->templateParser->processTemplate(
+				'user-home-item',
+				array(
+					'userAvatar' => $avatarUrl,
+					'userName'  => $users,
+					'timestamp' => $timeago,
+					'description' => wfMessage(
+										"useractivity-{$type}",
+										$users, $count_users, $pages, $pages_count,
+										$userNameForGender, $prefixToName
+									)->text(),
+					'hasShowcase' => false,
+				)
+			);
+			$wgMemc->set($key, $html);
+
 			if ( $pages || $has_page == false ) {
 
 				$this->activityLines[] = array(
@@ -1836,7 +1849,7 @@ class UserActivity {
 	private function updateTime($html, $timeago){
 		$startPoint = '<p class="time-ago"><strong>';
 		$endPoint = '</strong></p>';
-		$html = preg_replace('#('.preg_quote($startPoint).')(.*)('.preg_quote($endPoint).')#usi', '$1'.$timeago.'$3', $html);
+		$html = preg_replace('#('.preg_quote($startPoint).')(.+?)('.preg_quote($endPoint).')#us', '$1 '.$timeago.' $3', $html);
 		return $html;
 	}
 	/**
