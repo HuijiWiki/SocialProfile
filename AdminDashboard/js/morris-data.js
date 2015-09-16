@@ -75,11 +75,11 @@ jQuery( document ).ready( function() {
                                         ]  
                                     },  
                                     //系列中的数据标线内容 series.markLine  
-                                    markLine:{  
-                                        data:[  
-                                            {type:'average',name:'平均值'}  
-                                        ]  
-                                    }  
+                                    // markLine:{  
+                                    //     data:[  
+                                    //         {type:'average',name:'平均值'}  
+                                    //     ]  
+                                    // }  
                                 },
                                 {
                                     name:'关注人数',
@@ -94,11 +94,11 @@ jQuery( document ).ready( function() {
                                         ]
                                     },
                                     //系列中的数据标线内容 series.markLine
-                                    markLine:{
-                                        data:[
-                                            {type:'average',name:'平均值'}
-                                        ]
-                                    }
+                                    // markLine:{
+                                    //     data:[
+                                    //         {type:'average',name:'平均值'}
+                                    //     ]
+                                    // }
                                 },
                                 {
                                     name:'浏览次数',
@@ -113,11 +113,11 @@ jQuery( document ).ready( function() {
                                         ]
                                     },
                                     //系列中的数据标线内容 series.markLine
-                                    markLine:{
-                                        data:[
-                                            {type:'average',name:'平均值'}
-                                        ]
-                                    }
+                                    // markLine:{
+                                    //     data:[
+                                    //         {type:'average',name:'平均值'}
+                                    //     ]
+                                    // }
                                 },
                                 {
                                     name:'编辑次数',
@@ -132,11 +132,11 @@ jQuery( document ).ready( function() {
                                         ]
                                     },
                                     //系列中的数据标线内容 series.markLine
-                                    markLine:{
-                                        data:[
-                                            {type:'average',name:'平均值'}
-                                        ]
-                                    }
+                                    // markLine:{
+                                    //     data:[
+                                    //         {type:'average',name:'平均值'}
+                                    //     ]
+                                    // }
                                 }
                             ]
                         };
