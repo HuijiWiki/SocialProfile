@@ -1508,9 +1508,9 @@ class UserActivity {
 			$key = wfForeignMemcKey('huiji', '', 'simplifyPageActivity', $type, $page_name, $page_data['timestamp']);
 			$html = $wgMemc->get($key);
 			if ($html != ''){
-				$startPoint = '<p class="time-ago"><strong>';
-				$endPoint = '</strong></p>';
-				$html = preg_replace('#('.preg_quote($startPoint).')(.*)('.preg_quote($endPoint).')#si', '$1'.$timeago.'$2', $html);
+				// $startPoint = '<p class="time-ago"><strong>';
+				// $endPoint = '</strong></p>';
+				// $html = preg_replace('#('.preg_quote($startPoint).')(.*)('.preg_quote($endPoint).')#si', '$1'.$timeago.'$2', $html);
 			} else {
 				$users = '';
 				$pages = '';
