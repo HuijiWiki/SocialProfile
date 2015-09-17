@@ -50,6 +50,9 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		$followCount = count($follows);
 		if($followCount >= 8){
 			$follows = array_slice($follows, 0, 8);
+			$display = '';
+		}else{
+			$display = 'none';
 		}
 		$newFollow = array();
 		foreach ($follows as $value) {
@@ -59,11 +62,18 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 			$arr['follow_date'] = wfMessage( 'comments-time-ago', CommentFunctions::getTimeAgo( strtotime( $value['follow_date'] ) ) )->text();
 			$newFollow[] = $arr;
 		}
+		
+		$sentToAll = SpecialPage::getTitleFor( 'SendToFollowers' )->getFullURL();
+		$showMore = SpecialPage::getTitleFor( 'EditRank' )->getFullURL();
+		$rightsManage = SpecialPage::getTitleFor( '用户权限' )->getFullURL();
+		$blockUsers = SpecialPage::getTitleFor( '封禁' )->getFullURL();
+		$freezeUsers = SpecialPage::getTitleFor( '解除封禁' )->getFullURL();
+		$replaceText = SpecialPage::getTitleFor( '替换文本' )->getFullURL();
+		$siteRankPage = SpecialPage::getTitleFor( 'SiteRank' )->getFullURL();
+		$allSpecial = SpecialPage::getTitleFor( '特殊页面' )->getFullURL();
 		if(is_null($newFollow)){
 			$newFollow = false;
 		}
-		$sentToAll = SpecialPage::getTitleFor( 'SendToFollowers' );
-		$showMore = SpecialPage::getTitleFor( 'EditRank' );
 		$output .= $templateParser->processTemplate(
 				    'admin_index',
 				    array(
@@ -78,6 +88,13 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				        'newFollow' => $newFollow,
 				        'sendToAll' => $sentToAll,
 				        'showMore' => $showMore,
+				        'display' => $display,
+				        'rightsManage' =>$rightsManage,
+				        'blockUsers' =>$blockUsers,
+				        'freezeUsers' =>$freezeUsers,
+				        'replaceText' =>$replaceText,
+				        'siteRankPage' =>$siteRankPage,
+				        'allSpecial' =>$allSpecial,
 				    )
 				);
 		$out->addHtml($output);

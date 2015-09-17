@@ -97,7 +97,6 @@ jQuery( document ).ready( function() {
                         },
                         function( data ) {
                             var res = jQuery.parseJSON(data);
-                            console.log(res.result);
                             if ( res.success ){
                                 option.xAxis[0].data=res.result.date;
                                 option.series[0].data=res.result.rank;
@@ -184,7 +183,6 @@ jQuery( document ).ready( function() {
                         },
                         function( data ) {
                             var res = jQuery.parseJSON(data);
-                            console.log(res.result);
                             if ( res.success ){
                                 option.xAxis[0].data=res.result.date;
                                 option.series[0].data=res.result.FollowCount;
@@ -267,7 +265,6 @@ jQuery( document ).ready( function() {
                     huiji.getPreviousViewRecords(site,30,updateData);
                     function updateData(data){
                          if (data.status == 'success'){
-                            console.log(data.result);
                             option.xAxis[0].data=data.result.date_array;
                             option.series[0].data=data.result.number_array;
                             myChart.setOption(option,false);
@@ -349,7 +346,6 @@ jQuery( document ).ready( function() {
                     huiji.getPreviousEditRecords(site,30,updateDatape);
                     function updateDatape(data){
                          if (data.status == 'success'){
-                            console.log(data.result);
                             var res = data.result;
                             option.xAxis[0].data=data.result.date_array;
                             option.series[0].data=data.result.number_array;

@@ -126,8 +126,27 @@
                     {{/newFollow}}
                     </div>
                     <!-- /.list-group -->
-                    <a href="{{showMore}}" class="btn btn-default btn-block">查看全部</a>
+                    <a style="display:{{display}};" href="{{showMore}}" class="btn btn-default btn-block">查看更多</a>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+        </div>
+        <!-- /.col-lg-8 -->
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-bell fa-fw"></i> 常用页面
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <!-- /.list-group -->
                     <a href="{{sendToAll}}" class="btn btn-default btn-block">群发消息</a>
+                    <a href="{{rightsManage}}" class="btn btn-default btn-block">用户权限管理</a>
+                    <a href="{{blockUsers}}" class="btn btn-default btn-block">封禁用户</a>
+                    <a href="{{freezeUsers}}" class="btn btn-default btn-block">解封用户</a>
+                    <a href="{{replaceText}}" class="btn btn-default btn-block">替换文字</a>
+                    <a href="{{siteRankPage}}" class="btn btn-default btn-block">站点排行</a>
+                    <a href="{{allSpecial}}" class="btn btn-default btn-block">全部特殊页面</a>
                 </div>
                 <!-- /.panel-body -->
             </div>
