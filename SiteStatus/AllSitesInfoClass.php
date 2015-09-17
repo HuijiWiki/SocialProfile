@@ -8,7 +8,7 @@ class AllSitesInfo{
 	static function getAllSitesRankData( $prefix, $yesterday ){
 
 		$data = self::getAllSitesRankFromCache( $prefix, $yesterday );
-		if ( $data != '' ) {
+		if ( $data != '' && count($data) > 0 ) {
 			$result = $data;
 		} else {
 			$result = self::getAllSitesRankFromDB( $prefix, $yesterday );

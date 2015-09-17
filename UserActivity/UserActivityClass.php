@@ -63,7 +63,7 @@ class UserActivity {
 		}
 		$this->setFilter( $filter );
 		$this->item_max = $item_max;
-		$this->sql_depth = $this->item_max*3;
+		$this->sql_depth = $this->item_max * 5;
 		$this->now = time();
 		$this->half_day_ago = $this->now - ( 60 * 60 * 12 );
 		$this->half_a_day = ( 60 * 60 * 12 );
@@ -301,7 +301,7 @@ class UserActivity {
 				
 				
 				$this->items_grouped['edit'][$title->getPrefixedText()]['users'][$row->rc_user_text][] = array(
-					'id' => 0,
+					'id' => $row->rc_id,
 					'type' => 'edit',
 					'timestamp' => $row->item_date,
 					'pagetitle' => $row->rc_title,
@@ -319,7 +319,7 @@ class UserActivity {
 					$this->items_grouped['edit'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
 				}
 				$this->items[] = array(
-					'id' => 0,
+					'id' => $row->rc_id,
 					'type' => 'edit',
 					'timestamp' => ( $row->item_date ),
 					'pagetitle' => $row->rc_title,
@@ -935,23 +935,6 @@ class UserActivity {
 				'data' => $html
 			);
 
-			// $html = wfMessage(
-			// 	'useractivity-award',
-			// 	'<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$row->sg_user_name}</a></b>",
-			// 	$row->sg_user_name
-			// )->text() .
-			// '<div class="item">
-			// 	<a href="' . htmlspecialchars( $system_gift_link->getFullURL( 'gift_id=' . $row->sg_id ) ) . "\" rel=\"nofollow\">
-			// 		{$system_gift_image}
-			// 		{$row->gift_name}
-			// 	</a>
-			// </div>";
-
-			// $this->activityLines[] = array(
-			// 	'type' => 'system_gift',
-			// 	'timestamp' => $row->item_date,
-			// 	'data' => ' ' . $html
-			// );
 
 			$this->items[] = array(
 				'id' => $row->sg_id,
@@ -1541,21 +1524,10 @@ class UserActivity {
 		foreach ( $this->items_grouped[$type] as $page_name => $page_data ) {
 			$timeago = CommentFunctions::getTimeAgo($page_data['timestamp']).'前';
 			$key = wfForeignMemcKey('huiji', '', 'simplifyPageActivity', $type, $page_name, $page_data['timestamp'], count( $page_data['users'] ));
-			if (!isset( $this->displayed[$type][$page_name])){
-				/* memcache checking */
-				$html = $wgMemc->get($key);
-				if ($html != '' ){
-					$html = $this->updateTime($html, $timeago);		
 
-					$this->activityLines[] = array(
-						'type' => $type,
-						'timestamp' => $page_data['timestamp'],
-						'data' => $html
-					);
-					return;
-				}
+			if (isset($this->displayed[$type][$page_name])){
+				continue;
 			}
-
 			$users = '';
 			$pages = '';
 
@@ -1620,7 +1592,8 @@ class UserActivity {
 							} 
 							// don't stack the old ones.
 							/* get rid of same actions more than 1/2 day ago */
-							if ( $page_data2['timestamp'] < $page_data['timestamp'] - $this->half_a_day ) {
+							if ( $page_data2['timestamp'] < $page_data['timestamp'] - $this->half_a_day ||
+									$page_data2['timestamp'] > $page_data['timestamp']) {
 								continue;
 							}
 							foreach ( $page_data2['users'] as $user_name2 => $action2 ) {
@@ -1677,48 +1650,59 @@ class UserActivity {
 				$safeTitle = htmlspecialchars( $user_title->getText() );
 				$users .= ' <b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\" title=\"{$safeTitle}\">{$user_name_short}</a></b>";
 			}
-			
+			/* memcache checking */
+			$html = $wgMemc->get($key);
+			if ($html != '' ){
+				$html = $this->updateTime($html, $timeago);		
 
-			$prefixToName = '';
-			if ( isset($page_data['prefix']) ){
-				if ( is_array($page_data['prefix'])){
-					$page_data['prefix'] = array_unique($page_data['prefix']);
-					$prefixCount = count($page_data['prefix']);
-					$i = 0;
-					foreach($page_data['prefix'] as $prefix){
-						$prefixToName .= HuijiPrefix::prefixToSiteNameAnchor($prefix);
-						$i++;
-						if ($i < $prefixCount - 1 ){
-							$prefixToName .= wfMessage( 'comma-separator' )->text();
-						}
-						if ($i == $prefixCount-1 && $prefixCount > 1){
-							$prefixToName .= wfMessage( 'and' )->text();
-						}
-					}
-				}elseif (is_string($page_data['prefix'])){
-					$prefixToName .= HuijiPrefix::prefixToSiteNameAnchor($prefix);
-				}
+				$this->activityLines[] = array(
+					'type' => $type,
+					'timestamp' => $page_data['timestamp'],
+					'data' => $html
+				);
+				continue;
 			}
-			/* prepare format */
-
-			/* build html */
-			$html = $this->templateParser->processTemplate(
-				'user-home-item',
-				array(
-					'userAvatar' => $avatarUrl,
-					'userName'  => $users,
-					'timestamp' => $timeago,
-					'description' => wfMessage(
-										"useractivity-{$type}",
-										$users, $count_users, $pages, $pages_count,
-										$userNameForGender, $prefixToName
-									)->text(),
-					'hasShowcase' => false,
-				)
-			);
-			$wgMemc->set($key, $html);
 
 			if ( $pages || $has_page == false ) {
+				$prefixToName = '';
+				if ( isset($page_data['prefix']) ){
+					if ( is_array($page_data['prefix'])){
+						$page_data['prefix'] = array_unique($page_data['prefix']);
+						$prefixCount = count($page_data['prefix']);
+						$i = 0;
+						foreach($page_data['prefix'] as $prefix){
+							$prefixToName .= HuijiPrefix::prefixToSiteNameAnchor($prefix);
+							$i++;
+							if ($i < $prefixCount - 1 ){
+								$prefixToName .= wfMessage( 'comma-separator' )->text();
+							}
+							if ($i == $prefixCount-1 && $prefixCount > 1){
+								$prefixToName .= wfMessage( 'and' )->text();
+							}
+						}
+					}elseif (is_string($page_data['prefix'])){
+						$prefixToName .= HuijiPrefix::prefixToSiteNameAnchor($prefix);
+					}
+				}
+				/* prepare format */
+
+				/* build html */
+				$html = $this->templateParser->processTemplate(
+					'user-home-item',
+					array(
+						'userAvatar' => $avatarUrl,
+						'userName'  => $users,
+						'timestamp' => $timeago,
+						'description' => wfMessage(
+											"useractivity-{$type}",
+											$users, $count_users, $pages, $pages_count,
+											$userNameForGender, $prefixToName
+										)->text(),
+						'hasShowcase' => false,
+					)
+				);
+			
+				$wgMemc->set($key, $html);
 
 				$this->activityLines[] = array(
 					'type' => $type,
