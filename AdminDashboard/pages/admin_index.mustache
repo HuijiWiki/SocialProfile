@@ -1,16 +1,16 @@
 <div id="page-wrapper">
     <!-- /.row -->
-    <div class="row admin-statistics">
+    <div class="row">
         <div class="col-lg-3 col-md-6">
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-xs-3">
-                            <i class="icon-trophy"></i>
+                            <i class="fa fa-comments fa-5x"></i>
                         </div>
                         <div class="col-xs-9 text-right">
-                            <div class="huge">昨日评分{{siteScore}}</div>
-                            <div>维基排名{{siteRank}}</div>
+                            <div class="huge">昨日排名{{siteRank}}</div>
+                            <div>昨日得分{{siteScore}}</div>
                         </div>
                     </div>
                 </div>
@@ -21,41 +21,11 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-xs-3">
-                            <i class="icon-note"></i>
+                            <i class="fa fa-tasks fa-5x"></i>
                         </div>
                         <div class="col-xs-9 text-right">
-                            <div class="huge">昨日编辑{{yesterdayEdit}}</div>
-                            <div>全部编辑{{totalEdit}}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <i class="icon-eye"></i>
-                        </div>
-                        <div class="col-xs-9 text-right">
-                            <div class="huge">昨日浏览{{yesterdayView}}</div>
-                            <div>历史浏览{{totalView}}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <i class="icon-user-follow"></i>
-                        </div>
-                        <div class="col-xs-9 text-right">
-                            <div class="huge">昨日关注{{yesterdayCount}}</div>
-                            <div>全部关注{{totalCount}}</div>
+                            <div class="huge">昨日新增{{yesterdayCount}}</div>
+                            <div>本站关注总人数{{totalCount}}</div>
                         </div>
                     </div>
                 </div>
@@ -66,6 +36,36 @@
                         <div class="clearfix"></div>
                     </div>
                 </a>-->
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-shopping-cart fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">昨日浏览{{yesterdayView}}</div>
+                            <div>历史总浏览{{totalView}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-support fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">昨日编辑{{yesterdayEdit}}</div>
+                            <div>本站编辑总数{{totalEdit}}</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -98,9 +98,9 @@
                 <!-- /.panel-heading -->
                 <div class="panel-body">
                     <div id="morris-area-echart" style="height:400px">Loading...</div>
-                    <div id="morris-area-echart2" style="height:400px">Loading...</div>
-                    <div id="morris-area-echart3" style="height:400px">Loading...</div>
                     <div id="morris-area-echart4" style="height:400px">Loading...</div>
+                    <div id="morris-area-echart3" style="height:400px">Loading...</div>
+                    <div id="morris-area-echart2" style="height:400px">Loading...</div>
                 </div>
                 <!-- /.panel-body -->
             </div>
