@@ -103,7 +103,7 @@ class SpecialsendToAllUsers extends UnlistedSpecialPage {
 		$output .= '</div>
 		</div>';
 
-		$us = new UserStats();
+		$us = new UserStats($user->getId(),$user->getName());
 		$follows = $us->getAllUser( );
 
 		$output .= '<div id="blast-friends-list" class="blast-friends-list">';
@@ -112,11 +112,7 @@ class SpecialsendToAllUsers extends UnlistedSpecialPage {
 		$per_row = 3;
 		if ( count( $follows ) > 0 ) {
 			foreach ( $follows as $follow ) {
-				if ( $follow['type'] == 1 ) {
-					$class = 'friend';
-				} else {
-					$class = 'foe';
-				}
+				$class = 'friend';
 				if ( $follow['user_name'] !== $user->getName() ) {
 					$id = $follow['user_id'];
 					$output .= '<div class="blast-' . $class . "-unselected\" id=\"user-{$id}\">
