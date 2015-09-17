@@ -178,3 +178,15 @@
         border-left-width: 0;
     }
 }
+.admin-statistics .panel{
+    border-radius: 0;
+}
+.admin-statistics .panel-heading{
+    border-radius: 0;
+}
+.admin-statistics .panel i{
+    font-size: 36px;
+}
+.admin-statistics .text-right {
+    text-align: left;
+}
