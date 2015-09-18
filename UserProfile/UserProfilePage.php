@@ -333,6 +333,36 @@ class UserProfilePage extends Article {
 	        		$currentMaxlen = 0;
 	        	}
 	        }
+	        if ($maxlen == 2) {
+	        	 
+	        }elseif ($maxlen == 3) {
+	        	$usg = new UserSystemGifts( $wgUser->getName() );
+				$usg->sendSystemGift( 25 );
+	        }elseif ($maxlen == 7) {
+	        	 
+	        }elseif ($maxlen == 13) {
+	        	 
+	        }elseif ($maxlen == 23) {
+	        	 
+	        }elseif ($maxlen == 61) {
+	        	 
+	        }elseif ($maxlen == 109) {
+	        	 
+	        }elseif ($maxlen == 199) {
+	        	 
+	        }elseif ($maxlen == 367) {
+	        	 
+	        }elseif ($maxlen == 727) {
+	        	 
+	        }elseif ($maxlen == 1213) {
+	        	 
+	        }elseif ($maxlen == 1579) {
+	        	 
+	        }elseif ($maxlen == 1949) {
+	        	 
+	        }elseif ($maxlen == 2333) {
+	        	 
+	        }
 	        $wgOut->addHTML('
 	            <div class="check-wrapper"><svg width="721" height="110" class=" ">
 	                <g transform="translate(20, 20)">
