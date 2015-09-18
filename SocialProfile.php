@@ -120,6 +120,7 @@ require_once( "$IP/extensions/SocialProfile/UserUserFollows/UserUserFollows_Ajax
 require_once( "$IP/extensions/SocialProfile/UserStatus/UserStatus_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/UserSiteFollows/UserSiteFollows_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/SiteStatus/SiteStatus_AjaxFunctions.php" );
+require_once( "$IP/extensions/SocialProfile/UserActivity/UserActivity_AjaxFunctions.php" );
 // What to display on social profile pages by default?
 $wgUserProfileDisplay['board'] = true;
 $wgUserProfileDisplay['foes'] = false;
@@ -385,6 +386,14 @@ $wgResourceModules['ext.socialprofile.admindashboard.js'] = array(
 				),
 	'localBasePath' => __DIR__ . '/AdminDashboard/js',
 	'remoteExtPath' => 'SocialProfile/AdminDashboard/js',
+);
+// UserAcitvity
+$wgResourceModules['ext.socialprofile.useractivity.js'] = array(
+	'scripts' => array(
+					'UserActivity.js',
+				),
+	'localBasePath' => __DIR__ . '/UserActivity',
+	'remoteExtPath' => 'SocialProfile/UserActivity',
 );
 $wgResourceModules['ext.guidedTour.tour.newuser'] = array(
 	'scripts' => 'tours/newuser.js',

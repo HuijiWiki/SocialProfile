@@ -39,7 +39,8 @@ class UserHome extends SpecialPage {
 
 		// Add CSS
 		$out->addModuleStyles( 'ext.socialprofile.useractivity.css' );
-
+		// Add Javascript
+		$out->addModuleScripts( 'ext.socialprofile.useractivity.js' );
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
 
@@ -69,50 +70,6 @@ class UserHome extends SpecialPage {
 			<li role="presentation"><a href="/wiki/Special:UserActivity?filter=USER" aria-controls="user" role="tab" >我自己</a></li>
 			<li role="presentation"><a href="/wiki/Special:UserActivity?filter=ALL" aria-controls="all" role="tab" >精彩推荐</a></li>
 		</ul>';
-
-		// If not otherwise specified, display everything but *votes* in the feed
-		if ( $item_type == 'edit' || $item_type == 'all' ) {
-			$edits = 1;
-		}
-		if ( $item_type == 'vote' || $item_type == 'all' ) {
-			$votes = 1;
-		}
-		if ( $item_type == 'comment' || $item_type == 'all' ) {
-			$comments = 1;
-		}
-		if ( $item_type == 'gift-rec' || $item_type == 'all' ) {
-			$gifts = 1;
-		}
-		if ( $item_type == 'friend' || $item_type == 'all' ) {
-			$relationships = 1;
-		}
-		if ( $item_type == 'system_message' || $item_type == 'all' ) {
-			$messages = 1;
-		}
-		if ( $item_type == 'system_gift' || $item_type == 'all' ) {
-			$system_gifts = 1;
-		}
-		if ( $item_type == 'user_message' || $item_type == 'all' ) {
-			$messages_sent = 1;
-		}
-		if ( $item_type == 'network_update' || $item_type == 'all' ) {
-			$network_updates = 1;
-		}
-		if ( $item_type == 'user_update_status' || $item_type == 'all' ) {
-			$user_update_status = 1;
-		}
-		if ( $item_type == 'user_user_follow' || $item_type == 'all' ) {
-			$user_user_follows = 1;
-		}
-		if ( $item_type == 'user_site_follow' || $item_type == 'all' ) {
-			$user_site_follows = 1;
-		}
-		if ( $item_type == 'domain_creation' || $item_type == 'all' ) {
-			$domain_creations = 1;
-		}
-		if ( $item_type == 'image_upload' || $item_type == 'all' ) {
-			$image_uploads = 1;
-		}
 
 		// Filtering feature, if enabled
 		// The filter message's format is:
@@ -160,68 +117,11 @@ class UserHome extends SpecialPage {
 			</div>';
 		}
 
-		$output .= '<div class="user-home-feed">';
-
-		// $rel = new UserActivity( $user->getName(), ( ( $rel_type == 1 ) ? ' friends' : 'foes' ), 50 );
 		$fixedLimit = 30;
-		$rel = new UserActivity( $user->getName(), $filter , $fixedLimit );
-		if ($item_type != 'default'){
-			$rel->setActivityToggle( 'show_edits', $edits );
-			$rel->setActivityToggle( 'show_votes', $votes );
-			$rel->setActivityToggle( 'show_comments', $comments );
-			$rel->setActivityToggle( 'show_gifts_rec', $gifts );
-			$rel->setActivityToggle( 'show_relationships', $relationships );
-			$rel->setActivityToggle( 'show_system_messages', $messages );
-			$rel->setActivityToggle( 'show_system_gifts', $system_gifts );
-			$rel->setActivityToggle( 'show_messages_sent', $messages_sent );
-			$rel->setActivityToggle( 'show_network_updates', $network_updates );
-			$rel->setActivityToggle( 'show_domain_creations', $domain_creations );
-			$rel->setActivityToggle( 'show_user_user_follows', $user_user_follows );
-			$rel->setActivityToggle( 'show_user_site_follows', $user_site_follows );
-			$rel->setActivityToggle( 'show_user_update_status', $user_update_status );
-			$rel->setActivityToggle( 'show_image_uploads', $image_uploads );
-		}
-		/**
-		 * Get all relationship activity
-		 */
-		$key = wfForeignMemcKey( 'huiji',' ','site_activity', $filter, $item_type, $fixedLimit, $user->getName() );
-		$data = $wgMemc->get($key);
-		if ($data != ''){
-			$activity = $data;
-		} else {
-			$activity = $rel->getActivityListGrouped();
-			$wgMemc->set($key, $activity, 60 * 1);
-		}
-		
-		$border_fix = '';
-
-		if ( $activity ) {
-			$x = 1;
-			$numberOfItems = 30;
-			foreach ( $activity as $item ) {
-				if ( $x < $numberOfItems ) {
-					if (
-						( ( count( $activity ) > $numberOfItems ) && ( $x == $numberOfItems - 1 ) ) ||
-						( ( count( $activity ) < $numberOfItems ) && ( $x == ( count( $activity ) ) ) )
-					) {
-						$border_fix = ' border-fix';
-					} 
-
-					$typeIcon = UserActivity::getTypeIcon( $item['type'] );
-					// $output .= "<div class=\"user-home-activity{$border_fix}\">
-					// 	<img src=\"{$wgExtensionAssetsPath}/SocialProfile/images/" . $typeIcon . "\" alt=\"\" border=\"0\" />
-					// 	{$item['data']}
-					// </div>";
-					$output .= "<div class=\"user-home-activity{$border_fix}\">
-						{$item['data']}
-					</div>";
-					$x++;
-				}
-			}
-		}
+		$output .= '<div class="user-home-feed" data-filter="'.$filter.'" data-limit="'.$fixedLimit.'" data-item_type="'.$item_type.'">';
 
 		$output .= '</div>
-		<div class="cleared"></div>';
+		<div class="cleared"></div><button id="user-activity-more">More</button>';
 		$out->addHTML( $output );
 	}
 }

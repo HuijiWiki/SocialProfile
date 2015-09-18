@@ -55,7 +55,7 @@ class UserActivity {
 	 *                        kind of information is wanted
 	 * @param $item_max Integer: maximum amount of items to display in the feed
 	 */
-	public function __construct( $username, $filter, $item_max ) {
+	public function __construct( $username, $filter, $item_max, $earlierThan = null ) {
 		if ( $username ) {
 			//$title1 = Title::newFromDBkey( $username );
 			$this->user_name = $username;
@@ -71,6 +71,7 @@ class UserActivity {
 		$this->cached_where = false;
 		$this->cached_tables = false;
 		$this->templateParser = new TemplateParser(  __DIR__ . '/html' );
+		$this->earlierThan = $earlierThan;
 	}
 
 	private function setFilter( $filter ) {
@@ -168,6 +169,28 @@ class UserActivity {
 		}
 		$this->cached_tables = $tables;
 		return $tables;
+	}
+	/**
+	 * Based on the earlierThan, generate the option clause.
+	 * @param $filed the option field to be ordered. 
+	 * @return sql having clause for sql.
+	 */
+	private function option( $field ){
+		$option = array();
+		if ($this->earlierThan != null) {
+			return array(
+				'ORDER BY' => "{$field} DESC",
+				'LIMIT' => $this->item_max,
+				'OFFSET' => 0,
+				'HAVING' => "item_date < {$this->earlierThan}",
+			);
+		} else {
+			return array(
+				'ORDER BY' => "{$field} DESC",
+				'LIMIT' => $this->item_max,
+				'OFFSET' => 0,
+			);
+		}
 	}
 
 	/**
@@ -276,7 +299,12 @@ class UserActivity {
 		// echo $dbr->unionQueries($sqls, true)." ORDER BY `rc_id` DESC LIMIT $this->item_max OFFSET 0";
 		// die(1);
 		if (count($sqls) > 0){
-			$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
+			if ($this->earlierThan == null){
+				$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
+			} else {
+				$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0 HAVING item_date < {$this->earlierThan}");
+			}
+			
 
 			foreach ( $res as $row ) {
 				$row->item_date = strtotime('+8 hour', $row->item_date);
@@ -349,6 +377,7 @@ class UserActivity {
 		global $wgLang;
 		$dbr = wfGetDB( DB_SLAVE );
 		$where = $this->where('f_user_id');
+		$option = $this->option('f_id');
 		$res = $dbr->select(
 			'user_site_follow',
 			array(
@@ -357,11 +386,7 @@ class UserActivity {
 			),
 			$where,
 			__METHOD__,
-			array(
-				'ORDER BY' => 'f_id DESC',
-				'LIMIT' => $this->item_max,
-				'OFFSET' => 0
-			)
+			$option
 		);
 
 		foreach ( $res as $row ) {
@@ -409,6 +434,7 @@ class UserActivity {
 		global $wgLang;
 		$dbr = wfGetDB( DB_SLAVE );
 		$where = $this->where('f_user_id');
+		$option = $this->option('f_id');
 		$res = $dbr->select(
 			'user_user_follow',
 			array(
@@ -417,11 +443,7 @@ class UserActivity {
 			),
 			$where,
 			__METHOD__,
-			array(
-				'ORDER BY' => 'f_id DESC',
-				'LIMIT' => $this->item_max,
-				'OFFSET' => 0
-			)
+			$option
 		);
 
 		foreach ( $res as $row ) {
@@ -471,6 +493,7 @@ class UserActivity {
 		}
 		$where = $this->where('vote_user_id');
 		$where[] = 'vote_page_id = page_id';
+		$option = $this->option('vote_date');
 		$res = $dbr->select(
 			array( 'Vote', 'page' ),
 			array(
@@ -480,11 +503,7 @@ class UserActivity {
 			),
 			$where,
 			__METHOD__,
-			array(
-				'ORDER BY' => 'vote_date DESC',
-				'LIMIT' => $this->item_max,
-				'OFFSET' => 0
-			)
+			$option
 		);
 
 		foreach ( $res as $row ) {
@@ -552,7 +571,12 @@ class UserActivity {
 		}
 		if (count($sqls) > 0){
 			
-			$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
+			if ($this->earlierThan == null){
+				$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
+			} else {
+				$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0 HAVING item_date < {$this->earlierThan}");
+			}
+			
 
 			foreach ( $res as $row ) {
 				$row->item_date = strtotime('+8 hour', $row->item_date);
@@ -664,7 +688,12 @@ class UserActivity {
 			$sqls[] = $sql;
 		}
 		if (count($sqls) > 0){
-			$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
+			if ($this->earlierThan == null){
+				$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
+			} else {
+				$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0 HAVING item_date < {$this->earlierThan}");
+			}
+			
 			foreach ( $res as $row ) {
 				$show_comment = true;
 
@@ -775,6 +804,7 @@ class UserActivity {
 		$dbr = wfGetDB( DB_SLAVE );
 
 		$where = $this->where('ug_user_id_to');
+		$option = $this->option('ug_id');
 
 		$res = $dbr->select(
 			array( 'user_gift', 'gift' ),
@@ -785,11 +815,7 @@ class UserActivity {
 			),
 			$where,
 			__METHOD__,
-			array(
-				'ORDER BY' => 'ug_id DESC',
-				'LIMIT' => $this->item_max,
-				'OFFSET' => 0
-			),
+			$option,
 			array( 'gift' => array( 'INNER JOIN', 'gift_id = ug_gift_id' ) )
 		);
 
@@ -872,6 +898,7 @@ class UserActivity {
 		$dbr = wfGetDB( DB_SLAVE );
 
 		$where = $this->where('sg_user_id');
+		$option = $this->option('sg_id');
 
 		$res = $dbr->select(
 			array( 'user_system_gift', 'system_gift' ),
@@ -881,11 +908,7 @@ class UserActivity {
 			),
 			$where,
 			__METHOD__,
-			array(
-				'ORDER BY' => 'sg_id DESC',
-				'LIMIT' => $this->item_max,
-				'OFFSET' => 0
-			),
+			$option,
 			array( 'system_gift' => array( 'INNER JOIN', 'gift_id = sg_gift_id' ) )
 		);
 
@@ -961,6 +984,7 @@ class UserActivity {
 		$dbr = wfGetDB( DB_SLAVE );
 
 		$where = $this->where('r_user_id');
+		$option = $this->option('r_id');
 		$res = $dbr->select(
 			'user_relationship',
 			array(
@@ -970,11 +994,7 @@ class UserActivity {
 			),
 			$where,
 			__METHOD__,
-			array(
-				'ORDER BY' => 'r_id DESC',
-				'LIMIT' => $this->item_max,
-				'OFFSET' => 0
-			)
+			$option
 		);
 
 		foreach ( $res as $row ) {
@@ -1031,6 +1051,7 @@ class UserActivity {
 		$where = $this->where('ub_user_id_from');
 		// We do *not* want to display private messages...
 		$where['ub_type'] = 0;
+		$option = $this->option('ub_id');
 		$res = $dbr->select(
 			'user_board',
 			array(
@@ -1040,11 +1061,7 @@ class UserActivity {
 			),
 			$where,
 			__METHOD__,
-			array(
-				'ORDER BY' => 'ub_id DESC',
-				'LIMIT' => $this->item_max,
-				'OFFSET' => 0
-			)
+			$option
 		);
 
 		foreach ( $res as $row ) {
@@ -1099,6 +1116,7 @@ class UserActivity {
 		$dbr = wfGetDB( DB_SLAVE );
 
 		$where = $this->where('um_user_id');
+		$option = $this->option('um_id');
 
 		$res = $dbr->select(
 			'user_system_messages',
@@ -1108,11 +1126,7 @@ class UserActivity {
 			),
 			$where,
 			__METHOD__,
-			array(
-				'ORDER BY' => 'um_id DESC',
-				'LIMIT' => $this->item_max,
-				'OFFSET' => 0
-			)
+			$option
 		);
 
 		foreach ( $res as $row ) {
@@ -1181,6 +1195,7 @@ class UserActivity {
 		$dbr = wfGetDB( DB_SLAVE );
 
 		$where = $this->where('us_user_id');
+		$option = $this->option('us_id');
 		$res = $dbr->select(
 			'user_status',
 			array(
@@ -1190,11 +1205,7 @@ class UserActivity {
 			),
 			$where,
 			__METHOD__,
-			array(
-				'ORDER BY' => 'us_id DESC',
-				'LIMIT' => $this->item_max,
-				'OFFSET' => 0
-			)
+			$option
 		);
 
 		foreach ( $res as $row ) {
@@ -1260,6 +1271,7 @@ class UserActivity {
 		$dbr = wfGetDB( DB_SLAVE );
 
 		$where = $this->where('domain_founder_id');
+		$option = $this->option('domain_id');
 
 		/* reading database */
 		$res = $dbr->select(
@@ -1271,11 +1283,7 @@ class UserActivity {
 			),
 			$where,
 			__METHOD__,
-			array(
-				'ORDER BY' => 'domain_id DESC',
-				'LIMIT' => $this->item_max,
-				'OFFSET' => 0
-			)
+			$option
 		);
 
 		foreach ( $res as $row ) {
