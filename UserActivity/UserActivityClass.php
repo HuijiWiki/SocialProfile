@@ -302,7 +302,7 @@ class UserActivity {
 			if ($this->earlierThan == null){
 				$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
 			} else {
-				$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0 HAVING item_date < {$this->earlierThan}");
+				$res = $dbr->query($dbr->unionQueries($sqls, true)." HAVING `item_date` < {$this->earlierThan} ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
 			}
 			
 
@@ -574,7 +574,7 @@ class UserActivity {
 			if ($this->earlierThan == null){
 				$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
 			} else {
-				$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0 HAVING item_date < {$this->earlierThan}");
+				$res = $dbr->query($dbr->unionQueries($sqls, true)." HAVING `item_date` < {$this->earlierThan} ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
 			}
 			
 
@@ -691,7 +691,7 @@ class UserActivity {
 			if ($this->earlierThan == null){
 				$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
 			} else {
-				$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0 HAVING item_date < {$this->earlierThan}");
+				$res = $dbr->query($dbr->unionQueries($sqls, true)." HAVING `item_date` < {$this->earlierThan} ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
 			}
 			
 			foreach ( $res as $row ) {
