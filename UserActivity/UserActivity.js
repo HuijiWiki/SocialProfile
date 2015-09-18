@@ -18,6 +18,7 @@ jQuery( document ).ready( function() {
 		}
 		return function(){
 			showPlaceholder();
+			console.log(username+filter+item_type+limit+continuation);
 			jQuery.post(
 				mw.util.wikiScript(), {
 					action: 'ajax',
