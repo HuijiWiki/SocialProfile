@@ -280,7 +280,7 @@ class UserActivity {
 
 			$tableName = '`'.$DBprefix.'recentchanges'.'`';
 			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
-				array('UNIX_TIMESTAMP(rc_timestamp+60*60*8) AS item_date', 'rc_title',
+				array('(UNIX_TIMESTAMP(rc_timestamp)+60*60*8) AS item_date', 'rc_title',
 					'rc_user', 'rc_user_text', 'rc_comment', 'rc_id', 'rc_minor',
 					'rc_new', 'rc_log_action', 'rc_namespace', $dbr->addQuotes($table).' AS prefix',
 					)
@@ -554,7 +554,7 @@ class UserActivity {
 			}
 			$tableName = '`'.$DBprefix.'image'.'`';
 			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
-				array('UNIX_TIMESTAMP(img_timestamp+60*60*8) AS item_date',
+				array('(UNIX_TIMESTAMP(img_timestamp)+60*60*8) AS item_date',
 					'img_user_text', 'img_name', 'img_description',
 					'img_user', 'img_sha1', $dbr->addQuotes($table).' AS prefix',
 					)
