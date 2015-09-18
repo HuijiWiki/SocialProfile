@@ -280,7 +280,7 @@ class UserActivity {
 
 			$tableName = '`'.$DBprefix.'recentchanges'.'`';
 			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
-				array("UNIX_TIMESTAMP(CONVERT_TZ(img_timestamp, '+00:00','+08:00' )) AS item_date", 'rc_title',
+				array("UNIX_TIMESTAMP(CONVERT_TZ(rc_timestamp, '+00:00','+08:00' )) AS item_date", 'rc_title',
 					'rc_user', 'rc_user_text', 'rc_comment', 'rc_id', 'rc_minor',
 					'rc_new', 'rc_log_action', 'rc_namespace', $dbr->addQuotes($table).' AS prefix',
 					)
