@@ -288,7 +288,11 @@ class UserActivity {
 			);
 			if (count($where) > 0){
 				$conds = $dbr->makeList( $where, LIST_AND );
-				$sql = "SELECT $fieldName FROM $tableName WHERE $conds";
+				if ($this->earlierThan == null){
+					$sql = "SELECT $fieldName FROM $tableName WHERE $conds";
+				} else {
+					$sql = "SELECT $fieldName FROM $tableName WHERE $conds HAVING `item_date` < {$this->earlierThan}";
+				}
 			} else {
 				$sql = "SELECT $fieldName FROM $tableName";
 			}
@@ -296,15 +300,11 @@ class UserActivity {
 			$sqls[] = $sql;
 
 		} 
+		if (count($sqls) > 0){
 		// echo $dbr->unionQueries($sqls, true)." ORDER BY `rc_id` DESC LIMIT $this->item_max OFFSET 0";
 		// die(1);
-		if (count($sqls) > 0){
-			if ($this->earlierThan == null){
-				$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
-			} else {
-				$res = $dbr->query($dbr->unionQueries($sqls, true)." HAVING `item_date` < {$this->earlierThan} ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
-			}
-			
+
+			$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
 
 			foreach ( $res as $row ) {
 				$row->item_date = strtotime('+8 hour', $row->item_date);
@@ -562,7 +562,11 @@ class UserActivity {
 			);
 			if (count($where) > 0){
 				$conds = $dbr->makeList( $where, LIST_AND );
-				$sql = "SELECT $fieldName FROM $tableName WHERE $conds";
+				if ($this->earlierThan == null){
+					$sql = "SELECT $fieldName FROM $tableName WHERE $conds";
+				} else {
+					$sql = "SELECT $fieldName FROM $tableName WHERE $conds HAVING `item_date` < {$this->earlierThan}";
+				}
 			} else {
 				$sql = "SELECT $fieldName FROM $tableName";
 			}
@@ -571,12 +575,9 @@ class UserActivity {
 		}
 		if (count($sqls) > 0){
 			
-			if ($this->earlierThan == null){
-				$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
-			} else {
-				$res = $dbr->query($dbr->unionQueries($sqls, true)." HAVING `item_date` < {$this->earlierThan} ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
-			}
 			
+			$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
+
 
 			foreach ( $res as $row ) {
 				$row->item_date = strtotime('+8 hour', $row->item_date);
@@ -681,19 +682,19 @@ class UserActivity {
 			);
 			if (count($where) > 0){
 				$conds = $dbr->makeList( $where, LIST_AND );
-				$sql = "SELECT $fieldName FROM $tableName INNER JOIN $joinTableName ON comment_page_id = page_id WHERE $conds";
+				if ($this->earlierThan == null){
+					$sql = "SELECT $fieldName FROM $tableName INNER JOIN $joinTableName ON comment_page_id = page_id WHERE $conds";
+				} else {
+					$sql = "SELECT $fieldName FROM $tableName INNER JOIN $joinTableName ON comment_page_id = page_id WHERE $conds HAVING `item_date` < {$this->earlierThan}";
+				}
 			} else {
 				$sql = "SELECT $fieldName FROM $tableName INNER JOIN $joinTableName ON comment_page_id = page_id";
 			}
 			$sqls[] = $sql;
 		}
 		if (count($sqls) > 0){
-			if ($this->earlierThan == null){
-				$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
-			} else {
-				$res = $dbr->query($dbr->unionQueries($sqls, true)." HAVING `item_date` < {$this->earlierThan} ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
-			}
-			
+			$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
+
 			foreach ( $res as $row ) {
 				$show_comment = true;
 
