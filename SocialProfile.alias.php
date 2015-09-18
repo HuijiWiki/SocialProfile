@@ -510,6 +510,7 @@ $specialPageAliases['zh-hans'] = array(
 	'EditRank' => array('编辑排行'),
 	'SendToFollowers' => array('关注者群发消息'),
 	'SendToAllUsers' => array('所有人群发消息'),
+	'UserActivity' => array('用户动态'),
 );
 
 /** Traditional Chinese (中文（繁體）‎) */
