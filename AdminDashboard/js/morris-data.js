@@ -58,14 +58,14 @@ jQuery( document ).ready( function() {
                                     // stack: '总量',
                                     // color:'red',
                                     // line style
-                                    itemStyle:{
-                                        normal:{
-                                            lineStyle:{
-                                                color:'black',
-                                                width:3
-                                            }
-                                        }
-                                    },
+                                    // itemStyle:{
+                                    //     normal:{
+                                    //         lineStyle:{
+                                    //             color:'black',
+                                    //             width:3
+                                    //         }
+                                    //     }
+                                    // },
                                     data:[],
 
                                     // 系列中的数据标注内容 series.markPoint  

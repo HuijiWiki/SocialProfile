@@ -505,6 +505,11 @@ $specialPageAliases['zh-hans'] = array(
 	'UserBoard' => array( '用户留言板' ),
 	'ViewRelationshipRequests' => array( '查看关系申请' ),
 	'ViewRelationships' => array( '查看关系' ),
+	'AdminDashboard' => array('管理面板'),
+	'SiteRank' => array('站点排行'),
+	'EditRank' => array('编辑排行'),
+	'SendToFollowers' => array('关注者群发消息'),
+	'SendToAllUsers' => array('所有人群发消息'),
 );
 
 /** Traditional Chinese (中文（繁體）‎) */
