@@ -2,7 +2,7 @@ jQuery( document ).ready( function() {
 	var next = (function(){
 		var config = {
 			filter: jQuery('.user-home-feed').data('filter'),
-			item_type: jQuery('.user-home-feed').data('tem_type'),
+			item_type: jQuery('.user-home-feed').data('item_type'),
 			limit: jQuery('.user-home-feed').data('limit')
 		}
 		var username = mw.config.get('wgUserName');
