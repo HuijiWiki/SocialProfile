@@ -28,10 +28,12 @@ class SystemGifts {
 		'points_firstthree_weekly' => 17,
 		'points_firstthree_monthly' => 18,
 		'42' => 19,
-		'7夕' => 20
+		'7夕' => 20,
+		'端午' => 21,
+		'连续编辑' => 22,
 	);
 
-	private $repeatableGifts = array( 12, 13, 15, 16, 17, 18, 19, 20 );
+	private $repeatableGifts = array( 12, 13, 15, 16, 17, 18, 19, 20, 21 );
 
 	/**
 	 * Accessor for the private $categories variable; used by

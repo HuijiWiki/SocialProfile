@@ -77,7 +77,8 @@ class UserStatsTrack {
 		'quiz_points' => 'stats_quiz_points',
 		'currency' => 'stats_currency',
 		'links_submitted' => 'stats_links_submitted',
-		'links_approved' => 'stats_links_approved'
+		'links_approved' => 'stats_links_approved',
+		'连续编辑' => 'stats_edit_continue'
 	);
 
 	/**
