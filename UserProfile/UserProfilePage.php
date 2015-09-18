@@ -334,34 +334,47 @@ class UserProfilePage extends Article {
 	        	}
 	        }
 	        if ($maxlen == 2) {
-	        	 
+	        	$usg = new UserSystemGifts( $wgUser->getName() );
+				$usg->sendSystemGift( 33 );
 	        }elseif ($maxlen == 3) {
 	        	$usg = new UserSystemGifts( $wgUser->getName() );
-				$usg->sendSystemGift( 25 );
+				$usg->sendSystemGift( 34 );
 	        }elseif ($maxlen == 7) {
-	        	 
+	        	$usg = new UserSystemGifts( $wgUser->getName() );
+				$usg->sendSystemGift( 35 ); 
 	        }elseif ($maxlen == 13) {
-	        	 
+	        	$usg = new UserSystemGifts( $wgUser->getName() );
+				$usg->sendSystemGift( 36 ); 
 	        }elseif ($maxlen == 23) {
-	        	 
+	        	$usg = new UserSystemGifts( $wgUser->getName() );
+				$usg->sendSystemGift( 37 ); 
 	        }elseif ($maxlen == 61) {
-	        	 
+	        	$usg = new UserSystemGifts( $wgUser->getName() );
+				$usg->sendSystemGift( 38 ); 
 	        }elseif ($maxlen == 109) {
-	        	 
+	        	$usg = new UserSystemGifts( $wgUser->getName() );
+				$usg->sendSystemGift( 39 ); 
 	        }elseif ($maxlen == 199) {
-	        	 
+	        	$usg = new UserSystemGifts( $wgUser->getName() );
+				$usg->sendSystemGift( 40 ); 
 	        }elseif ($maxlen == 367) {
-	        	 
+	        	$usg = new UserSystemGifts( $wgUser->getName() );
+				$usg->sendSystemGift( 41 ); 
 	        }elseif ($maxlen == 727) {
-	        	 
+	        	$usg = new UserSystemGifts( $wgUser->getName() );
+				$usg->sendSystemGift( 42 ); 
 	        }elseif ($maxlen == 1213) {
-	        	 
+	        	$usg = new UserSystemGifts( $wgUser->getName() );
+				$usg->sendSystemGift( 43 ); 
 	        }elseif ($maxlen == 1579) {
-	        	 
+	        	$usg = new UserSystemGifts( $wgUser->getName() );
+				$usg->sendSystemGift( 44 ); 
 	        }elseif ($maxlen == 1949) {
-	        	 
+	        	$usg = new UserSystemGifts( $wgUser->getName() );
+				$usg->sendSystemGift( 45 ); 
 	        }elseif ($maxlen == 2333) {
-	        	 
+	        	$usg = new UserSystemGifts( $wgUser->getName() );
+				$usg->sendSystemGift( 46 ); 
 	        }
 	        $wgOut->addHTML('
 	            <div class="check-wrapper"><svg width="721" height="110" class=" ">
