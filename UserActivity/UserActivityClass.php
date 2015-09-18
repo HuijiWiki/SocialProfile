@@ -280,23 +280,23 @@ class UserActivity {
 
 			$tableName = '`'.$DBprefix.'recentchanges'.'`';
 			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
-				array('UNIX_TIMESTAMP(rc_timestamp) AS item_date', 'rc_title',
+				array('UNIX_TIMESTAMP(rc_timestamp+60*60*8) AS item_date', 'rc_title',
 					'rc_user', 'rc_user_text', 'rc_comment', 'rc_id', 'rc_minor',
 					'rc_new', 'rc_log_action', 'rc_namespace', $dbr->addQuotes($table).' AS prefix',
 					)
 				) 
 			);
 			if (count($where) > 0){
-				$conds = $dbr->makeList( $where, LIST_AND );
-				if ($this->earlierThan == null){
-					$sql = "SELECT $fieldName FROM $tableName WHERE $conds";
-				} else {
-					$sql = "SELECT $fieldName FROM $tableName WHERE $conds HAVING `item_date` < {$this->earlierThan}";
-				}
+				$conds = "WHERE ".$dbr->makeList( $where, LIST_AND );
 			} else {
-				$sql = "SELECT $fieldName FROM $tableName";
+				$conds = '';
 			}
-
+			if ($this->earlierThan != null){
+				$having = "HAVING `item_date` < {$this->earlierThan}";
+			} else {
+				$having = "";
+			}
+			$sql = "SELECT $fieldName FROM $tableName $conds $having";
 			$sqls[] = $sql;
 
 		} 
@@ -307,7 +307,7 @@ class UserActivity {
 			$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
 
 			foreach ( $res as $row ) {
-				$row->item_date = strtotime('+8 hour', $row->item_date);
+				// $row->item_date = strtotime('+8 hour', $row->item_date);
 				// Special pages aren't editable, so ignore them
 				// And blocking a vandal should not be counted as editing said
 				// vandal's user page...
@@ -554,22 +554,23 @@ class UserActivity {
 			}
 			$tableName = '`'.$DBprefix.'image'.'`';
 			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
-				array('UNIX_TIMESTAMP(img_timestamp) AS item_date',
+				array('UNIX_TIMESTAMP(img_timestamp+60*60*8) AS item_date',
 					'img_user_text', 'img_name', 'img_description',
 					'img_user', 'img_sha1', $dbr->addQuotes($table).' AS prefix',
 					)
 				) 
 			);
 			if (count($where) > 0){
-				$conds = $dbr->makeList( $where, LIST_AND );
-				if ($this->earlierThan == null){
-					$sql = "SELECT $fieldName FROM $tableName WHERE $conds";
-				} else {
-					$sql = "SELECT $fieldName FROM $tableName WHERE $conds HAVING `item_date` < {$this->earlierThan}";
-				}
+				$conds = "WHERE ".$dbr->makeList( $where, LIST_AND );
 			} else {
-				$sql = "SELECT $fieldName FROM $tableName";
+				$conds = '';
 			}
+			if ($this->earlierThan != null){
+				$having = "HAVING `item_date` < {$this->earlierThan}";
+			} else {
+				$having = "";
+			}
+			$sql = "SELECT $fieldName FROM $tableName $conds $having";
 			$sqls[] = $sql;
 
 		}
@@ -580,7 +581,7 @@ class UserActivity {
 
 
 			foreach ( $res as $row ) {
-				$row->item_date = strtotime('+8 hour', $row->item_date);
+				// $row->item_date = strtotime('+8 hour', $row->item_date);
 				$show_upload = true;
 
 				// global $wgFilterComments;
@@ -681,15 +682,16 @@ class UserActivity {
 				)
 			);
 			if (count($where) > 0){
-				$conds = $dbr->makeList( $where, LIST_AND );
-				if ($this->earlierThan == null){
-					$sql = "SELECT $fieldName FROM $tableName INNER JOIN $joinTableName ON comment_page_id = page_id WHERE $conds";
-				} else {
-					$sql = "SELECT $fieldName FROM $tableName INNER JOIN $joinTableName ON comment_page_id = page_id WHERE $conds HAVING `item_date` < {$this->earlierThan}";
-				}
+				$conds = "WHERE ".$dbr->makeList( $where, LIST_AND );
 			} else {
-				$sql = "SELECT $fieldName FROM $tableName INNER JOIN $joinTableName ON comment_page_id = page_id";
+				$conds = '';
 			}
+			if ($this->earlierThan != null){
+				$having = "HAVING `item_date` < {$this->earlierThan}";
+			} else {
+				$having = "";
+			}
+			$sql = "SELECT $fieldName FROM $tableName INNER JOIN $joinTableName ON comment_page_id = page_id $conds $having";
 			$sqls[] = $sql;
 		}
 		if (count($sqls) > 0){
