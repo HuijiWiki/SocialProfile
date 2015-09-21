@@ -314,6 +314,7 @@ class UserProfilePage extends Article {
 	        if (!empty($editBox[$today])) {
 	        	$editData[] = $today;
 	        }
+	        print_r($editData);
 	        $totalEdit = count($editData);
 	        $resArr[] = strtotime($editData[0]);
 	        $maxlen = 1;
@@ -333,36 +334,36 @@ class UserProfilePage extends Article {
 	        		$currentMaxlen = 0;
 	        	}
 	        }
-	        $usg = new UserSystemGifts( $wgUser->getName() );
-	        if ($maxlen == 2) {
-				$usg->sendSystemGift( 33 );
-	        }elseif ($maxlen == 3) {
-				$usg->sendSystemGift( 34 );
-	        }elseif ($maxlen == 7) {
-				$usg->sendSystemGift( 35 ); 
-	        }elseif ($maxlen == 13) {
-				$usg->sendSystemGift( 36 ); 
-	        }elseif ($maxlen == 23) {
-				$usg->sendSystemGift( 37 ); 
-	        }elseif ($maxlen == 61) {
-				$usg->sendSystemGift( 38 ); 
-	        }elseif ($maxlen == 109) {
-				$usg->sendSystemGift( 39 ); 
-	        }elseif ($maxlen == 199) {
-				$usg->sendSystemGift( 40 ); 
-	        }elseif ($maxlen == 367) {
-				$usg->sendSystemGift( 41 ); 
-	        }elseif ($maxlen == 727) {
-				$usg->sendSystemGift( 42 ); 
-	        }elseif ($maxlen == 1213) {
-				$usg->sendSystemGift( 43 ); 
-	        }elseif ($maxlen == 1579) {
-				$usg->sendSystemGift( 44 ); 
-	        }elseif ($maxlen == 1949) {
-				$usg->sendSystemGift( 45 ); 
-	        }elseif ($maxlen == 2333) {
-				$usg->sendSystemGift( 46 ); 
-	        }
+	   //      $usg = new UserSystemGifts( $wgUser->getName() );
+	   //      if ($maxlen == 2) {
+				// $usg->sendSystemGift( 33 );
+	   //      }elseif ($maxlen == 3) {
+				// $usg->sendSystemGift( 34 );
+	   //      }elseif ($maxlen == 7) {
+				// $usg->sendSystemGift( 35 ); 
+	   //      }elseif ($maxlen == 13) {
+				// $usg->sendSystemGift( 36 ); 
+	   //      }elseif ($maxlen == 23) {
+				// $usg->sendSystemGift( 37 ); 
+	   //      }elseif ($maxlen == 61) {
+				// $usg->sendSystemGift( 38 ); 
+	   //      }elseif ($maxlen == 109) {
+				// $usg->sendSystemGift( 39 ); 
+	   //      }elseif ($maxlen == 199) {
+				// $usg->sendSystemGift( 40 ); 
+	   //      }elseif ($maxlen == 367) {
+				// $usg->sendSystemGift( 41 ); 
+	   //      }elseif ($maxlen == 727) {
+				// $usg->sendSystemGift( 42 ); 
+	   //      }elseif ($maxlen == 1213) {
+				// $usg->sendSystemGift( 43 ); 
+	   //      }elseif ($maxlen == 1579) {
+				// $usg->sendSystemGift( 44 ); 
+	   //      }elseif ($maxlen == 1949) {
+				// $usg->sendSystemGift( 45 ); 
+	   //      }elseif ($maxlen == 2333) {
+				// $usg->sendSystemGift( 46 ); 
+	   //      }
 	        $wgOut->addHTML('
 	            <div class="check-wrapper"><svg width="721" height="110" class=" ">
 	                <g transform="translate(20, 20)">
