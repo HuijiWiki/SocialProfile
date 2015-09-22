@@ -45,7 +45,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		$ueb = new UserEditBox();
 		$rankInfo = AllSitesInfo::getAllSitesRankData( $wgHuijiPrefix, $yesterday );
 		$usf = new UserSiteFollow();
-		$follows = $usf->getSiteFollowedUser( '',$wgHuijiPrefix );
+		$follows = $usf->getSiteFollowers( '',$wgHuijiPrefix );
 		// print_r($follows);
 		$followCount = count($follows);
 		if($followCount >= 8){

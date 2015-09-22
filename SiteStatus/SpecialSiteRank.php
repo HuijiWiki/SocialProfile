@@ -39,7 +39,7 @@ class SpecialSiteRank extends SpecialPage {
 				<span class=\"top-fan-num\">{$value['site_rank']}.</span>
 				<span class=\"top-fan\"><a href='" . HuijiPrefix::prefixToUrl($value['site_prefix']) . "'>" .
 				HuijiPrefix::prefixToSiteName($value['site_prefix']) ."</a></span>
-				<span class=\"top-fan-points\">".number_format($value['site_score']).'mph</span>';
+				<span class=\"top-fan-points\">".$value['site_score'].'马赫</span>';
 			$output .= '<div class="cleared"></div>';
 			$output .= '</div>';
 		}
