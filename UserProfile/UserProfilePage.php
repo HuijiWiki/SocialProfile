@@ -125,7 +125,7 @@ class UserProfilePage extends Article {
 			$count[] = $val['count'];
 		}
 		array_multisort($count, SORT_DESC, $res);
-		$userCount = UserSiteFollow::getUserCount($this->user);
+		$userCount = UserSiteFollow::getFollowingCount($this->user);
 
 		if ($this->isOwner()){
 			$target = SpecialPage::getTitleFor('ViewFollows');

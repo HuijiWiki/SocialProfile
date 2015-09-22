@@ -51,7 +51,7 @@ function wfGetSiteFollowedUsers(){
 	$desdateArr = array_reverse($dateArr);
 	$res['date'] = $desdateArr;
 	foreach ($desdateArr as $key => $value) {
-		$dayFollow = UserSiteFollow::getSiteCountOneday( $wgHuijiPrefix, $value );
+		$dayFollow = UserSiteFollow::getFollowerCountOneday( $wgHuijiPrefix, $value );
 		$dfol = (int)isset($dayFollow)?$dayFollow:0;
 		$result[] = (int)$dfol;
 	}

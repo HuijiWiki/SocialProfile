@@ -72,7 +72,7 @@ class SpecialEditRank extends SpecialPage {
 		$user_id = User::idFromName( $user_name );
 		$target_user = User::newFromId( $user_id );
 		$userPage = Title::makeTitle( NS_USER, $user_name );
-		$sitefollows = UserSiteFollow::getUserFollowSite($target_user, $wgHuijiPrefix);
+		$sitefollows = UserSiteFollow::getSiteFollowersWithDetails($target_user, $wgHuijiPrefix);
 		$total = count($sitefollows);
 		$star_page = $per_page*($page-1);
 		$result = array_slice($sitefollows,$star_page ,$per_page );
@@ -88,7 +88,7 @@ class SpecialEditRank extends SpecialPage {
 				<span class=\"top-fan-num\">{$x}.</span>
 				<span class=\"top-fan\"><a href='" . $user['userUrl'] . "'>
 					{$commentIcon} </a><a href='" . $user['userUrl'] . "'>" .
-						$user['user'] .'</a><i>'.$user['level'] .'
+						$user['user'] .'</a><i class="hidden-xs hidden-sm">'.$user['level'] .'
 				</i></span>';
 			$output .= '<span class="top-fan-points"><b>' .
 				number_format( $user['count'] ) . '</b> ' .

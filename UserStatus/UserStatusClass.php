@@ -210,22 +210,22 @@ class UserStatus{
 		$status = $this->getStatus();
 		$result['gender'] = $gender;
 		$result['status'] = $status;	
-		//��ע��
+		//¹Ø×¢Êý
 		$usercount = UserUserFollow::getFollowingCount( $this->user );
 		$result['usercounts'] = $usercount;
-		//����ע��
+		//±»¹Ø×¢Êý
 		$usercounted = UserUserFollow::getFollowerCount( $this->user);
 		$result['usercounted'] = $usercounted;
 
-		//�༭��
+		//±à¼­Êý
 		$stats = new UserStats( $this->userid, $this->username );
 		$stats_data = $stats->getUserStats();
 		$result['editcount'] = $stats_data['edits'];
-		//�ȼ�
+		//µÈ¼¶
 		$user_level = new UserLevel( $stats_data['points'] );
 		$result['level'] = $user_level->getLevelName();
 
-		//�Ƿ��ע
+		//ÊÇ·ñ¹Ø×¢
 		if( $wgUser->isLoggedIn() ){			
 			$current_user = $wgUser->getName();
 			
@@ -237,7 +237,7 @@ class UserStatus{
 				$result['is_follow'] = 'N';
 			}
 
-			//��ͬ��ע
+			//¹²Í¬¹Ø×¢
 			$cfollow = array();
 			$t_user = $this->username;
 			$ufollower = UserUserFollow::getFollowedByUser( $t_user );
@@ -251,7 +251,7 @@ class UserStatus{
 				$cfollow = array();
 			}
 			$result['commonfollow'] = $cfollow;
-			//�ҹ�ע��˭Ҳ��ע��
+			//ÎÒ¹Ø×¢µÄË­Ò²¹Ø×¢Ëû
 			$result['minefollowerhim'] = self::getFollowingFollowsUser( $t_user,$current_user );
 		}else{
 			$result['is_follow'] = '';

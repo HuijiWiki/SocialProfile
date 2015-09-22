@@ -76,15 +76,15 @@ class UserSiteFollow{
 	 * @param $huijiPrefix String: the site
 	 * @return Integer
 	 */
-	static function getSiteCount ( $huijiPrefix ){
-		$data = self::getSiteCountCache( $huijiPrefix );
+	static function getFollowerCount ( $huijiPrefix ){
+		$data = self::getFollowerCountCache( $huijiPrefix );
 		if ( $data != '' ) {
 			if ( $data == -1 ) {
 				$data = 0;
 			}
 			$count = $data;
 		} else {
-			$count = self::getSiteCountDB( $huijiPrefix );
+			$count = self::getFollowerCountDB( $huijiPrefix );
 		}
 
 		return $count;
@@ -96,7 +96,7 @@ class UserSiteFollow{
 	 * @param $HuijiPrefix String:
 	 * @return Integer
 	 */
-	static function getSiteCountDB( $huijiPrefix ) {
+	static function getFollowerCountDB( $huijiPrefix ) {
 		global $wgMemc;
 
 		wfDebug( "Got site followers count (prefix={$huijiPrefix}) from DB\n" );
@@ -129,7 +129,7 @@ class UserSiteFollow{
 	 * 
 	 * @return Integer
 	 */
-	static function getSiteCountCache( $huijiPrefix ) {
+	static function getFollowerCountCache( $huijiPrefix ) {
 		global $wgMemc;
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'follow_count', $huijiPrefix );
 		$data = $wgMemc->get( $key );
@@ -146,27 +146,27 @@ class UserSiteFollow{
 	 * @param $user User:object
 	 * @return Integer
 	 */
-	static function getUserCount ( $user ){
-		$data = self::getUserCountCache( $user );
+	static function getFollowingCount ( $user ){
+		$data = self::getFollowingCountCache( $user );
 		if ( $data != '' ) {
 			if ( $data == -1 ) {
 				$data = 0;
 			}
 			$count = $data;
 		} else {
-			$count = self::getUserCountDB( $user );
+			$count = self::getFollowingCountDB( $user );
 		}
 
 		return $count;
 	}
 	/**
-	 * Get the amount of site followers from the
+	 * Get the amount of site followed by a given user from the
 	 * database and cache it.
 	 *
 	 * @param $user User Object:
 	 * @return Integer
 	 */
-	static function getUserCountDB( $user ) {
+	static function getFollowingCountDB( $user ) {
 		global $wgMemc;
 
 		wfDebug( "Got user followed sites count (prefix={$user}) from DB\n" );
@@ -199,7 +199,7 @@ class UserSiteFollow{
 	 * 
 	 * @return Integer
 	 */
-	static function getUserCountCache( $user ) {
+	static function getFollowingCountCache( $user ) {
 		global $wgMemc;
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'user_count', $user->getName() );
 		$data = $wgMemc->get( $key );
@@ -277,7 +277,7 @@ class UserSiteFollow{
 		
 
 	/**
-	 * Get 3 recently followed wiki site.
+	 * Get 3 most-edited following wiki site.
 	 * 
 	 * @param $user User object, whose info we want.
 	 * @return array the array of the top followed site.
@@ -324,7 +324,7 @@ class UserSiteFollow{
 			$siteName = HuijiPrefix::prefixToSiteName($prefix);
 			$topFollowed[$prefix] = $siteName;
 		}
-
+		// $result = sortFollowedSite($topFollowed);
 		$wgMemc->set( $key, $topFollowed );
 		return $topFollowed;
 	}
@@ -344,6 +344,13 @@ class UserSiteFollow{
 			return $data;
 		}
 	}
+	public static function getTopFollowedSitesWithDetails( $user_id, $target_user_id ){
+		$tuser = User::newFromId($target_user_id);
+		$followedByTargetUser = self::getTopFollowedSites($tuser);
+		$user = User::newFromId($user_id);
+		$followedByCurrentUser = self::getFullFollowedSites($user);
+		return self::sortFollowedSiteWithDetails($tuser, $followedByTargetUser, $followedByCurrentUser);		
+	}
 	/**
 	 * Get full list of followed sites from the
 	 * database and cache it.
@@ -351,23 +358,34 @@ class UserSiteFollow{
 	 * @param $user: vist user id;$target_user_id:visted id
 	 * @return array
 	 */
-	public static function getFullFollowedSites( $user_id,$target_user_id ) {
-
-		$dbr = wfGetDB( DB_SLAVE );
-		$followed = array();
-		$fs = array();
+	public static function getFullFollowedSitesWithDetails( $user_id,$target_user_id ) {
 		$tuser = User::newFromId($target_user_id);
-		$res = self::getUserFollowingSites($tuser);
+		$followedByTargetUser = self::getFullFollowedSites($tuser);
 		$user = User::newFromId($user_id);
-		$s = self::getUserFollowingSites($user);
-		foreach ($s as $value) {
-			$fs[] = $value;
+		$followedByCurrentUser = self::getFullFollowedSites($user);
+		return self::sortFollowedSiteWithDetails($tuser, $followedByTargetUser, $followedByCurrentUser);
+	}
+	/**
+	 * Sort The User Followed Sites by edits
+	 *
+	 *
+	 * @param $followedByTargetUser: array, sites that are followed by the target user
+	 * @param $followedByCurrentUser: array, Sites that are followed by the current user (wgUser).
+	 *        defaut to null.
+	 * @return array
+	 */
+	public static function sortFollowedSiteWithDetails($targetUser, $followedByTargetUser, $followedByCurrentUser = null){
+		$fs = array();
+		if (!empty ($followedByCurrentUser)){
+			foreach ($followedByCurrentUser as $value) {
+				$fs[] = $value;
+			}
 		}
-		foreach( $res as $row ){
+		foreach( $followedByTargetUser as $row ){
 			$temp = array();
 			$domain = $row;
 			$siteName = HuijiPrefix::prefixToSiteName($domain);
-			$temp['count'] = UserStats::getSiteEditsCount($tuser,$domain);
+			$temp['count'] = UserStats::getSiteEditsCount($targetUser,$domain);
 			$temp['key'] = $domain;
 			$temp['val'] = $siteName;
 			if(in_array($domain, $fs)){
@@ -379,12 +397,11 @@ class UserSiteFollow{
 			$followed[] = $temp; 
 		}
 		foreach ($followed as $key => $value) {
-				$count[$key] = $value['count'];
-			}
+			$count[$key] = $value['count'];
+		}
 		array_multisort($count, SORT_DESC, $followed); 
 		return $followed;
 	}
-
 	/**
 	 * Get common interests with the user you are watching
 	 *
@@ -413,12 +430,12 @@ class UserSiteFollow{
 	 * @param $user:current username; $site_name:servername
 	 * @return array
 	 */
-	public static function getUserFollowSite( $user,$site_name ){
+	public static function getSiteFollowersWithDetails( $user,$site_name ){
 		// return '';
 		$dbr = wfGetDB( DB_SLAVE );
 		$request = array();
 			// $follower = UserUserFollow::getFollowedByUser( $user->getName() );
-			$res = self::getSiteFollowedUserDB($user,$site_name);
+			$res = self::getSiteFollowers($user,$site_name);
 			foreach ($res as $value) {
 				$u_name = $value['user_name'];
 				$temp['user'] = $u_name;
@@ -453,20 +470,20 @@ class UserSiteFollow{
 
 	}
 	/**
-	 * Get user following sites 
+	 * Get user's list of his/her following sites.
 	 *
 	 * @param $user:current username
 	 * @return array list of sites
 	 */	
-	public static function getUserFollowingSites( $user ){
-		$data = self::getUserFollowingSitesCache( $user );
+	public static function getFullFollowedSites( $user ){
+		$data = self::getFullFollowedSitesCache( $user );
 		if ( $data != '' ) {
 			return $data;
 		} else {
-			return self::getUserFollowingSitesDB( $user );
+			return self::getFullFollowedSitesDB( $user );
 		}
 	}
-	public static function getUserFollowingSitesCache( $user ){
+	public static function getFullFollowedSitesCache( $user ){
 		global $wgMemc;
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'all_sites_user_following', $user->getName() );
 		$data = $wgMemc->get( $key );
@@ -475,7 +492,7 @@ class UserSiteFollow{
 			return $data;
 		}		
 	}
-	public static function getUserFollowingSitesDB( $user ){
+	public static function getFullFollowedSitesDB( $user ){
 		global $wgMemc;
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'all_sites_user_following', $user->getName() );
 		$dbr = wfGetDB( DB_SLAVE );
@@ -506,15 +523,15 @@ class UserSiteFollow{
 	 * @param $sitename:site's name
 	 * @return array list of user
 	 */	
-	public static function getSiteFollowedUser( $user,$sitename ) {
-		$data = self::getSiteFollowedUserCache( $user,$sitename );
+	public static function getSiteFollowers( $user,$sitename ) {
+		$data = self::getSiteFollowersCache( $user,$sitename );
 		if ( $data != '' ) {
 			return $data;
 		}else {
-			return self::getSiteFollowedUserDB( $user,$sitename );
+			return self::getSiteFollowersDB( $user,$sitename );
 		}
 	}
-	public static function getSiteFollowedUserCache( $user,$sitename ) {
+	public static function getSiteFollowersCache( $user,$sitename ) {
 		global $wgMemc;
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'site_followed_list', $sitename );
 		$data = $wgMemc->get( $key );
@@ -522,7 +539,7 @@ class UserSiteFollow{
 			return $data;
 		}
 	}
-	public static function getSiteFollowedUserDB( $user,$sitename ){
+	public static function getSiteFollowersDB( $user,$sitename ){
 		global $wgMemc;
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'site_followed_list', $sitename );
 		$dbr = wfGetDB( DB_SLAVE );
@@ -557,17 +574,17 @@ class UserSiteFollow{
 		}
 	}
 	/**
-	 * get site followers in one day
+	 * get new site followers in a given day
 	 */
-	static function getSiteCountOneday ( $huijiPrefix, $date ){
-		$data = self::getSiteCountOnedayCache( $huijiPrefix, $date );
+	static function getFollowerCountOneday ( $huijiPrefix, $date ){
+		$data = self::getFollowerCountOnedayCache( $huijiPrefix, $date );
 		if ( $data != '' ) {
 			if ( $data == -1 ) {
 				$data = 0;
 			}
 			$count = $data;
 		} else {
-			$count = self::getSiteCountOnedayDB( $huijiPrefix, $date );
+			$count = self::getFollowerCountOnedayDB( $huijiPrefix, $date );
 		}
 
 		return $count;
@@ -579,7 +596,7 @@ class UserSiteFollow{
 	 * @param $HuijiPrefix String:
 	 * @return Integer
 	 */
-	static function getSiteCountOnedayDB( $huijiPrefix, $date ) {
+	static function getFollowerCountOnedayDB( $huijiPrefix, $date ) {
 		global $wgMemc;
 
 		wfDebug( "Got site followers count (prefix={$huijiPrefix}) from DB in day:{$date}\n" );
@@ -610,7 +627,7 @@ class UserSiteFollow{
 	 * 
 	 * @return Integer
 	 */
-	static function getSiteCountOnedayCache( $huijiPrefix, $date ) {
+	static function getFollowerCountOnedayCache( $huijiPrefix, $date ) {
 		global $wgMemc;
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'follow_count', $huijiPrefix.$date );
 		$data = $wgMemc->get( $key );

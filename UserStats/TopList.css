@@ -2,10 +2,13 @@
 .top-users {
 	float: left;
 	margin: 15px 0px 0px 0px;
+	width: 100%;
+	max-width: 600px;
+	min-width: 320px;
 }
 
 .top-fan {
-	width: 250px;
+	width: 60%;
 	padding-right: 10px;
 	font-weight: bold;
 	font-size: 90%;
@@ -27,7 +30,8 @@
 	font-size: 18px;
 	color: #DCDCDC;
 	float: left;
-	width: 45px;
+	max-width: 45px;
+	width: 10%;
 	padding: 5px 0px 0px 0px;
 	margin: 0px 0px 0px 5px;
 }
@@ -38,11 +42,21 @@
 	color: #797979;
 	height: 30px;
 	padding-top: 5px;
+	width: 20%;
+	max-width: 100px;
+	min-width: 50px;
+
 }
 
 .top-fan-row {
 	margin: 0px 0px 10px 0px;
 	clear: both;
+	width: 100%;
+	min-width: 320px;
+}
+
+.top-fan-row:hover {
+	background-color: #eee;
 }
 
 .top-fan-level {
