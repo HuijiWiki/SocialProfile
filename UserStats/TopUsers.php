@@ -21,6 +21,7 @@ class TopUsersPoints extends SpecialPage {
 				    array(
 				    	'activeList' => $activeList,
 				    	'followed' => $followed,
+				    	'hasfollowed' => count($followed) > 0,
 				    )
 				);
 		return $output;
