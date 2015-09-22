@@ -1,0 +1,15 @@
+<div class="dropdown">
+  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    {{activeList}}
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+    <li><a href="/wiki/特殊:站点排行">站点排行榜</a></li>
+    <li><a href="/wiki/特殊:近期的用户排行榜?period=weekly">用户周排行榜</a></li>
+    <li><a href="/wiki/特殊:近期的用户排行榜?period=monthly">用户月排行榜</a></li>
+    <li><a href="/wiki/特殊:用户排行榜">用户总排行榜</a></li>
+    {{#followed}}
+    <li><a href="http://{{key}}.huiji.wiki/wiki/特殊:编辑排行">{{val}}排行榜</a></li>
+    {{/followed}}
+  </ul>
+</div>
