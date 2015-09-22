@@ -3,7 +3,7 @@
 	float: left;
 	margin: 15px 0px 0px 0px;
 	width: 100%;
-	max-width: 600px;
+	max-width: 500px;
 	min-width: 320px;
 }
 
@@ -53,6 +53,7 @@
 	margin: 0px 0px 10px 0px;
 	clear: both;
 	width: 100%;
+	max-width: 500px;
 	min-width: 320px;
 }
 

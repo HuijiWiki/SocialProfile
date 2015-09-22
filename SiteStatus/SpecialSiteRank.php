@@ -34,6 +34,7 @@ class SpecialSiteRank extends SpecialPage {
 		if($total > 50){
 			$allSiteRank = array_slice($allSiteRank,0 ,50);
 		}
+		$output .= '<div class="top-users">';
 		foreach ($allSiteRank as $key => $value) {
 			$output .= "<div class=\"top-fan-row\">
 				<span class=\"top-fan-num\">{$value['site_rank']}.</span>
