@@ -512,6 +512,7 @@ $specialPageAliases['zh-hans'] = array(
 	'SendToAllUsers' => array('所有人群发消息'),
 	'UserActivity' => array('用户动态'),
 	'ShowFollowedSites' => array('显示关注的站点'),
+	'GiftManager' => array('礼物管理'),
 );
 
 /** Traditional Chinese (中文（繁體）‎) */
