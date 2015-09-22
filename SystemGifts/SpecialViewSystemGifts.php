@@ -21,7 +21,7 @@ class ViewSystemGifts extends SpecialPage {
 	 * @param $par Mixed: parameter passed to the page or null
 	 */
 	public function execute( $par ) {
-		global $wgUploadPath;
+		global $wgUploadPath, $wgUser;
 
 		$out = $this->getOutput();
 		$request = $this->getRequest();
@@ -36,7 +36,7 @@ class ViewSystemGifts extends SpecialPage {
 		$output = '';
 		$user_name = $request->getVal( 'user' );
 		if ($user_name) {
-			$user_current = User::newFromName( $user_name );
+			$user = User::newFromName( $user_name );
 		}
 		$page = $request->getInt( 'page', 1 );
 
@@ -80,27 +80,50 @@ class ViewSystemGifts extends SpecialPage {
 		$rel = new UserSystemGifts( $user_name );
 
 		$gifts = $rel->getUserGiftList( 0, $per_page, $page );
-		$total = $rel->getGiftCountByUsername( $user_name );
-
+		$total = '<span style="color:#428bca;font-size:20px;font-weight: bold;">'.$rel->getGiftCountByUsername( $user_name ).'</span>';
+		$curUserObj = User::newFromName($user_name);
+		$uuf = new UserUserFollow();
+		$follows = $uuf->getFollowList( $curUserObj, 1, '', $page);
+		$follows[] = array('user_name'=>$curUserObj->getName());
+		$giftCount = array();
+		foreach ($follows as $value) {
+			$giftCount[$value['user_name']] = $rel->getGiftCountByUsername( $value['user_name'] );
+		}
+		arsort($giftCount);
+		$max = count($giftCount);
+		$countRes = array();
+		$i=1;
+		foreach ($giftCount as $key => $value) {
+			$countRes[$key] = $i;
+			$i++;
+		}
+		if ( $curUserObj->getName() == $wgUser->getName() ) {
+			$who = '我';
+		}else{
+			$who = $curUserObj->getName();
+		}
+		// print_r($countRes);
 		/**
 		 * Show gift count for user
 		 */
+		$allGiftList = '/wiki/'.SpecialPage::getTitleFor( 'SystemGiftList' );
 		$out->setPageTitle( $this->msg( 'ga-title', $rel->user_name )->parse() );
-
 		$output .= '<div class="back-links">' .
 			$this->msg(
 				'ga-back-link',
-				htmlspecialchars( $user_current->getUserPage()->getFullURL() ),
+				htmlspecialchars( $user->getUserPage()->getFullURL() ),
 				$rel->user_name
 			)->text() . '</div>';
-
 		$output .= '<div class="ga-count">' .
 			$this->msg( 'ga-count', $rel->user_name, $total )->parse() .
-		'</div>';
-
+		', 在'.$who.'的好友中排第<span style="color:#428bca;font-size:20px;font-weight: bold;">'.$countRes[$curUserObj->getName()].
+		'</span>名</div>';
+		$output .= '<div><a href="'.$allGiftList.'">查看所有奖励</a></div>';
 		// Safelinks
 		$view_system_gift_link = SpecialPage::getTitleFor( 'ViewSystemGift' );
-
+		// print_r($gifts);
+		
+		// print_r($countRes);
 		if ( $gifts ) {
 			$x = 1;
 			foreach ( $gifts as $gift ) {
@@ -112,7 +135,7 @@ class ViewSystemGifts extends SpecialPage {
 					{$gift_image}
 					<a href=\"" .
 						htmlspecialchars( $view_system_gift_link->getFullURL( 'gift_id=' . $gift['id'] ) ) .
-						"\">{$gift['gift_name']}</a>";
+						"\">{$gift['gift_name']}</a></br><span>{$gift['gift_description']}</span>";
 
 				if ( $gift['status'] == 1 ) {
 					if ( $user_name == $user->getName() ) {
@@ -136,7 +159,8 @@ class ViewSystemGifts extends SpecialPage {
 		/**
 		 * Build next/prev nav
 		 */
-		$numofpages = $total / $per_page;
+		$pcount = $rel->getGiftCountByUsername( $user_name );
+		$numofpages = $pcount / $per_page;
 
 		$page_link = $this->getPageTitle();
 
@@ -150,16 +174,16 @@ class ViewSystemGifts extends SpecialPage {
 					array(),
 					array(
 						'user' => $user_name,
-						'rel_type' => $rel_type,
+						// 'rel_type' => $rel_type,
 						'page' => ( $page - 1 )
 					)
 				) . '</li>';
 			}
 
-			if ( ( $total % $per_page ) != 0 ) {
+			if ( ( $pcount % $per_page ) != 0 ) {
 				$numofpages++;
 			}
-			if ( $numofpages >= 9 && $page < $total ) {
+			if ( $numofpages >= 9 && $page < $pcount ) {
 				$numofpages = 9 + $page;
 			}
 			// if ( $numofpages >= ( $total / $per_page ) ) {
@@ -182,7 +206,7 @@ class ViewSystemGifts extends SpecialPage {
 				}
 			}
 
-			if ( ( $total - ( $per_page * $page ) ) > 0 ) {
+			if ( ( $pcount - ( $per_page * $page ) ) > 0 ) {
 				$output .= '<li>' .
 					Linker::link(
 						$page_link,
@@ -190,7 +214,7 @@ class ViewSystemGifts extends SpecialPage {
 						array(),
 						array(
 							'user' => $user_name,
-							'rel_type' => $rel_type,
+							// 'rel_type' => $rel_type,
 							'page' => ( $page + 1 )
 						)
 					).'</li>';	

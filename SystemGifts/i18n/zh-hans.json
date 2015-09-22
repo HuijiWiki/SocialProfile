@@ -44,6 +44,7 @@
 	"notification-system-gift-view-link": "查看奖励",
 	"ga-back-link": "<a href=\"$1\">< 返回 $2的页面</a>",
 	"ga-title": "$1收到的奖励",
+	"gl-title": "礼物列表",
 	"ga-count": "$1共收到$2份奖励",
 	"ga-recent-recipients-award": "最近获得此成就的用户"
 }

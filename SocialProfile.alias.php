@@ -513,6 +513,9 @@ $specialPageAliases['zh-hans'] = array(
 	'UserActivity' => array('用户动态'),
 	'ShowFollowedSites' => array('关注的站点'),
 	'GiftManager' => array('礼物管理'),
+	'SystemGiftManager' => array('系统礼物管理'),
+	'ViewSystemGifts' => array('收到的奖励'),
+	'SystemGiftList' => array('礼物列表'),
 );
 
 /** Traditional Chinese (中文（繁體）‎) */
