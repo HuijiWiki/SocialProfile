@@ -38,6 +38,9 @@ $wgSpecialPages['RemoveMasterSystemGift'] = 'RemoveMasterSystemGift';
 $wgAutoloadClasses['PopulateAwards'] = "{$wgSystemGiftsDirectory}/SpecialPopulateAwards.php";
 $wgSpecialPages['PopulateAwards'] = 'PopulateAwards';
 
+$wgAutoloadClasses['SystemGiftList'] = "{$wgSystemGiftsDirectory}/SpecialSystemGiftList.php";
+$wgSpecialPages['SystemGiftList'] = 'SystemGiftList';
+
 // i18n
 $wgMessagesDirs['SystemGifts'] = __DIR__ . '/i18n';
 
