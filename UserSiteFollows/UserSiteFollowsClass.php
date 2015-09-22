@@ -374,7 +374,7 @@ class UserSiteFollow{
 	 *        defaut to null.
 	 * @return array
 	 */
-	public static function sortFollowedSiteWithDetails($targetUser, $followedByTargetUser, $followedByCurrentUser = null, $limit){
+	public static function sortFollowedSiteWithDetails($targetUser, $followedByTargetUser, $followedByCurrentUser = null, $limit = null){
 		$fs = array();
 		if (!empty ($followedByCurrentUser)){
 			foreach ($followedByCurrentUser as $value) {
@@ -401,9 +401,9 @@ class UserSiteFollow{
 		}
 		array_multisort($count, SORT_DESC, $followed); 
 		if (!empty($limit)){
-			$out = array_slice($followed, 0, $limit);
+			$followed = array_slice($followed, 0, $limit);
 		}
-		return $out;
+		return $followed;
 	}
 	/**
 	 * Get common interests with the user you are watching
