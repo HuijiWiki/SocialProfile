@@ -25,6 +25,7 @@ class SpecialSiteRank extends SpecialPage {
 		global $wgUser,$wgSitename,$wgHuijiPrefix,$wgUserLevels;
 		$out = $this->getOutput();
 		$this->setHeaders();
+		$out->addHtml(TopUsersPoints::getRankingDropdown( '站点排行榜'));
 		$output = '<i>'.$this->msg( 'editranknote' )->plain().'</i>';
 		// Add CSS
 		$out->addModuleStyles( 'ext.socialprofile.userstats.css' );

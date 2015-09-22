@@ -39,6 +39,7 @@ class SpecialEditRank extends SpecialPage {
 		$user = $this->getUser();
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
+		$out->addHtml(TopUsersPoints::getRankingDropdown( $wgSitename . '排行榜' ));
 		$output = '<i>'.$this->msg( 'editranknote' )->plain().'</i>';
 		// Add CSS
 		// $out->addModuleStyles( 'ext.socialprofile.useruserfollows.css' );

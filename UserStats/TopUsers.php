@@ -10,6 +10,23 @@ class TopUsersPoints extends SpecialPage {
 	}
 
 	/**
+	 * Get a common dropdown for all ranking pages
+	 */
+	public static function getRankingDropdown($activeList){
+		global $wgUser;
+		$templateParser = new TemplateParser(  __DIR__  );
+		$followed = UserSiteFollow::getTopFollowedSitesWithDetails($wgUser->getId(), $wgUser->getId());
+		$output = $templateParser->processTemplate(
+				    'dropdown',
+				    array(
+				    	'activeList' => $activeList,
+				    	'followed' => $followed,
+				    )
+				);
+		return $output;
+	}
+
+	/**
 	 * Show the special page
 	 *
 	 * @param $par Mixed: parameter passed to the page or null
@@ -24,6 +41,8 @@ class TopUsersPoints extends SpecialPage {
 
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
+		
+		$out->addHtml(self::getRankingDropdown( '用户'.$this->msg( 'user-stats-alltime-title' ) ));
 
 		$out->setPageTitle( $this->msg( 'user-stats-alltime-title' )->plain() );
 

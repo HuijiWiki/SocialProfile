@@ -43,6 +43,7 @@ class TopFansRecent extends UnlistedSpecialPage {
 		} else {
 			$pageTitle = 'top-fans-monthly-points-link';
 		}
+		$out->addHtml(TopUsersPoints::getRankingDropdown( '用户'.$this->msg( $pageTitle )->plain() ));
 		$out->setPageTitle( $this->msg( $pageTitle )->plain() );
 
 		$count = 50;

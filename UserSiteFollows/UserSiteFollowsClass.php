@@ -278,7 +278,7 @@ class UserSiteFollow{
 
 	/**
 	 * Get 3 most-edited following wiki site.
-	 * 
+	 *  
 	 * @param $user User object, whose info we want.
 	 * @return array the array of the top followed site.
 	 */
@@ -321,8 +321,7 @@ class UserSiteFollow{
 		);
 		foreach( $s as $row ){
 			$prefix = $row->f_wiki_domain;
-			$siteName = HuijiPrefix::prefixToSiteName($prefix);
-			$topFollowed[$prefix] = $siteName;
+			$topFollowed[] = $prefix;
 		}
 		// $result = sortFollowedSite($topFollowed);
 		$wgMemc->set( $key, $topFollowed );
@@ -345,10 +344,11 @@ class UserSiteFollow{
 		}
 	}
 	public static function getTopFollowedSitesWithDetails( $user_id, $target_user_id ){
+		$usf = new UserSiteFollow();
 		$tuser = User::newFromId($target_user_id);
-		$followedByTargetUser = self::getTopFollowedSites($tuser);
+		$followedByTargetUser = $usf->getTopFollowedSites($tuser);
 		$user = User::newFromId($user_id);
-		$followedByCurrentUser = self::getFullFollowedSites($user);
+		$followedByCurrentUser = $usf->getFullFollowedSites($user);
 		return self::sortFollowedSiteWithDetails($tuser, $followedByTargetUser, $followedByCurrentUser);		
 	}
 	/**
