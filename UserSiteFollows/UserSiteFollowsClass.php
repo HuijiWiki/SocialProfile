@@ -346,10 +346,10 @@ class UserSiteFollow{
 	public static function getTopFollowedSitesWithDetails( $user_id, $target_user_id ){
 		$usf = new UserSiteFollow();
 		$tuser = User::newFromId($target_user_id);
-		$followedByTargetUser = $usf->getTopFollowedSites($tuser);
+		$followedByTargetUser = $usf->getFullFollowedSites($tuser);
 		$user = User::newFromId($user_id);
 		$followedByCurrentUser = $usf->getFullFollowedSites($user);
-		return self::sortFollowedSiteWithDetails($tuser, $followedByTargetUser, $followedByCurrentUser);		
+		return self::sortFollowedSiteWithDetails($tuser, $followedByTargetUser, $followedByCurrentUser, 5);		
 	}
 	/**
 	 * Get full list of followed sites from the
@@ -374,7 +374,7 @@ class UserSiteFollow{
 	 *        defaut to null.
 	 * @return array
 	 */
-	public static function sortFollowedSiteWithDetails($targetUser, $followedByTargetUser, $followedByCurrentUser = null){
+	public static function sortFollowedSiteWithDetails($targetUser, $followedByTargetUser, $followedByCurrentUser = null, $limit){
 		$fs = array();
 		if (!empty ($followedByCurrentUser)){
 			foreach ($followedByCurrentUser as $value) {
@@ -400,7 +400,10 @@ class UserSiteFollow{
 			$count[$key] = $value['count'];
 		}
 		array_multisort($count, SORT_DESC, $followed); 
-		return $followed;
+		if (!empty($limit)){
+			$out = array_slice($followed, 0, $limit);
+		}
+		return $out;
 	}
 	/**
 	 * Get common interests with the user you are watching
