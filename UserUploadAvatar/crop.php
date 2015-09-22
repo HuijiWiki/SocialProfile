@@ -87,8 +87,8 @@ class CropAvatar {
             $stats = new UserStatsTrack( $uid, $wgUser->getName() );
             $stats->incStatField( 'user_image' );
           }
-          $this->createThumbnail( $file->getTempName() , $imageInfo, $wgAvatarKey . '_' . $uid . '_l', 75 );
-          $this->createThumbnail( $file->getTempName() , $imageInfo, $wgAvatarKey . '_' . $uid . '_ml', 50 );
+          $this->createThumbnail( $file->getTempName() , $imageInfo, $wgAvatarKey . '_' . $uid . '_l', 200 );
+          $this->createThumbnail( $file->getTempName() , $imageInfo, $wgAvatarKey . '_' . $uid . '_ml', 75 );
           $this->createThumbnail( $file->getTempName() , $imageInfo, $wgAvatarKey . '_' . $uid . '_m', 30 );
           $this->createThumbnail( $file->getTempName() , $imageInfo, $wgAvatarKey . '_' . $uid . '_s', 16 );
           switch ( $imageInfo[2] ) {

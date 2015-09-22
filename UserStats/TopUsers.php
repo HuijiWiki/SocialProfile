@@ -96,21 +96,21 @@ class TopUsersPoints extends SpecialPage {
 			$wgMemc->set( $key, $user_list, 60 * 5 );
 		}
 
-		$recent_title = SpecialPage::getTitleFor( 'TopUsersRecent' );
+		// $recent_title = SpecialPage::getTitleFor( 'TopUsersRecent' );
 
-		$output = '<div class="top-fan-nav">
-			<h3>' . $this->msg( 'top-fans-by-points-nav-header' )->plain() . '</h3>
-			<p><b>' . $this->msg( 'top-fans-total-points-link' )->plain() . '</b></p>';
+		// $output = '<div class="top-fan-nav">
+		// 	<h3>' . $this->msg( 'top-fans-by-points-nav-header' )->plain() . '</h3>
+		// 	<p><b>' . $this->msg( 'top-fans-total-points-link' )->plain() . '</b></p>';
 
-		if ( $wgUserStatsTrackWeekly ) {
-			$output .= '<p><a href="' . htmlspecialchars( $recent_title->getFullURL( 'period=monthly' ) ) . '">' .
-				$this->msg( 'top-fans-monthly-points-link' )->plain() . '</a></p>';
-		}
+		// if ( $wgUserStatsTrackWeekly ) {
+		// 	$output .= '<p><a href="' . htmlspecialchars( $recent_title->getFullURL( 'period=monthly' ) ) . '">' .
+		// 		$this->msg( 'top-fans-monthly-points-link' )->plain() . '</a></p>';
+		// }
 
-		if ( $wgUserStatsTrackMonthly ) {
-			$output .= '<p><a href="' . htmlspecialchars( $recent_title->getFullURL( 'period=weekly' ) ) . '">' .
-				$this->msg( 'top-fans-weekly-points-link' )->plain() . '</a></p>';
-		}
+		// if ( $wgUserStatsTrackMonthly ) {
+		// 	$output .= '<p><a href="' . htmlspecialchars( $recent_title->getFullURL( 'period=weekly' ) ) . '">' .
+		// 		$this->msg( 'top-fans-weekly-points-link' )->plain() . '</a></p>';
+		// }
 
 		// Build nav of stats by category based on MediaWiki:Topfans-by-category
 		$by_category_title = SpecialPage::getTitleFor( 'TopFansByStatistic' );

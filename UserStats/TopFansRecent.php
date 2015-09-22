@@ -87,62 +87,62 @@ class TopFansRecent extends UnlistedSpecialPage {
 			$wgMemc->set( $key, $user_list, 60 * 5 );
 		}
 
-		// Top nav bar
-		$top_title = SpecialPage::getTitleFor( 'TopUsers' );
-		$recent_title = SpecialPage::getTitleFor( 'TopUsersRecent' );
+		// // Top nav bar
+		// $top_title = SpecialPage::getTitleFor( 'TopUsers' );
+		// $recent_title = SpecialPage::getTitleFor( 'TopUsersRecent' );
 
-		$output = '<div class="top-fan-nav">
-			<h1>' . $this->msg( 'top-fans-by-points-nav-header' )->plain() . '</h1>
-			<p><a href="' . htmlspecialchars( $top_title->getFullURL() ) . '">' .
-				$this->msg( 'top-fans-total-points-link' )->plain() . '</a></p>';
+		// $output = '<div class="top-fan-nav">
+		// 	<h1>' . $this->msg( 'top-fans-by-points-nav-header' )->plain() . '</h1>
+		// 	<p><a href="' . htmlspecialchars( $top_title->getFullURL() ) . '">' .
+		// 		$this->msg( 'top-fans-total-points-link' )->plain() . '</a></p>';
 
-		if ( $period == 'weekly' ) {
-			$output .= '<p><a href="' . htmlspecialchars( $recent_title->getFullURL( 'period=monthly' ) ) . '">' .
-				$this->msg( 'top-fans-monthly-points-link' )->plain() . '</a><p>
-			<p><b>' . $this->msg( 'top-fans-weekly-points-link' )->plain() . '</b></p>';
-		} else {
-			$output .= '<p><b>' . $this->msg( 'top-fans-monthly-points-link' )->plain() . '</b><p>
-			<p><a href="' . htmlspecialchars( $recent_title->getFullURL( 'period=weekly' ) ) . '">' .
-				$this->msg( 'top-fans-weekly-points-link' )->plain() . '</a></p>';
-		}
+		// if ( $period == 'weekly' ) {
+		// 	$output .= '<p><a href="' . htmlspecialchars( $recent_title->getFullURL( 'period=monthly' ) ) . '">' .
+		// 		$this->msg( 'top-fans-monthly-points-link' )->plain() . '</a><p>
+		// 	<p><b>' . $this->msg( 'top-fans-weekly-points-link' )->plain() . '</b></p>';
+		// } else {
+		// 	$output .= '<p><b>' . $this->msg( 'top-fans-monthly-points-link' )->plain() . '</b><p>
+		// 	<p><a href="' . htmlspecialchars( $recent_title->getFullURL( 'period=weekly' ) ) . '">' .
+		// 		$this->msg( 'top-fans-weekly-points-link' )->plain() . '</a></p>';
+		// }
 
-		// Build nav of stats by category based on MediaWiki:Topfans-by-category
-		$by_category_title = SpecialPage::getTitleFor( 'TopFansByStatistic' );
-		$message = $this->msg( 'topfans-by-category' )->inContentLanguage();
+		// // Build nav of stats by category based on MediaWiki:Topfans-by-category
+		// $by_category_title = SpecialPage::getTitleFor( 'TopFansByStatistic' );
+		// $message = $this->msg( 'topfans-by-category' )->inContentLanguage();
 
-		if ( !$message->isDisabled() ) {
-			$output .= '<h1 class="top-title">' .
-				$this->msg( 'top-fans-by-category-nav-header' )->plain() . '</h1>';
+		// if ( !$message->isDisabled() ) {
+		// 	$output .= '<h1 class="top-title">' .
+		// 		$this->msg( 'top-fans-by-category-nav-header' )->plain() . '</h1>';
 
-			$lines = explode( "\n", $message->text() );
-			foreach ( $lines as $line ) {
-				if ( strpos( $line, '*' ) !== 0 ) {
-					continue;
-				} else {
-					$line = explode( '|', trim( $line, '* ' ), 2 );
-					$stat = $line[0];
+		// 	$lines = explode( "\n", $message->text() );
+		// 	foreach ( $lines as $line ) {
+		// 		if ( strpos( $line, '*' ) !== 0 ) {
+		// 			continue;
+		// 		} else {
+		// 			$line = explode( '|', trim( $line, '* ' ), 2 );
+		// 			$stat = $line[0];
 
-					$link_text = $line[1];
-					// Check if the link text is actually the name of a system
-					// message (refs bug #30030)
-					$msgObj = $this->msg( $link_text );
-					if ( !$msgObj->isDisabled() ) {
-						$link_text = $msgObj->parse();
-					}
+		// 			$link_text = $line[1];
+		// 			// Check if the link text is actually the name of a system
+		// 			// message (refs bug #30030)
+		// 			$msgObj = $this->msg( $link_text );
+		// 			if ( !$msgObj->isDisabled() ) {
+		// 				$link_text = $msgObj->parse();
+		// 			}
 
-					$output .= '<p>';
-					$output .= Linker::link(
-						$by_category_title,
-						$link_text,
-						array(),
-						array( 'stat' => $stat )
-					);
-					$output .= '</p>';
-				}
-			}
-		}
+		// 			$output .= '<p>';
+		// 			$output .= Linker::link(
+		// 				$by_category_title,
+		// 				$link_text,
+		// 				array(),
+		// 				array( 'stat' => $stat )
+		// 			);
+		// 			$output .= '</p>';
+		// 		}
+		// 	}
+		// }
 
-		$output .= '</div>';
+		// $output .= '</div>';
 
 		$x = 1;
 		$output .= '<div class="top-users">';
