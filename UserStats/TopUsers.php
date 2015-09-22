@@ -42,7 +42,7 @@ class TopUsersPoints extends SpecialPage {
 
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
-		
+		$user = $this->getUser();
 		$out->addHtml(self::getRankingDropdown( '用户'.$this->msg( 'user-stats-alltime-title' ) ));
 
 		$out->setPageTitle( $this->msg( 'user-stats-alltime-title' )->plain() );
