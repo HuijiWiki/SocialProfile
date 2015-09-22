@@ -511,7 +511,7 @@ $specialPageAliases['zh-hans'] = array(
 	'SendToFollowers' => array('关注者群发消息'),
 	'SendToAllUsers' => array('所有人群发消息'),
 	'UserActivity' => array('用户动态'),
-	'ShowFollowedSites' => array('显示关注的站点'),
+	'ShowFollowedSites' => array('关注的站点'),
 	'GiftManager' => array('礼物管理'),
 );
 
