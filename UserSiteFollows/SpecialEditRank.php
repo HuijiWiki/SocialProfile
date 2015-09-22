@@ -39,6 +39,7 @@ class SpecialEditRank extends SpecialPage {
 		$user = $this->getUser();
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
+		$out->addHtml(TopUsersPoints::getRankingDropdown( $wgSitename . '排行榜' ));
 		$output = '<i>'.$this->msg( 'editranknote' )->plain().'</i>';
 		// Add CSS
 		// $out->addModuleStyles( 'ext.socialprofile.useruserfollows.css' );
@@ -72,7 +73,7 @@ class SpecialEditRank extends SpecialPage {
 		$user_id = User::idFromName( $user_name );
 		$target_user = User::newFromId( $user_id );
 		$userPage = Title::makeTitle( NS_USER, $user_name );
-		$sitefollows = UserSiteFollow::getUserFollowSite($target_user, $wgHuijiPrefix);
+		$sitefollows = UserSiteFollow::getSiteFollowersWithDetails($target_user, $wgHuijiPrefix);
 		$total = count($sitefollows);
 		$star_page = $per_page*($page-1);
 		$result = array_slice($sitefollows,$star_page ,$per_page );
@@ -82,13 +83,18 @@ class SpecialEditRank extends SpecialPage {
 		$output .= '<div class="top-users">';
 		$x = $star_page+1;
 		foreach ( $result as $user ) {
+			if($wgUser->getName() == $user['user']){
+				$active = 'active';
+			} else {
+				$active = '';
+			}
 			$user_title = Title::makeTitle( NS_USER, $user['user'] );
 			$commentIcon = $user['url'];
-			$output .= "<div class=\"top-fan-row\">
+			$output .= "<div class=\"top-fan-row {$active}\">
 				<span class=\"top-fan-num\">{$x}.</span>
 				<span class=\"top-fan\"><a href='" . $user['userUrl'] . "'>
 					{$commentIcon} </a><a href='" . $user['userUrl'] . "'>" .
-						$user['user'] .'</a><i>'.$user['level'] .'
+						$user['user'] .'</a><i class="hidden-xs hidden-sm">'.$user['level'] .'
 				</i></span>';
 			$output .= '<span class="top-fan-points"><b>' .
 				number_format( $user['count'] ) . '</b> ' .

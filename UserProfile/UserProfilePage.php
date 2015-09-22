@@ -105,27 +105,27 @@ class UserProfilePage extends Article {
 		}
 		$usf = new UserSiteFollow();
 		$uuf = new UserUserFollow();
-		$topFollowedSites = $usf->getTopFollowedSites( $this->user );
-		$temp = array();
-		$res = array();
-		$count = array();
+		$topFollowedSites = $usf->getTopFollowedSitesWithDetails( $wgUser->getId(), $this->user_id );
+		// $temp = array();
+		// $res = array();
+		// $count = array();
 
-		foreach( $topFollowedSites as $key => $value ){
-			// if ( $wgUser->isLoggedIn() ) {
-			$user = User::newFromName( $this->user_name );
-			// }
-			$temp['url'] = 'http://'.$key.'.huiji.wiki';
-			$temp['name'] = $value;
-			$temp['count'] = UserStats::getSiteEditsCount($user,$key);
-			$res[] = $temp;
-		}
+		// foreach( $topFollowedSites as $value ){
+		// 	// if ( $wgUser->isLoggedIn() ) {
+		// 	$user = User::newFromName( $this->user_name );
+		// 	// }
+		// 	$temp['url'] = HuijiPrefix::prefixToUrl($value);
+		// 	$temp['name'] = HuijiPrefix::prefixToSiteName($value);
+		// 	$temp['count'] = UserStats::getSiteEditsCount($user,$value);
+		// 	$res[] = $temp;
+		// }
 		
 		//sort by edit num
-		foreach ($res as $val) {
+		foreach ($topFollowedSites as $val) {
 			$count[] = $val['count'];
 		}
-		array_multisort($count, SORT_DESC, $res);
-		$userCount = UserSiteFollow::getUserCount($this->user);
+		array_multisort($count, SORT_DESC, $topFollowedSites);
+		$userCount = UserSiteFollow::getFollowingCount($this->user);
 
 		if ($this->isOwner()){
 			$target = SpecialPage::getTitleFor('ViewFollows');
@@ -244,9 +244,9 @@ class UserProfilePage extends Article {
                 </div>
                 <div class="profile-top-right-bottom">
                     <ul>');
-        foreach ($res as $value) {
-        	$Turl[] = $value['url'];
-        	$Tname[] = $value['name'];
+        foreach ($topFollowedSites as $value) {
+        	$Turl[] = HuijiPrefix::prefixToUrl($value['key']);
+        	$Tname[] = $value['val'];
         	$Tcount[] = $value['count'];
         }
         if(isset($Tname)){
@@ -333,7 +333,7 @@ class UserProfilePage extends Article {
 	        		$currentMaxlen = 0;
 	        	}
 	        }
-	        $usg = new UserSystemGifts( $user->getName() );
+	        $usg = new UserSystemGifts( $this->user->getName() );
 	        if ($maxlen == 2) {
 				$usg->sendSystemGift( 33 );
 	        }elseif ($maxlen == 3) {
@@ -1233,7 +1233,7 @@ class UserProfilePage extends Article {
 		$output = '';
 
 		//get more
-		$target = SpecialPage::getTitleFor('FollowSites');
+		$target = SpecialPage::getTitleFor('ShowFollowedSites');
 		$query = array('user_id' => $wgUser->getId(), 'target_user_id' => $this->user_id);
 		$mailVerify = $wgUser->getEmailAuthenticationTimestamp();
 		if ($mailVerify == NULL) {

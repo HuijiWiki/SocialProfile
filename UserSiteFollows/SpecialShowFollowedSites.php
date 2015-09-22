@@ -1,18 +1,18 @@
 <?php
 /**
- * A special page for show all sites user following
+ * A special page for show all sites that the current user are following.
  *user_id :thte user who is visting
  *target_user_id :user be visted
  * Example URL: index.php?title=Special:FollowSites&user_id=*&target_user_id=* 
  */
-class SpecialFollowSites extends SpecialPage {
+class SpecialShowFollowedSites extends SpecialPage {
 
 	/**
 	 * Constructor -- set up the new special page
 	 */
 	public function __construct() {
 		global $wgUser,$wgSitename;
-		parent::__construct( 'FollowSites' );
+		parent::__construct( 'ShowFollowedSites' );
 	}
 	/**
 	 * Group this special page under the correct header in Special:SpecialPages.
@@ -69,7 +69,7 @@ class SpecialFollowSites extends SpecialPage {
 			$out->addHTML( $this->msg( 'g-error-message-invalid-link' )->plain() );
 			return false;
 		}
-		$sites = UserSiteFollow::getFullFollowedSites( $user_id,$target_user_id );
+		$sites = UserSiteFollow::getFullFollowedSitesWithDetails( $user_id,$target_user_id );
 		$total = count($sites);
 		$star_page = $per_page*($page-1);
 		$per_sites = array_slice($sites,$star_page ,$per_page );

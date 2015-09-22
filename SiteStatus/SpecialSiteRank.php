@@ -25,6 +25,7 @@ class SpecialSiteRank extends SpecialPage {
 		global $wgUser,$wgSitename,$wgHuijiPrefix,$wgUserLevels;
 		$out = $this->getOutput();
 		$this->setHeaders();
+		$out->addHtml(TopUsersPoints::getRankingDropdown( '站点排行榜'));
 		$output = '<i>'.$this->msg( 'editranknote' )->plain().'</i>';
 		// Add CSS
 		$out->addModuleStyles( 'ext.socialprofile.userstats.css' );
@@ -34,11 +35,13 @@ class SpecialSiteRank extends SpecialPage {
 		if($total > 50){
 			$allSiteRank = array_slice($allSiteRank,0 ,50);
 		}
+		$output .= '<div class="top-users">';
 		foreach ($allSiteRank as $key => $value) {
 			$output .= "<div class=\"top-fan-row\">
 				<span class=\"top-fan-num\">{$value['site_rank']}.</span>
 				<span class=\"top-fan\"><a href='" . HuijiPrefix::prefixToUrl($value['site_prefix']) . "'>" .
-						HuijiPrefix::prefixToSiteName($value['site_prefix']) .'</a>'.$value['site_score'].'分</span>';
+				HuijiPrefix::prefixToSiteName($value['site_prefix']) ."</a></span>
+				<span class=\"top-fan-points\">".$value['site_score'].'马赫</span>';
 			$output .= '<div class="cleared"></div>';
 			$output .= '</div>';
 		}

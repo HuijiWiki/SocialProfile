@@ -10,6 +10,24 @@ class TopUsersPoints extends SpecialPage {
 	}
 
 	/**
+	 * Get a common dropdown for all ranking pages
+	 */
+	public static function getRankingDropdown($activeList){
+		global $wgUser;
+		$templateParser = new TemplateParser(  __DIR__  );
+		$followed = UserSiteFollow::getTopFollowedSitesWithDetails($wgUser->getId(), $wgUser->getId());
+		$output = $templateParser->processTemplate(
+				    'dropdown',
+				    array(
+				    	'activeList' => $activeList,
+				    	'followed' => $followed,
+				    	'hasFollowed' => count($followed) > 0,
+				    )
+				);
+		return $output;
+	}
+
+	/**
 	 * Show the special page
 	 *
 	 * @param $par Mixed: parameter passed to the page or null
@@ -24,6 +42,9 @@ class TopUsersPoints extends SpecialPage {
 
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
+		$user = $this->getUser();
+
+		$out->addHtml(self::getRankingDropdown( '用户'.$this->msg( 'user-stats-alltime-title' ) ));
 
 		$out->setPageTitle( $this->msg( 'user-stats-alltime-title' )->plain() );
 
@@ -134,9 +155,9 @@ class TopUsersPoints extends SpecialPage {
 		$output .= '<div class="top-users">';
 		$last_level = '';
 
-		foreach ( $user_list as $user ) {
-			$user_title = Title::makeTitle( NS_USER, $user['user_name'] );
-			$avatar = new wAvatar( $user['user_id'], 'm' );
+		foreach ( $user_list as $item ) {
+			$user_title = Title::makeTitle( NS_USER, $item['user_name'] );
+			$avatar = new wAvatar( $item['user_id'], 'm' );
 			$commentIcon = $avatar->getAvatarURL();
 
 			// Break list into sections based on User Level if it's defined for this site
@@ -149,16 +170,20 @@ class TopUsersPoints extends SpecialPage {
 			// 	}
 			// 	$last_level = $user_level->getLevelName();
 			// }
-
-			$output .= "<div class=\"top-fan-row\">
+			if($user->getName() == $item['user_name']){
+				$active = 'active';
+			} else {
+				$active = '';
+			}
+			$output .= "<div class=\"top-fan-row {$active}\">
 				<span class=\"top-fan-num\">{$x}.</span>
 				<span class=\"top-fan\"><a href='" . htmlspecialchars( $user_title->getFullURL() ) . "'>
 					{$commentIcon} </a><a href='" . htmlspecialchars( $user_title->getFullURL() ) . "'>" .
-						$user['user_name'] . '</a>
+						$item['user_name'] . '</a>
 				</span>';
 
 			$output .= '<span class="top-fan-points"><b>' .
-				number_format( $user['points'] ) . '</b> ' .
+				number_format( $item['points'] ) . '</b> ' .
 				$this->msg( 'top-fans-points' )->plain() . '</span>';
 			$output .= '<div class="cleared"></div>';
 			$output .= '</div>';
