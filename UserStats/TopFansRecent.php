@@ -147,20 +147,25 @@ class TopFansRecent extends UnlistedSpecialPage {
 		$x = 1;
 		$output .= '<div class="top-users">';
 
-		foreach ( $user_list as $user ) {
-			$user_title = Title::makeTitle( NS_USER, $user['user_name'] );
-			$avatar = new wAvatar( $user['user_id'], 'm' );
+		foreach ( $user_list as $item ) {
+			$user_title = Title::makeTitle( NS_USER, $item['user_name'] );
+			$avatar = new wAvatar( $item['user_id'], 'm' );
 			$avatarImage = $avatar->getAvatarURL();
-			if ($user['points'] < 0) {
+			if ($item['points'] < 0) {
 				$points = 0;
 			}else{
-				$points = $user['points'];
+				$points = $item['points'];
 			}
-			$output .= '<div class="top-fan-row">
+			if($user->getName() == $item['user_name']){
+				$active = 'active';
+			} else {
+				$active = '';
+			}
+			$output .= '<div class="top-fan-row {$active}">
 				<span class="top-fan-num">' . $x . '.</span>
 				<span class="top-fan"><a href="' . htmlspecialchars( $user_title->getFullURL() ) . '" >' .
 					$avatarImage .
-					'</a><a href="' . htmlspecialchars( $user_title->getFullURL() ) . '" >' . $user['user_name'] . '</a>
+					'</a><a href="' . htmlspecialchars( $user_title->getFullURL() ) . '" >' . $item['user_name'] . '</a>
 				</span>';
 
 			$output .= '<span class="top-fan-points"><b>' .

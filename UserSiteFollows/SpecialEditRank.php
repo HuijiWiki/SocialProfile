@@ -83,9 +83,14 @@ class SpecialEditRank extends SpecialPage {
 		$output .= '<div class="top-users">';
 		$x = $star_page+1;
 		foreach ( $result as $user ) {
+			if($wgUser->getName() == $user['user']){
+				$active = 'active';
+			} else {
+				$active = '';
+			}
 			$user_title = Title::makeTitle( NS_USER, $user['user'] );
 			$commentIcon = $user['url'];
-			$output .= "<div class=\"top-fan-row\">
+			$output .= "<div class=\"top-fan-row {$active}\">
 				<span class=\"top-fan-num\">{$x}.</span>
 				<span class=\"top-fan\"><a href='" . $user['userUrl'] . "'>
 					{$commentIcon} </a><a href='" . $user['userUrl'] . "'>" .

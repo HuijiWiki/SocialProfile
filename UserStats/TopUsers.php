@@ -153,9 +153,9 @@ class TopUsersPoints extends SpecialPage {
 		$output .= '<div class="top-users">';
 		$last_level = '';
 
-		foreach ( $user_list as $user ) {
-			$user_title = Title::makeTitle( NS_USER, $user['user_name'] );
-			$avatar = new wAvatar( $user['user_id'], 'm' );
+		foreach ( $user_list as $item ) {
+			$user_title = Title::makeTitle( NS_USER, $item['user_name'] );
+			$avatar = new wAvatar( $item['user_id'], 'm' );
 			$commentIcon = $avatar->getAvatarURL();
 
 			// Break list into sections based on User Level if it's defined for this site
@@ -168,16 +168,20 @@ class TopUsersPoints extends SpecialPage {
 			// 	}
 			// 	$last_level = $user_level->getLevelName();
 			// }
-
-			$output .= "<div class=\"top-fan-row\">
+			if($user->getName() == $item['user_name']){
+				$active = 'active';
+			} else {
+				$active = '';
+			}
+			$output .= "<div class=\"top-fan-row {$active}\">
 				<span class=\"top-fan-num\">{$x}.</span>
 				<span class=\"top-fan\"><a href='" . htmlspecialchars( $user_title->getFullURL() ) . "'>
 					{$commentIcon} </a><a href='" . htmlspecialchars( $user_title->getFullURL() ) . "'>" .
-						$user['user_name'] . '</a>
+						$item['user_name'] . '</a>
 				</span>';
 
 			$output .= '<span class="top-fan-points"><b>' .
-				number_format( $user['points'] ) . '</b> ' .
+				number_format( $item['points'] ) . '</b> ' .
 				$this->msg( 'top-fans-points' )->plain() . '</span>';
 			$output .= '<div class="cleared"></div>';
 			$output .= '</div>';

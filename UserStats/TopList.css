@@ -56,6 +56,10 @@
 	max-width: 500px;
 	min-width: 320px;
 }
+.top-fan-row.active {
+	border-left: 3px solid #eee;
+	padding-left: 2px;
+}
 
 .top-fan-row:hover {
 	background-color: #eee;
