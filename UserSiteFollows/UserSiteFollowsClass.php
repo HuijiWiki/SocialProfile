@@ -412,9 +412,9 @@ class UserSiteFollow{
 		$dbr = wfGetDB( DB_SLAVE );
 		$coninterest = array();
 		$user = User::newFromId($user_id);
-		$ures = self::getUserFollowingSites($user);
+		$ures = self::getFullFollowedSites($user);
 		$tuser = User::newFromId($target_user_id);
-		$tres = self::getUserFollowingSites($tuser);
+		$tres = self::getFullFollowedSites($tuser);
 		foreach ($tres as $tval) {
 			foreach ($ures as $uval) {
 				if ($tval == $uval) {

@@ -333,7 +333,7 @@ class UserProfilePage extends Article {
 	        		$currentMaxlen = 0;
 	        	}
 	        }
-	        $usg = new UserSystemGifts( $user->getName() );
+	        $usg = new UserSystemGifts( $this->user->getName() );
 	        if ($maxlen == 2) {
 				$usg->sendSystemGift( 33 );
 	        }elseif ($maxlen == 3) {
