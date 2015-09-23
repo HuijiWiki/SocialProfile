@@ -147,7 +147,7 @@ class SystemGiftList extends SpecialPage {
 		$page_link = $this->getPageTitle();
 
 		if ( $numofpages > 1 ) {
-			$output .= '<nav class="page-nav pagination">';
+			$output .= '<div class="page-nav-wrapper"><nav class="page-nav pagination">';
 
 			if ( $page > 1 ) {
 				$output .= '<li>'.Linker::link(
@@ -199,7 +199,7 @@ class SystemGiftList extends SpecialPage {
 					).'</li>';	
 			}
 
-			$output .= '</nav>';
+			$output .= '</nav></div>';
 		}
         
 		/**
