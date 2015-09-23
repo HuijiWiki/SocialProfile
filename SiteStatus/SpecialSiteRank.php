@@ -37,11 +37,17 @@ class SpecialSiteRank extends SpecialPage {
 		foreach ($beforeallSiteRank as $value) {
 			$beforeArr[$value['site_prefix']] = $value['site_rank'];
 		}
+		$output .= '<div class="top-users">';
 		$total = count($allSiteRank);
 		if($total > 50){
 			$allSiteRank = array_slice($allSiteRank,0 ,50);
+		} elseif ($total == 0){
+			$output .= '<p>站点排行榜正在生成中...请刷新重试！</p>'
+			$output .= '</div><div class="cleared"></div>';
+			$out->addHTML( $output );
+			return;
 		}
-		$output .= '<div class="top-users">';
+		
 		foreach ($allSiteRank as $key => $value) {
 			$diff = abs( $value['site_rank'] - $beforeArr[$value['site_prefix']] );
 			if( $diff==0 ){

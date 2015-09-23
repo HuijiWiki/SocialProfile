@@ -29,6 +29,12 @@
 	color: darkred;
 }
 
+.top-fan i {
+    float: right;
+    margin-top: 5px;
+    width: 40px;
+    font-weight: 100;
+}
 
 .top-fan img {
 	vertical-align: middle;
@@ -64,6 +70,7 @@
 	width: 100%;
 	max-width: 500px;
 	min-width: 320px;
+	padding: 5px;
 }
 .top-fan-row.active {
 	border-left: 3px solid #eee;
