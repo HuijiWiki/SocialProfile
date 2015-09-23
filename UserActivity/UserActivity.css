@@ -57,6 +57,7 @@
 .user-home-activity img {
 	vertical-align: middle;
 	margin: 0px 5px 0px 0px;
+	max-width: 250px;
 }
 
 .user-home-activity a {
@@ -80,6 +81,7 @@
 	border: 1px solid #dcdcdc;
 	padding: 1px;
 	background-color: #fff;
+	
 }
 .user-home-activity:after{
     content: '';
