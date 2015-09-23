@@ -334,6 +334,29 @@ class UserProfilePage extends Article {
 	        	}
 	        }
 	        $usg = new UserSystemGifts( $this->user->getName() );
+	        if( $maxlen > 23 ){
+	        	$usg->sendSystemGift( 33 );
+	        	$usg->sendSystemGift( 34 );
+	        	$usg->sendSystemGift( 35 );
+				$usg->sendSystemGift( 36 );
+				$usg->sendSystemGift( 37 );
+	        }elseif ( $maxlen > 13 ) {
+				$usg->sendSystemGift( 33 );
+				$usg->sendSystemGift( 34 );
+				$usg->sendSystemGift( 35 );
+				$usg->sendSystemGift( 36 );
+	        }elseif ( $maxlen > 7 ) {
+	        	$usg->sendSystemGift( 33 );
+	        	$usg->sendSystemGift( 34 );
+	        	$usg->sendSystemGift( 35 );
+	        }elseif ( $maxlen > 3 ){
+	        	$usg->sendSystemGift( 33 );
+	        	$usg->sendSystemGift( 34 );
+	        }elseif ( $maxlen > 2 ) {
+	        	$usg->sendSystemGift( 33 );
+	        }
+
+
 	        if ($maxlen == 2) {
 				$usg->sendSystemGift( 33 );
 	        }elseif ($maxlen == 3) {
