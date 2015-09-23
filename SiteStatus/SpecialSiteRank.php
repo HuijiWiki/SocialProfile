@@ -42,7 +42,7 @@ class SpecialSiteRank extends SpecialPage {
 		if($total > 50){
 			$allSiteRank = array_slice($allSiteRank,0 ,50);
 		} elseif ($total == 0){
-			$output .= '<p>站点排行榜正在生成中...请刷新重试！</p>'
+			$output .= '<p>站点排行榜正在生成中...请刷新重试！</p>';
 			$output .= '</div><div class="cleared"></div>';
 			$out->addHTML( $output );
 			return;

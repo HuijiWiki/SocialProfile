@@ -135,6 +135,9 @@ class SystemGiftList extends SpecialPage {
 				}
 				$output .= '<div class="cleared"></div>
 				</div>';
+				if ( $x == count( $gifts ) || $x != 1 && $x % $per_row == 0 ) {
+					$output .= '<div class="cleared"></div>';
+				}
 
 				$x++;
 			}
