@@ -102,7 +102,7 @@ class SystemGiftList extends SpecialPage {
 		 * Show gift count for user
 		 */
 		$out->setPageTitle( $this->msg( 'gl-title' )->parse() );
-		$output .= '<div class="back-links">' .
+		$output .= '<div class="giftlist"><div class="back-links">' .
 			$this->msg(
 				'ga-back-link',
 				htmlspecialchars( $wgUser->getUserPage()->getFullURL() ),
@@ -118,7 +118,6 @@ class SystemGiftList extends SpecialPage {
 		
 		// print_r($countRes);
 		if ( $gifts ) {
-			$x = 1;
 			foreach ( $gifts as $gift ) {
 				$gift_image = "<img src=\"{$wgUploadPath}/awards/" .
 					SystemGifts::getGiftImage( $gift['id'], 'ml' ) .
@@ -135,12 +134,8 @@ class SystemGiftList extends SpecialPage {
 				}
 				$output .= '<div class="cleared"></div>
 				</div>';
-				if ( $x == count( $gifts ) || $x != 1 && $x % $per_row == 0 ) {
-					$output .= '<div class="cleared"></div>';
-				}
-
-				$x++;
 			}
+			$output .= '</div>';
 		}
 
 		/**
@@ -169,8 +164,8 @@ class SystemGiftList extends SpecialPage {
 			if ( ( $pcount % $per_page ) != 0 ) {
 				$numofpages++;
 			}
-			if ( $numofpages >= 9 && $page < $pcount ) {
-				$numofpages = 9 + $page;
+			if ( $numofpages >= 50 && $page < $pcount ) {
+				$numofpages = 50 + $page;
 			}
 			// if ( $numofpages >= ( $pcount / $per_page ) ) {
 			// 	$numofpages = ( $pcount / $per_page ) + 1;
@@ -206,7 +201,7 @@ class SystemGiftList extends SpecialPage {
 
 			$output .= '</nav>';
 		}
-
+        
 		/**
 		 * Output everything
 		 */
