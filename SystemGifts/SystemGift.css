@@ -10,6 +10,9 @@
 .ga-count {
 	margin: 0px 0px 15px 0px;
 }
+.giftlist{
+    margin-left: 50px;
+}
 .giftlist:after{
     content: '';
     display: block;
@@ -224,4 +227,10 @@
 
 .ga-buttons {
 	padding: 15px 0px 0px 0px;
+}
+.ga-item span.glyphicon{
+    color: #09c;
+    position: absolute;
+    right: 10px;
+    top: 10px;
 }

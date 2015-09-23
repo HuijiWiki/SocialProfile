@@ -65,7 +65,7 @@ class SystemGiftList extends SpecialPage {
 		/**
 		* Config for the page
 		*/
-		$per_page = 10;
+		$per_page = 50;
 		$per_row = 2;
 
 		/**
@@ -102,7 +102,7 @@ class SystemGiftList extends SpecialPage {
 		 * Show gift count for user
 		 */
 		$out->setPageTitle( $this->msg( 'gl-title' )->parse() );
-		$output .= '<div class="giftlist"><div class="back-links">' .
+		$output .= '<div class="back-links">' .
 			$this->msg(
 				'ga-back-link',
 				htmlspecialchars( $wgUser->getUserPage()->getFullURL() ),
@@ -110,7 +110,7 @@ class SystemGiftList extends SpecialPage {
 			)->text() . '</div>';
 		$output .= '<div class="ga-count">' .
 			$this->msg( 'ga-count', '我', $total )->parse() .
-		', 在'.$who.'的好友中排第<span style="color:#428bca;font-size:20px;font-weight: bold;">'.$countRes[$wgUser->getName()].'</span>名</div>';
+		', 在'.$who.'的好友中排第<span style="color:#428bca;font-size:20px;font-weight: bold;">'.$countRes[$wgUser->getName()].'</span>名</div><div class="giftlist">';
 
 		// Safelinks
 		$view_system_gift_link = SpecialPage::getTitleFor( 'ViewSystemGift' );
@@ -130,7 +130,7 @@ class SystemGiftList extends SpecialPage {
 						"\">{$gift['gift_name']}</a>";
 				$sg = new SystemGifts();
 				if ( $sg->doesUserHaveGift( $user_id, $gift['id'] ) ) {
-					$output .= '&nbsp<span class="label label-success">you got it</span>';
+					$output .= '<span class="glyphicon glyphicon-ok-circle"></span>';
 				}
 				$output .= '<div class="cleared"></div>
 				</div>';
@@ -164,8 +164,8 @@ class SystemGiftList extends SpecialPage {
 			if ( ( $pcount % $per_page ) != 0 ) {
 				$numofpages++;
 			}
-			if ( $numofpages >= 50 && $page < $pcount ) {
-				$numofpages = 50 + $page;
+			if ( $numofpages >= 9 && $page < $pcount ) {
+				$numofpages = 9 + $page;
 			}
 			// if ( $numofpages >= ( $pcount / $per_page ) ) {
 			// 	$numofpages = ( $pcount / $per_page ) + 1;
