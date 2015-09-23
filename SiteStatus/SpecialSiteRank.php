@@ -48,16 +48,16 @@ class SpecialSiteRank extends SpecialPage {
 				$diff ='';
 			}
 			if ( $value['site_rank'] > $beforeArr[$value['site_prefix']] ) {
-				$change = 'glyphicon glyphicon-arrow-up';
+				$change = 'glyphicon glyphicon-arrow-up green';
 			}elseif ( $value['site_rank'] < $beforeArr[$value['site_prefix']] ) {
-				$change = 'glyphicon glyphicon-arrow-down';
+				$change = 'glyphicon glyphicon-arrow-down red';
 			}else{
 				$change = 'glyphicon glyphicon-minus';
 			}
 			$output .= "<div class=\"top-fan-row\">
 				<span class=\"top-fan-num\">{$value['site_rank']}.</span>
 				<span class=\"top-fan\"><a href='" . HuijiPrefix::prefixToUrl($value['site_prefix']) . "'>" .
-				HuijiPrefix::prefixToSiteName($value['site_prefix']) ."</a><i class= \"".$change."\">".$diff."</i></span>
+				HuijiPrefix::prefixToSiteName($value['site_prefix']) ."</a><i class= \"".$change." hidden-sm hidden-xs\">".$diff."</i></span>
 				<span class=\"top-fan-points\">".$value['site_score'].'马赫</span>';
 			$output .= '<div class="cleared"></div>';
 			$output .= '</div>';

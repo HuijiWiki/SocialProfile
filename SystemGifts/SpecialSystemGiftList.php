@@ -128,7 +128,7 @@ class SystemGiftList extends SpecialPage {
 					{$gift_image}
 					<a href=\"" .
 						htmlspecialchars( $view_system_gift_link->getFullURL( 'gift_id=' . $gift['id'] ) ) .
-						"\">{$gift['gift_name']}</a></br><span>{$gift['gift_description']}</span>";
+						"\">{$gift['gift_name']}</a>";
 				$sg = new SystemGifts();
 				if ( $sg->doesUserHaveGift( $user_id, $gift['id'] ) ) {
 					$output .= '&nbsp<span class="label label-success">you got it</span>';

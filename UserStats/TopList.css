@@ -21,6 +21,15 @@
 	text-decoration: none;
 }
 
+.top-fan i.green {
+	color: green;
+}
+
+.top-fan i.red {
+	color: darkred;
+}
+
+
 .top-fan img {
 	vertical-align: middle;
 	padding-right: 4px;
