@@ -381,6 +381,7 @@ class UserSiteFollow{
 				$fs[] = $value;
 			}
 		}
+		$followed = array();
 		foreach( $followedByTargetUser as $row ){
 			$temp = array();
 			$domain = $row;
@@ -396,6 +397,7 @@ class UserSiteFollow{
 			$temp['is'] = $is_follow;
 			$followed[] = $temp; 
 		}
+		$count = array();
 		foreach ($followed as $key => $value) {
 			$count[$key] = $value['count'];
 		}

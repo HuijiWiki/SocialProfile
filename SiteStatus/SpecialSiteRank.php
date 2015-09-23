@@ -30,17 +30,34 @@ class SpecialSiteRank extends SpecialPage {
 		// Add CSS
 		$out->addModuleStyles( 'ext.socialprofile.userstats.css' );
 		$yesterday = date('Y-m-d',strtotime('-1 days'));
+		$beforeyesterday = date('Y-m-d',strtotime('-2 days'));
 		$allSiteRank = AllSitesInfo::getAllSitesRankData( '', $yesterday );
+		$beforeallSiteRank = AllSitesInfo::getAllSitesRankData( '', $beforeyesterday );
+		$beforeArr = array();
+		foreach ($beforeallSiteRank as $value) {
+			$beforeArr[$value['site_prefix']] = $value['site_rank'];
+		}
 		$total = count($allSiteRank);
 		if($total > 50){
 			$allSiteRank = array_slice($allSiteRank,0 ,50);
 		}
 		$output .= '<div class="top-users">';
 		foreach ($allSiteRank as $key => $value) {
+			$diff = abs( $value['site_rank'] - $beforeArr[$value['site_prefix']] );
+			if( $diff==0 ){
+				$diff ='';
+			}
+			if ( $value['site_rank'] > $beforeArr[$value['site_prefix']] ) {
+				$change = 'glyphicon glyphicon-arrow-up';
+			}elseif ( $value['site_rank'] < $beforeArr[$value['site_prefix']] ) {
+				$change = 'glyphicon glyphicon-arrow-down';
+			}else{
+				$change = 'glyphicon glyphicon-minus';
+			}
 			$output .= "<div class=\"top-fan-row\">
 				<span class=\"top-fan-num\">{$value['site_rank']}.</span>
 				<span class=\"top-fan\"><a href='" . HuijiPrefix::prefixToUrl($value['site_prefix']) . "'>" .
-				HuijiPrefix::prefixToSiteName($value['site_prefix']) ."</a></span>
+				HuijiPrefix::prefixToSiteName($value['site_prefix']) ."</a><i class= \"".$change."\">".$diff."</i></span>
 				<span class=\"top-fan-points\">".$value['site_score'].'马赫</span>';
 			$output .= '<div class="cleared"></div>';
 			$output .= '</div>';
