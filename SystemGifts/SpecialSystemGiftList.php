@@ -122,21 +122,25 @@ class SystemGiftList extends SpecialPage {
 		// print_r($countRes);
 		if ( $gifts ) {
 			foreach ( $gifts as $gift ) {
-				$gift_image = "<img src=\"{$wgUploadPath}/awards/" .
+				$gift_image = "<div class='img'><img src=\"{$wgUploadPath}/awards/" .
 					SystemGifts::getGiftImage( $gift['id'], 'ml' ) .
-					'" border="0" alt="" />';
-
-				$output .= "<div class=\"ga-item\">
+					'" border="0" alt="" /></div>';
+					$sg = new SystemGifts();
+                if ( $sg->doesUserHaveGift( $user_id, $gift['id'] ) ) {
+                				$s = 'ga-item have';
+                				}else{
+                				$s= 'ga-item';
+                				}
+				$output .= "<div class='".$s."'>
+				    <a href=\"" .
+                    htmlspecialchars( $view_system_gift_link->getFullURL( 'gift_id=' . $gift['id'] ) ) .
+                    "\" data-toggle='popover' data-trigger='hover' title='{$gift['gift_name']}' data-content='{$gift['gift_description']}'>
 					{$gift_image}
-					<a href=\"" .
-						htmlspecialchars( $view_system_gift_link->getFullURL( 'gift_id=' . $gift['id'] ) ) .
-						"\">{$gift['gift_name']}</a>";
-				$sg = new SystemGifts();
-				if ( $sg->doesUserHaveGift( $user_id, $gift['id'] ) ) {
-					$output .= '<span class="glyphicon glyphicon-ok-circle"></span>';
-				}
+					<div class=\"info hidden\"><h3>{$gift['gift_name']}</h3><p>{$gift['gift_description']}</p></div>";
+
+
 				$output .= '<div class="cleared"></div>
-				</div>';
+				</a></div>';
 			}
 			$output .= '</div>';
 		}
