@@ -14,6 +14,9 @@ class SystemGiftList extends SpecialPage {
 	public function __construct() {
 		parent::__construct( 'SystemGiftList' );
 	}
+	function getGroupName() {
+    	return 'users';
+    }
 
 	/**
 	 * Show the special page
