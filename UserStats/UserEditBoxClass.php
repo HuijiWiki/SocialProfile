@@ -36,15 +36,32 @@ class UserEditBox{
 			if ($today == $userEditInfo['lastSeen']){
 				return $userEditInfo;
 			}
-			$receive = RecordStatistics::getEditRecordsFromUserIdGroupByDay( $userId, $userEditInfo['lastSeen'], $yesterday );
-			if($receive->status == 'success'){
-				$EditSinceLastSeen = $receive->result;
-				$userEditInfo = array_merge($userEditInfo, $EditSinceLastSeen);
-				$userEditInfo['lastSeen'] = $today;
-				$wgMemc->set( $key, $userEditInfo );		
+			$Delres = array();
+			if($userEditInfo['lastSeen'] == $yesterday){
+				$receive = RecordStatistics::getPageEditCountOnWikiSiteFromUserId( $userId, '', $yesterday, $yesterday);
+				if($receive->status == 'success'){
+					$Beres = $receive->result;
+					$Delres['_id'] = $yesterday;
+					$Delres['value'] = $Beres;
+					$resData[] = (object)$Delres;
+					$userEditInfo = array_merge($userEditInfo, $resData);
+					$userEditInfo['lastSeen'] = $today;
+					$wgMemc->set( $key, $userEditInfo );		
+				}else{
+					$userEditInfo = false;
+				}
 			}else{
-				$userEditInfo = false;
+				$receive = RecordStatistics::getEditRecordsFromUserIdGroupByDay( $userId, $userEditInfo['lastSeen'], $yesterday );
+				if($receive->status == 'success'){
+					$EditSinceLastSeen = $receive->result;
+					$userEditInfo = array_merge($userEditInfo, $EditSinceLastSeen);
+					$userEditInfo['lastSeen'] = $today;
+					$wgMemc->set( $key, $userEditInfo );		
+				}else{
+					$userEditInfo = false;
+				}
 			}
+			
 		}
 		return $userEditInfo;
 	}
