@@ -104,7 +104,7 @@ class SpecialSendToFollowers extends UnlistedSpecialPage {
 
 		$usf = new UserSiteFollow();
 
-		$res = $usf->getSiteFollowedUser( $user->getName(),$wgHuijiPrefix );
+		$res = $usf->getSiteFollowers( $user->getName(),$wgHuijiPrefix );
 		foreach ($res as $value) {
 			$follows[] = $value['user_name'];
 		}
