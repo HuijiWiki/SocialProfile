@@ -132,8 +132,7 @@ class SystemGiftList extends SpecialPage {
 				    <a href=\"" .
                     htmlspecialchars( $view_system_gift_link->getFullURL( 'gift_id=' . $gift['id'] ) ) .
                     "\" data-toggle='popover' data-trigger='hover' title='{$gift['gift_name']}' data-content='{$gift['gift_description']}'>
-					{$gift_image}
-					<div class=\"info hidden\"><h3>{$gift['gift_name']}</h3><p>{$gift['gift_description']}</p></div>";
+                    {$gift_image}";
 
 
 				$output .= '<div class="cleared"></div>

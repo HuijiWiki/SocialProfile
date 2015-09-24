@@ -1304,7 +1304,7 @@ class UserProfilePage extends Article {
                     <!--<span id="user-site-count">'.'</span>个站点。-->';
 		if ( $wgUserLevels ) {
 			$progress = $user_level->getLevelProgress()*100;
-			$output .= '<div id="honorific-level" class="label label-info">
+			$output .= '<div id="honorific-level" class="label">
 						<a href="' . htmlspecialchars( $level_link->getFullURL() ) . '" rel="nofollow">' . $user_level->getLevelName() . '</a>
 					</div>
 					<div id="points-level" class="progress">
