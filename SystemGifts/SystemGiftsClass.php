@@ -29,7 +29,7 @@ class SystemGifts {
 		'points_firstthree_monthly' => 18,
 		'42' => 19,
 		'7夕' => 20,
-		'端午' => 21,
+		'中秋' => 21,
 		'连续编辑' => 22,
 	);
 
