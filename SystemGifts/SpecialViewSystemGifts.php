@@ -71,7 +71,7 @@ class ViewSystemGifts extends SpecialPage {
 		/**
 		* Config for the page
 		*/
-		$per_page = 10;
+		$per_page = 20;
 		$per_row = 2;
 
 		/**
@@ -118,42 +118,37 @@ class ViewSystemGifts extends SpecialPage {
 			$this->msg( 'ga-count', $rel->user_name, $total )->parse() .
 		', 在'.$who.'的好友中排第<span style="color:#428bca;font-size:20px;font-weight: bold;">'.$countRes[$curUserObj->getName()].
 		'</span>名</div>';
-		$output .= '<div><a href="'.$allGiftList.'">查看所有奖励</a></div>';
+		$output .= '<div><a href="'.$allGiftList.'">查看所有奖励</a></div><div class="giftlist">';
 		// Safelinks
 		$view_system_gift_link = SpecialPage::getTitleFor( 'ViewSystemGift' );
 		// print_r($gifts);
 		
 		// print_r($countRes);
 		if ( $gifts ) {
-			$x = 1;
 			foreach ( $gifts as $gift ) {
-				$gift_image = "<img src=\"{$wgUploadPath}/awards/" .
+				$gift_image = "<div class='img'><img src=\"{$wgUploadPath}/awards/" .
 					SystemGifts::getGiftImage( $gift['gift_id'], 'ml' ) .
-					'" border="0" alt="" />';
+					'" border="0" alt="" /></div>';
 
-				$output .= "<div class=\"ga-item\">
-					{$gift_image}
+				$output .= "<div class=\"ga-item have\">
 					<a href=\"" .
-						htmlspecialchars( $view_system_gift_link->getFullURL( 'gift_id=' . $gift['id'] ) ) .
-						"\">{$gift['gift_name']}</a></br><span>{$gift['gift_description']}</span>";
+                    htmlspecialchars( $view_system_gift_link->getFullURL( 'gift_id=' . $gift['id'] ) ) .
+                    "\" data-toggle='popover' data-trigger='hover' title='{$gift['gift_name']}' data-content='{$gift['gift_description']}'>
+                    {$gift_image}";
 
 				if ( $gift['status'] == 1 ) {
 					if ( $user_name == $user->getName() ) {
 						$rel->clearUserGiftStatus( $gift['id'] );
 						$rel->decNewSystemGiftCount( $user->getID() );
 					}
-					$output .= '&nbsp<span class="label label-success">' .
-						$this->msg( 'ga-new' )->plain() . '</span>';
+					/*$output .= '&nbsp<span class="label label-success">' .
+						$this->msg( 'ga-new' )->plain() . '</span>';*/
 				}
 
 				$output .= '<div class="cleared"></div>
-				</div>';
-				if ( $x == count( $gifts ) || $x != 1 && $x % $per_row == 0 ) {
-					$output .= '<div class="cleared"></div>';
-				}
-
-				$x++;
+				</a></div>';
 			}
+			$output .= '</div>';
 		}
 
 		/**
@@ -165,7 +160,7 @@ class ViewSystemGifts extends SpecialPage {
 		$page_link = $this->getPageTitle();
 
 		if ( $numofpages > 1 ) {
-			$output .= '<nav class="page-nav pagination">';
+			$output .= '<div class="page-nav-wrapper"><nav class="page-nav pagination">';
 
 			if ( $page > 1 ) {
 				$output .= '<li>'.Linker::link(
@@ -220,7 +215,7 @@ class ViewSystemGifts extends SpecialPage {
 					).'</li>';	
 			}
 
-			$output .= '</nav>';
+			$output .= '</nav></div>';
 		}
 
 		/**

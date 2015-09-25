@@ -127,13 +127,14 @@
 }*/
 #points-level{
 	display: inline-block;
-	margin: 4px 8px -5px 0px;
+	margin: 0;
 	width: 240px;
 }
 #honorific-level {
 	display: inline-block;
-	margin: 4px 0px 0px 0px;
-	font-size: 14px;
+	font-size: 18px;
+    padding:0;
+    vertical-align: top;
 }
 /*#points-level {
 	float: left;
@@ -700,10 +701,6 @@
     .profile-page .jumbotron {
         padding:30px 50px!important;
     }
-}
-#honorific-level.label{
-    padding:0.2em 0;
-    width: 100px;
 }
 .user-follow-msg{
     list-style-type: none;
