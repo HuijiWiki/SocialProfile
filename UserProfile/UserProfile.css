@@ -132,9 +132,10 @@
 }
 #honorific-level {
 	display: inline-block;
-	font-size: 18px;
+	font-size: 20px;
     padding:0;
     vertical-align: top;
+    width: 15%;
 }
 /*#points-level {
 	float: left;
