@@ -40,8 +40,8 @@ function incEditCount( $article, $revision, $baseRevId ) {
 	}
 	//8.15 gift-- del next day
 	$nowTime = time();
-	$duanWu = strtotime("2015-09-26 00:00:00");
-	$endTime = strtotime("2015-09-27 00:00:00");
+	$duanWu = strtotime("2015-09-27 00:00:00");
+	$endTime = strtotime("2015-09-28 00:00:00");
 	if( $nowTime >= $duanWu && $nowTime < $endTime ){
 		$dayCount = UserEditBox::getTodayEdit( $wgUser->getId() );
 		if ($dayCount == 1) {
