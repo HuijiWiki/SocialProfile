@@ -293,8 +293,9 @@ class UserProfilePage extends Article {
 		// }
        
         $ueb = new UserEditBox();
-        $editBox = array();
+        $editBox = $editData = array();
         $userEditInfo = $ueb->getUserEditInfo($this->user_id);
+        $maxlen = $currentMaxlen = 0; //init variables.
         if ($userEditInfo != false) {
         	$wgOut->addHTML('<div id="user-page-center" class="col-md-12 hidden-xs">
         	<div class="panel panel-default"><div class="user-section-heading panel-heading">
@@ -302,11 +303,12 @@ class UserProfilePage extends Article {
  			<div class="action-right"></div>
 			<div class="cleared"></div></div><div class="user-gift-container panel-body check-body">');
 	        foreach ($userEditInfo as $value) {
-	        	if (!empty($value->_id)) {
+	        	if (is_object($value) && !empty($value->_id)) {
 		        	$editBox[$value->_id] = $value->value;
 		        	$editData[] = $value->_id;
+		        	echo $value->_id.'->'.$value->value.'<br>';
 	        	}
-	            // echo $value->_id.'->'.$value->value.'<br>';
+	            
 	        }
 	        $today = date("Y-m-d");
 	        $yesterday = date("Y-m-d",strtotime("-1 day"));
@@ -315,8 +317,11 @@ class UserProfilePage extends Article {
 	        	$editData[] = $today;
 	        }
 	        $totalEdit = count($editData);
-	        $resArr[] = strtotime($editData[0]);
-	        $maxlen = 1;
+	        if ($totalEdit > 0){
+		        $resArr[] = strtotime($editData[0]);
+		        $maxlen = 1;	        	
+	        }
+
 	        for($k=1;$k<count($editData);$k++){
 	        	if(in_array(strtotime($editData[$k])-86400, $resArr)){
 	        		$resArr[] = strtotime($editData[$k]);
