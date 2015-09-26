@@ -303,10 +303,10 @@ class UserProfilePage extends Article {
  			<div class="action-right"></div>
 			<div class="cleared"></div></div><div class="user-gift-container panel-body check-body">');
 	        foreach ($userEditInfo as $value) {
-	        	if (is_object($value) && !empty($value->_id)) {
+	        	if (is_object($value) && !empty($value->_id) && $value->value > 0) {
 		        	$editBox[$value->_id] = $value->value;
 		        	$editData[] = $value->_id;
-		        	echo $value->_id.'->'.$value->value.'<br>';
+		        	//echo $value->_id.'->'.$value->value.'<br>';
 	        	}
 	            
 	        }
