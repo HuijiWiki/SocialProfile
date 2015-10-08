@@ -48,7 +48,7 @@
 	float: left;
 	max-width: 45px;
 	width: 10%;
-	padding: 5px 0px 0px 0px;
+	padding: 3px 0px 0px 0px;
 	margin: 0px 0px 0px 5px;
 }
 
@@ -71,6 +71,11 @@
 	max-width: 500px;
 	min-width: 320px;
 	padding: 5px;
+}
+.top-fan-row:after {
+    content: '';
+    display: block;
+    clear: both;
 }
 .top-fan-row.active {
 	border-left: 3px solid #eee;
