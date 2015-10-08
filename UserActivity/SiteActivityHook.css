@@ -29,3 +29,16 @@
     margin-top: 10px;
     max-height: 100px;
 }
+.user-home-item-owner-avatar{
+    width: 20%;
+    float: left;
+}
+.user-home-item-body{
+    width: 80%;
+    float: left;
+}
+@media screen and  (max-width: 768px){
+    .user-home-item-owner-avatar,.user-home-item-body{
+        width: 100%;
+    }
+}
