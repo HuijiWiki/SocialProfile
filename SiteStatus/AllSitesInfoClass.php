@@ -57,6 +57,7 @@ class AllSitesInfo{
 					$result['site_prefix'] = $value->site_prefix;
 					$result['site_rank'] = $value->site_rank;
 					$result['site_score'] = $value->site_score;
+					$result['best_rank'] = AllSitesInfo::getSiteBestRank( $value->site_prefix );
 					$allSiteRank[] = $result;
 				}
 			}
@@ -166,12 +167,49 @@ class AllSitesInfo{
 					'site_rank_date' => $yesterday
 				), __METHOD__
 			);
+			//best rank
+			$key_rank = AllSitesInfo::getSiteBestRank( $key );
+			$site_rank = (!is_null($key_rank))?$key_rank:0;
+			if( $rank > $site_rank ){
+				$dbw = wfGetDB( DB_MASTER );
+				$dbw->upsert(
+					'site_best_rank',
+					array(
+						'site_rank' => $rank,
+						'site_prefix' => $key
+					),
+					array(
+						'site_prefix' => $key
+					),
+					array(
+						'site_rank' => $rank
+					), __METHOD__
+				);
+			}
 			$x++;
 		}
-		// print_r($res);
-		// if ($numRank) {
-		// 	return $numRank;
-		// }
 	}
 
+	//get site bset rank
+	static function getSiteBestRank( $prefix ){
+		$dbr = wfGetDB( DB_SLAVE );
+		$res = $dbr->select(
+			'site_best_rank',
+			array(
+				'site_rank'
+			),
+			array(
+				'site_prefix' => $prefix,
+			),
+			__METHOD__
+		);
+		$result = 0;
+		if ( $res ) {
+			foreach ($res as $value) {
+				$result = $value->site_rank;
+			}
+		}
+		return $result;
+
+	}
 }
