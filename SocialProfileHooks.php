@@ -59,7 +59,8 @@ class SocialProfileHooks {
 		$updater->addExtensionUpdate( array( 'addTable', 'user_points_weekly', "$dir/UserStats/user_points_weekly$dbExt.sql", true ) );
 		$updater->addExtensionUpdate( array( 'addTable', 'user_points_monthly', "$dir/UserStats/user_points_monthly$dbExt.sql", true ) );
 		$updater->addExtensionUpdate( array( 'addTable', 'user_points_archive', "$dir/UserStats/user_points_archive$dbExt.sql", true ) );
-
+		$updater->addExtensionUpdate( array( 'addTable', 'template_fork', "$dir/TemplateFork/template_fork$dbExt.sql", true ) );
+		$updater->addExtensionUpdate( array( 'addTable', 'template_fork_count', "$dir/TemplateFork/template_fork_count$dbExt.sql", true ) );
 		return true;
 	}
 

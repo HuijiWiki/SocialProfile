@@ -186,6 +186,13 @@ class GenerateTopUsersReport extends SpecialPage {
 				if ( $user['rank'] == 1 ) {
 					// Mark the user ranked #1 as the "winner" for the given
 					// period
+					if( $period == 'weekly' ){
+						$systemGiftID = 9;
+					}elseif ( $period == 'monthly' ) {
+						$systemGiftID = 10;
+					}
+					$sg = new UserSystemGifts( $user['user_name'] );
+					$sg->sendSystemGift( $systemGiftID );
 					$stats = new UserStatsTrack( $user['user_id'], $user['user_name'] );
 					$stats->incStatField( "points_winner_{$period}" );
 					if ( $winners ) {
