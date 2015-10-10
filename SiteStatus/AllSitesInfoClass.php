@@ -169,8 +169,8 @@ class AllSitesInfo{
 			);
 			//best rank
 			$key_rank = AllSitesInfo::getSiteBestRank( $key );
-			$site_rank = (!is_null($key_rank))?$key_rank:0;
-			if( $rank > $site_rank ){
+			$site_rank = (!is_null($key_rank))?$key_rank:1000;
+			if( $rank < $site_rank ){
 				$dbw = wfGetDB( DB_MASTER );
 				$dbw->upsert(
 					'site_best_rank',
@@ -211,5 +211,26 @@ class AllSitesInfo{
 		}
 		return $result;
 
+	}
+	//get one page fork count
+	static function getPageForkCount( $page_id ){
+		$dbw = wfGetDB( DB_SLAVE );
+		$res = $dbw->select(
+			'template_fork_count',
+			array(
+				'fork_count'
+			),
+			array(
+				'template_id' => $page_id
+			),
+			__METHOD__
+		);
+		$result = '';
+		if( $res ){
+			foreach ($res as $value) {
+				$result = $value->fork_count;
+			}
+		}
+		return $result;
 	}
 }
