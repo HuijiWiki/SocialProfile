@@ -64,16 +64,17 @@ class CropAvatar {
   }
 
   private function setFile($file) {
-    global $wgUploadDirectory, $wgAvatarKey, $wgMemc, $wgUser, $wgSiteAvatarKey;
+    global $wgUploadDirectory, $wgAvatarKey, $wgMemc, $wgUser, $wgSiteAvatarKey, $wgHuijiPrefix;
+    $uid = $wgUser->getId();
     if (! $this->isUserAvatar ){
       $avatarKey = $wgSiteAvatarKey;
+      $avatar = new wSiteAvatar( $wgHuijiPrefix, 'l' );
     } else {
       $avatarKey = $wgAvatarKey;
+      $avatar = new wAvatar( $uid, 'l' );
     }
     $dest = $this->avatarUploadDirectory;
     $imageInfo = getimagesize( $file->getTempName() );
-    $uid = $wgUser->getId();
-    $avatar = new wAvatar( $uid, 'l' );
     $errorCode = $file->getError();
     if ($errorCode === UPLOAD_ERR_OK) {
       $type = exif_imagetype( $file->getTempName() );
@@ -315,9 +316,13 @@ class CropAvatar {
   }
 
   public function getResult() {
-    global $wgUser;
-    $uid = $wgUser->getId();
-    $avatar = new wAvatar( $uid, 'l' );
+    global $wgUser, $wgHuijiPrefix;
+    if ($this->isUserAvatar) {
+      $uid = $wgUser->getId();
+      $avatar = new wAvatar( $uid, 'l' );
+    } else {
+      $avatar = new wSiteAvatar( $wgHuijiPrefix, 'l' );      
+    }
     return $avatar->getAvatarUrlPath();
   }
 

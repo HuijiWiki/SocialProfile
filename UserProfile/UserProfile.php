@@ -64,8 +64,11 @@ $wgUploadAvatarInRecentChanges = false; // Same as above, but for avatar uploadi
 
 $wgAvailableRights[] = 'avatarremove';
 $wgAvailableRights[] = 'editothersprofiles';
+$wgAvailableRights[] = 'uploadSiteAvatar';
 $wgGroupPermissions['sysop']['avatarremove'] = true;
 $wgGroupPermissions['staff']['editothersprofiles'] = true;
+$wgGroupPermissions['sysop']['uploadSiteAvatar'] = true;
+
 
 // ResourceLoader support for MediaWiki 1.17+
 $wgResourceModules['ext.socialprofile.userprofile.css'] = array(
