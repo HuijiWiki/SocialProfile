@@ -34,10 +34,12 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		// Add Less
 		$out->addModuleStyles( 'ext.socialprofile.admindashboard.less' );
 		// Add CSS
-		$out->addModuleStyles( 'ext.socialprofile.admindashboard.css' );		
+		$out->addModuleStyles( 'ext.socialprofile.admindashboard.css' );
+		$out->addModuleStyles('ext.socialprofile.userprofile.css');	
 		// Add js and message
 		// $out->addModules( 'skin.bootstrapmediawiki.huiji.getRecordsInterface.js' );
 		$out->addModules( 'ext.socialprofile.admindashboard.js' );
+		$out->addModules('ext.socialprofile.userprofile.js');
 
 		$output = ''; // Prevent E_NOTICE
 	    $yesterday = date("Y-m-d",strtotime("-1 day"));
@@ -71,6 +73,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		$replaceText = SpecialPage::getTitleFor( '替换文本' )->getFullURL();
 		$siteRankPage = SpecialPage::getTitleFor( 'SiteRank' )->getFullURL();
 		$allSpecial = SpecialPage::getTitleFor( '特殊页面' )->getFullURL();
+		$siteAvatar = (new wSiteAvatar($wgHuijiPrefix, 'l'))->getAvatarHtml();
 		if(is_null($newFollow)){
 			$newFollow = false;
 		}
@@ -95,6 +98,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				        'replaceText' =>$replaceText,
 				        'siteRankPage' =>$siteRankPage,
 				        'allSpecial' =>$allSpecial,
+				        'siteAvatar' =>$siteAvatar,
 				    )
 				);
 		$out->addHtml($output);
