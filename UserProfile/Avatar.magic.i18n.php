@@ -10,4 +10,5 @@ $magicWords = array();
 /** English */
 $magicWords['en'] = array(
 	'avatar' => array( 0, 'avatar' ),
+	'siteavatar' => array( 0, 'siteavatar' ),
 );

@@ -15,17 +15,27 @@ class ApiAvatarShow extends ApiBase {
         $id = $this->getMain()->getVal( 'userid' );
         $name = $this->getMain()->getVal( 'username' );
         $size = $this->getMain()->getVal( 'size' );
+        $prefix = $this->getMain()->getVal( 'prefix' );
+        $isSite = false;
         if ($id == ''){
             if ($name != ''){
                 $id = User::idFromName($name);
             } else {
-                $id = 0;
+                if ($prefix != ''){
+                    $isSite = true;
+                } else {
+                    $id = 0;
+                }
             }
         } 
         if ($size = ''){
             $size = 'l';
         }
-		$avatar = new wAvatar($id, $size);
+        if (!$isSite){
+            $avatar = new wAvatar($id, $size);
+        } else {
+            $avatar = new wSiteAvatar($prefix, $size);
+        }
         $responseBody = array(
           'state'  => 200,
           'message' => '',
@@ -50,7 +60,11 @@ class ApiAvatarShow extends ApiBase {
             'size' => array(
                 ApiBase::PARAM_REQUIRED => false,
                 ApiBase::PARAM_TYPE => 'string'
-            )
+            ),
+            'prefix' => array(
+                ApiBase::PARAM_REQUIRED => false,
+                ApiBase::PARAM_TYPE => 'string'
+            ),           
         );
     }
 }

@@ -45,10 +45,19 @@ class ApiAvatarSubmit extends ApiBase {
         $avatar_src = $this->getMain()->getVal( 'avatar_src' );
         $avatar_data = $this->getMain()->getVal( 'avatar_data' );
         $avatar_file = $this->getMain()->getUpload( 'avatar_file' );
+        $avatar_type = $this->getMain()->getVal( 'avatar_type' );
+        if ( empty ($avatar_type) ){
+          $isUserAvatar = true;
+        } elseif ($avatar_type == 'site' ){
+          $isUserAvatar = false;
+        } else {
+          $isUserAvatar = true;
+        }
 		$avatar = new CropAvatar(
 			$avatar_src,
 			$avatar_data,
-			$avatar_file   
+			$avatar_file,  
+      $isUserAvatar 
 	    );
         $responseBody = array(
           'state'  => 200,
@@ -73,7 +82,11 @@ class ApiAvatarSubmit extends ApiBase {
             'avatar_file' => array(
                 ApiBase::PARAM_REQUIRED => true,
                 ApiBase::PARAM_TYPE => 'upload'
-            )
+            ),
+            'avatar_type' => array(
+                ApiBase::PARAM_REQUIRED => false,
+                ApiBase::PARAM_TYPE => 'string'
+            ),            
         );
     }
 }

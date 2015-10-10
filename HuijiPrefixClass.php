@@ -3,6 +3,19 @@
  * A help class to translate huijiprefix and the actual site name.
  */
 class HuijiPrefix{
+	/**
+	 * Check if a prefix is part of huiji.
+	 * @param string: prefix
+	 * @return bool
+	 */
+	public static function hasPrefix( $prefix ){
+		$result = self::getAllPrefix();
+		if (in_array($prefix, $result)){
+			return true;
+		} else {
+			return false;
+		}
+	}
 	public static function prefixToSiteName( $prefix ){
 		global $wgMemc;
 		$key = wfForeignMemcKey( 'huiji',' ','prefixToSiteName', $prefix );

@@ -13,9 +13,11 @@ class CropAvatar {
   private $extension;
   private $msg;
   private $avatarUploadDirectory;
+  private $isUserAvatar;
 
-  function __construct($src, $data, $file) {
+  function __construct($src, $data, $file, $isUserAvatar = true) {
     // wfDebug('=====================================Constructing=================================');
+    $this->isUserAvatar = $isUserAvatar;
     $this -> setSrc($file->getTempName());
     $this->file = $file;
     $this -> setData($data);
@@ -62,7 +64,12 @@ class CropAvatar {
   }
 
   private function setFile($file) {
-    global $wgUploadDirectory, $wgAvatarKey, $wgMemc, $wgUser;
+    global $wgUploadDirectory, $wgAvatarKey, $wgMemc, $wgUser, $wgSiteAvatarKey;
+    if (! $this->isUserAvatar ){
+      $avatarKey = $wgSiteAvatarKey;
+    } else {
+      $avatarKey = $wgAvatarKey;
+    }
     $dest = $this->avatarUploadDirectory;
     $imageInfo = getimagesize( $file->getTempName() );
     $uid = $wgUser->getId();
@@ -87,10 +94,10 @@ class CropAvatar {
             $stats = new UserStatsTrack( $uid, $wgUser->getName() );
             $stats->incStatField( 'user_image' );
           }
-          $this->createThumbnail( $file->getTempName() , $imageInfo, $wgAvatarKey . '_' . $uid . '_l', 200 );
-          $this->createThumbnail( $file->getTempName() , $imageInfo, $wgAvatarKey . '_' . $uid . '_ml', 50 );
-          $this->createThumbnail( $file->getTempName() , $imageInfo, $wgAvatarKey . '_' . $uid . '_m', 30 );
-          $this->createThumbnail( $file->getTempName() , $imageInfo, $wgAvatarKey . '_' . $uid . '_s', 16 );
+          $this->createThumbnail( $file->getTempName() , $imageInfo, $avatarKey . '_' . $uid . '_l', 200 );
+          $this->createThumbnail( $file->getTempName() , $imageInfo, $avatarKey . '_' . $uid . '_ml', 50 );
+          $this->createThumbnail( $file->getTempName() , $imageInfo, $avatarKey . '_' . $uid . '_m', 30 );
+          $this->createThumbnail( $file->getTempName() , $imageInfo, $avatarKey . '_' . $uid . '_s', 16 );
           switch ( $imageInfo[2] ) {
             case 1:
               $ext = 'gif';
@@ -106,45 +113,45 @@ class CropAvatar {
           }
 
           if ( $ext != 'jpg' ) {
-            if ( is_file( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_s.jpg' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_s.jpg' );
+            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.jpg' ) ) {
+              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.jpg' );
             }
-            if ( is_file( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_m.jpg' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_m.jpg' );
+            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_m.jpg' ) ) {
+              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_m.jpg' );
             }
-            if ( is_file( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_l.jpg' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_l.jpg' );
+            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_l.jpg' ) ) {
+              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_l.jpg' );
             }
-            if ( is_file( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_ml.jpg' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_ml.jpg' );
+            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_ml.jpg' ) ) {
+              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_ml.jpg' );
             }
           }
           if ( $ext != 'gif' ) {
-            if ( is_file( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_s.gif' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_s.gif' );
+            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.gif' ) ) {
+              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.gif' );
             }
-            if ( is_file( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_m.gif' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_m.gif' );
+            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_m.gif' ) ) {
+              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_m.gif' );
             }
-            if ( is_file( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_l.gif' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_l.gif' );
+            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_l.gif' ) ) {
+              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_l.gif' );
             }
-            if ( is_file( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_ml.gif' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_ml.gif' );
+            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_ml.gif' ) ) {
+              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_ml.gif' );
             }
           }
           if ( $ext != 'png' ) {
-            if ( is_file( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_s.png' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_s.png' );
+            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.png' ) ) {
+              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.png' );
             }
-            if ( is_file( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_m.png' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_m.png' );
+            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_m.png' ) ) {
+              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_m.png' );
             }
-            if ( is_file( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_l.png' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_l.png' );
+            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_l.png' ) ) {
+              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_l.png' );
             }
-            if ( is_file( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_ml.png' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $wgAvatarKey . '_' . $uid . '_ml.png' );
+            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_ml.png' ) ) {
+              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_ml.png' );
             }
           }
 

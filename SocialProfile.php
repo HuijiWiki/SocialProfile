@@ -73,6 +73,7 @@ $wgAutoloadClasses['TopFansByStat'] = __DIR__ . '/UserStats/TopFansByStat.php';
 $wgAutoloadClasses['TopFansRecent'] = __DIR__ . '/UserStats/TopFansRecent.php';
 $wgAutoloadClasses['TopUsersPoints'] = __DIR__ . '/UserStats/TopUsers.php';
 $wgAutoloadClasses['wAvatar'] = __DIR__ . '/UserProfile/AvatarClass.php';
+$wgAutoloadClasses['wSiteAvatar'] = __DIR__ . '/SiteStatus/SiteAvatarClass.php';
 $wgAutoloadClasses['AvatarParserFunction'] = __DIR__ . '/UserProfile/AvatarParserFunction.php';
 $wgAutoloadClasses['UserSiteFollow'] = __DIR__ . '/UserSiteFollows/UserSiteFollowsClass.php';
 $wgAutoloadClasses['UserUserFollow'] = __DIR__ . '/UserUserFollows/UserUserFollowsClass.php';
@@ -143,7 +144,8 @@ $wgFriendingEnabled = true;
 // Prefix SocialProfile will use to store avatars
 // for global avatars on a wikifarm or groups of wikis,
 // set this to something static.
-$wgAvatarKey = $wgDBname;
+$wgAvatarKey = 'my_wiki';
+$wgSiteAvatarKey = 'site_avatar';
 
 // Extension credits that show up on Special:Version
 $wgExtensionCredits['other'][] = array(
