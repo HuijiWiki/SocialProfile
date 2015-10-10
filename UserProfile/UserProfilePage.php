@@ -369,7 +369,7 @@ class UserProfilePage extends Article {
 				$usg->sendSystemGift( 46 ); 
 	        }
 	        $wgOut->addHTML('
-	            <div class="check-wrapper"><svg width="721" height="110" class=" ">
+	            <div class="check-wrapper"><svg width="725" height="110" class=" ">
 	                <g transform="translate(20, 20)">
 	        ');
 	        $n = 676/13;
