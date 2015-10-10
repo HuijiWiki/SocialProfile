@@ -248,6 +248,8 @@ jQuery( document ).ready( function() {
     }
     function ages(str)
     {
+        if(!str)
+            return;
         var   r   =   str.match(/^(\d{1,4})(-|\/)(\d{1,2})\2(\d{1,2})$/);
         if(r==null)return   false;
         var   d=   new   Date(r[1],   r[3]-1,   r[4]);

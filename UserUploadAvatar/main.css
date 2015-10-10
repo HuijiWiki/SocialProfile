@@ -6,6 +6,8 @@ body {
   box-shadow: 0 0 5px rgba(0,0,0,.15);
   cursor: pointer;
   overflow: hidden;
+}
+.crop-headimg .avatar-view{
   border-radius: 50%;
 }
 
@@ -62,6 +64,8 @@ body {
   border: 1px solid #eee;
   background-color: #fff;
   overflow: hidden;
+}
+.crop-headimg .avatar-preview{
   border-radius: 50%;
 }
 
@@ -119,6 +123,6 @@ body {
   filter: alpha(opacity=75);
   z-index: 20140628;
 }
-.cropper-view-box{
+.crop-headimg .cropper-view-box{
     border-radius:50%;
 }

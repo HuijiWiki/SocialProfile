@@ -31,11 +31,11 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		}
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
-		// Add Less
-		$out->addModuleStyles( 'ext.socialprofile.admindashboard.less' );
+
 		// Add CSS
-		$out->addModuleStyles( 'ext.socialprofile.admindashboard.css' );
-		$out->addModuleStyles('ext.socialprofile.userprofile.css');	
+		$out->addModules('ext.socialprofile.userprofile.css');	
+		$out->addModules( 'ext.socialprofile.admindashboard.css' );
+		
 		// Add js and message
 		// $out->addModules( 'skin.bootstrapmediawiki.huiji.getRecordsInterface.js' );
 		$out->addModules( 'ext.socialprofile.admindashboard.js' );

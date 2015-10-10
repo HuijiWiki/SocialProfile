@@ -1251,7 +1251,7 @@ class UserProfilePage extends Article {
 
 		$output .= '<div id="profile-title-container">
 				<h1 id="profile-title">
-				<div id="profile-image">' .($this->isOwner()? ('<div class="profile-image-container" id="crop-avatar"><div class="avatar-view upload-tool" title="上传头像">'.$avatar->getOwnerAvatarURL().'</div>'.$this->cropModal().'</div>'): $avatar->getAvatarURL()) .'</div>' .
+				<div id="profile-image">' .($this->isOwner()? ('<div class="profile-image-container crop-headimg" id="crop-avatar"><div class="avatar-view upload-tool" title="上传头像">'.$avatar->getOwnerAvatarURL().'</div>'.$this->cropModal().'</div>'): $avatar->getAvatarURL()) .'</div>' .
 					$user_name .
 				'</h1></div>';
         $output .='<div class="modal fade watch-url" tabindex="-1" role="dialog" aria-labelledby="mySmModalLabel" aria-hidden="true">

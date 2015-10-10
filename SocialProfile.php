@@ -359,17 +359,6 @@ $wgResourceModules['ext.socialprofile.siteactivity.css'] = array(
 	'position' => 'top' // just in case
 );
 // AdminDashboard
-$wgResourceModules['ext.socialprofile.admindashboard.less'] = array(
-	'styles' => array(
-					'minxins.less',
-					'sb-admin-2.less',
-					'variables.less',
-				),
-	'localBasePath' => __DIR__ . '/AdminDashboard/less',
-	'remoteExtPath' => 'SocialProfile/AdminDashboard/less',
-	'position' => 'top' // just in case
-);
-// AdminDashboard
 $wgResourceModules['ext.socialprofile.admindashboard.css'] = array(
 	'styles' => array(
 					'timeline.css',

@@ -65,11 +65,13 @@ class CropAvatar {
 
   private function setFile($file) {
     global $wgUploadDirectory, $wgAvatarKey, $wgMemc, $wgUser, $wgSiteAvatarKey, $wgHuijiPrefix;
-    $uid = $wgUser->getId();
+    
     if (! $this->isUserAvatar ){
+      $uid = $wgHuijiPrefix;
       $avatarKey = $wgSiteAvatarKey;
-      $avatar = new wSiteAvatar( $wgHuijiPrefix, 'l' );
+      $avatar = new wSiteAvatar( $uid, 'l' );
     } else {
+      $uid = $wgUser->getId();
       $avatarKey = $wgAvatarKey;
       $avatar = new wAvatar( $uid, 'l' );
     }
@@ -155,18 +157,34 @@ class CropAvatar {
               unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_ml.png' );
             }
           }
+          if ($this->isUserAvatar){
+            $key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'avatar', $uid, 's' );
+            $data = $wgMemc->delete( $key );
 
-          $key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'avatar', $uid, 's' );
-          $data = $wgMemc->delete( $key );
+            $key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'avatar', $uid, 'm' );
+            $data = $wgMemc->delete( $key );
 
-          $key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'avatar', $uid, 'm' );
-          $data = $wgMemc->delete( $key );
+            $key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'avatar', $uid , 'l' );
+            $data = $wgMemc->delete( $key );
 
-          $key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'avatar', $uid , 'l' );
-          $data = $wgMemc->delete( $key );
+            $key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'avatar', $uid, 'ml' );
+            $data = $wgMemc->delete( $key );
+           
+          } else {
+            $key = wfForeignMemcKey( 'huiji', '', 'site', 'profile', 'avatar', $uid, 's' );
+            $data = $wgMemc->delete( $key );
 
-          $key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'avatar', $uid, 'ml' );
-          $data = $wgMemc->delete( $key );
+            $key = wfForeignMemcKey( 'huiji', '', 'site', 'profile', 'avatar', $uid, 'm' );
+            $data = $wgMemc->delete( $key );
+
+            $key = wfForeignMemcKey( 'huiji', '', 'site', 'profile', 'avatar', $uid , 'l' );
+            $data = $wgMemc->delete( $key );
+
+            $key = wfForeignMemcKey( 'huiji', '', 'site', 'profile', 'avatar', $uid, 'ml' );
+            $data = $wgMemc->delete( $key );           
+          }
+
+
 
           /* I know this is bad but whatever */
           $result = true;
