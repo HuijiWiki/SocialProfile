@@ -49,6 +49,17 @@ class ApiAvatarSubmit extends ApiBase {
         if ( empty ($avatar_type) ){
           $isUserAvatar = true;
         } elseif ($avatar_type == 'site' ){
+          if(!$user->isAllowed('uploadSiteAvatar')){
+            $responseBody = array(
+              'state'  => 200,
+              'message' => '您的权限不足。',
+              'result' => $avatar->getResult(),
+            );
+            $result = $this->getResult();
+
+            $result->addValue($this->getModuleName(),'res', $responseBody);
+            return true;                   
+          }
           $isUserAvatar = false;
         } else {
           $isUserAvatar = true;
