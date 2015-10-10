@@ -30,7 +30,7 @@ var UserProfilePage = {
 	},
 
 	deleteMessage: function( id ) {
-		if ( confirm( 'Are you sure you want to delete this message?' ) ) {
+		if ( confirm( '你确认删除此条留言？' ) ) {
 			jQuery.post(
 				mw.util.wikiScript(), {
 					action: 'ajax',
