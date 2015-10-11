@@ -93,7 +93,7 @@ class CropAvatar {
           // If this is the user's first custom avatar, update statistics (in
           // case if we want to give out some points to the user for uploading
           // their first avatar)
-          if ( strpos( $avatar->getAvatarImage(), 'default_' ) !== false ) {
+          if ( $this->isUserAvatar && strpos( $avatar->getAvatarImage(), 'default_' ) !== false ) {
             $stats = new UserStatsTrack( $uid, $wgUser->getName() );
             $stats->incStatField( 'user_image' );
           }
