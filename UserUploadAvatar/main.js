@@ -283,7 +283,12 @@
       if ($.isPlainObject(data) && data.avatarsubmit.res.state === 200) {
         if (data.avatarsubmit.res.result) {
           this.url = data.avatarsubmit.res.result;
-          $(".navbar-right").find('.headimg').attr('src',data.avatarsubmit.res.result);
+          if($('#crop-avatar').hasClass('crop-headimg')){
+            $(".navbar-right").find('.headimg').attr('src',data.avatarsubmit.res.result);
+          }
+          else{
+            $('.logo-wiki-user').find('img').attr('src',data.avatarsubmit.res.result);
+          }
           if (this.support.datauri || this.uploaded) {
             this.uploaded = false;
             this.cropDone();
