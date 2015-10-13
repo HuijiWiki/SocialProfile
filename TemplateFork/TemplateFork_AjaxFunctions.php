@@ -4,6 +4,8 @@
  */
 $wgAjaxExportList[] = 'wfAddForkCount';
 $wgAjaxExportList[] = 'wfAddForkInfo';
+$wgAjaxExportList[] = 'wfGetForkCountByPageId';
+$wgAjaxExportList[] = 'wfGetForkInfoByPageId';
 
 //add fork count
 function wfAddForkCount( $page_id ){
@@ -52,5 +54,56 @@ function wfAddForkInfo( $page_id, $fork_from, $prefix ){
 		__METHOD__
 	);
 	return 'success';
+}
+
+//get template fork count by pageid
+function wfGetForkCountByPageId( $page_id ){
+	$dbw = wfGetDB(DB_SLAVE);
+	$res = $dbw->select(
+		'template_fork_count',
+		array(
+			'fork_count'
+		),
+		array(
+			'template_id' => $page_id
+		),
+		__METHOD__
+	);
+	$result = 0;
+	if( $res !== false ){
+		foreach ($res as $value) {
+			$result = $value->fork_count;
+		}
+	}
+	return json_encode( $result );
+}
+
+//get template fork info by pageid
+function wfGetForkInfoByPageId( $page_id ){
+	$dbw = wfGetDB(DB_SLAVE);
+	$res = $dbw->select(
+		'template_fork',
+		array(
+			'fork_from',
+			'fork_user',
+			'fork_date',
+		),
+		array(
+			'template_id' => $page_id
+		),
+		__METHOD__,
+		array( 
+			'ORDER BY' => 'fork_date DESC'
+		)
+	);
+	$result = array();
+	if( $res ){
+		foreach ($res as $value) {
+			$result['fork_from'] = $value->fork_from;
+			$result['fork_user'] = $value->fork_user;
+			$result['fork_date'] = $value->fork_date;
+		}
+	}
+	return json_encode( $result );
 }
 
