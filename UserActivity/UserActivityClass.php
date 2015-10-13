@@ -1326,11 +1326,7 @@ class UserActivity {
 				// $timeago = CommentFunctions::getTimeAgo($row->item_date).'前';
 				$page_link = '<a href="' . $domainUrl .
 					"\" rel=\"nofollow\">{$row->domain_name}</a>";
-				if ($this->show_following_sites){
-					$avatar = new wSiteAvatar($row->domain_prefix, 'ml');
-				} else {
-					$avatar = new wAvatar($row->domain_founder_id, 'ml');
-				}
+				$avatar = new wAvatar($row->domain_founder_id, 'ml');
 				$avatarUrl = $avatar->getAvatarURL();
 				/* build html */
 				$html = $this->templateParser->processTemplate(
@@ -1538,7 +1534,7 @@ class UserActivity {
 
 		foreach ( $this->items_grouped[$type] as $page_name => $page_data ) {
 			$timeago = CommentFunctions::getTimeAgo($page_data['timestamp']).'前';
-			$key = wfForeignMemcKey('huiji', '', 'simplifyPageActivity', $type, $page_name, $page_data['timestamp'], count( $page_data['users'] ));
+			$key = wfForeignMemcKey('huiji', '', 'simplifyPageActivity', $type, $page_name, $page_data['timestamp'], count( $page_data['users'] ), $this->show_following_sites);
 
 			if (isset($this->displayed[$type][$page_name])){
 				continue;
