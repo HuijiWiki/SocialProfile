@@ -203,7 +203,7 @@ class AllSitesInfo{
 			),
 			__METHOD__
 		);
-		$result = 0;
+		$result = '';
 		if ( $res ) {
 			foreach ($res as $value) {
 				$result = $value->site_rank;
