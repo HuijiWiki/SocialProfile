@@ -1326,7 +1326,11 @@ class UserActivity {
 				// $timeago = CommentFunctions::getTimeAgo($row->item_date).'前';
 				$page_link = '<a href="' . $domainUrl .
 					"\" rel=\"nofollow\">{$row->domain_name}</a>";
-				$avatar = new wAvatar($row->domain_founder_id, 'ml');
+				if ($this->show_following_sites){
+					$avatar = new wSiteAvatar($row->domain_prefix, 'ml');
+				} else {
+					$avatar = new wAvatar($row->domain_founder_id, 'ml');
+				}
 				$avatarUrl = $avatar->getAvatarURL();
 				/* build html */
 				$html = $this->templateParser->processTemplate(
@@ -1573,7 +1577,11 @@ class UserActivity {
 					$this->displayed[$type][$page_name] = 1;
 					$pages.= $this->fixPageTitle($page_title, $page_data);
 					/* get User Avatar for display */
-					$avatar = new wAvatar(User::idFromName($user_name), 'ml');
+					if ($this->show_following_sites){
+						$avatar = new wSiteAvatar($page_data['prefix'][0], 'ml');
+					} else {
+						$avatar = new wAvatar(User::idFromName($user_name), 'ml');
+					}
 					$avatarUrl = $avatar->getAvatarHtml();
 					
 					if ( $count_users == 1 && $count_actions > 1 ) {
