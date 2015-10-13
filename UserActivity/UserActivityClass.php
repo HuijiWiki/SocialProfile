@@ -1706,7 +1706,7 @@ class UserActivity {
 					'user-home-item',
 					array(
 						'userAvatar' => $avatarUrl,
-						'userName'  => $users,
+						'userName'  => $this->show_following_sites?$prefixToName:$users,
 						'timestamp' => $timeago,
 						'description' => wfMessage(
 											"useractivity-{$type}",
