@@ -123,7 +123,7 @@ class SystemGiftList extends SpecialPage {
 		if ( $gifts ) {
 			foreach ( $gifts as $gift ) {
 				$gift_image = "<div class='img'><img src=\"{$wgUploadPath}/awards/" .
-					SystemGifts::getGiftImage( $gift['id'], 'ml' ) .
+					SystemGifts::getGiftImage( $gift['id'], 'l' ) .
 					'" border="0" alt="" /></div>';
 					$sg = new SystemGifts();
                 if ( $sg->doesUserHaveGift( $user_id, $gift['id'] ) ) {
