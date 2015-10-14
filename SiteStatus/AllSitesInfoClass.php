@@ -214,8 +214,8 @@ class AllSitesInfo{
 	}
 	//get one page fork count
 	static function getPageForkCount( $page_id ){
-		$dbw = wfGetDB( DB_SLAVE );
-		$res = $dbw->select(
+		$dbr = wfGetDB( DB_SLAVE );
+		$res = $dbr->select(
 			'template_fork_count',
 			array(
 				'fork_count'
@@ -232,5 +232,117 @@ class AllSitesInfo{
 			}
 		}
 		return $result;
+	}
+
+	//get site count
+	static function getSiteCountNum(){
+		$allSite = HuijiPrefix::getAllPrefix();
+		return count($allSite);
+	}
+
+	//get user count
+	static function getUsreCountNum(){
+		$dbr = wfGetDB( DB_SLAVE );
+		$res = $dbr->select(
+			'user',
+			array( 'COUNT(user_id) AS count' ),
+			array('1'),
+			__METHOD__
+		);
+		if($res){
+			foreach ($res as $value) {
+				$countNum = $value->count;
+			}
+		}
+		return $countNum;
+	}
+
+	//get all site edit count
+	static function getAllSiteEditCount(){
+		global $isProduction;
+		$allSite = HuijiPrefix::getAllPrefix();
+		$editCount = 0;
+		foreach ($allSite as $prefix) {
+			if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
+				$prefix = 'huiji_home';
+			}elseif ( $isProduction == true ) {
+				$prefix = 'huiji_sites-'.str_replace('.', '_', $prefix);
+			}else{
+				$prefix = 'huiji_'.str_replace('.', '_', $prefix);
+			}
+			$dbr = wfGetDB( DB_SLAVE,$groups = array(),$wiki = $prefix );
+			$res = $dbr->select(
+				'site_stats',
+				array(
+					'ss_total_edits'
+				),
+				array('1'),
+				__METHOD__
+			);
+			if($res){
+				foreach ($res as $value) {
+					$editCount  = $editCount + $value->ss_total_edits;
+				}
+			}
+		}
+		return $editCount;
+	}
+
+	//get upload files count
+	static function getAllUploadFileCount(){
+		global $isProduction;
+		$allSite = HuijiPrefix::getAllPrefix();
+		$fileCount = 0;
+		foreach ($allSite as $prefix) {
+			if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
+				$prefix = 'huiji_home';
+			}elseif ( $isProduction == true ) {
+				$prefix = 'huiji_sites-'.str_replace('.', '_', $prefix);
+			}else{
+				$prefix = 'huiji_'.str_replace('.', '_', $prefix);
+			}
+			$dbr = wfGetDB( DB_SLAVE,$groups = array(),$wiki = $prefix );
+			$res = $dbr->select(
+				'image',
+				array( 'COUNT(img_name) AS count' ),
+				array('1'),
+				__METHOD__
+			);
+			if($res){
+				foreach ($res as $value) {
+					$fileCount  = $fileCount + $value->count;
+				}
+			}
+		}
+		return $fileCount;
+	}
+
+	//get all page count
+	static function getAllPageCount(){
+		global $isProduction;
+		$allSite = HuijiPrefix::getAllPrefix();
+		$pageCount = 0;
+		foreach ($allSite as $prefix) {
+			if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
+				$prefix = 'huiji_home';
+			}elseif ( $isProduction == true ) {
+				$prefix = 'huiji_sites-'.str_replace('.', '_', $prefix);
+			}else{
+				$prefix = 'huiji_'.str_replace('.', '_', $prefix);
+			}
+			$dbr = wfGetDB( DB_SLAVE,$groups = array(),$wiki = $prefix );
+			$res = $dbr->select(
+				'page',
+				array( 'COUNT(page_id) AS count' ),
+				array('1'),
+				__METHOD__
+			);
+			if($res){
+				foreach ($res as $value) {
+					$pageCount  = $pageCount + $value->count;
+				}
+			}
+		}
+		return $pageCount;
 	}
 }
