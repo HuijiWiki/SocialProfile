@@ -78,7 +78,6 @@ $wgAutoloadClasses['AvatarParserFunction'] = __DIR__ . '/UserProfile/AvatarParse
 $wgAutoloadClasses['UserSiteFollow'] = __DIR__ . '/UserSiteFollows/UserSiteFollowsClass.php';
 $wgAutoloadClasses['UserUserFollow'] = __DIR__ . '/UserUserFollows/UserUserFollowsClass.php';
 $wgAutoloadClasses['UserStatus'] = __DIR__ . '/UserStatus/UserStatusClass.php';
-$wgAutoloadClasses['HuijiPrefix'] = __DIR__ . '/HuijiPrefixClass.php';
 $wgAutoloadClasses['ResponseGenerator'] = __DIR__ . '/ResponseGeneratorClass.php';
 $wgAutoloadClasses['CropAvatar'] = __DIR__ . '/UserUploadAvatar/crop.php';
 $wgAutoloadClasses['UserEditBox'] = __DIR__ . '/UserStats/UserEditBoxClass.php';
