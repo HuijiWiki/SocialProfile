@@ -33,12 +33,9 @@ class SpecialSiteRank extends SpecialPage {
 		$beforeyesterday = date('Y-m-d',strtotime('-2 days'));
 		$allSiteRank = AllSitesInfo::getAllSitesRankData( '', $yesterday );
 		foreach ($allSiteRank as $key=>$value) {
-            $allSiteRank[$key]['site_prefix'] = HuijiPrefix::prefixToSiteName($value['site_prefix']);
-            $allSiteRank[$key]['site_url'] = HuijiPrefix::prefixToUrl($value['site_prefix']);
-            $allSiteRank[$key]['siteInfo'] = AllSitesInfo::getPageInfoByPrefix($value['site_prefix']);
-
-        }
-        print_r($allSiteRank);die();
+		$allSiteRank[$key]['site_prefix'] = HuijiPrefix::prefixToSiteName($value['site_prefix']);
+		$allSiteRank[$key]['site_url'] = HuijiPrefix::prefixToUrl($value['site_prefix']);
+		$allSiteRank[$key]['siteInfo'] = AllSitesInfo::getPageInfoByPrefix($value['site_prefix']);
 		$beforeallSiteRank = AllSitesInfo::getAllSitesRankData( '', $beforeyesterday );
 		$beforeArr = array();
 		foreach ($beforeallSiteRank as $value) {
