@@ -31,6 +31,7 @@ class SystemGifts {
 		'7夕' => 20,
 		'中秋' => 21,
 		'连续编辑' => 22,
+		'节日' => 23,
 	);
 
 	private $repeatableGifts = array( 12, 13, 15, 16, 17, 18, 19, 20, 21 );
