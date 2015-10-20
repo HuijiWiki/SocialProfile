@@ -826,7 +826,7 @@ class UserActivity {
 			global $wgUploadPath, $wgMemc;
 			$key = wfForeignMemcKey('huiji', '', 'setGiftsRec', $row->ug_id);
 			$html = $wgMemc->get($key);
-			$timeago = CommentFunctions::getTimeAgo($row->item_date).'前';
+			$timeago = HuijiFunctions::getTimeAgo($row->item_date).'前';
 			if ($html != ''){
 				$html = $this->updateTime($html, $timeago);
 			} else {
@@ -840,7 +840,7 @@ class UserActivity {
 				$avatar = new wAvatar($row->ug_user_id_to, 'ml');
 				$avatarUrl = $avatar->getAvatarURL();
 				$user_name_short = $wgLang->truncate( $row->ug_user_name_to, 25 );
-				// $timeago = CommentFunctions::getTimeAgo($row->item_date);
+				// $timeago = HuijiFunctions::getTimeAgo($row->item_date);
 				/* build html */
 				$html = $this->templateParser->processTemplate(
 					'user-home-item',
@@ -919,7 +919,7 @@ class UserActivity {
 			global $wgMemc;
 			$key = wfForeignMemcKey('huiji', '', 'setSystemGiftsRec', $row->sg_id);
 			$html = $wgMemc->get($key);
-			$timeago = CommentFunctions::getTimeAgo($row->item_date).'前';
+			$timeago = HuijiFunctions::getTimeAgo($row->item_date).'前';
 			if ($html != ''){
 				$html = $this->updateTime($html, $timeago);
 			} else {
@@ -931,7 +931,7 @@ class UserActivity {
 				$user_name_short = $wgLang->truncate( $row->sg_user_name, 25 );
 				$avatar = new wAvatar( $row->sg_user_id, 'ml');
 				$avatarUrl = $avatar->getAvatarURL();
-				// $timeago = CommentFunctions::getTimeAgo($row->item_date).'前';
+				// $timeago = HuijiFunctions::getTimeAgo($row->item_date).'前';
 				/* build html */
 				$html = $this->templateParser->processTemplate(
 					'user-home-item',
@@ -1136,7 +1136,7 @@ class UserActivity {
 			global $wgMemc;
 			$key = wfForeignMemcKey('huiji', '', 'setSystemMessages', $row->um_id);
 			$html = $wgMemc->get($key);
-			$timeago = CommentFunctions::getTimeAgo($row->item_date).'前';
+			$timeago = HuijiFunctions::getTimeAgo($row->item_date).'前';
 			if ($html != ''){
 				$html = $this->updateTime($html, $timeago);
 			} else {
@@ -1144,7 +1144,7 @@ class UserActivity {
 				$user_name_short = $wgLang->truncate( $row->um_user_name, 15 );
 				$avatar = new wAvatar( $row->um_user_id, 'ml');
 				$avatarUrl = $avatar->getAvatarHtml();
-				// $timeago = CommentFunctions::getTimeAgo($row->item_date).'前';
+				// $timeago = HuijiFunctions::getTimeAgo($row->item_date).'前';
 				/* build html */
 				$html = $this->templateParser->processTemplate(
 					'user-home-item',
@@ -1314,7 +1314,7 @@ class UserActivity {
 			global $wgMemc;
 			$key = wfForeignMemcKey('huiji', '', 'setDomainCreations', $row->domain_id);
 			$html = $wgMemc->get($key);
-			$timeago = CommentFunctions::getTimeAgo($row->item_date).'前';
+			$timeago = HuijiFunctions::getTimeAgo($row->item_date).'前';
 			if ($html != ''){
 				$html = $this->updateTime($html, $timeago);
 			} else {
@@ -1323,7 +1323,7 @@ class UserActivity {
 				$user_name_short = $wgLang->truncate( $row->domain_founder_name, 15 );
 				$user_title = Title::makeTitle( NS_USER, $row->domain_founder_name );
 				$founder_link = '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b>";
-				// $timeago = CommentFunctions::getTimeAgo($row->item_date).'前';
+				// $timeago = HuijiFunctions::getTimeAgo($row->item_date).'前';
 				$page_link = '<a href="' . $domainUrl .
 					"\" rel=\"nofollow\">{$row->domain_name}</a>";
 				$avatar = new wAvatar($row->domain_founder_id, 'ml');
@@ -1533,7 +1533,7 @@ class UserActivity {
 
 
 		foreach ( $this->items_grouped[$type] as $page_name => $page_data ) {
-			$timeago = CommentFunctions::getTimeAgo($page_data['timestamp']).'前';
+			$timeago = HuijiFunctions::getTimeAgo($page_data['timestamp']).'前';
 			$key = wfForeignMemcKey('huiji', '', 'simplifyPageActivity', $type, $page_name, $page_data['timestamp'], count( $page_data['users'] ), $this->show_following_sites);
 
 			if (isset($this->displayed[$type][$page_name])){

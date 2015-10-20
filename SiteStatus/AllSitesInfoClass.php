@@ -236,12 +236,14 @@ class AllSitesInfo{
 
 	//get site count
 	static function getSiteCountNum(){
+		global $wgLang;
 		$allSite = HuijiPrefix::getAllPrefix();
-		return count($allSite);
+		return $wgLang->formatNum( count($allSite) );
 	}
 
 	//get user count
 	static function getUsreCountNum(){
+		global $wgLang;
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select(
 			'user',
@@ -254,12 +256,12 @@ class AllSitesInfo{
 				$countNum = $value->count;
 			}
 		}
-		return $countNum;
+		return $wgLang->formatNum( $countNum );
 	}
 
 	//get all site edit count
 	static function getAllSiteEditCount(){
-		global $isProduction;
+		global $isProduction, $wgLang;
 		$allSite = HuijiPrefix::getAllPrefix();
 		$editCount = 0;
 		foreach ($allSite as $prefix) {
@@ -285,12 +287,12 @@ class AllSitesInfo{
 				}
 			}
 		}
-		return $editCount;
+		return $wgLang->formatNum( $editCount );
 	}
 
 	//get upload files count
 	static function getAllUploadFileCount(){
-		global $isProduction;
+		global $isProduction, $wgLang;
 		$allSite = HuijiPrefix::getAllPrefix();
 		$fileCount = 0;
 		foreach ($allSite as $prefix) {
@@ -314,12 +316,12 @@ class AllSitesInfo{
 				}
 			}
 		}
-		return $fileCount;
+		return $wgLang->formatNum( $fileCount );
 	}
 
 	//get all page count
 	static function getAllPageCount(){
-		global $isProduction;
+		global $isProduction, $wgLang;
 		$allSite = HuijiPrefix::getAllPrefix();
 		$pageCount = 0;
 		foreach ($allSite as $prefix) {
@@ -343,6 +345,42 @@ class AllSitesInfo{
 				}
 			}
 		}
-		return $pageCount;
+		return $wgLang->formatNum( $pageCount );
 	}
+
+	//get one page info edit/artical/totalpage/followee
+	
+	static function getPageInfoByPrefix( $prefix ){
+		global $isProduction, $wgLang;
+		if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
+				$prefix = 'huiji_home';
+			}elseif ( $isProduction == true ) {
+				$prefix = 'huiji_sites-'.str_replace('.', '_', $prefix);
+			}else{
+				$prefix = 'huiji_'.str_replace('.', '_', $prefix);
+			}
+			$resArr = array();
+			$dbr = wfGetDB( DB_SLAVE,$groups = array(),$wiki = $prefix );
+			$res = $dbr->select(
+				'site_stats',
+				array(
+					'ss_total_edits',
+					'ss_good_articles',
+					'ss_total_pages',
+					'ss_users',
+				 ),
+				array('1'),
+				__METHOD__
+			);
+			if($res){
+				foreach ($res as $value) {
+					$resArr['totalEdits']  = $value->ss_total_edits;
+					$resArr['totalArticles']  = $value->ss_good_articles;
+					$resArr['totalPages']  = $value->ss_total_pages;
+					$resArr['totalUsers']  = $value->ss_users;
+				}
+			}
+			return $resArr;
+	}
+
 }

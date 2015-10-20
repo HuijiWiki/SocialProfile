@@ -24,7 +24,7 @@ class UserBoard {
 	 */
 	public function sendBoardMessage( $user_id_from, $user_name_from, $user_id_to, $user_name_to, $message, $message_type = 0 ) {		
 		// convert '@' to wiki link;
-		$message = CommentFunctions::preprocessText($message);
+		$message = HuijiFunctions::preprocessText($message);
 
 		$dbw = wfGetDB( DB_MASTER );
 
@@ -50,7 +50,7 @@ class UserBoard {
 			$this->sendBoardNotificationEmail( $user_id_to, $user_name_from, $message );
 			$this->incNewMessageCount( $user_id_to );
 		}
-		$mentionedUsers = CommentFunctions::getMentionedUsers($message);
+		$mentionedUsers = HuijiFunctions::getMentionedUsers($message);
 		if ( count( $mentionedUsers ) && $message_type == 0 ) {
 			$this->sendMentionedNotification($user_id_from, $user_name_from, $user_id_to, $user_name_to, $message, $mentionedUsers);
 		}
@@ -527,7 +527,7 @@ class UserBoard {
 	}
 
 	public function getTimeOffset( $time, $timeabrv, $timename ) {
-		return CommentFunctions::getTimeOffset( $time, $timeabrv, $timename );
+		return HuijiFunctions::getTimeOffset( $time, $timeabrv, $timename );
 	}
 
 	/**
@@ -537,7 +537,7 @@ class UserBoard {
 	 * @return $timeStr Mixed: time, such as "20 days" or "11 hours"
 	 */
 	public function getTimeAgo( $time ) {
-		return CommentFunctions::getTimeAgo( $time );
+		return HuijiFunctions::getTimeAgo( $time );
 	}
 
 	/**

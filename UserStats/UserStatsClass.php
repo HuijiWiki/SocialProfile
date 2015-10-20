@@ -1056,6 +1056,76 @@ class UserStats {
 			return $res; 
 		}
 	}
+	//user rank week/month/total
+	static function getUserRank( $count, $table ){
+
+		if($table == 'total'){
+			$tableName = 'user_stats';
+			$field = array( 'stats_user_id', 'stats_user_name', 'stats_total_points' );
+			$condition = array( 'stats_user_id <> 0' );
+			$params['ORDER BY'] = 'stats_total_points DESC';
+		}elseif($table == 'week'){
+			$tableName = 'user_points_weekly';
+			$field = array( 'up_user_id', 'up_user_name', 'up_points' );
+			$condition = array( 'up_user_id <> 0' );
+			$params['ORDER BY'] = 'up_points DESC';
+		}elseif($table == 'month'){
+			$tableName = 'user_points_monthly';
+			$field = array( 'up_user_id', 'up_user_name', 'up_points' );
+			$condition = array( 'up_user_id <> 0' );
+			$params['ORDER BY'] = 'up_points DESC';
+		}
+        $params['LIMIT'] = $count;
+        $dbr = wfGetDB( DB_SLAVE );
+        $res = $dbr->select(
+            $tableName,
+            $field,
+            $condition,
+            __METHOD__,
+            $params
+        );
+        foreach ( $res as $row ) {
+        	if($table == 'total'){
+        		$userObj = User::newFromId( $row->stats_user_id );
+	            $user_group = $userObj->getEffectiveGroups();
+	            if ( !in_array('bot', $user_group) && !in_array('bot-global',$user_group)  ) {
+	                $user_list_total[] = array(
+	                    'user_id' => $row->stats_user_id,
+	                    'user_name' => $row->stats_user_name,
+	                    'points' => $row->stats_total_points
+	                );
+	            }
+        	}else{
+        		$userObj = User::newFromId( $row->up_user_id );
+	            $user_group = $userObj->getEffectiveGroups();
+	            if ( !in_array('bot', $user_group) && !in_array('bot-global',$user_group)  ) {
+	                $user_list_total[] = array(
+	                    'user_id' => $row->up_user_id,
+	                    'user_name' => $row->up_user_name,
+	                    'points' => $row->up_points
+	                );
+	            }
+        	}
+            
+        }
+        $z = 1;
+        $resdata = array();
+        $user_list_total = array_slice($user_list_total, 0, 10);  
+        foreach ( $user_list_total as $user ) {
+                // $resdata['user_title'] = Title::makeTitle( NS_USER, $user['user_name'] );
+                $avatar = new wAvatar( $user['user_id'], 'ml' );
+				$userPage = Title::makeTitle( NS_USER, $user['user_name'] );
+				$userPageURL = htmlspecialchars( $userPage->getFullURL() );
+                $resdata['avatarImage'] = $avatar->getAvatarURL();
+                $resdata['rank'] = $z;
+                $resdata['user_name'] = $user['user_name'];
+                $resdata['user_url'] = $userPageURL;
+				$resdata['user_points'] = $user['points']>=0?$user['points']:0;
+                $result[] = $resdata;
+                $z++;
+        }
+        return $result;
+	}
 }
 
 class UserLevel {
