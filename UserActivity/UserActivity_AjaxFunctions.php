@@ -128,16 +128,17 @@ function wfUserActivityResponse( $username, $filter, $item_type, $limit, $earlie
 				$x++;
 			}
 		}
+		$end = false;
+	} else {
+		$end = true;
 	}
-
-	$output .= '
-	<div class="cleared"></div>';
 
 	$out = array(
 		"success" => true,
 		"continuation" => $last,
 		"output" => $output,
-		"earlierThan" => $earlierThan
+		"earlierThan" => $earlierThan,
+		"end" => $end
 	);
 	return json_encode($out);
 }
