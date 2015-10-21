@@ -121,7 +121,7 @@ function wfUserFollowsRecommend( $follower, $followee ){
 	$uuf = new UserUserFollow();
 	if ( $follower === $wgUser->getName() && $followee !== $follower){
 		if ($uuf->addUserUserFollow($wgUser, User::newFromName($followee)) !== false){
-			$weekRank = UserStats::getUserRank(10,'week');
+			$weekRank = UserStats::getUserRank(20,'week');
 			$monthRank = UserStats::getUserRank(20,'month');
 			$totalRank = UserStats::getUserRank(20,'total');
 			if ( count($weekRank) >=8 ) {
@@ -147,8 +147,12 @@ function wfUserFollowsRecommend( $follower, $followee ){
 	        $i = 5;
 	        $newUser = $recommendRes[$i];
 	        $i++;
+	        if ($i=$n) {
+	        	$i = 4;
+		    }
     		$res = array('success'=> true, 'result'=>$newUser );
-    		return $res;
+    		$out = json_encode($res);
+    		return $out;
 		}
 	}
 }
