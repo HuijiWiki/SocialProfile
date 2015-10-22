@@ -104,7 +104,7 @@ function wfUsersFollowingSiteResponse( $user, $site_name ) {
 }
 
 function wfSiteFollowsRecommend( $username, $servername ){
-	global $wgUsre;
+	global $wgUser;
 	$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_UNKNOWN);
 
 	// This feature is only available for logged-in users.
@@ -137,7 +137,6 @@ function wfSiteFollowsRecommend( $username, $servername ){
 			// $out = ResponseGenerator::getJson(ResponseGenerator::SUCCESS);
 			$yesterday = date('Y-m-d',strtotime('-1 days'));
 			$allSiteRank = AllSitesInfo::getAllSitesRankData( '', $yesterday );
-			$usf = new UserSiteFollow();
 	        $recSite = array_slice($allSiteRank,0 ,10);
 	        $recommendSite = array();
 	        foreach($recSite as $value){
