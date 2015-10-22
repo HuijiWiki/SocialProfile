@@ -145,14 +145,11 @@ function wfUserFollowsRecommend( $follower, $followee ){
 	        }
 	        $n = count($recommendRes);
 	        $i = 5;
-	        $newUser = $recommendRes[$i];
-	        $i++;
-	        if ($i=$n) {
-	        	$i = 4;
-		    }
+	        $newUser = isset($recommendRes[$i])?$recommendRes[$i]:null;
     		$res = array('success'=> true, 'result'=>$newUser );
     		$out = json_encode($res);
     		return $out;
 		}
+	
 	}
 }
