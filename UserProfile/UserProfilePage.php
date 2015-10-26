@@ -108,7 +108,6 @@ class UserProfilePage extends Article {
 		$topFollowedSites = $usf->getTopFollowedSitesWithDetails( $wgUser->getId(), $this->user_id );
 		// $temp = array();
 		// $res = array();
-		// $count = array();
 
 		// foreach( $topFollowedSites as $value ){
 		// 	// if ( $wgUser->isLoggedIn() ) {
@@ -121,6 +120,7 @@ class UserProfilePage extends Article {
 		// }
 		
 		//sort by edit num
+		$count = array();
 		foreach ($topFollowedSites as $val) {
 			$count[] = $val['count'];
 		}
