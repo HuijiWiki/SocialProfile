@@ -116,7 +116,6 @@ class SystemGiftList extends SpecialPage {
 		', 在'.$who.'的好友中排第<span style="color:#428bca;font-size:20px;font-weight: bold;">'.$countRes[$wgUser->getName()].'</span>名</div><div class="giftlist">';
 
 		// Safelinks
-		$view_system_gift_link = SpecialPage::getTitleFor( 'ViewSystemGift' );
 		// print_r($gifts);
 		
 		// print_r($countRes);
@@ -132,9 +131,7 @@ class SystemGiftList extends SpecialPage {
                 				$s= 'ga-item';
                 				}
 				$output .= "<div class='".$s."'>
-				    <a href=\"" .
-                    htmlspecialchars( $view_system_gift_link->getFullURL( 'gift_id=' . $gift['id'] ) ) .
-                    "\" data-toggle='popover' data-trigger='hover' title='{$gift['gift_name']}' data-content='{$gift['gift_description']}'>
+				    <a data-toggle='popover' data-trigger='hover' title='{$gift['gift_name']}' data-content='{$gift['gift_description']}'>
                     {$gift_image}";
 
 
