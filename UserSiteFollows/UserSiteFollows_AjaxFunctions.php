@@ -139,11 +139,14 @@ function wfSiteFollowsRecommend( $username, $servername ){
 			$allSiteRank = AllSitesInfo::getAllSitesRankData( '', $yesterday );
 	        $recSite = array_slice($allSiteRank,0 ,10);
 	        $recommendSite = array();
+
 	        foreach($recSite as $value){
 	            $isFollowSite = $usf->checkUserSiteFollow( $wgUser, $value['site_prefix']);
 	            if($isFollowSite == false ){
+	            	$sa = new wSiteAvatar( $value['site_prefix'], 'ml' );
 	                $fsres['s_name'] = HuijiPrefix::prefixToSiteName($value['site_prefix']);
 	                $fsres['s_url'] = HuijiPrefix::prefixToUrl($value['site_prefix']);
+	                $fsres['s_avatar'] = $sa->getAvatarURL();
 	                $recommendSite[] = $fsres;
 	            }
 	        }
