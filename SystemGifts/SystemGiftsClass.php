@@ -34,7 +34,7 @@ class SystemGifts {
 		'节日' => 23,
 	);
 
-	private $repeatableGifts = array( 12, 13, 15, 16, 17, 18, 19, 20, 21 );
+	private $repeatableGifts = array( 12, 13, 15, 16, 17, 18, 19, 20, 21, 23 );
 
 	/**
 	 * Accessor for the private $categories variable; used by
@@ -54,7 +54,7 @@ class SystemGifts {
 	 * caches.
 	 * Special:PopulateAwards calls this function
 	 */
-	public function update_system_gifts() {
+	public function update_system_gifts( $giftId='' ) {
 		global $wgOut, $wgMemc;
 
 		$dbw = wfGetDB( DB_MASTER );
@@ -64,7 +64,9 @@ class SystemGifts {
 		$res = $dbw->select(
 			'system_gift',
 			array( 'gift_id', 'gift_category', 'gift_threshold', 'gift_name' ),
-			array(),
+			array( 
+				'gift_id' => $giftId
+			),
 			__METHOD__,
 			array( 'ORDER BY' => 'gift_category, gift_threshold ASC' )
 		);

@@ -82,9 +82,9 @@ class SystemGiftManager extends SpecialPage {
 					'</span><br /><br />'
 				);
 			}
-			// if ( !in_array( $gift_category, $un_update ) ){
-			// 	$g->update_system_gifts();
-			// }
+			if ( !in_array( $gift_category, $un_update ) ){
+				$g->update_system_gifts( $gift_id );
+			}
 			$out->addHTML( $this->displayForm( $gift_id ) );
 		} else {
 			$gift_id = $request->getInt( 'id' );
