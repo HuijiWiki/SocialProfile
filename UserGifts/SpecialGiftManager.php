@@ -327,7 +327,4 @@ class GiftManager extends SpecialPage {
 		</form>';
 		return $form;
 	}
-	function getGroupName() {
-    		return 'users';
-	}
 }
