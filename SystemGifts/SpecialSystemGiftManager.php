@@ -15,6 +15,9 @@ class SystemGiftManager extends SpecialPage {
 	public function __construct() {
 		parent::__construct( 'SystemGiftManager'/*class*/, 'awardsmanage'/*restriction*/ );
 	}
+	function getGroupName() {
+    		return 'wiki';
+	}
 
 	/**
 	 * Show the special page
