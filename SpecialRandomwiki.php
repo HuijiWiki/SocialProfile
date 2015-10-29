@@ -15,5 +15,8 @@ class SpecialRandomwiki extends SpecialPage {
 		}
 		$this->getOutput()->redirect( 'http://'.$prefix.'.huiji.wiki' );
 	}
+	function getGroupName() {
+    		return 'redirects';
+	}
 
 }
