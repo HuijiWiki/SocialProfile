@@ -223,4 +223,7 @@ class ViewSystemGifts extends SpecialPage {
 		 */
 		$out->addHTML( $output );
 	}
+	function getGroupName() {
+    		return 'users';
+	}
 }
