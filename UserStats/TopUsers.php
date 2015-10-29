@@ -193,4 +193,7 @@ class TopUsersPoints extends SpecialPage {
 		$output .= '</div><div class="cleared"></div>';
 		$out->addHTML( $output );
 	}
+	function getGroupName() {
+    		return 'users';
+	}
 }
