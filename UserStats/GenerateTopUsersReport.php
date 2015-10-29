@@ -313,4 +313,7 @@ class GenerateTopUsersReport extends SpecialPage {
 		$output .= '</div>'; // .top-users
 		$out->addHTML( $output );
 	}
+	function getGroupName() {
+    		return 'users';
+	}
 }
