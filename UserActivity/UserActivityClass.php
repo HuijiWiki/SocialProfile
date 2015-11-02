@@ -545,8 +545,8 @@ class UserActivity {
 				$DBprefix = '';
 				break;
 			} elseif ( $table == 'www'){
-				$dbr->selectDB('huiji_home');
-				$DBprefix = '';
+				// $dbr->selectDB('huiji_home');
+				// $DBprefix = '';
 				continue;
 			} else {
 				$dbr->selectDB('huiji_sites');
@@ -664,8 +664,8 @@ class UserActivity {
 				$DBprefix = '';
 				break;
 			} elseif ( $table == 'www'){
-				$dbr->selectDB('huiji_home');
-				$DBprefix = '';
+				// $dbr->selectDB('huiji_home');
+				// $DBprefix = '';
 				continue;
 			} else {
 				$dbr->selectDB('huiji_sites');
