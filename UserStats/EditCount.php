@@ -38,20 +38,7 @@ function incEditCount( $article, $revision, $baseRevId ) {
 	if($sg){
 		$usg->sendSystemGift( 17 );
 	}
-	//10.31 gift-- del next day
-	$nowTime = time();
-	$starTime = strtotime("2015-10-31 00:00:00");
-	$endTime = strtotime("2015-11-01 00:00:00");
-	if( $nowTime >= $starTime && $nowTime < $endTime ){
-		$dayCount = UserEditBox::getTodayEdit( $wgUser->getId() );
-		if ($dayCount == 1) {
-			$usg->sendSystemGift( 51 );
-		}elseif ($dayCount == 10) {
-			$usg->sendSystemGift( 52 );
-		}elseif ($dayCount == 31) {
-			$usg->sendSystemGift( 53 );
-		}
-	}
+	
 	$key = wfForeignMemcKey( 'huiji', '', 'revision', 'high_edit_site_followed', $wgUser->getName(), $wgHuijiPrefix );
 	$wgMemc->incr( $key );
 	$key = wfForeignMemcKey( 'huiji', '', 'revision', 'last_edit_user', $article->getTitle()->getArticleId(), $wgHuijiPrefix );
