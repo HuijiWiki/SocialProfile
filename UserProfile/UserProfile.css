@@ -169,14 +169,14 @@
 	margin: 0px 20px 0px 0px;
 }
 
-#profile-image .avatar-view>img {
+#profile-image img {
 	border: 1px solid #dcdcdc;
-    background-color: #fff;
-    padding: 3px;
-    cursor: pointer;
+    	background-color: #fff;
+    	padding: 3px;
+    	cursor: pointer;
 }
 #profile-image .upload-tool{
-    margin-right: 10px;
+    	margin-right: 10px;
 }
 
 #profile-right {
@@ -685,7 +685,7 @@
 #profile-title{
     font-size: 24px;
 }
-.jumbotron h1 .avatar-view img{
+.jumbotron #profile-image img{
     top: 0!important;
     width: 100px;
     height: 100px;
