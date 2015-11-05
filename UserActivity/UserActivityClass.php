@@ -270,8 +270,8 @@ class UserActivity {
 				$DBprefix = '';
 				break;
 			} elseif ( $table == 'www'){
-				$dbr->selectDB('huiji_home');
-				$DBprefix = '';
+				// $dbr->selectDB('huiji_home');
+				// $DBprefix = '';
 				continue;
 			} else {
 				$dbr->selectDB('huiji_sites');
@@ -321,7 +321,7 @@ class UserActivity {
 
 				// Please aware that a project namespace in other wikis can not be localised as [[sitename:blahblah]].
 				// We must add a prefix argument.
-				if ($table != $wgHuijiPrefix){
+				if ($row->prefix != $wgHuijiPrefix){
 					$title = Title::makeTitle( $row->rc_namespace, $row->rc_title, '', $row->prefix);
 				} else {
 					$title = Title::makeTitle( $row->rc_namespace, $row->rc_title, '');
@@ -545,8 +545,8 @@ class UserActivity {
 				$DBprefix = '';
 				break;
 			} elseif ( $table == 'www'){
-				$dbr->selectDB('huiji_home');
-				$DBprefix = '';
+				// $dbr->selectDB('huiji_home');
+				// $DBprefix = '';
 				continue;
 			} else {
 				$dbr->selectDB('huiji_sites');
@@ -664,8 +664,8 @@ class UserActivity {
 				$DBprefix = '';
 				break;
 			} elseif ( $table == 'www'){
-				$dbr->selectDB('huiji_home');
-				$DBprefix = '';
+				// $dbr->selectDB('huiji_home');
+				// $DBprefix = '';
 				continue;
 			} else {
 				$dbr->selectDB('huiji_sites');
@@ -708,7 +708,7 @@ class UserActivity {
 				}
 
 				if ( $show_comment ) {
-					if ($table != $wgHuijiPrefix){
+					if ($row->prefix != $wgHuijiPrefix){
 						$title = Title::makeTitle( $row->page_namespace, $row->page_title, 'Comments-'.$row->CommentID, $row->prefix );
 					} else {
 						$title = Title::makeTitle( $row->page_namespace, $row->page_title, 'Comments-'.$row->CommentID );
