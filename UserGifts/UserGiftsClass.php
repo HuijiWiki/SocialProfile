@@ -331,7 +331,7 @@ class UserGifts {
 			$params['OFFSET'] = $limitvalue;
 		}
 
-		$params['ORDER BY'] = 'ug_id DESC';
+		// $params['ORDER BY'] = 'ug_id DESC';
 		$res = $dbr->select(
 			array( 'user_gift', 'gift' ),
 			array(

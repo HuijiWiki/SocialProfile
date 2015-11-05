@@ -1886,7 +1886,11 @@ class UserProfilePage extends Article {
 			wfDebug( "Got profile gifts for user {$user_name} from cache\n" );
 			$gifts = $data;
 		}
-
+		$o_id = array();
+		foreach ($gifts as $key => $value) {
+			$o_id[$key] = $value['id'];
+		}
+		array_multisort( $o_id, SORT_DESC, $gifts );
 		$gift_count = $g->getGiftCountByUsername( $user_name );
 		$gift_link = SpecialPage::getTitleFor( 'ViewGifts' );
 		$per_row = 5;
