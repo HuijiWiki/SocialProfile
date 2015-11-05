@@ -92,7 +92,7 @@ class ViewSystemGift extends UnlistedSpecialPage {
 					{$giftImage}
 					<div class=\"ga-name\">{$gift['name']}</div>
 					<div class=\"ga-timestamp\">({$gift['timestamp']})</div>
-					<div class=\"ga-description-message\">\"{$message}\"</div>";
+					<div class=\"ga-description-message\">{$message}</div>";
 			$output .= '<div class="cleared"></div>
 				</div>';
 

@@ -112,11 +112,15 @@ class SystemGiftManager extends SpecialPage {
 	 */
 	function displayGiftList() {
 		$output = ''; // Prevent E_NOTICE
-		$page = 0;
-		$per_page = 50;
+		// $page = 0;
+		$request = $this->getRequest();
+		$per_page = 30;
+		$page = $request->getInt( 'page', 1 );
+		// $gifts = SystemGifts::getGiftList( $per_page, $page );
 		$gifts = SystemGifts::getGiftList( $per_page, $page );
 		$user = $this->getUser();
-
+		$pcount = SystemGifts::getGiftCount();
+		$output .= '<div id="views">';
 		if ( $gifts ) {
 			foreach ( $gifts as $gift ) {
 				$deleteLink = '';
@@ -134,8 +138,72 @@ class SystemGiftManager extends SpecialPage {
 						$deleteLink . '</div>' . "\n";
 			}
 		}
+		$output .= '</div>';
+		/**
+		 * Build next/prev nav
+		 */
+		$numofpages = $pcount / $per_page;
 
-		return '<div id="views">' . $output . '</div>';
+		$page_link = $this->getPageTitle();
+
+		if ( $numofpages > 1 ) {
+			$output .= '<div class="text-align: left"><nav class="page-nav pagination">';
+
+			if ( $page > 1 ) {
+				$output .= '<li>'.Linker::link(
+					$page_link,
+					'<span aria-hidden="true">&laquo;</span>',
+					array(),
+					array(
+						'user' => $user_name,
+						// 'rel_type' => $rel_type,
+						'page' => ( $page - 1 )
+					)
+				) . '</li>';
+			}
+
+			if ( ( $pcount % $per_page ) != 0 ) {
+				$numofpages++;
+			}
+			if ( $numofpages >= 9 && $page < $pcount ) {
+				$numofpages = 9 + $page;
+			}
+			// if ( $numofpages >= ( $total / $per_page ) ) {
+			// 	$numofpages = ( $total / $per_page ) + 1;
+			// }
+
+			for ( $i = 1; $i <= $numofpages; $i++ ) {
+				if ( $i == $page ) {
+					$output .= ( '<li class="active"><a href="#">'.$i.' <span class="sr-only">(current)</span></a></li>' );
+				} else {
+					$output .= '<li>' .Linker::link(
+						$page_link,
+						$i,
+						array(),
+						array(
+							'page' => $i
+						)
+					);
+				}
+			}
+
+			if ( ( $pcount - ( $per_page * $page ) ) > 0 ) {
+				$output .= '<li>' .
+					Linker::link(
+						$page_link,
+						'<span aria-hidden="true">&raquo;</span>',
+						array(),
+						array(
+							// 'rel_type' => $rel_type,
+							'page' => ( $page + 1 )
+						)
+					).'</li>';	
+			}
+
+			$output .= '</nav></div>';
+		}
+
+		return  $output;
 	}
 
 	function displayForm( $gift_id ) {
@@ -212,5 +280,10 @@ class SystemGiftManager extends SpecialPage {
 
 		</form>';
 		return $form;
+	}
+
+	function displayPage(){
+		
+		return '<div class="page-nav-wrapper">' . $output . '</div>';
 	}
 }
