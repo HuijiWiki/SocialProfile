@@ -55,9 +55,10 @@ function wfAddUserOauthCookie( $user_id ){
 	// session_start();
 	if ( $user_id ){
 		$u = User::newFromId( $user_id );
-		$arr = array('wpName'=>$u->getName());
-		$u->setCookies($arr, null, true);
-		// $u->setCookies( );
+		// $uname = $u->getName();
+		// $arr = array('wpName'=>$uname);
+		// $u->setCookies($arr, null, true);
+		$u->setCookies( );
 	}
 	// session_id() = $user_id;
 	$res = array('success' => true, 'result'=>'1' );

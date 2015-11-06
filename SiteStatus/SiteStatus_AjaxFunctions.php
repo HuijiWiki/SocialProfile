@@ -4,6 +4,7 @@
  */
 $wgAjaxExportList[] = 'wfGetSiteRank';
 $wgAjaxExportList[] = 'wfGetSiteFollowedUsers';
+$wgAjaxExportList[] = 'wfGetRecommendContent';
 
 function wfGetSiteRank( ) {
 	global $wgUser, $wgHuijiPrefix;
@@ -61,4 +62,27 @@ function wfGetSiteFollowedUsers(){
 		$out = json_encode($ret);
 		return $out;
 	}
+}
+
+function wfGetRecommendContent(){
+	global $wgUser;
+	$recRes = new BootstrapMediaWikiTemplate();
+    $block = $recRes->getIndexBlock( '首页/Admin' );
+    $pageTitle = Title::newFromText( '首页/Admin' );
+    $wgParserOptions = new ParserOptions($wgUser);
+    $n = count($block);
+    $recContent = array(); 
+    for ($i=0; $i < $n; $i++) {
+        $contentRes['title'] = $block[$i]->title;
+        $contentRes['wikiname'] = $block[$i]->wikiname;
+        $contentRes['desc'] = $wgParser->parse( $block[$i]->desc ,$pageTitle ,$wgParserOptions )->getText();
+        $contentRes['wikiurl'] = $block[$i]->wikiurl;
+        $contentRes['siteurl'] = $block[$i]->siteurl;
+        $contentRes['backgroungimg'] = $block[$i]->backgroungimg;
+        $recContent[] = $contentRes;
+    }
+    $result = array_rand( $recContent, 5 );
+    $ret = array('success'=> true, 'result'=>$result );
+	$out = json_encode($ret);
+	return $out;
 }
