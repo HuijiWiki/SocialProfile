@@ -1779,7 +1779,7 @@ class UserActivity {
 	 * @return array
 	 */
 	private function streamlineForeignDBRepo( $prefix ){
-		global $wgDBtype, $wgDBserver, $wgDBuser, $wgDBpassword, $isProduction;
+		global $wgDBtype, $wgDBserver, $wgDBuser, $wgDBpassword, $isProduction, $wgThumbnailScriptPath;
 		$lowDashPrefix = str_replace('.', '_', $prefix);
 		$dotPrefix = str_replace('_', '.', $prefix);
 		if ($isProduction){
@@ -1790,6 +1790,8 @@ class UserActivity {
 				    'url' => "http://cdn.huijiwiki.com/{$dotPrefix}/uploads",
 				    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
 				    'hashLevels' => 2, // This must be the same for the other family member
+				    'thumbScriptUrl' => $wgSharedThumbnailScriptPath,
+				    'transformVia404' => true,
 				    'dbType' => $wgDBtype,
 				    'dbServer' => $wgDBserver,
 				    'dbUser' => $wgDBuser,
@@ -1809,6 +1811,8 @@ class UserActivity {
 				    'url' => "http://cdn.huijiwiki.com/{$dotPrefix}/uploads",
 				    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
 				    'hashLevels' => 2, // This must be the same for the other family member
+				    'thumbScriptUrl' => $wgSharedThumbnailScriptPath,
+				    'transformVia404' => true,
 				    'dbType' => $wgDBtype,
 				    'dbServer' => $wgDBserver,
 				    'dbUser' => $wgDBuser,
@@ -1831,6 +1835,8 @@ class UserActivity {
 		    'url' => "http://{$dotPrefix}.huiji.wiki/uploads",
 		    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
 		    'hashLevels' => 0, // This must be the same for the other family member
+		    'thumbScriptUrl' => $wgSharedThumbnailScriptPath,
+		    'transformVia404' => true,
 		    'dbType' => $wgDBtype,
 		    'dbServer' => $wgDBserver,
 		    'dbUser' => $wgDBuser,
