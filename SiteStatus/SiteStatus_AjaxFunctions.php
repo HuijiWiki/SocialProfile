@@ -65,13 +65,12 @@ function wfGetSiteFollowedUsers(){
 }
 
 function wfGetRecommendContent(){
-	global $wgUser;
-	$recRes = new BootstrapMediaWikiTemplate();
-    $block = $recRes->getIndexBlock( '首页/Admin' );
+	global $wgUser, $wgParser;
+    $block = HuijiSkinTemplate::getIndexBlock( '首页/Admin' );
     $pageTitle = Title::newFromText( '首页/Admin' );
     $wgParserOptions = new ParserOptions($wgUser);
     $n = count($block);
-    $recContent = array(); 
+    $recContent = array();
     for ($i=0; $i < $n; $i++) {
         $contentRes['title'] = $block[$i]->title;
         $contentRes['wikiname'] = $block[$i]->wikiname;
@@ -81,8 +80,12 @@ function wfGetRecommendContent(){
         $contentRes['backgroungimg'] = $block[$i]->backgroungimg;
         $recContent[] = $contentRes;
     }
-    $result = array_rand( $recContent, 5 );
-    $ret = array('success'=> true, 'result'=>$result );
+    $randKey = array_rand( $recContent, 5 );
+    $resRand = array();
+    foreach ($randKey as $value) {
+    	$resRand[] = $recContent[$value];
+    }
+    $ret = array('success'=> true, 'result'=>$resRand );
 	$out = json_encode($ret);
 	return $out;
 }
