@@ -1791,7 +1791,7 @@ class UserActivity {
 				    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
 				    'hashLevels' => 2, // This must be the same for the other family member
 				    'thumbScriptUrl' => $wgSharedThumbnailScriptPath,
-				    'transformVia404' => true,
+				    'transformVia404' => false,
 				    'dbType' => $wgDBtype,
 				    'dbServer' => $wgDBserver,
 				    'dbUser' => $wgDBuser,
@@ -1812,7 +1812,7 @@ class UserActivity {
 				    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
 				    'hashLevels' => 2, // This must be the same for the other family member
 				    'thumbScriptUrl' => $wgSharedThumbnailScriptPath,
-				    'transformVia404' => true,
+				    'transformVia404' => false,
 				    'dbType' => $wgDBtype,
 				    'dbServer' => $wgDBserver,
 				    'dbUser' => $wgDBuser,
@@ -1836,7 +1836,7 @@ class UserActivity {
 		    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
 		    'hashLevels' => 0, // This must be the same for the other family member
 		    'thumbScriptUrl' => $wgSharedThumbnailScriptPath,
-		    'transformVia404' => true,
+		    'transformVia404' => false,
 		    'dbType' => $wgDBtype,
 		    'dbServer' => $wgDBserver,
 		    'dbUser' => $wgDBuser,
