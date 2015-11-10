@@ -70,7 +70,7 @@ function wfGetRecommendContent(){
     $pageTitle = Title::newFromText( '首页/Admin' );
     $wgParserOptions = new ParserOptions($wgUser);
     $n = count($block);
-    $recContent = array(); 
+    $recContent = array();
     for ($i=0; $i < $n; $i++) {
         $contentRes['title'] = $block[$i]->title;
         $contentRes['wikiname'] = $block[$i]->wikiname;

@@ -58,7 +58,7 @@ function wfAddUserOauthCookie( $user_id ){
 		// $uname = $u->getName();
 		// $arr = array('wpName'=>$uname);
 		// $u->setCookies($arr, null, true);
-		$u->setCookies( );
+		$u->setCookies(null,null,true );
 	}
 	// session_id() = $user_id;
 	$res = array('success' => true, 'result'=>'1' );
