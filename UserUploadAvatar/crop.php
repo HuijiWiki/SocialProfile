@@ -19,8 +19,7 @@ class CropAvatar {
     // wfDebug('=====================================Constructing=================================');
     $this->isUserAvatar = $isUserAvatar;
     if (filter_var($src, FILTER_VALIDATE_URL)){
-      $exteranlFile = file_get_contents($src);
-      $this->putExternalFile($externalFile);
+      $this->putExternalFile($src);
     } else {
       $this -> setSrc($file->getTempName());
       $this->file = $file;
@@ -52,8 +51,10 @@ class CropAvatar {
     // exit(0);
 
   }
-  private function putExternalFile($file){
+  private function putExternalFile($src){
     global $wgUser, $wgHuijiPrefix, $wgAvatarKey, $wgSiteAvatarKey;
+    $path_parts = pathinfo($src);
+    $file = file_get_contents($src);
     if ($this->isUserAvatar){
       $avatarkey = $wgAvatarKey;
       $uid = $wgUser->getId();
@@ -61,10 +62,11 @@ class CropAvatar {
       $avatarKey = $wgSiteAvatarKey;
       $uid = $wgHuijiPrefix;
     }
-    file_put_contents("/tmp/checkpoint_{$uid}.image", $file);
+    file_put_contents("/tmp/checkpoint_{$uid}.".$path_parts['extension'], $file);
     $type = exif_imagetype("/tmp/checkpoint_{$uid}.image");
     if ($type == IMAGETYPE_GIF || $type == IMAGETYPE_JPEG || $type == IMAGETYPE_PNG) {
       $this -> avatarUploadDirectory = $wgUploadDirectory . '/avatars';
+      
       $nameL = $avatarKey . '_' . $uid . '_l';
       $nameML = $avatarKey . '_' . $uid . '_ml';
       $nameM = $avatarKey . '_' . $uid . '_m';
