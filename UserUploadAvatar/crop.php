@@ -17,11 +17,16 @@ class CropAvatar {
 
   function __construct($src, $data, $file, $isUserAvatar = true) {
     // wfDebug('=====================================Constructing=================================');
+    if (!empty($src) && empty($file)){
+      $file = file_get_contents($src);
+    }
     $this->isUserAvatar = $isUserAvatar;
     $this -> setSrc($file->getTempName());
     $this->file = $file;
-    $this -> setData($data);
-    $this -> crop($file->getTempName(), $this->file->getTempName(), $this -> data);
+    if (!empty($data)){
+      $this -> setData($data);
+      $this -> crop($file->getTempName(), $this->file->getTempName(), $this -> data);
+    }
     $this -> setFile($this->file);     
     $responseBody = array(
       'state'  => 200,
