@@ -41,7 +41,7 @@ function wfAddInfoToOauth( $otype, $openid, $userid ){
 		__METHOD__
 	);
 	$u = User::newFromId( $userid );
-	$u->setCookies();
+	$u->setCookies(null,null,true );
 	// $u->setSession();
 	if($res){
 		$result = array('success'=> true, 'result'=>'1' );
