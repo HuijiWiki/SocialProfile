@@ -89,10 +89,10 @@ class CropAvatar {
         file_put_contents($wgUploadDirectory."/".$nameM.".png", $file);
         file_put_contents($wgUploadDirectory."/".$nameS.".png", $file);    
       } 
-      unlink("/tmp/checkpoint_{$uid}.".$path_parts['extension']");
+      unlink("/tmp/checkpoint_{$uid}.".$path_parts['extension']);
     } else {
       $this -> msg = '请上传如下类型的图片: JPG, PNG, GIF（错误代码：12）';
-      unlink("/tmp/checkpoint_{$uid}.".$path_parts['extension']");
+      unlink("/tmp/checkpoint_{$uid}.".$path_parts['extension']);
     }
     
     
