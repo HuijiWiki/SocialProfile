@@ -17,17 +17,21 @@ class CropAvatar {
 
   function __construct($src, $data, $file, $isUserAvatar = true) {
     // wfDebug('=====================================Constructing=================================');
-    if (!empty($src) && empty($file)){
-      $file = file_get_contents($src);
-    }
     $this->isUserAvatar = $isUserAvatar;
-    $this -> setSrc($file->getTempName());
-    $this->file = $file;
-    if (!empty($data)){
-      $this -> setData($data);
-      $this -> crop($file->getTempName(), $this->file->getTempName(), $this -> data);
+    if (!empty($src) && empty($file)){
+      $exteranlFile = file_get_contents($src);
+      $this->putExternalFile($externalFile);
+    } else {
+      $this -> setSrc($file->getTempName());
+      $this->file = $file;
+      if (!empty($data)){
+        $this -> setData($data);
+        $this -> crop($file->getTempName(), $this->file->getTempName(), $this -> data);
+      }
+      $this -> setFile($this->file);   
+      
     }
-    $this -> setFile($this->file);     
+  
     $responseBody = array(
       'state'  => 200,
       'message' => $this -> getMsg(),
@@ -47,6 +51,50 @@ class CropAvatar {
     // $dbw->commit();
     // exit(0);
 
+  }
+  private function putExternalFile($file){
+    global $wgUser, $wgHuijiPrefix, $wgAvatarKey, $wgSiteAvatarKey;
+    if ($this->isUserAvatar){
+      $avatarkey = $wgAvatarKey;
+      $uid = $wgUser->getId();
+    } else {
+      $avatarKey = $wgSiteAvatarKey;
+      $uid = $wgHuijiPrefix;
+    }
+    file_put_contents("/tmp/checkpoint_{$uid}.image", $file);
+    $type = exif_imagetype("/tmp/checkpoint_{$uid}.image");
+    if ($type == IMAGETYPE_GIF || $type == IMAGETYPE_JPEG || $type == IMAGETYPE_PNG) {
+      $this -> avatarUploadDirectory = $wgUploadDirectory . '/avatars';
+      $nameL = $avatarKey . '_' . $uid . '_l';
+      $nameML = $avatarKey . '_' . $uid . '_ml';
+      $nameM = $avatarKey . '_' . $uid . '_m';
+      $nameS = $avatarKey . '_' . $uid . '_s';
+      if ( $type == IMAGETYPE_GIF ){
+        file_put_contents($wgUploadDirectory."/".$nameL.".gif", $file);
+        file_put_contents($wgUploadDirectory."/".$nameML.".gif", $file);
+        file_put_contents($wgUploadDirectory."/".$nameM.".gif", $file);
+        file_put_contents($wgUploadDirectory."/".$nameS.".gif", $file);
+      } 
+      if ( $type == IMAGETYPE_JPEG ){
+        file_put_contents($wgUploadDirectory."/".$nameL.".jpg", $file);
+        file_put_contents($wgUploadDirectory."/".$nameML.".jpg", $file);
+        file_put_contents($wgUploadDirectory."/".$nameM.".jpg", $file);
+        file_put_contents($wgUploadDirectory."/".$nameS.".jpg", $file);        
+      } 
+      if ( $type == IMAGETYPE_PNG ){
+        file_put_contents($wgUploadDirectory."/".$nameL.".png", $file);
+        file_put_contents($wgUploadDirectory."/".$nameML.".png", $file);
+        file_put_contents($wgUploadDirectory."/".$nameM.".png", $file);
+        file_put_contents($wgUploadDirectory."/".$nameS.".png", $file);    
+      } 
+      unlink("/tmp/checkpoint_{$uid}.image");
+    } else {
+      $this -> msg = '请上传如下类型的图片: JPG, PNG, GIF（错误代码：12）';
+      unlink("/tmp/checkpoint_{$uid}.image");
+    }
+    
+    
+    
   }
 
   private function setSrc($src) {
