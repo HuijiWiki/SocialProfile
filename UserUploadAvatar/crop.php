@@ -89,7 +89,7 @@ class CropAvatar {
         $result += file_put_contents($this -> avatarUploadDirectory."/".$nameM.".png", $file);
         $result += file_put_contents($this -> avatarUploadDirectory."/".$nameS.".png", $file);    
       } 
-      this->msg=$result;
+      $this->msg=$result;
       unlink("/tmp/checkpoint_{$uid}.".$path_parts['extension']);
       $this->cleanUp($path_parts['extension'], $avatarkey, $uid);
     } else {
