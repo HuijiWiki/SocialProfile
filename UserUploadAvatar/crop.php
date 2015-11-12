@@ -89,9 +89,9 @@ class CropAvatar {
         $result += file_put_contents($this -> avatarUploadDirectory."/".$nameM.".png", $file);
         $result += file_put_contents($this -> avatarUploadDirectory."/".$nameS.".png", $file);    
       } 
-      $this->msg=$result;
+      //$this->msg=$result;
       unlink("/tmp/checkpoint_{$uid}.".$path_parts['extension']);
-      $this->cleanUp($path_parts['extension'], $avatarkey, $uid);
+      $this->cleanUp($path_parts['extension'], $avatarKey, $uid);
     } else {
       $this -> msg = '请上传如下类型的图片: JPG, PNG, GIF（错误代码：12）';
       unlink("/tmp/checkpoint_{$uid}.".$path_parts['extension']);
@@ -171,7 +171,7 @@ class CropAvatar {
             default:
               return $this -> msg = '请上传如下类型的图片: JPG, PNG, GIF（错误代码：14）';
           }
-          $this->cleanUp($ext, $avatarkey, $uid);
+          $this->cleanUp($ext, $avatarKey, $uid);
           /* I know this is bad but whatever */
           $result = true;
 
