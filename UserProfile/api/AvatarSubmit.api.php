@@ -64,12 +64,12 @@ class ApiAvatarSubmit extends ApiBase {
         } else {
           $isUserAvatar = true;
         }
-		$avatar = new CropAvatar(
-			$avatar_src,
-			$avatar_data,
-			$avatar_file,  
-      $isUserAvatar 
-	    );
+	$avatar = new CropAvatar(
+		$avatar_src,
+		$avatar_data,
+		$avatar_file,  
+      		$isUserAvatar 
+	);
         $responseBody = array(
           'state'  => 200,
           'message' => $avatar->getMsg(),
@@ -91,7 +91,7 @@ class ApiAvatarSubmit extends ApiBase {
                 ApiBase::PARAM_TYPE => 'string'
             ),
             'avatar_file' => array(
-                ApiBase::PARAM_REQUIRED => true,
+                ApiBase::PARAM_REQUIRED => false,
                 ApiBase::PARAM_TYPE => 'upload'
             ),
             'avatar_type' => array(
