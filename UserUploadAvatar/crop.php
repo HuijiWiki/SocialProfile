@@ -90,6 +90,7 @@ class CropAvatar {
         file_put_contents($wgUploadDirectory."/".$nameS.".png", $file);    
       } 
       unlink("/tmp/checkpoint_{$uid}.".$path_parts['extension']);
+      $this->cleanUp($path_parts['extension'], $avatarkey, $uid);
     } else {
       $this -> msg = '请上传如下类型的图片: JPG, PNG, GIF（错误代码：12）';
       unlink("/tmp/checkpoint_{$uid}.".$path_parts['extension']);
@@ -169,78 +170,7 @@ class CropAvatar {
             default:
               return $this -> msg = '请上传如下类型的图片: JPG, PNG, GIF（错误代码：14）';
           }
-
-          if ( $ext != 'jpg' ) {
-            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.jpg' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.jpg' );
-            }
-            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_m.jpg' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_m.jpg' );
-            }
-            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_l.jpg' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_l.jpg' );
-            }
-            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_ml.jpg' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_ml.jpg' );
-            }
-          }
-          if ( $ext != 'gif' ) {
-            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.gif' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.gif' );
-            }
-            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_m.gif' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_m.gif' );
-            }
-            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_l.gif' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_l.gif' );
-            }
-            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_ml.gif' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_ml.gif' );
-            }
-          }
-          if ( $ext != 'png' ) {
-            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.png' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.png' );
-            }
-            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_m.png' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_m.png' );
-            }
-            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_l.png' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_l.png' );
-            }
-            if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_ml.png' ) ) {
-              unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_ml.png' );
-            }
-          }
-          if ($this->isUserAvatar){
-            $key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'avatar', $uid, 's' );
-            $data = $wgMemc->delete( $key );
-
-            $key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'avatar', $uid, 'm' );
-            $data = $wgMemc->delete( $key );
-
-            $key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'avatar', $uid , 'l' );
-            $data = $wgMemc->delete( $key );
-
-            $key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'avatar', $uid, 'ml' );
-            $data = $wgMemc->delete( $key );
-           
-          } else {
-            $key = wfForeignMemcKey( 'huiji', '', 'site', 'profile', 'avatar', $uid, 's' );
-            $data = $wgMemc->delete( $key );
-
-            $key = wfForeignMemcKey( 'huiji', '', 'site', 'profile', 'avatar', $uid, 'm' );
-            $data = $wgMemc->delete( $key );
-
-            $key = wfForeignMemcKey( 'huiji', '', 'site', 'profile', 'avatar', $uid , 'l' );
-            $data = $wgMemc->delete( $key );
-
-            $key = wfForeignMemcKey( 'huiji', '', 'site', 'profile', 'avatar', $uid, 'ml' );
-            $data = $wgMemc->delete( $key );           
-          }
-
-
-
+          $this->cleanUp($ext, $avatarkey, $uid);
           /* I know this is bad but whatever */
           $result = true;
 
@@ -262,7 +192,77 @@ class CropAvatar {
       $this -> msg = $this -> codeToMessage($errorCode);
     }
   }
-
+  private function cleanUp ($ext, $avatarkey, $uid){
+    global $wgMemc;
+    if ( $ext != 'jpg' ) {
+      if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.jpg' ) ) {
+        unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.jpg' );
+      }
+      if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_m.jpg' ) ) {
+        unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_m.jpg' );
+      }
+      if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_l.jpg' ) ) {
+        unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_l.jpg' );
+      }
+      if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_ml.jpg' ) ) {
+        unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_ml.jpg' );
+      }
+    }
+    if ( $ext != 'gif' ) {
+      if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.gif' ) ) {
+        unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.gif' );
+      }
+      if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_m.gif' ) ) {
+        unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_m.gif' );
+      }
+      if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_l.gif' ) ) {
+        unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_l.gif' );
+      }
+      if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_ml.gif' ) ) {
+        unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_ml.gif' );
+      }
+    }
+    if ( $ext != 'png' ) {
+      if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.png' ) ) {
+        unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.png' );
+      }
+      if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_m.png' ) ) {
+        unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_m.png' );
+      }
+      if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_l.png' ) ) {
+        unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_l.png' );
+      }
+      if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_ml.png' ) ) {
+        unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_ml.png' );
+      }
+    }
+    if ($this->isUserAvatar){
+      $key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'avatar', $uid, 's' );
+      $data = $wgMemc->delete( $key );
+  
+      $key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'avatar', $uid, 'm' );
+      $data = $wgMemc->delete( $key );
+  
+      $key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'avatar', $uid , 'l' );
+      $data = $wgMemc->delete( $key );
+  
+      $key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'avatar', $uid, 'ml' );
+      $data = $wgMemc->delete( $key );
+     
+    } else {
+      $key = wfForeignMemcKey( 'huiji', '', 'site', 'profile', 'avatar', $uid, 's' );
+      $data = $wgMemc->delete( $key );
+  
+      $key = wfForeignMemcKey( 'huiji', '', 'site', 'profile', 'avatar', $uid, 'm' );
+      $data = $wgMemc->delete( $key );
+  
+      $key = wfForeignMemcKey( 'huiji', '', 'site', 'profile', 'avatar', $uid , 'l' );
+      $data = $wgMemc->delete( $key );
+  
+      $key = wfForeignMemcKey( 'huiji', '', 'site', 'profile', 'avatar', $uid, 'ml' );
+      $data = $wgMemc->delete( $key );           
+    }   
+  }
   private function crop($src, $dst, $data) {
     if (!empty($src) && !empty($dst) && !empty($data)) {
       switch ($this -> type) {
