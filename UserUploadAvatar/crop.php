@@ -52,7 +52,7 @@ class CropAvatar {
 
   }
   private function putExternalFile($src){
-    global $wgUser, $wgHuijiPrefix, $wgAvatarKey, $wgSiteAvatarKey;
+    global $wgUser, $wgHuijiPrefix, $wgAvatarKey, $wgSiteAvatarKey, $wgUploadDirectory;
     $path_parts = pathinfo($src);
     $file = file_get_contents($src);
     if ($this->isUserAvatar){
