@@ -30,7 +30,7 @@ class UserEditBox{
 				$userEditInfo['lastSeen'] = $today;
 				$wgMemc->set( $key, $userEditInfo );
 			}else{
-			 	$userEditInfo = false;
+			 	throw new Exception("Error getUserEditInfo/getEditRecordsFromUserIdGroupByDay Bad Request");
 			}
 		}else{
 			if ($today == $userEditInfo['lastSeen']){
@@ -48,7 +48,7 @@ class UserEditBox{
 					$userEditInfo['lastSeen'] = $today;
 					$wgMemc->set( $key, $userEditInfo );		
 				}else{
-					$userEditInfo = false;
+					throw new Exception("Error getUserEditInfo/getPageEditCountOnWikiSiteFromUserId Bad Request");
 				}
 			}else{
 				$receive = RecordStatistics::getEditRecordsFromUserIdGroupByDay( $userId, $userEditInfo['lastSeen'], $yesterday );
@@ -58,7 +58,7 @@ class UserEditBox{
 					$userEditInfo['lastSeen'] = $today;
 					$wgMemc->set( $key, $userEditInfo );		
 				}else{
-					$userEditInfo = false;
+					throw new Exception("Error getUserEditInfo/getEditRecordsFromUserIdGroupByDay Bad Request");
 				}
 			}
 			
@@ -70,7 +70,7 @@ class UserEditBox{
 		if($receive->status == 'success'){
 			$editNum = $receive->result;
 		}else{
-			$editNum = false;
+			throw new Exception("Error getTodayEdit/getRecentPageEditCountOnWikiSiteFromUserId Bad Request");
 		}
 		return $editNum;
 	}
@@ -93,7 +93,7 @@ class UserEditBox{
 		if ($receive->status == 'success') {
 			return $receive->result;
 		}else{
-			return false;
+			throw new Exception("Error getSiteEditCount/getPageEditCountOnWikiSiteFromUserId Bad Request");
 		}
 	}
 	//pv
@@ -102,7 +102,7 @@ class UserEditBox{
 		if ($receive->status == 'success') {
 			return $receive->result;
 		}else{
-			return false;
+			throw new Exception("Error getSiteViewCount/getPageViewCountOnWikiSiteFromUserId Bad Request");
 		}
 	}
 	//page edit user
@@ -114,7 +114,7 @@ class UserEditBox{
 			}
 			return $resdata;
 		}else{
-			return false;
+			throw new Exception("Error getSiteEditUserCount/getEditorCountGroupByWikiSite Bad Request");
 		}
 	}
 
