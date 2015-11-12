@@ -56,7 +56,7 @@ class CropAvatar {
     $path_parts = pathinfo($src);
     $file = file_get_contents($src);
     if ($this->isUserAvatar){
-      $avatarkey = $wgAvatarKey;
+      $avatarKey = $wgAvatarKey;
       $uid = $wgUser->getId();
     } else {
       $avatarKey = $wgSiteAvatarKey;
