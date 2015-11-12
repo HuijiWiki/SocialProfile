@@ -72,22 +72,22 @@ class CropAvatar {
       $nameM = $avatarKey . '_' . $uid . '_m';
       $nameS = $avatarKey . '_' . $uid . '_s';
       if ( $type == IMAGETYPE_GIF ){
-        file_put_contents($wgUploadDirectory."/".$nameL.".gif", $file);
-        file_put_contents($wgUploadDirectory."/".$nameML.".gif", $file);
-        file_put_contents($wgUploadDirectory."/".$nameM.".gif", $file);
-        file_put_contents($wgUploadDirectory."/".$nameS.".gif", $file);
+        file_put_contents($this -> avatarUploadDirectory."/".$nameL.".gif", $file);
+        file_put_contents($this -> avatarUploadDirectory."/".$nameML.".gif", $file);
+        file_put_contents($this -> avatarUploadDirectory."/".$nameM.".gif", $file);
+        file_put_contents($this -> avatarUploadDirectory."/".$nameS.".gif", $file);
       } 
       if ( $type == IMAGETYPE_JPEG ){
-        file_put_contents($wgUploadDirectory."/".$nameL.".jpg", $file);
-        file_put_contents($wgUploadDirectory."/".$nameML.".jpg", $file);
-        file_put_contents($wgUploadDirectory."/".$nameM.".jpg", $file);
-        file_put_contents($wgUploadDirectory."/".$nameS.".jpg", $file);        
+        file_put_contents($this -> avatarUploadDirectory."/".$nameL.".jpg", $file);
+        file_put_contents($this -> avatarUploadDirectory."/".$nameML.".jpg", $file);
+        file_put_contents($this -> avatarUploadDirectory."/".$nameM.".jpg", $file);
+        file_put_contents($this -> avatarUploadDirectory."/".$nameS.".jpg", $file);        
       } 
       if ( $type == IMAGETYPE_PNG ){
-        file_put_contents($wgUploadDirectory."/".$nameL.".png", $file);
-        file_put_contents($wgUploadDirectory."/".$nameML.".png", $file);
-        file_put_contents($wgUploadDirectory."/".$nameM.".png", $file);
-        file_put_contents($wgUploadDirectory."/".$nameS.".png", $file);    
+        file_put_contents($this -> avatarUploadDirectory."/".$nameL.".png", $file);
+        file_put_contents($this -> avatarUploadDirectory."/".$nameML.".png", $file);
+        file_put_contents($this -> avatarUploadDirectory."/".$nameM.".png", $file);
+        file_put_contents($this -> avatarUploadDirectory."/".$nameS.".png", $file);    
       } 
       unlink("/tmp/checkpoint_{$uid}.".$path_parts['extension']);
       $this->cleanUp($path_parts['extension'], $avatarkey, $uid);
