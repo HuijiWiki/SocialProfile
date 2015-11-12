@@ -18,7 +18,7 @@ class CropAvatar {
   function __construct($src, $data, $file, $isUserAvatar = true) {
     // wfDebug('=====================================Constructing=================================');
     $this->isUserAvatar = $isUserAvatar;
-    if (!empty($src) && empty($file)){
+    if (filter_var($src, FILTER_VALIDATE_URL)){
       $exteranlFile = file_get_contents($src);
       $this->putExternalFile($externalFile);
     } else {
