@@ -63,7 +63,7 @@ class CropAvatar {
       $uid = $wgHuijiPrefix;
     }
     file_put_contents("/tmp/checkpoint_{$uid}.".$path_parts['extension'], $file);
-    $type = exif_imagetype("/tmp/checkpoint_{$uid}.image");
+    $type = exif_imagetype("/tmp/checkpoint_{$uid}.".$path_parts['extension']);
     if ($type == IMAGETYPE_GIF || $type == IMAGETYPE_JPEG || $type == IMAGETYPE_PNG) {
       $this -> avatarUploadDirectory = $wgUploadDirectory . '/avatars';
       
@@ -89,10 +89,10 @@ class CropAvatar {
         file_put_contents($wgUploadDirectory."/".$nameM.".png", $file);
         file_put_contents($wgUploadDirectory."/".$nameS.".png", $file);    
       } 
-      unlink("/tmp/checkpoint_{$uid}.image");
+      unlink("/tmp/checkpoint_{$uid}.".$path_parts['extension']");
     } else {
       $this -> msg = '请上传如下类型的图片: JPG, PNG, GIF（错误代码：12）';
-      unlink("/tmp/checkpoint_{$uid}.image");
+      unlink("/tmp/checkpoint_{$uid}.".$path_parts['extension']");
     }
     
     
