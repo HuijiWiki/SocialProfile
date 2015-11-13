@@ -53,8 +53,11 @@ class CropAvatar {
   }
   private function putExternalFile($src){
     global $wgUser, $wgHuijiPrefix, $wgAvatarKey, $wgSiteAvatarKey, $wgUploadDirectory;
-    $path_parts = pathinfo($src);
     $file = file_get_contents($src);
+    if ( empty($file) ){
+        $this -> msg = "无法读取图片文件（错误代码：10）";
+        return;
+    }
     if ($this->isUserAvatar){
       $avatarKey = $wgAvatarKey;
       $uid = $wgUser->getId();
@@ -62,39 +65,32 @@ class CropAvatar {
       $avatarKey = $wgSiteAvatarKey;
       $uid = $wgHuijiPrefix;
     }
-    file_put_contents("/tmp/checkpoint_{$uid}.".$path_parts['extension'], $file);
-    $type = exif_imagetype("/tmp/checkpoint_{$uid}.".$path_parts['extension']);
+    $tempName = "/tmp/checkpoint_{$uid}.tmp";
+    file_put_contents( $tempName, $file);
+    $type = exif_imagetype( $tempName );
+    
     if ($type == IMAGETYPE_GIF || $type == IMAGETYPE_JPEG || $type == IMAGETYPE_PNG) {
       $this -> avatarUploadDirectory = $wgUploadDirectory . '/avatars';
-      
       $nameL = $avatarKey . '_' . $uid . '_l';
       $nameML = $avatarKey . '_' . $uid . '_ml';
       $nameM = $avatarKey . '_' . $uid . '_m';
       $nameS = $avatarKey . '_' . $uid . '_s';
-      if ( $type == IMAGETYPE_GIF ){
-        $result = file_put_contents($this -> avatarUploadDirectory."/".$nameL.".gif", $file);
-        $result += file_put_contents($this -> avatarUploadDirectory."/".$nameML.".gif", $file);
-        $result += file_put_contents($this -> avatarUploadDirectory."/".$nameM.".gif", $file);
-        $result += file_put_contents($this -> avatarUploadDirectory."/".$nameS.".gif", $file);
-      } 
-      if ( $type == IMAGETYPE_JPEG ){
-        $result = file_put_contents($this -> avatarUploadDirectory."/".$nameL.".jpg", $file);
-        $result += file_put_contents($this -> avatarUploadDirectory."/".$nameML.".jpg", $file);
-        $result += file_put_contents($this -> avatarUploadDirectory."/".$nameM.".jpg", $file);
-        $result += file_put_contents($this -> avatarUploadDirectory."/".$nameS.".jpg", $file);        
-      } 
-      if ( $type == IMAGETYPE_PNG ){
-        $result = file_put_contents($this -> avatarUploadDirectory."/".$nameL.".png", $file);
-        $result += file_put_contents($this -> avatarUploadDirectory."/".$nameML.".png", $file);
-        $result += file_put_contents($this -> avatarUploadDirectory."/".$nameM.".png", $file);
-        $result += file_put_contents($this -> avatarUploadDirectory."/".$nameS.".png", $file);    
-      } 
+      $imageInfo = getimagesize( $tempName );
+      if ( $this->isUserAvatar && strpos( $avatar->getAvatarImage(), 'default_' ) !== false ) {
+        $stats = new UserStatsTrack( $uid, $wgUser->getName() );
+        $stats->incStatField( 'user_image' );
+      }
+      $this->createThumbnail( $file->getTempName() , $imageInfo, $nameL, 200 );
+      $this->createThumbnail( $file->getTempName() , $imageInfo, $nameML, 50 );
+      $this->createThumbnail( $file->getTempName() , $imageInfo, $nameM, 30 );
+      $this->createThumbnail( $file->getTempName() , $imageInfo, $nameS, 16 );
+
       //$this->msg=$result;
-      unlink("/tmp/checkpoint_{$uid}.".$path_parts['extension']);
-      $this->cleanUp($path_parts['extension'], $avatarKey, $uid);
+      unlink( $tempName );
+      $this->cleanUp(image_type_to_extension($type), $avatarKey, $uid);
     } else {
       $this -> msg = '请上传如下类型的图片: JPG, PNG, GIF（错误代码：12）';
-      unlink("/tmp/checkpoint_{$uid}.".$path_parts['extension']);
+      unlink( $tempName );
     }
     
     
@@ -132,7 +128,7 @@ class CropAvatar {
       $avatarKey = $wgAvatarKey;
       $avatar = new wAvatar( $uid, 'l' );
     }
-    $dest = $this->avatarUploadDirectory;
+    // $dest = $this->avatarUploadDirectory;
     $imageInfo = getimagesize( $file->getTempName() );
     $errorCode = $file->getError();
     if ($errorCode === UPLOAD_ERR_OK) {
