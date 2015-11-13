@@ -58,12 +58,14 @@ class CropAvatar {
         $this -> msg = "无法读取图片文件（错误代码：10）";
         return;
     }
-    if ($this->isUserAvatar){
-      $avatarKey = $wgAvatarKey;
-      $uid = $wgUser->getId();
-    } else {
-      $avatarKey = $wgSiteAvatarKey;
+    if (! $this->isUserAvatar ){
       $uid = $wgHuijiPrefix;
+      $avatarKey = $wgSiteAvatarKey;
+      $avatar = new wSiteAvatar( $uid, 'l' );
+    } else {
+      $uid = $wgUser->getId();
+      $avatarKey = $wgAvatarKey;
+      $avatar = new wAvatar( $uid, 'l' );
     }
     $tempName = "/tmp/checkpoint_{$uid}.tmp";
     file_put_contents( $tempName, $file);
@@ -80,10 +82,10 @@ class CropAvatar {
         $stats = new UserStatsTrack( $uid, $wgUser->getName() );
         $stats->incStatField( 'user_image' );
       }
-      $this->createThumbnail( $file->getTempName() , $imageInfo, $nameL, 200 );
-      $this->createThumbnail( $file->getTempName() , $imageInfo, $nameML, 50 );
-      $this->createThumbnail( $file->getTempName() , $imageInfo, $nameM, 30 );
-      $this->createThumbnail( $file->getTempName() , $imageInfo, $nameS, 16 );
+      $this->createThumbnail( $tempName , $imageInfo, $nameL, 200 );
+      $this->createThumbnail( $tempName , $imageInfo, $nameML, 50 );
+      $this->createThumbnail( $tempName , $imageInfo, $nameM, 30 );
+      $this->createThumbnail( $tempName , $imageInfo, $nameS, 16 );
 
       //$this->msg=$result;
       unlink( $tempName );
