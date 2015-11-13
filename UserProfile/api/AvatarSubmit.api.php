@@ -11,6 +11,16 @@ class ApiAvatarSubmit extends ApiBase {
 		// Blocked users cannot submit new comments, and neither can those users
         // without the necessary privileges. Also prevent obvious cross-site request
         // forgeries (CSRF)
+        if ( !$this->getRequest()->wasPosted() ){
+             $responseBody = array(
+              'state'  => 200,
+              'message' => '请使用Post方式发送HTTP请求',
+              'result' => $avatar->getResult(),
+            );
+            $result = $this->getResult();
+            $result->addValue($this->getModuleName(),'res', $responseBody);   
+            return true;             	
+        }
         if (
             wfReadOnly()
         ) {
