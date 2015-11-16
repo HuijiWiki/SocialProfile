@@ -100,6 +100,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				        'siteRankPage' =>$siteRankPage,
 				        'allSpecial' =>$allSpecial,
 				        'siteAvatar' =>$siteAvatar,
+				        'token' => $token,
 				    )
 				);
 		$out->addHtml($output);
