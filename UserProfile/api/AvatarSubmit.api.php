@@ -90,6 +90,9 @@ class ApiAvatarSubmit extends ApiBase {
     $result->addValue($this->getModuleName(),'res', $responseBody);
     return true;       
 	}
+  public function needsToken() {
+    return 'csrf';
+  }
 	public function getAllowedParams() {
         return array(
             'avatar_src' => array(
