@@ -695,12 +695,12 @@
     word-wrap: break-word;
     word-break: break-all;
 }
-.profile-page{
-    padding-top:50px;
-}
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 769px) {
     .profile-page .jumbotron {
         padding:30px 50px!important;
+    }
+    .profile-page{
+        padding-top:50px;
     }
 }
 .user-follow-msg{

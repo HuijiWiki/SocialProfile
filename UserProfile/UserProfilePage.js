@@ -138,6 +138,33 @@ jQuery( document ).ready( function() {
 
 
     //修改个人资料
+    $('.form-location').editable({
+        type: 'text',
+        url: '/post',
+        title: '居住城市'
+    });
+    $('.form-date').editable({
+        type: 'date',
+        format: 'yyyy-mm-dd',
+        viewformat: 'dd/mm/yyyy',
+        datepicker: {
+            weekStart: 1
+        }
+    });
+    $('.form-sex').editable({
+        type: 'select',
+        value: 2,
+        source: [
+            {value: 1, text: '无'},
+            {value: 2, text: '男'},
+            {value: 3, text: '女'}
+        ]
+    });
+    $('.form-autograph').editable({
+        type:'textarea',
+        title:'个性签名'
+    });
+
     $(".form-change").click(function(){
         var location = $(".form-location").text();
         var autograph = $(".form-autograph").text();

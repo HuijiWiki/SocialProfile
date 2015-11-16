@@ -88,6 +88,9 @@ $wgResourceModules['ext.socialprofile.userprofile.js'] = array(
         '../UserUploadAvatar/main.js',
         'UserProfilePage.js'
 	),
+	'dependencies' => array(
+    	    'skins.editable',
+    	),
 	'localBasePath' => __DIR__,
 	'remoteExtPath' => 'SocialProfile/UserProfile',
 );

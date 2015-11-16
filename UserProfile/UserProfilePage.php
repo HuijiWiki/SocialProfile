@@ -1300,11 +1300,10 @@ class UserProfilePage extends Article {
 					</div>';
 		}
 		$output .= '<div class="profile-actions">';
-        $output .='<div class="form-container '.($this->isOwner()?'owner':'').'"><div class="form-msg"><span class="form-location '.($city == ''&& $this->isOwner()?'edit-on':'').'" data-toggle="yes">'.($city == ''?($this->isOwner()?'填写居住地':'居住地未公开'):$city).'</span>
-                    <span class="span-color">|</span><span class="form-date '.(($birthday == ''|| $birthday == '0000-00-00') && $this->isOwner()?'edit-on':'').'" data-birthday="'.($birthday == ''||$birthday == '0000-00-00'?'':$birthday).'">'.($birthday == ''||$birthday == '0000-00-00'?($this->isOwner()?'填写生日':'生日未公开'):'').'</span>
-                    <span class="span-color">|</span><span class="form-sex">'.$genderIcon.'</span></div>';
-        $output .='<div class="user-autograph"><span class="form-autograph '.($status == '' && $this->isOwner()?'edit-on':'').'" data-toggle="yes">'.($status == ''?($this->isOwner()?'填写个人状态':'这个人很懒，什么都没有写...'):$status).'</span>
-                    <span class="glyphicon glyphicon-pencil form-change">修改</span></div></div>';
+        $output .='<div class="form-container '.($this->isOwner()?'owner':'').'"><div class="form-msg"><a class="form-location'.($city == ''&& $this->isOwner()?'edit-on':'').'">'.($city == ''?($this->isOwner()?'填写居住地':'居住地未公开'):$city).'</a>
+                    <span class="span-color">|</span><a class="form-date '.(($birthday == ''|| $birthday == '0000-00-00') && $this->isOwner()?'edit-on':'').'" data-birthday="'.($birthday == ''||$birthday == '0000-00-00'?'':$birthday).'">'.($birthday == ''||$birthday == '0000-00-00'?($this->isOwner()?'填写生日':'生日未公开'):'').'</a>
+                    <span class="span-color">|</span><a class="form-sex">'.$genderIcon.'</a></div>';
+        $output .='<div class="user-autograph"><a class="form-autograph '.($status == '' && $this->isOwner()?'edit-on':'').'">'.($status == ''?($this->isOwner()?'填写个人状态':'这个人很懒，什么都没有写...'):$status).'</a></div></div>';
 
 		// Links to User:user_name from User_profile:
 		// if ( $this->getTitle()->getNamespace() == NS_USER_PROFILE && $this->profile_data['user_id'] && $this->profile_data['user_page_type'] == 0 ) {
