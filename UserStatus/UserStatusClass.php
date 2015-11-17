@@ -18,14 +18,8 @@ class UserStatus{
 	}
 
 	public function getGender(){
-		$data = $this->getAllCache( );
-		if ($data != ''){
-			$all = json_decode($data, true);
-		} else {
-			$data = $this->getAllDB( );
-			$all = json_decode($data, true);
-		}
-		return $all['gender'];
+		$gender = $this->user->getOption('gender');
+		return $gender;
 	}  
 	public function getProvince(){
 		$data = $this->getAllCache( );
@@ -191,7 +185,43 @@ class UserStatus{
 		// return $profileId;
 
 	}
+	/**
+	 * insert or update userprofile table one by one
+	 */
 	
+	public function setInfo( $field, $value ){
+		global $wgMemc;
+		$key = wfForeignMemcKey('huiji','', 'user_profile', 'get_all', $this->user->getName() );
+		if( $field == 'gender'){
+			if ($value == ''){
+				$this->user->setOption( $field, null);
+			} else {
+				$this->user->setOption( $field, $value);
+			}
+			$this->user->saveSettings();
+		}else{
+			$dbw = wfGetDB( DB_MASTER );
+			$dbw->upsert(
+				'user_profile',
+				array(
+					'up_user_id'=> $this->user->getId(),
+					$field => $value,
+					'up_date' => date( 'Y-m-d H:i:s' ),
+				),
+				array(
+					'up_user_id'=> $this->user->getId()
+				),
+				array(
+					$field => $value,
+					'up_date' => date( 'Y-m-d H:i:s' ),
+				),
+				__METHOD__
+			);
+		}
+		$wgMemc->delete( $key );
+		return true;
+	}
+
 	/**
      * GET USER DETAIL INFO
      * @param user UserName
