@@ -1213,8 +1213,10 @@ class UserProfilePage extends Article {
 		$user_wiki = Title::makeTitle( NS_USER_WIKI, $user );
 		$us = new UserStatus($this->user);
 		$city = $us->getCity();
+		$city = Sanitizer::escapeHtmlAllowEntities($city);
 		$birthday = $us->getBirthday();
 		$status = $us->getStatus();
+		$status = Sanitizer::escapeHtmlAllowEntities($status);
 		$gender = $us->getGender();
 		if ($gender == 'male'){
 			$genderIcon = '♂';
