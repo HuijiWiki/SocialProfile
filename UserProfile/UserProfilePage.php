@@ -2422,6 +2422,8 @@ class UserProfilePage extends Article {
 	}
 
     function cropModal(){
+    	global $wgUser;
+    	$token = $wgUser->getEditToken();
         $output = '<div class="modal fade" id="avatar-modal" aria-hidden="true" aria-labelledby="avatar-modal-label" role="dialog" tabindex="-1">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -2439,6 +2441,7 @@ class UserProfilePage extends Article {
                       <input type="hidden" class="avatar-data" name="avatar_data">
                       <input type="hidden" class="action" name="action" value="avatarsubmit">
                       <input type="hidden" class="format" name="format" value="json"> 
+                      <input type="hidden" class="token" name="token" value="'.$token.'">
                       <label for="avatarInput">本地上传</label>
                       <input type="file" class="avatar-input" id="avatarInput" name="avatar_file">
                     </div>

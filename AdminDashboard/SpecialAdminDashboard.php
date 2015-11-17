@@ -42,7 +42,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		$out->addModules('ext.socialprofile.userprofile.js');
 
 		$output = ''; // Prevent E_NOTICE
-	    $yesterday = date("Y-m-d",strtotime("-1 day"));
+	    	$yesterday = date("Y-m-d",strtotime("-1 day"));
 		$totaledit = SiteStats::edits();
 		$ueb = new UserEditBox();
 		$rankInfo = AllSitesInfo::getAllSitesRankData( $wgHuijiPrefix, $yesterday );
@@ -74,6 +74,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		$siteRankPage = SpecialPage::getTitleFor( 'SiteRank' )->getFullURL();
 		$allSpecial = SpecialPage::getTitleFor( '特殊页面' )->getFullURL();
 		$siteAvatar = (new wSiteAvatar($wgHuijiPrefix, 'l'))->getAvatarHtml();
+		$token = $user->getEditToken();
 		if(is_null($newFollow)){
 			$newFollow = false;
 		}
@@ -99,6 +100,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				        'siteRankPage' =>$siteRankPage,
 				        'allSpecial' =>$allSpecial,
 				        'siteAvatar' =>$siteAvatar,
+				        'token' => $token,
 				    )
 				);
 		$out->addHtml($output);
