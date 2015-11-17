@@ -4,10 +4,11 @@
  */
 $wgAjaxExportList[] = 'wfUpdateUserStatus';
 $wgAjaxExportList[] = 'wfGetUserAvatar';
-function wfUpdateUserStatus( $username, $gender, $province, $city, $birthday, $status ) {
+function wfUpdateUserStatus( $username, $field, $value ) {
 	global $wgUser;
-	$city = trim($city);
-	$status = trim($status);
+	// Sanitizer::escapeHtmlAllowEntities($html);
+	$value = trim($value);
+	$field = trim($field);
 	$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_UNKNOWN);
 
 	// This feature is only available for logged-in users.
@@ -37,7 +38,10 @@ function wfUpdateUserStatus( $username, $gender, $province, $city, $birthday, $s
 	if ( $username === $wgUser->getName() ){
 		$us = new UserStatus($wgUser);
 
-		if ($us->setAll($gender, $province, $city, $birthday, $status)){
+		// if ($us->setAll($gender, $province, $city, $birthday, $status)){
+		// 	$out = ResponseGenerator::getJson(ResponseGenerator::SUCCESS);
+		// }
+		if ($us->setInfo($field, $value)){
 			$out = ResponseGenerator::getJson(ResponseGenerator::SUCCESS);
 		}
 	}
