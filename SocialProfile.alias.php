@@ -516,6 +516,7 @@ $specialPageAliases['zh-hans'] = array(
 	'SystemGiftManager' => array('系统礼物管理'),
 	'ViewSystemGifts' => array('收到的奖励'),
 	'SystemGiftList' => array('礼物列表'),
+	'CompleteUserInfo' => array('完善资料'),
 );
 
 /** Traditional Chinese (中文（繁體）‎) */
