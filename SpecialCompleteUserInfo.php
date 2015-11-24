@@ -10,6 +10,7 @@ class SpecialCompleteUserInfo extends SpecialPage {
 	 * Constructor
 	 */
 	public function __construct() {
+		require_once('/var/www/html/Confidential.php');
 		parent::__construct( 'CompleteUserInfo' );
 
 	}
@@ -40,6 +41,7 @@ class SpecialCompleteUserInfo extends SpecialPage {
 		}
 		$qq_sdk = new QqSdk();
 		$token = $qq_sdk->get_access_token($_GET['code']);
+		// print_r($token);die;
 		$open_id = $qq_sdk->get_open_id($token['access_token']);
 		$user_info = $qq_sdk->get_user_info($token['access_token'], $open_id['openid']);
 		if( $user_info['gender'] == '男' ){
@@ -63,7 +65,7 @@ class SpecialCompleteUserInfo extends SpecialPage {
 		// 	$out->redirect( $login->getFullURL( 'returnto=Special:UserBoard' ) );
 		// 	return false;
 		// }
-		$output="<form><label for='qqloginname'>用户名</label><input type='text' id='qqloginusername' class='form-control' value='".$user_info['nickname']."' name='qqloginname'>
+		$output="<form><label for='qqloginname'>用户".Confidential::$qq_app_secret ."名</label><input type='text' id='qqloginusername' class='form-control' value='".$user_info['nickname']."' name='qqloginname'>
 		<label for='qqloginemail'>邮箱</label><input type='email' class='form-control' id='qqloginemail' placeholder=\"请输入邮箱\" name='qqloginemail'>
 		<label for='qqloginpass'>密码</label><input type='password' id='qqloginpassword' class='form-control' placeholder=\"请输入密码\" name='qqloginpass'>  
 		<input id='qqOpenId' type='hidden' value='".$open_id['openid']."' >

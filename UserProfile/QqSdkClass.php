@@ -4,22 +4,21 @@
 */ 
  
 class QqSdk{ 
+	 private $app_id;
+	 private $app_secret;
+	 private $redirect = 'http://test.huiji.wiki/callbackqq.php';
 
- 
-	//配置APP参数
-	private $app_id = Confidential::$qq_app_id; 
-	private $app_secret = Confidential::$qq_app_secret; 
-	private $redirect = 'http://test.huiji.wiki/callbackqq.php';
-	 
 	function __construct() { 
 	    require_once('/var/www/html/Confidential.php');
-	} 
+	    $app_id = Confidential::$qq_app_id; 
+		$app_secret = Confidential::$qq_app_secret; 
+		
+	}
+
+	//配置APP参数
+	
 	 
-	/**
-	* [get_access_token 获取access_token]
-	* @param [string] $code [登陆后返回的$_GET['code']]
-	* @return [array] [expires_in 为有效时间 , access_token 为授权码 ; 失败返回 error , error_description ]
-	*/ 
+	 
 	function get_access_token($code) { 
 		//获取access_token
 		$token_url = 'https://graph.qq.com/oauth2.0/token?grant_type=authorization_code&'
@@ -30,11 +29,6 @@ class QqSdk{
 		return $token; 
 	} 
 	 
-	/**
-	* [get_open_id 获取用户唯一ID，openid]
-	* @param [string] $token [授权码]
-	* @return [array] [成功返回client_id 和 openid ;失败返回error 和 error_msg]
-	*/ 
 	function get_open_id($token) { 
 		$str = $this->_curl_get_content('https://graph.qq.com/oauth2.0/me?access_token=' . $token);
 		if (strpos($str, "callback") !== false) { 
@@ -46,16 +40,9 @@ class QqSdk{
 		 
 		return $user; 
 	} 
-	 
-	/**
-	* [get_user_info 获取用户信息]
-	* @param [string] $token [授权码]
-	* @param [string] $open_id [用户唯一ID]
-	* @return [array] [ret：返回码，为0时成功。msg为错误信息,正确返回时为空。...params]
-	*/ 
+
 	function get_user_info($token, $open_id) { 
 	 
-		//组装URL
 		$user_info_url = 'https://graph.qq.com/user/get_user_info?'
 		. 'access_token=' . $token 
 		. '&oauth_consumer_key=' . $this->app_id 
@@ -71,7 +58,7 @@ class QqSdk{
 		$ch = curl_init(); 
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); 
 		curl_setopt($ch, CURLOPT_URL, $url); 
-		//设置超时时间为3s
+		//超时时间3s
 		curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, 3); 
 		$result = curl_exec($ch); 
 		curl_close($ch); 
