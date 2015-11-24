@@ -178,14 +178,14 @@ class UserStatsTrack {
 				}
 			}
 
-			// $s = $dbw->selectRow(
-			// 	'user_stats',
-			// 	array( $this->stats_fields[$field] ),
-			// 	array( 'stats_user_id' => $this->user_id ),
-			// 	__METHOD__
-			// );
-			// $stat_field = $this->stats_fields[$field];
-			// $field_count = $s->$stat_field;
+			$s = $dbw->selectRow(
+				'user_stats',
+				array( $this->stats_fields[$field] ),
+				array( 'stats_user_id' => $this->user_id ),
+				__METHOD__
+			);
+			$stat_field = $this->stats_fields[$field];
+			$field_count = $s->$stat_field;
 
 			// $key = wfForeignMemcKey( 'huiji', '', 'system_gift', 'id', $field . '-' . $field_count );
 			// $data = $wgMemc->get( $key );
@@ -194,17 +194,20 @@ class UserStatsTrack {
 			// 	wfDebug( "Got system gift ID from cache\n" );
 			// 	$systemGiftID = $data;
 			// } else {
-			// 	$g = new SystemGifts();
-			// 	$systemGiftID = $g->doesGiftExistForThreshold( $field, $field_count );
-			// 	if ( $systemGiftID ) {
-			// 		$wgMemc->set( $key, $systemGiftID, 60 * 30 );
-			// 	}
+				$g = new SystemGifts();
+				$repeatableGift = $g->getRepeatableGifts();
+				$categories = array_flip( $g->getCategories() );
+				$systemGiftID = $g->doesGiftExistForThreshold( $field, $field_count );
+				// print_r($field);
+				// if ( $systemGiftID ) {
+				// 	$wgMemc->set( $key, $systemGiftID, 60 * 30 );
+				// }
 			// }
 
-			// if ( $systemGiftID ) {
-			// 	$sg = new UserSystemGifts( $this->user_name );
-			// 	$sg->sendSystemGift( $systemGiftID );
-			// }
+			if ( $systemGiftID && !in_array( $field, $categories ) ) {
+				$sg = new UserSystemGifts( $this->user_name );
+				$sg->sendSystemGift( $systemGiftID );
+			}
 		}
 	}
 
