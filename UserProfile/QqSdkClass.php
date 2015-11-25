@@ -6,7 +6,8 @@
 class QqSdk{ 
 	 private $app_id;
 	 private $app_secret;
-	 private $redirect = 'http://test.huiji.wiki/callbackqq.php';
+	 // private $redirect = 'http://test.huiji.wiki/callbackqq.php';
+	 private $redirect = 'http://slx.test.huiji.wiki/wiki/special:callbackqq';
 
 	function __construct() { 
 	    require_once('/var/www/html/Confidential.php');
@@ -19,11 +20,11 @@ class QqSdk{
 	
 	 
 	 
-	function get_access_token($code) { 
+	function get_access_token($code,$appid,$appsecret) { 
 		//获取access_token
 		$token_url = 'https://graph.qq.com/oauth2.0/token?grant_type=authorization_code&'
-		. 'client_id=' . $this->app_id . '&redirect_uri=' . urlencode($this->redirect)//回调地址
-		. '&client_secret=' . $this->app_secret . '&code=' . $code; 
+		. 'client_id=' . $appid . '&redirect_uri=' . urlencode($this->redirect)//回调地址
+		. '&client_secret=' . $appsecret . '&code=' . $code; 
 		$token = array();		//expires_in 为access_token 有效时间增量 
 		parse_str($this->_curl_get_content($token_url), $token); 
 		return $token; 
@@ -41,11 +42,11 @@ class QqSdk{
 		return $user; 
 	} 
 
-	function get_user_info($token, $open_id) { 
+	function get_user_info($token, $open_id, $appid) { 
 	 
 		$user_info_url = 'https://graph.qq.com/user/get_user_info?'
 		. 'access_token=' . $token 
-		. '&oauth_consumer_key=' . $this->app_id 
+		. '&oauth_consumer_key=' . $appid
 		. '&openid=' . $open_id 
 		. '&format=json'; 
 		 
