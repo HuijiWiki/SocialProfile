@@ -45,14 +45,14 @@ class SpecialCallbackQQ extends SpecialPage {
 	    	// echo 'null';die;
 	        //goto complete user info
 	        // header('Location: http://slx.test.huiji.wiki');
-	        header('Location: http://slx.test.huiji.wiki/wiki/special:completeuserinfo?code='.$token['access_token']);
+	        header('Location: http://test.huiji.wiki/wiki/special:completeuserinfo?code='.$token['access_token']);
 	        exit;
 	    }else{
 	    	// echo '111';die;
 	        // success login redirect to index
 	        $user = User::newFromId($checkRes);
 	        $user->setCookies(null, null, true);
-	        header('Location: http://slx.test.huiji.wiki/wiki/%E9%A6%96%E9%A1%B5?loggingIn=1');
+	        header('Location: http://test.huiji.wiki/wiki/%E9%A6%96%E9%A1%B5?loggingIn=1');
 	        exit;
 	    }
 	}
