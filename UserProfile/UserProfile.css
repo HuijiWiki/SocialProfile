@@ -741,12 +741,12 @@
     color:#999;
     position: relative;
 }
-.form-location.edit-on,.form-autograph.edit-on,.form-date.edit-on{
+.form-location.edit,.form-autograph.edit,.form-sex.edit,.form-date.edit{
     color:#428bca;
     cursor: pointer;
 }
 .form-container span{
-    margin-right: 20px;
+    margin: 10px;
     cursor: default;
 }
 span.span-color{
