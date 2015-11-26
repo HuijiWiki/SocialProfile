@@ -87,6 +87,7 @@ $wgAutoloadClasses['AllSitesInfo'] = __DIR__ . '/SiteStatus/AllSitesInfoClass.ph
 $wgAutoloadClasses['RecordStatistics'] = __DIR__ . '/HuijiStatistics/interface.php';
 $wgAutoloadClasses['SpecialCompleteUserInfo'] = __DIR__ . '/SpecialCompleteUserInfo.php';
 $wgAutoloadClasses['QqSdk'] = __DIR__ . '/UserProfile/QqSdkClass.php';
+$wgAutoloadClasses['SpecialCallbackQQ'] = __DIR__ . '/SpecialCallbackQQ.php';
 
 // New special pages
 // $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
@@ -115,6 +116,7 @@ $wgSpecialPages['Randomwiki'] = 'SpecialRandomwiki';
 $wgSpecialPages['AdminDashboard'] = 'SpecialAdminDashboard';
 $wgSpecialPages['SiteRank'] = 'SpecialSiteRank';
 $wgSpecialPages['CompleteUserInfo'] = 'SpecialCompleteUserInfo';
+$wgSpecialPages['CallbackQQ'] = 'SpecialCallbackQQ';
 
 // Necessary AJAX functions
 require_once( "$IP/extensions/SocialProfile/UserBoard/UserBoard_AjaxFunctions.php" );

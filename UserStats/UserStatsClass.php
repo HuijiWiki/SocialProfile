@@ -187,24 +187,23 @@ class UserStatsTrack {
 			$stat_field = $this->stats_fields[$field];
 			$field_count = $s->$stat_field;
 
-			// $key = wfForeignMemcKey( 'huiji', '', 'system_gift', 'id', $field . '-' . $field_count );
-			// $data = $wgMemc->get( $key );
+			$key = wfForeignMemcKey( 'huiji', '', 'system_gift', 'id', $field . '-' . $field_count );
+			$data = $wgMemc->get( $key );
 
-			// if ( $data != '' && is_int($data)  ) {
-			// 	wfDebug( "Got system gift ID from cache\n" );
-			// 	$systemGiftID = $data;
-			// } else {
+			if ( $data != '' && is_int($data)  ) {
+				wfDebug( "Got system gift ID from cache\n" );
+				$systemGiftID = $data;
+			} else {
 				$g = new SystemGifts();
 				$repeatableGift = $g->getRepeatableGifts();
 				$categories = array_flip( $g->getCategories() );
 				$systemGiftID = $g->doesGiftExistForThreshold( $field, $field_count );
-				// print_r($field);
-				// if ( $systemGiftID ) {
-				// 	$wgMemc->set( $key, $systemGiftID, 60 * 30 );
-				// }
-			// }
-
-			if ( $systemGiftID && !in_array( $field, $categories ) ) {
+				// echo $field;die;
+				if ( $systemGiftID ) {
+					$wgMemc->set( $key, $systemGiftID, 60 * 30 );
+				}
+			}
+			if ( isset($systemGiftID) && $field != "points_winner_weekly" && $field != "points_winner_monthly" ) {
 				$sg = new UserSystemGifts( $this->user_name );
 				$sg->sendSystemGift( $systemGiftID );
 			}

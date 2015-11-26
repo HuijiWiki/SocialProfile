@@ -32,18 +32,17 @@ class SpecialCompleteUserInfo extends SpecialPage {
 	public function execute( $params ) {
 		$out = $this->getOutput();
 		$request = $this->getRequest();
-
+		$code = $request->getVal( 'code' );
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
-		$code = $request->getVal( 'code' );
 		if(empty($_GET['code'])) {
 		    exit('参数非法');
 		}
 		$qq_sdk = new QqSdk();
-		$token = $qq_sdk->get_access_token($_GET['code']);
+		// $token = $qq_sdk->get_access_token($code,Confidential::$qq_app_id,Confidential::$qq_app_secret);
 		// print_r($token);die;
-		$open_id = $qq_sdk->get_open_id($token['access_token']);
-		$user_info = $qq_sdk->get_user_info($token['access_token'], $open_id['openid']);
+		$open_id = $qq_sdk->get_open_id($code);
+		$user_info = $qq_sdk->get_user_info($code, $open_id['openid'], Confidential::$qq_app_id);
 		if( $user_info['gender'] == '男' ){
 			$gender = 'male';
 		}elseif( $user_info['gender'] == '女' ){
@@ -65,7 +64,7 @@ class SpecialCompleteUserInfo extends SpecialPage {
 		// 	$out->redirect( $login->getFullURL( 'returnto=Special:UserBoard' ) );
 		// 	return false;
 		// }
-		$output="<form><label for='qqloginname'>用户".Confidential::$qq_app_secret ."名</label><input type='text' id='qqloginusername' class='form-control' value='".$user_info['nickname']."' name='qqloginname'>
+		$output="<form><label for='qqloginname'>用户名</label><input type='text' id='qqloginusername' class='form-control' value='".$user_info['nickname']."' name='qqloginname'>
 		<label for='qqloginemail'>邮箱</label><input type='email' class='form-control' id='qqloginemail' placeholder=\"请输入邮箱\" name='qqloginemail'>
 		<label for='qqloginpass'>密码</label><input type='password' id='qqloginpassword' class='form-control' placeholder=\"请输入密码\" name='qqloginpass'>  
 		<input id='qqOpenId' type='hidden' value='".$open_id['openid']."' >
