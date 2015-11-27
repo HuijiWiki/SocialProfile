@@ -264,6 +264,9 @@ require_once( "$IP/extensions/SocialProfile/SystemGifts/SystemGifts.php" ); // S
 require_once( "$IP/extensions/SocialProfile/UserBoard/UserBoard.php" ); // UserBoard loader file
 require_once( "$IP/extensions/SocialProfile/UserActivity/UserActivity.php" ); // UserActivity - recent social changes
 require_once( "$IP/extensions/SocialProfile/userEditRecord.php"); // Edit Record collected to mongoDB.
+require_once( "$IP/extensions/SocialProfile/updateESContent.php"); // Update Page Content in ES.
+
+
 
 $wgHooks['CanonicalNamespaces'][] = 'SocialProfileHooks::onCanonicalNamespaces';
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'SocialProfileHooks::onLoadExtensionSchemaUpdates';
