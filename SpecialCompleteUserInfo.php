@@ -36,7 +36,8 @@ class SpecialCompleteUserInfo extends SpecialPage {
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
 		if(empty($_GET['code'])) {
-		    exit('参数非法');
+			$out->setPageTitle( $this->msg( 'complete_user_error' )->plain() );
+			return false;
 		}
 		$qq_sdk = new QqSdk();
 		// $token = $qq_sdk->get_access_token($code,Confidential::$qq_app_id,Confidential::$qq_app_secret);
@@ -50,27 +51,13 @@ class SpecialCompleteUserInfo extends SpecialPage {
 		}else{
  			$gender = null;
   		}
-  // 		$user_info['figureurl_qq_1'];
-		// Add CSS & JS
-		// $out->addModuleStyles( 'ext.socialprofile. .css' );
-		// $out->addModules( 'ext.socialprofile. .js' );
-
-		/**
-		 * Redirect Non-logged in users to Login Page
-		 * It will automatically return them to the UserBoard page
-		 */
-		// if ( $currentUser->getID() == 0 && $user_name == '' ) {
-		// 	$login = SpecialPage::getTitleFor( 'Userlogin' );
-		// 	$out->redirect( $login->getFullURL( 'returnto=Special:UserBoard' ) );
-		// 	return false;
-		// }
-		$output="<form><label for='qqloginname'>用户名</label><input type='text' id='qqloginusername' class='form-control' value='".$user_info['nickname']."' name='qqloginname'>
-		<label for='qqloginemail'>邮箱</label><input type='email' class='form-control' id='qqloginemail' placeholder=\"请输入邮箱\" name='qqloginemail'>
-		<label for='qqloginpass'>密码</label><input type='password' id='qqloginpassword' class='form-control' placeholder=\"请输入密码\" name='qqloginpass'>  
-		<input id='qqOpenId' type='hidden' value='".$open_id['openid']."' >
-		<input id='userGender' type='hidden' value='".$gender."' >
-		<input id='userAvatar' type='hidden' value='".$user_info['figureurl_qq_1']."' >
-		<div class='mw-ui-button  mw-ui-block mw-ui-constructive' id='qqConfirm'>提交</div></form>";
+		$output = "<form><label for='qqloginname'>用户名</label><input type='text' id='qqloginusername' class='form-control' value='".$user_info['nickname']."' name='qqloginname'>
+			<label for='qqloginemail'>邮箱</label><input type='email' class='form-control' id='qqloginemail' placeholder=\"请输入邮箱\" name='qqloginemail'>
+			<label for='qqloginpass'>密码</label><input type='password' id='qqloginpassword' class='form-control' placeholder=\"请输入密码\" name='qqloginpass'>  
+			<input id='qqOpenId' type='hidden' value='".$open_id['openid']."' >
+			<input id='userGender' type='hidden' value='".$gender."' >
+			<input id='userAvatar' type='hidden' value='".$user_info['figureurl_qq_1']."' >
+			<div class='mw-ui-button  mw-ui-block mw-ui-constructive' id='qqConfirm'>提交</div></form>";
 		$out->addHTML( $output );
 	}
 }
