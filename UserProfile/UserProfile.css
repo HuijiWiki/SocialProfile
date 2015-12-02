@@ -1154,3 +1154,9 @@ body>.tooltip.top .tooltip-arrow{
     display: block;
     color: #09c;
 }
+/*hack crop avatar img*/
+#profile-image #avatar-modal img {
+    padding: 0;
+    width: inherit;
+    height: inherit;
+}
