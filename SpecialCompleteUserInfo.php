@@ -43,21 +43,27 @@ class SpecialCompleteUserInfo extends SpecialPage {
 		// $token = $qq_sdk->get_access_token($code,Confidential::$qq_app_id,Confidential::$qq_app_secret);
 		// print_r($token);die;
 		$open_id = $qq_sdk->get_open_id($code);
-		$user_info = $qq_sdk->get_user_info($code, $open_id['openid'], Confidential::$qq_app_id);
-		if( $user_info['gender'] == '男' ){
-			$gender = 'male';
-		}elseif( $user_info['gender'] == '女' ){
-			$gender = 'female';
+		if( array_key_exists('openid', $open_id ) ){
+			$user_info = $qq_sdk->get_user_info($code, $open_id['openid'], Confidential::$qq_app_id);
+			if( $user_info['gender'] == '男' ){
+				$gender = 'male';
+			}elseif( $user_info['gender'] == '女' ){
+				$gender = 'female';
+			}else{
+	 			$gender = null;
+	  		}
+	  		$output = "<span>您当前使用的第三方账号登录，建议您绑定官方账号更有利于您的账户安全！</span>";
+			$output .= "<form><label for='qqloginname'>用户名</label><input type='text' id='qqloginusername' class='form-control' value='".$user_info['nickname']."' name='qqloginname'>
+				<label for='qqloginemail'>邮箱</label><input type='email' class='form-control' id='qqloginemail' placeholder=\"请输入邮箱\" name='qqloginemail'>
+				<label for='qqloginpass'>密码</label><input type='password' id='qqloginpassword' class='form-control' placeholder=\"请输入密码\" name='qqloginpass'>  
+				<input id='qqOpenId' type='hidden' value='".$open_id['openid']."' >
+				<input id='userGender' type='hidden' value='".$gender."' >
+				<input id='userAvatar' type='hidden' value='".$user_info['figureurl_qq_1']."' >
+				<div class='mw-ui-button  mw-ui-block mw-ui-constructive' id='qqConfirm'>提交</div></form>";
 		}else{
- 			$gender = null;
-  		}
-		$output = "<form><label for='qqloginname'>用户名</label><input type='text' id='qqloginusername' class='form-control' value='".$user_info['nickname']."' name='qqloginname'>
-			<label for='qqloginemail'>邮箱</label><input type='email' class='form-control' id='qqloginemail' placeholder=\"请输入邮箱\" name='qqloginemail'>
-			<label for='qqloginpass'>密码</label><input type='password' id='qqloginpassword' class='form-control' placeholder=\"请输入密码\" name='qqloginpass'>  
-			<input id='qqOpenId' type='hidden' value='".$open_id['openid']."' >
-			<input id='userGender' type='hidden' value='".$gender."' >
-			<input id='userAvatar' type='hidden' value='".$user_info['figureurl_qq_1']."' >
-			<div class='mw-ui-button  mw-ui-block mw-ui-constructive' id='qqConfirm'>提交</div></form>";
+			$out->setPageTitle( $this->msg( 'complete_user_error' )->plain() );
+			return false;
+		}
 		$out->addHTML( $output );
 	}
 }

@@ -87,6 +87,8 @@ $wgAutoloadClasses['AllSitesInfo'] = __DIR__ . '/SiteStatus/AllSitesInfoClass.ph
 $wgAutoloadClasses['RecordStatistics'] = __DIR__ . '/HuijiStatistics/interface.php';
 $wgAutoloadClasses['SpecialCompleteUserInfo'] = __DIR__ . '/SpecialCompleteUserInfo.php';
 $wgAutoloadClasses['QqSdk'] = __DIR__ . '/UserProfile/QqSdkClass.php';
+$wgAutoloadClasses['SaeTOAuthV2'] = __DIR__ . '/UserProfile/weiboSdkClass.php';
+$wgAutoloadClasses['SaeTClientV2'] = __DIR__ . '/UserProfile/weiboSdkClass.php';
 $wgAutoloadClasses['SpecialCallbackQQ'] = __DIR__ . '/SpecialCallbackQQ.php';
 
 // New special pages
