@@ -68,7 +68,6 @@ class SpecialCompleteUserInfo extends SpecialPage {
 			}else{
 	 			$gender = null;
 	  		}
-	  		print_r($user_info);die;
 	  		$nickname = $user_info['screen_name'];
 	  		$openid = $uid;
 	  		$avatar = $user_info['avatar_large'];
