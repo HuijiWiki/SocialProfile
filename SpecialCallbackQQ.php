@@ -37,7 +37,7 @@ class SpecialCallbackQQ extends SpecialPage {
 	    $open_id = $qq_sdk->get_open_id($token['access_token']);
 	    $checkRes = $qq_sdk->checkOauth( $open_id['openid'], 'qq' );
 	    if( $checkRes == null ){
-	        header('Location: http://huiji.wiki/wiki/special:completeuserinfo?code='.$token['access_token']);
+	        header('Location: http://huiji.wiki/wiki/special:completeuserinfo?type=qq&code='.$token['access_token']);
 	        exit;
 	    }else{
 	        // success login redirect to index
