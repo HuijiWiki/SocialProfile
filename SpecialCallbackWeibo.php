@@ -59,7 +59,7 @@ class SpecialCallbackWeibo extends SpecialPage {
 	        // success login redirect to index
 	        $user = User::newFromId($checkRes);
 	        $user->setCookies(null, null, true);
-	        header('Location: http://huiji.wiki/wiki/%E9%A6%96%E9%A1%B5?loggingIn=1');
+	        echo "<script>location.href = document.referrer;</script>";
 	        exit;
 	    }
 	}
