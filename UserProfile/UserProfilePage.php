@@ -219,17 +219,6 @@ class UserProfilePage extends Article {
 				$tools[] = '<li><a href="' . htmlspecialchars( $watchlist->getFullURL() ) . '">' . wfMessage( 'user-watchlist' )->escaped() . '</a></li>';
 			}
 		}
-		//user isonline
-		// $_SESSION['username'] = $wgUser->getName();
-		// $user = User::newFromName( $this->user_name );
-		// $isonline = OnlineStatusBar_StatusCheck::getStatus( $user );
-		// if($isonline === 'online'){
-		// 	$online = '在线';
-		// }else{
-		// 	$online = '未知';
-		// }
-		// $wgOut->addModuleScripts( 'ext.socialprofile.useruserfollows.js' ); #this script is already added globally
-		// $wgOut->addHTML($wgAjaxExportList); # What is that for??
 		$wgOut->addHTML( '<div class="profile-page"><div id="profile-top" class="jumbotron row">' );
 		$wgOut->addHTML( $this->getProfileTop( $this->user_id, $this->user_name ) );
         
@@ -280,17 +269,6 @@ class UserProfilePage extends Article {
             </div>
         ');
         $wgOut->addHTML( '<div class="cleared"></div></div>');
-		// // User does not want social profile for User:user_name, so we just
-		// // show header + page content
-		// if (
-		// 	$this->getTitle()->getNamespace() == NS_USER &&
-		// 	$this->profile_data['user_id'] &&
-		// 	$this->profile_data['user_page_type'] == 0
-		// )
-		// {
-		// 	parent::view();
-		// 	return '';
-		// }
        
         $ueb = new UserEditBox();
         $editBox = $editData = array();
@@ -306,7 +284,6 @@ class UserProfilePage extends Article {
 	        	if (is_object($value) && !empty($value->_id) && $value->value > 0) {
 		        	$editBox[$value->_id] = $value->value;
 		        	$editData[] = $value->_id;
-		        	//echo $value->_id.'->'.$value->value.'<br>';
 	        	}
 	            
 	        }
@@ -440,7 +417,7 @@ class UserProfilePage extends Article {
 			    		$x = $value;
 			    	}
 			    }
-	        	$wgOut->addHTML('<text x="'.$x.'" y="-5" class="'.$year.'">'.$mon.'月</text>');
+	        	$wgOut->addHTML('<text x="'.$x.'" y="-5" class="month">'.$mon.'月</text>');
 	        }
 
 	        $wgOut->addHTML('
@@ -1306,23 +1283,6 @@ class UserProfilePage extends Article {
                     <span class="span-color">|</span><a class="form-date '.($this->isOwner()?'edit':'').'" data-birthday="'.($birthday == ''||$birthday == '0000-00-00'?'':$birthday).'">'.($birthday == ''||$birthday == '0000-00-00'?($this->isOwner()?'填写生日':'生日未公开'):'').'</a>
                     <span class="span-color">|</span><a class="form-sex '.($this->isOwner()?'edit':'').'" data-sex="'.$gender.'">'.$genderIcon.'</a></div>';
         $output .='<div class="user-autograph"><a class="form-autograph '.($this->isOwner()?'edit':'').'">'.($status == ''?($this->isOwner()?'填写个人状态':'这个人很懒，什么都没有写...'):$status).'</a></div></div>';
-
-		// Links to User:user_name from User_profile:
-		// if ( $this->getTitle()->getNamespace() == NS_USER_PROFILE && $this->profile_data['user_id'] && $this->profile_data['user_page_type'] == 0 ) {
-		// 	$output .= '| <a href="' . htmlspecialchars( $user_page->getFullURL() ) . '" rel="nofollow">' .
-		// 		wfMessage( 'user-page-link' )->escaped() . '</a> ';
-		// }
-
-		// // Links to User:user_name from User_profile:
-		// if ( $this->getTitle()->getNamespace() == NS_USER && $this->profile_data['user_id'] && $this->profile_data['user_page_type'] == 0 ) {
-		// 	$output .= '| <a href="' . htmlspecialchars( $user_social_profile->getFullURL() ) . '" rel="nofollow">' .
-		// 		wfMessage( 'user-social-profile-link' )->escaped() . '</a> ';
-		// }
-
-		// if ( $this->getTitle()->getNamespace() == NS_USER && ( !$this->profile_data['user_id'] || $this->profile_data['user_page_type'] == 1 ) ) {
-		// 	$output .= '| <a href="' . htmlspecialchars( $user_wiki->getFullURL() ) . '" rel="nofollow">' .
-		// 		wfMessage( 'user-wiki-link' )->escaped() . '</a>';
-		// }
 
 		$output .= '</div></div>';
 
