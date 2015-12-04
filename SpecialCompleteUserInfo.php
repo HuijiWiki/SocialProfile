@@ -51,13 +51,14 @@ class SpecialCompleteUserInfo extends SpecialPage {
 		}else{
  			$gender = null;
   		}
-		$output = "<form><label for='qqloginname'>用户名</label><input type='text' id='qqloginusername' class='form-control' value='".$user_info['nickname']."' name='qqloginname'>
+		$output = "<form class='complete-user-info'><label for='qqloginname'>用户名</label><input type='text' id='qqloginusername' class='form-control' value='".$user_info['nickname']."' name='qqloginname'>
 			<label for='qqloginemail'>邮箱</label><input type='email' class='form-control' id='qqloginemail' placeholder=\"请输入邮箱\" name='qqloginemail'>
 			<label for='qqloginpass'>密码</label><input type='password' id='qqloginpassword' class='form-control' placeholder=\"请输入密码\" name='qqloginpass'>  
 			<input id='qqOpenId' type='hidden' value='".$open_id['openid']."' >
 			<input id='userGender' type='hidden' value='".$gender."' >
 			<input id='userAvatar' type='hidden' value='".$user_info['figureurl_qq_1']."' >
 			<div class='mw-ui-button  mw-ui-block mw-ui-constructive' id='qqConfirm'>提交</div></form>";
+
 		$out->addHTML( $output );
 	}
 }
