@@ -6,7 +6,7 @@
 class QqSdk{ 
 	 private $app_id;
 	 private $app_secret;
-	 private $redirect = 'http://huiji.wiki/wiki/special:callbackqq';
+	 private $redirect = 'http://www.huiji.wiki/wiki/special:callbackqq';
 
 	function __construct() { 
 	    require_once('/var/www/html/Confidential.php');

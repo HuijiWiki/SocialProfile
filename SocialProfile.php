@@ -87,7 +87,11 @@ $wgAutoloadClasses['AllSitesInfo'] = __DIR__ . '/SiteStatus/AllSitesInfoClass.ph
 $wgAutoloadClasses['RecordStatistics'] = __DIR__ . '/HuijiStatistics/interface.php';
 $wgAutoloadClasses['SpecialCompleteUserInfo'] = __DIR__ . '/SpecialCompleteUserInfo.php';
 $wgAutoloadClasses['QqSdk'] = __DIR__ . '/UserProfile/QqSdkClass.php';
+$wgAutoloadClasses['SaeTOAuthV2'] = __DIR__ . '/UserProfile/weiboSdkClass.php';
+$wgAutoloadClasses['SaeTClientV2'] = __DIR__ . '/UserProfile/weiboSdkClass.php';
 $wgAutoloadClasses['SpecialCallbackQQ'] = __DIR__ . '/SpecialCallbackQQ.php';
+$wgAutoloadClasses['SpecialCallbackWeibo'] = __DIR__ . '/SpecialCallbackWeibo.php';
+$wgAutoloadClasses['SpecialGlobalSearch'] = __DIR__ . '/SpecialGlobalSearch.php';
 
 // New special pages
 // $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
@@ -117,6 +121,8 @@ $wgSpecialPages['AdminDashboard'] = 'SpecialAdminDashboard';
 $wgSpecialPages['SiteRank'] = 'SpecialSiteRank';
 $wgSpecialPages['CompleteUserInfo'] = 'SpecialCompleteUserInfo';
 $wgSpecialPages['CallbackQQ'] = 'SpecialCallbackQQ';
+$wgSpecialPages['CallbackWeibo'] = 'SpecialCallbackWeibo';
+$wgSpecialPages['GlobalSearch'] = 'SpecialGlobalSearch';
 
 // Necessary AJAX functions
 require_once( "$IP/extensions/SocialProfile/UserBoard/UserBoard_AjaxFunctions.php" );
