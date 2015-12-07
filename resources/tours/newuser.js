@@ -147,7 +147,7 @@
        name: 'edit',
        titlemsg: 'guidedtour-tour-newuser-edit-title',
        descriptionmsg: 'guidedtour-tour-newuser-edit-description',
-       attachTo: '#ca-edit',
+       attachTo: '#ca-huiji-edit',
        position: 'right',
        autoFocus: false,
        allowAutomaticNext: false,
