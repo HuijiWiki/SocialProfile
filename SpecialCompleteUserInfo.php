@@ -4,7 +4,7 @@
  *
  */
 
-class SpecialCompleteUserInfo extends SpecialPage {
+class SpecialCompleteUserInfo extends UnlistedSpecialPage {
 
 	/**
 	 * Constructor
@@ -40,6 +40,7 @@ class SpecialCompleteUserInfo extends SpecialPage {
 			$out->setPageTitle( $this->msg( 'complete_user_error' )->plain() );
 			return false;
 		}
+		$out->addModuleStyles('mediawiki.special.userlogin.signup.styles');
 		if( $type == 'qq' ){
 			$qq_sdk = new QqSdk();
 			$open_id = $qq_sdk->get_open_id($access_token);
@@ -79,8 +80,22 @@ class SpecialCompleteUserInfo extends SpecialPage {
 			<input id='qqOpenId' type='hidden' value='".$openid."' >
 			<input id='userGender' type='hidden' value='".$gender."' >
 			<input id='userAvatar' type='hidden' value='".$avatar."' >
-			<input id='userType' type='hidden' value='".$type."' >
-			<div class='mw-ui-button  mw-ui-block mw-ui-constructive' id='qqConfirm'>提交</div></form>";
+			<input id='userType' type='hidden' value='".$type."' >";
+
+		$output .=	'<div class="mw-createacct-benefits-container">'.
+			    "<h2>".$this->msg( 'createacct-benefit-heading' )."</h2>".
+			    '<div class="mw-createacct-benefits-list">';
+	
+		for ( $benefitIdx = 1; $benefitIdx <= 3; $benefitIdx++ ) {
+			// Pass each benefit's head text (by default a number) as a parameter to the body's message for PLURAL handling.
+			$headUnescaped = $this->msg( "createacct-benefit-head$benefitIdx" )->text();
+			$output.= '<div class="mw-number-text '.$this->msg( "createacct-benefit-icon$benefitIdx" ).'">'.
+			                '<h3>'.$this->msg( "createacct-benefit-head$benefitIdx" ).'</h3>'.
+			                '<p>'.$this->msg( "createacct-benefit-body$benefitIdx" )->params( $headUnescaped )->escaped().'</p>'.
+			            "</div>";
+		}
+		$output .=	"</div>".
+			 "</div>";		
 
 		$out->addHTML( $output );
 	}
