@@ -92,6 +92,7 @@ $wgAutoloadClasses['SaeTClientV2'] = __DIR__ . '/UserProfile/weiboSdkClass.php';
 $wgAutoloadClasses['SpecialCallbackQQ'] = __DIR__ . '/SpecialCallbackQQ.php';
 $wgAutoloadClasses['SpecialCallbackWeibo'] = __DIR__ . '/SpecialCallbackWeibo.php';
 $wgAutoloadClasses['SpecialGlobalSearch'] = __DIR__ . '/SpecialGlobalSearch.php';
+$wgAutoloadClasses['QueryInterface'] = __DIR__ . '/QueryInterface.php';
 
 // New special pages
 // $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
