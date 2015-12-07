@@ -73,7 +73,7 @@ class SpecialCompleteUserInfo extends SpecialPage {
 	  		$avatar = $user_info['avatar_large'];
 		}
 		$output = "<span>您当前使用的第三方账号登录，建议您绑定官方账号更有利于您的账户安全！</span>";
-		$output .= "<form><label for='qqloginname'>用户名</label><input type='text' id='qqloginusername' class='form-control' value='".$nickname."' name='qqloginname'>
+		$output .= "<form  class='complete-user-info'><label for='qqloginname'>用户名</label><input type='text' id='qqloginusername' class='form-control' value='".$nickname."' name='qqloginname'>
 			<label for='qqloginemail'>邮箱</label><input type='email' class='form-control' id='qqloginemail' placeholder=\"请输入邮箱\" name='qqloginemail'>
 			<label for='qqloginpass'>密码</label><input type='password' id='qqloginpassword' class='form-control' placeholder=\"请输入密码\" name='qqloginpass'>  
 			<input id='qqOpenId' type='hidden' value='".$openid."' >

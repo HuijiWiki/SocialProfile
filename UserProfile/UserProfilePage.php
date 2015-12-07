@@ -2026,7 +2026,7 @@ class UserProfilePage extends Article {
 
 		// Add JS
 		$wgOut->addModules( 'ext.socialprofile.userprofile.js' );
-
+		$wgOut->addModules( 'skins.editable' );
 		$rel = new UserRelationship( $user_name );
 		$friends = $rel->getRelationshipList( 1, 4 );
 
