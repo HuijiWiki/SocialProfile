@@ -82,7 +82,7 @@ class SpecialCompleteUserInfo extends UnlistedSpecialPage {
 			<input id='userAvatar' type='hidden' value='".$avatar."' >
 			<input id='userType' type='hidden' value='".$type."' >
 			<input id='userType' type='hidden' value='".$type."' >
-            <div class='mw-ui-button  mw-ui-block mw-ui-constructive' id='qqConfirm'>提交</div></form>";
+            <div class='mw-ui-button  mw-ui-block mw-ui-constructive btn' data-loading-text='提交中...' id='qqConfirm'>提交</div></form>";
 
 		$output .=	'<div class="mw-createacct-benefits-container unite-container">'.
 			    "<h2>".$this->msg( 'createacct-benefit-heading' )."</h2>".
