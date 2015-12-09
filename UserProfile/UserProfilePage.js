@@ -245,9 +245,9 @@ jQuery( document ).ready( function() {
                                 if( i<10 && i>=0){
                                     $('.modal-body .btn-default').hide();
                                     if (item.is == 'Y') {
-                                        var msg='<a href="'+"http://"+item.key+'.huiji.wiki" class="list-group-item">'+item.val+'<span class="badge user-site-follow-from-modal unfollow">取关</span></a>';
+                                        var msg='<a href="'+"http://"+item.key+mw.config.get('wgHuijiSuffix')+'" class="list-group-item">'+item.val+'<span class="badge user-site-follow-from-modal unfollow">取关</span></a>';
                                     }else{
-                                        var msg='<a href="'+"http://"+item.key+'.huiji.wiki" class="list-group-item">'+item.val+'<span class="badge user-site-follow-from-modal">关注</span></a>';
+                                        var msg='<a href="'+"http://"+item.key+mw.config.get('wgHuijiSuffix')+'" class="list-group-item">'+item.val+'<span class="badge user-site-follow-from-modal">关注</span></a>';
                                     }
                                     $('.modal-body .list-group').append(msg);
                                 }else if (i>=10) {
@@ -261,9 +261,9 @@ jQuery( document ).ready( function() {
                                 if( i<10 && i>=0){
                                     $('.modal-body .btn-default').hide();
                                     if (item.is == 'Y') {
-                                        var msg='<a href="'+"http://"+item.key+'.huiji.wiki" class="list-group-item">'+item.val+'</a>';
+                                        var msg='<a href="'+"http://"+item.key+mw.config.get('wgHuijiSuffix')+'" class="list-group-item">'+item.val+'</a>';
                                     }else{
-                                        var msg='<a href="'+"http://"+item.key+'.huiji.wiki" class="list-group-item">'+item.val+'</a>';
+                                        var msg='<a href="'+"http://"+item.key+mw.config.get('wgHuijiSuffix')+'" class="list-group-item">'+item.val+'</a>';
                                     }
                                     $('.modal-body .list-group').append(msg);
                                 }else if (i>=10) {
