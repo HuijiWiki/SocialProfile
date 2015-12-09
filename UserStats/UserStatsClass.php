@@ -203,7 +203,7 @@ class UserStatsTrack {
 					$wgMemc->set( $key, $systemGiftID, 60 * 30 );
 				}
 			}
-			if ( isset($systemGiftID) && $field != "points_winner_weekly" && $field != "points_winner_monthly" ) {
+			if ( !empty($systemGiftID) && $field != "points_winner_weekly" && $field != "points_winner_monthly" ) {
 				$sg = new UserSystemGifts( $this->user_name );
 				$sg->sendSystemGift( $systemGiftID );
 			}

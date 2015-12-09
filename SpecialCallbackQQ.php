@@ -42,9 +42,14 @@ class SpecialCallbackQQ extends SpecialPage {
 	    }else{
 	        // success login redirect to index
 	        $user = User::newFromId($checkRes);
+		$user->touch();
+		$wgUser = $user;
+		wfResetSessionID();
+		$request->setSessionData( 'wsLoginToken', null );
+		$this->getContext()->setUser( $user );
 	        $user->setCookies(null, null, true);
 	        //echo "<script>location.href = document.referrer;</script>";
-	        header('Location: http://huiji.wiki/');
+	        header('Location: http://www.huiji.wiki/');
 		exit;
 	    }
 	}
