@@ -49,7 +49,7 @@ class SpecialCallbackWeibo extends UnlistedSpecialPage {
 		$uid_get = $c->get_uid();
 		$uid = $uid_get['uid'];
 		// print_r($uid);die;
-		// $user_message = $c->show_user_by_id( $uid);//根据ID获取用户等基本信�er->touch();
+		// $user_message = $c->show_user_by_id( $uid);//æ ¹æ®IDèŽ·å–ç”¨æˆ·ç­‰åŸºæœ¬ä¿¡æer->touch();
 
 		$qq_sdk = new QqSdk();
   	        $checkRes = $qq_sdk->checkOauth( $uid, 'weibo' );
@@ -61,10 +61,10 @@ class SpecialCallbackWeibo extends UnlistedSpecialPage {
 	        $user = User::newFromId($checkRes);
 		$user->touch();
 		$wgUser = $user;
-		$this->getContext()->setUser( $user );
-	        $user->setCookies(null, null, false);
 		wfResetSessionID();
 		$request->setSessionData( 'wsLoginToken', null );
+		$this->getContext()->setUser( $user );
+	        $user->setCookies(null, null, true);
 	        header('Location: http://www.huiji.wiki/');
 	        exit;
 	    }
