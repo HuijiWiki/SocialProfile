@@ -75,8 +75,8 @@ class SpecialCompleteUserInfo extends UnlistedSpecialPage {
 	  		$avatar = $user_info['avatar_large'];
 		}
 		$output = "<form  class='complete-user-info'><p>您当前使用的第三方账号登录，现在我们只需要您补充一点信息</p><input type='text' id='qqloginusername' placeholder='用户名' value='".$nickname."' name='qqloginname'>
+		    <input type='password' id='qqloginpassword'  placeholder=\"请输入密码\" name='qqloginpass'>
 			<input type='email'  id='qqloginemail' placeholder=\"请输入邮箱\" name='qqloginemail'>
-			<input type='password' id='qqloginpassword'  placeholder=\"请输入密码\" name='qqloginpass'>
 			<input id='qqOpenId' type='hidden' value='".$openid."' >
 			<input id='userGender' type='hidden' value='".$gender."' >
 			<input id='userAvatar' type='hidden' value='".$avatar."' >
