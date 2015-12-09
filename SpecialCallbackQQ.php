@@ -43,8 +43,9 @@ class SpecialCallbackQQ extends SpecialPage {
 	        // success login redirect to index
 	        $user = User::newFromId($checkRes);
 	        $user->setCookies(null, null, true);
-	        echo "<script>location.href = document.referrer;</script>";
-	        exit;
+	        //echo "<script>location.href = document.referrer;</script>";
+	        header('Location: http://huiji.wiki/');
+		exit;
 	    }
 	}
 }

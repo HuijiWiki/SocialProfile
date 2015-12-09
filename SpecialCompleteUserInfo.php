@@ -73,16 +73,17 @@ class SpecialCompleteUserInfo extends UnlistedSpecialPage {
 	  		$openid = $uid;
 	  		$avatar = $user_info['avatar_large'];
 		}
-		$output = "<span>您当前使用的第三方账号登录，建议您绑定官方账号更有利于您的账户安全！</span>";
-		$output .= "<form  class='complete-user-info'><label for='qqloginname'>用户名</label><input type='text' id='qqloginusername' class='form-control' value='".$nickname."' name='qqloginname'>
-			<label for='qqloginemail'>邮箱</label><input type='email' class='form-control' id='qqloginemail' placeholder=\"请输入邮箱\" name='qqloginemail'>
-			<label for='qqloginpass'>密码</label><input type='password' id='qqloginpassword' class='form-control' placeholder=\"请输入密码\" name='qqloginpass'>  
+		$output = "<form  class='complete-user-info'><p>您当前使用的第三方账号登录，现在我们只需要您补充一点信息</p><input type='text' id='qqloginusername' placeholder='用户名' value='".$nickname."' name='qqloginname'>
+			<input type='email'  id='qqloginemail' placeholder=\"请输入邮箱\" name='qqloginemail'>
+			<input type='password' id='qqloginpassword'  placeholder=\"请输入密码\" name='qqloginpass'>
 			<input id='qqOpenId' type='hidden' value='".$openid."' >
 			<input id='userGender' type='hidden' value='".$gender."' >
 			<input id='userAvatar' type='hidden' value='".$avatar."' >
-			<input id='userType' type='hidden' value='".$type."' >";
+			<input id='userType' type='hidden' value='".$type."' >
+			<input id='userType' type='hidden' value='".$type."' >
+            <div class='mw-ui-button  mw-ui-block mw-ui-constructive' id='qqConfirm'>提交</div></form>";
 
-		$output .=	'<div class="mw-createacct-benefits-container">'.
+		$output .=	'<div class="mw-createacct-benefits-container unite-container">'.
 			    "<h2>".$this->msg( 'createacct-benefit-heading' )."</h2>".
 			    '<div class="mw-createacct-benefits-list">';
 	
