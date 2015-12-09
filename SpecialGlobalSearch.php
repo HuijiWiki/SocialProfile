@@ -43,7 +43,9 @@ class SpecialGlobalSearch extends SpecialPage {
 		if ( !is_null($key) ) {
 			$resJson = QueryInterface::pageSearch($key,3,0);
 			$resObj = json_decode($resJson);
-			$output .= "<ul class=\"mw-search-results\">";
+			$resCount = $resObj->hits;
+			$output .= "<div class=\"results-info\"><strong>".$resCount."</strong>条结果中的<strong>1~20</strong>条</div>
+					<ul class=\"mw-search-results\">";
 			foreach ($resObj->sites as $value) {
 				$d=strtotime($value->timestamp);
 				$output .= "<li><div class=\"mw-search-result-heading\">
