@@ -125,10 +125,11 @@ class SocialProfileHooks {
 	*
 	*/
 	public static function onResourceLoaderGetConfigVars( array &$vars ) {
-	    global $wgHuijiPrefix, $wgHuijiId, $wgHuijiSuffix;
+	    global $wgHuijiPrefix, $wgHuijiId, $wgHuijiSuffix, $wgCentralServer;
 	    $vars['wgHuijiPrefix'] = $wgHuijiPrefix;
 	    $vars['wgHuijiId'] = $wgHuijiId;
 	    $vars['wgHuijiSuffix'] = $wgHuijiSuffix;
+	    $vars['wgCentralServer'] = $wgCentralServer;
 	    return true;
 	}
 
