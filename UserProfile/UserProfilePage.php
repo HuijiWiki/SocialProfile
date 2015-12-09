@@ -293,6 +293,7 @@ class UserProfilePage extends Article {
 	        if (!empty($editBox[$today])) {
 	        	$editData[] = $today;
 	        }
+	        sort($editData);
 	        $totalEdit = count($editData);
 	        if ($totalEdit > 0){
 		        $resArr[] = strtotime($editData[0]);

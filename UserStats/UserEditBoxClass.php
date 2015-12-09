@@ -17,6 +17,7 @@ class UserEditBox{
 		return $data;
 	}
 	public function getUserEditInfo($userId){
+		$userId = intval($userId);
 		global $wgMemc;
 		$key = wfForeignMemcKey('huiji','', 'user_daily_edit', 'all_days', $userId );
 		$today = date("Y-m-d");
