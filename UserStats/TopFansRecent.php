@@ -145,7 +145,7 @@ class TopFansRecent extends UnlistedSpecialPage {
 		// $output .= '</div>';
 
 		$x = 1;
-		$output .= '<div class="top-users">';
+		$output = '<div class="top-users">';
 
 		foreach ( $user_list as $item ) {
 			$user_title = Title::makeTitle( NS_USER, $item['user_name'] );

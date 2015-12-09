@@ -13,7 +13,7 @@ class TopUsersPoints extends SpecialPage {
 	 * Get a common dropdown for all ranking pages
 	 */
 	public static function getRankingDropdown($activeList){
-		global $wgUser;
+		global $wgUser, $wgHuijiSuffix;
 		$templateParser = new TemplateParser(  __DIR__  );
 		$followed = UserSiteFollow::getTopFollowedSitesWithDetails($wgUser->getId(), $wgUser->getId());
 		$output = $templateParser->processTemplate(
@@ -22,6 +22,7 @@ class TopUsersPoints extends SpecialPage {
 				    	'activeList' => $activeList,
 				    	'followed' => $followed,
 				    	'hasFollowed' => count($followed) > 0,
+				    	'wgHuijiSuffix' => $wgHuijiSuffix,
 				    )
 				);
 		return $output;

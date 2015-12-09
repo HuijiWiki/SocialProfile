@@ -30,7 +30,7 @@ class SpecialCallbackWeibo extends UnlistedSpecialPage {
 	 * @param $params Mixed: parameter(s) passed to the page or null
 	 */
 	public function execute( $params ) {
-		global $wgUser;
+		global $wgUser, $wgCentralServer;
 		// echo "wb";die;
 		$request = $this->getRequest();
 		$code = $request->getVal( 'code' );
@@ -54,7 +54,7 @@ class SpecialCallbackWeibo extends UnlistedSpecialPage {
 		$qq_sdk = new QqSdk();
   	        $checkRes = $qq_sdk->checkOauth( $uid, 'weibo' );
 	    if( $checkRes == null ){
-	        header('Location: http://huiji.wiki/wiki/special:completeuserinfo?type=weibo&code='.$token['access_token']);
+	        header('Location: '.$wgCentralServer.'/wiki/special:completeuserinfo?type=weibo&code='.$token['access_token']);
 	        exit;
 	    }else{
 	        // success login redirect to index
@@ -65,7 +65,7 @@ class SpecialCallbackWeibo extends UnlistedSpecialPage {
 		$request->setSessionData( 'wsLoginToken', null );
 		$this->getContext()->setUser( $user );
 	        $user->setCookies(null, null, true);
-	        header('Location: http://www.huiji.wiki/');
+	        header('Location: '.$wgCentralServer);
 	        exit;
 	    }
 	}

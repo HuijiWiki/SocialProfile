@@ -30,6 +30,7 @@ class SpecialCallbackQQ extends SpecialPage {
 	 * @param $params Mixed: parameter(s) passed to the page or null
 	 */
 	public function execute( $params ) {
+		global $wgCentralServer;
 		$request = $this->getRequest();
 		$code = $request->getVal( 'code' );
 		$qq_sdk = new QqSdk();
@@ -37,7 +38,7 @@ class SpecialCallbackQQ extends SpecialPage {
 	    $open_id = $qq_sdk->get_open_id($token['access_token']);
 	    $checkRes = $qq_sdk->checkOauth( $open_id['openid'], 'qq' );
 	    if( $checkRes == null ){
-	        header('Location: http://huiji.wiki/wiki/special:completeuserinfo?type=qq&code='.$token['access_token']);
+	        header('Location: '.$wgCentralServer.'/wiki/special:completeuserinfo?type=qq&code='.$token['access_token']);
 	        exit;
 	    }else{
 	        // success login redirect to index
@@ -49,7 +50,7 @@ class SpecialCallbackQQ extends SpecialPage {
 		$this->getContext()->setUser( $user );
 	        $user->setCookies(null, null, true);
 	        //echo "<script>location.href = document.referrer;</script>";
-	        header('Location: http://www.huiji.wiki/');
+	        header('Location: '.$wgCentralServer);
 		exit;
 	    }
 	}

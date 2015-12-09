@@ -29,7 +29,7 @@ class SpecialGlobalSearch extends SpecialPage {
 	 * @param $params Mixed: parameter(s) passed to the page or null
 	 */
 	public function execute( $params ) {
-		global $wgParser;
+		global $wgParser, $wgHuijiSuffix;
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$key = empty($request->getVal( 'key' ))?null:$request->getVal( 'key' );
@@ -50,7 +50,7 @@ class SpecialGlobalSearch extends SpecialPage {
 				$d=strtotime($value->timestamp);
 				$output .= "<li><div class=\"mw-search-result-heading\">
 									<a href=\"http://".$value->address."\">".$value->title."</a><br>
-									<a href=\"http://".$value->sitePrefix.".huiji.wiki\">".$value->siteName."</a>
+									<a href=\"http://".$value->sitePrefix.$wgHuijiSuffix."\">".$value->siteName."</a>
 								</div>
 								<div class=\"searchresult\">".$value->content."
 								</div>

@@ -5,7 +5,7 @@ class SpecialRandomwiki extends SpecialPage {
 	}
 
 	public function execute( $par ) {
-		global $wgCookieDomain;
+		global $wgCookieDomain, $wgHuijiSuffix;
 		$prefix = HuijiPrefix::getRandomPrefix();
 
 		if ( is_null ($prefix) ) {
@@ -13,7 +13,7 @@ class SpecialRandomwiki extends SpecialPage {
 			$this->getOutput()->addWikiMsg( strtolower( $this->getName() ) . '-nopages');
 			return;
 		}
-		$this->getOutput()->redirect( 'http://'.$prefix.'.huiji.wiki' );
+		$this->getOutput()->redirect( 'http://'.$prefix.$wgHuijiSuffix );
 	}
 	function getGroupName() {
     		return 'redirects';

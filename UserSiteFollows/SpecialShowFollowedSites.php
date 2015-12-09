@@ -28,7 +28,7 @@ class SpecialShowFollowedSites extends SpecialPage {
 	 * @param $params Mixed: parameter(s) passed to the page or null
 	 */
 	public function execute( $params ) {
-		global $wgUser,$wgSitename,$wgHuijiPrefix,$wgUserLevels;
+		global $wgUser,$wgSitename,$wgHuijiPrefix,$wgUserLevels,$wgHuijiSuffix;
 		$lang = $this->getLanguage();
 		$out = $this->getOutput();
 		$request = $this->getRequest();
@@ -85,13 +85,13 @@ class SpecialShowFollowedSites extends SpecialPage {
 			$domain_name = $user['key'];
 			$is_follow = $user['is'];
 			if ( $user_id == '' || $user_id == 0 ) {
-				$output .= '<div class=\"top-fan-row\"><a href=http://'.$domain_name.'.huiji.wiki class="list-group-item">' .$site_name .'</a>';
+				$output .= '<div class=\"top-fan-row\"><a href=http://'.$domain_name.$wgHuijiSuffix.' class="list-group-item">' .$site_name .'</a>';
 				
 			}else{
 				if ($is_follow == 'Y') {
-					$output .= '<div class=\"top-fan-row\"><a href=http://'.$domain_name.'.huiji.wiki class="list-group-item">' .$site_name .'<span class="badge user-site-follow-from-modal unfollow">取关</span></a>';
+					$output .= '<div class=\"top-fan-row\"><a href=http://'.$domain_name.$wgHuijiSuffix.' class="list-group-item">' .$site_name .'<span class="badge user-site-follow-from-modal unfollow">取关</span></a>';
 				}else{
-					$output .= '<div class=\"top-fan-row\"><a href=http://'.$domain_name.'.huiji.wiki class="list-group-item">' .$site_name .'<span class="badge user-site-follow-from-modal">关注</span></a>';
+					$output .= '<div class=\"top-fan-row\"><a href=http://'.$domain_name.$wgHuijiSuffix.' class="list-group-item">' .$site_name .'<span class="badge user-site-follow-from-modal">关注</span></a>';
 				}
 			}
 			$output .= '<div class="cleared"></div>';
