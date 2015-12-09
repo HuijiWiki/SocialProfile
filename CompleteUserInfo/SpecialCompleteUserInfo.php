@@ -41,6 +41,7 @@ class SpecialCompleteUserInfo extends UnlistedSpecialPage {
 			return false;
 		}
 		$out->addModuleStyles('mediawiki.special.userlogin.signup.styles');
+		$out->addModuleStyles('ext.socialprofile.userinfo.css');
 		if( $type == 'qq' ){
 			$qq_sdk = new QqSdk();
 			$open_id = $qq_sdk->get_open_id($access_token);
@@ -74,14 +75,14 @@ class SpecialCompleteUserInfo extends UnlistedSpecialPage {
 	  		$avatar = $user_info['avatar_large'];
 		}
 		$output = "<form  class='complete-user-info'><p>您当前使用的第三方账号登录，现在我们只需要您补充一点信息</p><input type='text' id='qqloginusername' placeholder='用户名' value='".$nickname."' name='qqloginname'>
+		    <input type='password' id='qqloginpassword'  placeholder=\"请输入密码\" name='qqloginpass'>
 			<input type='email'  id='qqloginemail' placeholder=\"请输入邮箱\" name='qqloginemail'>
-			<input type='password' id='qqloginpassword'  placeholder=\"请输入密码\" name='qqloginpass'>
 			<input id='qqOpenId' type='hidden' value='".$openid."' >
 			<input id='userGender' type='hidden' value='".$gender."' >
 			<input id='userAvatar' type='hidden' value='".$avatar."' >
 			<input id='userType' type='hidden' value='".$type."' >
 			<input id='userType' type='hidden' value='".$type."' >
-            <div class='mw-ui-button  mw-ui-block mw-ui-constructive' id='qqConfirm'>提交</div></form>";
+            <div class='mw-ui-button  mw-ui-block mw-ui-constructive btn' data-loading-text='提交中...' id='qqConfirm'>提交</div></form>";
 
 		$output .=	'<div class="mw-createacct-benefits-container unite-container">'.
 			    "<h2>".$this->msg( 'createacct-benefit-heading' )."</h2>".

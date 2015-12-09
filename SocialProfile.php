@@ -85,7 +85,7 @@ $wgAutoloadClasses['SpecialAdminDashboard'] = __DIR__ . '/AdminDashboard/Special
 $wgAutoloadClasses['SpecialSiteRank'] = __DIR__ . '/SiteStatus/SpecialSiteRank.php';
 $wgAutoloadClasses['AllSitesInfo'] = __DIR__ . '/SiteStatus/AllSitesInfoClass.php';
 $wgAutoloadClasses['RecordStatistics'] = __DIR__ . '/HuijiStatistics/interface.php';
-$wgAutoloadClasses['SpecialCompleteUserInfo'] = __DIR__ . '/SpecialCompleteUserInfo.php';
+$wgAutoloadClasses['SpecialCompleteUserInfo'] = __DIR__ . '/CompleteUserInfo/SpecialCompleteUserInfo.php';
 $wgAutoloadClasses['QqSdk'] = __DIR__ . '/UserProfile/QqSdkClass.php';
 $wgAutoloadClasses['SaeTOAuthV2'] = __DIR__ . '/UserProfile/weiboSdkClass.php';
 $wgAutoloadClasses['SaeTClientV2'] = __DIR__ . '/UserProfile/weiboSdkClass.php';
@@ -304,6 +304,13 @@ $wgResourceModules['ext.socialprofile.userboard.css'] = array(
 	'styles' => 'UserBoard.css',
 	'localBasePath' => __DIR__ . '/UserBoard',
 	'remoteExtPath' => 'SocialProfile/UserBoard',
+	'position' => 'top' // just in case
+);
+
+$wgResourceModules['ext.socialprofile.userinfo.css'] = array(
+	'styles' => 'userinfo.css',
+	'localBasePath' => __DIR__ . '/CompleteUserInfo',
+	'remoteExtPath' => 'SocialProfile/CompleteUserInfo',
 	'position' => 'top' // just in case
 );
 
