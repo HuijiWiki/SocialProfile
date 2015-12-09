@@ -14,10 +14,11 @@ class UserEditBox{
 		global $wgMemc;
 		$key = wfForeignMemcKey('huiji','', 'user_daily_edit', 'all_days', $userId );
 		$data = $wgMemc->get( $key );
-		return '';
+		return $data;
 	}
 	public function getUserEditInfo($userId){
-		global $wgMemc;
+		global $wgMemc, $wgUser;
+		$userId = intval($userId);
 		$key = wfForeignMemcKey('huiji','', 'user_daily_edit', 'all_days', $userId );
 		$today = date("Y-m-d");
 		$oneYearAgo = date("Y-m-d",strtotime("-1 year"));
