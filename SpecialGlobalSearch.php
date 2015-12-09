@@ -20,7 +20,7 @@ class SpecialGlobalSearch extends SpecialPage {
 	 * @return string
 	 */
 	function getGroupName() {
-		return 'users';
+		return 'wiki';
 	}
 
 	/**

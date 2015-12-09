@@ -26,7 +26,7 @@ class UserEditBox{
 		if($userEditInfo == ''){
 			$receive = RecordStatistics::getAllPageEditRecordsFromUserIdGroupByDay( $userId, $oneYearAgo, $yesterday );
 			if($receive->status == 'success'){
-				$userEditInfo = $receive->value;
+				$userEditInfo = $receive->result;
 				$userEditInfo['lastSeen'] = $today;
 				$wgMemc->set( $key, $userEditInfo );
 			}else{
@@ -38,7 +38,7 @@ class UserEditBox{
 			}
 			$Delres = array();
 			if($userEditInfo['lastSeen'] == $yesterday){
-				$receive = RecordStatistics::getPageEditCountOnWikiSiteFromUserId( $userId, '', $yesterday, $yesterday);
+				$receive = RecordStatistics::getAllPageEditRecordsFromUserIdGroupByDay( $userId, $yesterday, $yesterday);
 				if($receive->status == 'success'){
 					$Beres = $receive->result;
 					$Delres['_id'] = $yesterday;
