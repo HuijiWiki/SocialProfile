@@ -184,7 +184,7 @@ jQuery( document ).ready( function() {
 		event.preventDefault();
 		var that = $(this);
 		var server = that.parent().attr('href');
-		server = server.replace('http://','').replace('.huiji.wiki','');
+		server = server.replace('http://','').replace(mw.config.get('wgHuijiSuffix'),'');
 		if (userSiteFollows.submitted == true){
 			return;
 		}
