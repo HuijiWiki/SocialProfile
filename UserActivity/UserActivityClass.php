@@ -1787,7 +1787,7 @@ class UserActivity {
 				return array(
 				    'class' => 'ForeignDBRepo',
 				    'name' => $dotPrefix,
-				    'url' => "{$wgCdnScriptPath}/uploads",
+				    'url' => "http://cdn.huijiwiki.com/{$dotPrefix}/uploads",
 				    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
 				    'hashLevels' => 2, // This must be the same for the other family member
 				    'thumbScriptUrl' => $wgSharedThumbnailScriptPath,
@@ -1808,7 +1808,7 @@ class UserActivity {
 				return array(
 				    'class' => 'ForeignDBRepo',
 				    'name' => $dotPrefix,
-				    'url' => "{$wgCdnScriptPath}/uploads",
+				    'url' => "http://cdn.huijiwiki.com/{$dotPrefix}/uploads",
 				    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
 				    'hashLevels' => 2, // This must be the same for the other family member
 				    'thumbScriptUrl' => $wgSharedThumbnailScriptPath,
