@@ -14,9 +14,10 @@ class UserEditBox{
 		global $wgMemc;
 		$key = wfForeignMemcKey('huiji','', 'user_daily_edit', 'all_days', $userId );
 		$data = $wgMemc->get( $key );
-		return '';
+		return $data;
 	}
 	public function getUserEditInfo($userId){
+		global $wgMemc, $wgUser;
 		$userId = intval($userId);
 		global $wgMemc;
 		$key = wfForeignMemcKey('huiji','', 'user_daily_edit', 'all_days', $userId );
