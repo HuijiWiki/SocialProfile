@@ -1800,7 +1800,7 @@ class UserActivity {
 				    'dbName' => "huiji_sites",
 				    'tablePrefix' => $lowDashPrefix,
 				    'hasSharedCache' => false,
-				    'descBaseUrl' => "http://{$dotPrefix}.{$wgHuijiSuffix}/wiki/File:",
+				    'descBaseUrl' => "http://{$dotPrefix}{$wgHuijiSuffix}/wiki/File:",
 				    'fetchDescription' => false,
 				    'backend' => 'local-backend'				
 				);
@@ -1821,7 +1821,7 @@ class UserActivity {
 				    'dbName' => "huiji_home",
 				    'tablePrefix' => '',
 				    'hasSharedCache' => false,
-				    'descBaseUrl' => "http://{$dotPrefix}.{$wgHuijiSuffix}/wiki/File:",
+				    'descBaseUrl' => "http://{$dotPrefix}{$wgHuijiSuffix}/wiki/File:",
 				    'fetchDescription' => false,
 				    'backend' => 'local-backend'				
 				);
@@ -1832,7 +1832,7 @@ class UserActivity {
 		return array(
 		    'class' => 'ForeignDBRepo',
 		    'name' => $dotPrefix,
-		    'url' => "http://{$dotPrefix}.{$wgHuijiSuffix}/uploads",
+		    'url' => "http://{$dotPrefix}{$wgHuijiSuffix}/uploads",
 		    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
 		    'hashLevels' => 0, // This must be the same for the other family member
 		    'thumbScriptUrl' => $wgSharedThumbnailScriptPath,
@@ -1845,7 +1845,7 @@ class UserActivity {
 		    'dbName' => $dbname,
 		    'tablePrefix' => '',
 		    'hasSharedCache' => false,
-		    'descBaseUrl' => "http://{$dotPrefix}.{$wgHuijiSuffix}/wiki/File:",
+		    'descBaseUrl' => "http://{$dotPrefix}{$wgHuijiSuffix}/wiki/File:",
 		    'fetchDescription' => false,
 		    'backend' => 'local-backend'
 		);
