@@ -191,9 +191,9 @@ class CropAvatar {
       $this -> msg = $this -> codeToMessage($errorCode);
     }
   }
-  private function cleanUp ($ext, $avatarkey, $uid){
+  private function cleanUp ($ext, $avatarKey, $uid){
     global $wgMemc;
-    if ( $ext != 'jpg' ) {
+    if ( $ext !== 'jpg' ) {
       if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.jpg' ) ) {
         unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.jpg' );
       }
@@ -207,7 +207,7 @@ class CropAvatar {
         unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_ml.jpg' );
       }
     }
-    if ( $ext != 'gif' ) {
+    if ( $ext !== 'gif' ) {
       if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.gif' ) ) {
         unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.gif' );
       }
@@ -221,7 +221,7 @@ class CropAvatar {
         unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_ml.gif' );
       }
     }
-    if ( $ext != 'png' ) {
+    if ( $ext !== 'png' ) {
       if ( is_file( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.png' ) ) {
         unlink( $this->avatarUploadDirectory . '/' . $avatarKey . '_' . $uid . '_s.png' );
       }
