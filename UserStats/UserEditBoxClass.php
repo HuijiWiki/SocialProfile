@@ -44,7 +44,7 @@ class UserEditBox{
 				if($receive->status == 'success'){
 					$Beres = $receive->result;
 					$Delres['_id'] = $yesterday;
-					$Delres['value'] = $Beres;
+					$Delres['value'] = $Beres[0]->value;
 					$resData[] = (object)$Delres;
 					$userEditInfo = array_merge($userEditInfo, $resData);
 					$userEditInfo['lastSeen'] = $today;
