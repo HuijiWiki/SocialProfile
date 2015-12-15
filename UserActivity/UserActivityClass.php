@@ -164,7 +164,9 @@ class UserActivity {
 			// die(1);
 			$tables = array();
 			foreach( $values as $value ){
-				$tables[] = $value->domain_prefix;
+				if ( !is_null($value->domain_prefix) ) {
+					$tables[] = $value->domain_prefix;
+				}
 			}			
 		}
 		$this->cached_tables = $tables;

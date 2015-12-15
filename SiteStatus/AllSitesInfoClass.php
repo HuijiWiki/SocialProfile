@@ -105,15 +105,17 @@ class AllSitesInfo{
 		$editDate = array();
 		$editUserDate = array();
 		foreach ($allSite as $value) {
-			$viewResult['yesterday'] = $ueb->getSiteViewCount( '', $value, $yesterday, $yesterday );
-			$viewResult['week'] = $ueb->getSiteViewCount( '', $value, $lastWeek, $yesterday );
-			$viewResult['month'] = $ueb->getSiteViewCount( '', $value, $lastMonth, $yesterday );
-			$editResult['yesterday'] = $ueb->getSiteEditCount( '', $value, $yesterday, $yesterday );
-			$editResult['week'] = $ueb->getSiteEditCount( '', $value, $lastWeek, $yesterday );
-			$editResult['month'] = $ueb->getSiteEditCount( '', $value, $lastMonth, $yesterday );
-			$viewDate[$value] = round($viewResult['yesterday']+$viewResult['week']/7+$viewResult['month']/30);
-			$editDate[$value] = round($editResult['yesterday']+$editResult['week']/7+$editResult['month']/30);
-			$editUserDate[$value] = round(isset($editUserYesterday[$value])?$editUserYesterday[$value]:0+(isset($editUserWeek[$value])?$editUserWeek[$value]:0)/7+(isset($editUserMonth[$value])?$editUserMonth[$value]:0)/30);
+			if ( !is_null($value) ) {
+				$viewResult['yesterday'] = $ueb->getSiteViewCount( '', $value, $yesterday, $yesterday );
+				$viewResult['week'] = $ueb->getSiteViewCount( '', $value, $lastWeek, $yesterday );
+				$viewResult['month'] = $ueb->getSiteViewCount( '', $value, $lastMonth, $yesterday );
+				$editResult['yesterday'] = $ueb->getSiteEditCount( '', $value, $yesterday, $yesterday );
+				$editResult['week'] = $ueb->getSiteEditCount( '', $value, $lastWeek, $yesterday );
+				$editResult['month'] = $ueb->getSiteEditCount( '', $value, $lastMonth, $yesterday );
+				$viewDate[$value] = round($viewResult['yesterday']+$viewResult['week']/7+$viewResult['month']/30);
+				$editDate[$value] = round($editResult['yesterday']+$editResult['week']/7+$editResult['month']/30);
+				$editUserDate[$value] = round(isset($editUserYesterday[$value])?$editUserYesterday[$value]:0+(isset($editUserWeek[$value])?$editUserWeek[$value]:0)/7+(isset($editUserMonth[$value])?$editUserMonth[$value]:0)/30);
+			}
 		}
 		//sort arr
 		asort($viewDate);
@@ -265,12 +267,16 @@ class AllSitesInfo{
 		$allSite = HuijiPrefix::getAllPrefix();
 		$editCount = 0;
 		foreach ($allSite as $prefix) {
-			if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
-				$prefix = 'huiji_home';
-			}elseif ( $isProduction == true ) {
-				$prefix = 'huiji_sites-'.str_replace('.', '_', $prefix);
+			if ( !is_null($prefix) ) {
+				if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
+					$prefix = 'huiji_home';
+				}elseif ( $isProduction == true ) {
+					$prefix = 'huiji_sites-'.str_replace('.', '_', $prefix);
+				}else{
+					$prefix = 'huiji_'.str_replace('.', '_', $prefix);
+				}
 			}else{
-				$prefix = 'huiji_'.str_replace('.', '_', $prefix);
+				die( "error: empty $prefix;function:getAllSiteEditCount.\n" );
 			}
 			$dbr = wfGetDB( DB_SLAVE,$groups = array(),$wiki = $prefix );
 			$res = $dbr->select(
@@ -296,12 +302,16 @@ class AllSitesInfo{
 		$allSite = HuijiPrefix::getAllPrefix();
 		$fileCount = 0;
 		foreach ($allSite as $prefix) {
-			if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
-				$prefix = 'huiji_home';
-			}elseif ( $isProduction == true ) {
-				$prefix = 'huiji_sites-'.str_replace('.', '_', $prefix);
+			if ( !is_null($prefix) ) {
+				if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
+					$prefix = 'huiji_home';
+				}elseif ( $isProduction == true ) {
+					$prefix = 'huiji_sites-'.str_replace('.', '_', $prefix);
+				}else{
+					$prefix = 'huiji_'.str_replace('.', '_', $prefix);
+				}
 			}else{
-				$prefix = 'huiji_'.str_replace('.', '_', $prefix);
+				die( "error: empty $prefix;function:getAllUploadFileCount.\n" );
 			}
 			$dbr = wfGetDB( DB_SLAVE,$groups = array(),$wiki = $prefix );
 			$res = $dbr->select(
@@ -325,12 +335,16 @@ class AllSitesInfo{
 		$allSite = HuijiPrefix::getAllPrefix();
 		$pageCount = 0;
 		foreach ($allSite as $prefix) {
-			if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
-				$prefix = 'huiji_home';
-			}elseif ( $isProduction == true ) {
-				$prefix = 'huiji_sites-'.str_replace('.', '_', $prefix);
+			if ( !is_null($prefix) ) {
+				if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
+					$prefix = 'huiji_home';
+				}elseif ( $isProduction == true ) {
+					$prefix = 'huiji_sites-'.str_replace('.', '_', $prefix);
+				}else{
+					$prefix = 'huiji_'.str_replace('.', '_', $prefix);
+				}
 			}else{
-				$prefix = 'huiji_'.str_replace('.', '_', $prefix);
+				die( "error: empty $prefix;function:getAllPageCount.\n" );
 			}
 			$dbr = wfGetDB( DB_SLAVE,$groups = array(),$wiki = $prefix );
 			$res = $dbr->select(
