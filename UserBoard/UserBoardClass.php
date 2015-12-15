@@ -350,6 +350,13 @@ class UserBoard {
 			$parser = new Parser();
 			$message_text = $parser->parse( $row->ub_message, $wgTitle, $wgOut->parserOptions(), true );
 			$message_text = $message_text->getText();
+			// make sure link text is not too long (will overflow)
+			// this function changes too long links to <a href=#>http://www.abc....xyz.html</a>
+			$message_text = preg_replace_callback(
+				"/(<a[^>]*>)(.*?)(<\/a>)/i",
+				array( 'HuijiFunctions', 'cutCommentLinkText' ),
+				$message_text
+			);
 
 			$messages[] = array(
 				'id' => $row->ub_id,
