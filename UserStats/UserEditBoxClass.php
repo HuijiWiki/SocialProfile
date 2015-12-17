@@ -42,13 +42,15 @@ class UserEditBox{
 			if($userEditInfo['lastSeen'] == $yesterday){
 				$receive = RecordStatistics::getAllPageEditRecordsFromUserIdGroupByDay( $userId, $yesterday, $yesterday);
 				if($receive->status == 'success'){
-					$Beres = $receive->result;
-					$Delres['_id'] = $yesterday;
-					$Delres['value'] = $Beres[0]->value;
-					$resData[] = (object)$Delres;
-					$userEditInfo = array_merge($userEditInfo, $resData);
-					$userEditInfo['lastSeen'] = $today;
-					$wgMemc->set( $key, $userEditInfo );		
+					if ( $receive->result != '' ) {
+						$Beres = $receive->result;
+						$Delres['_id'] = $yesterday;
+						$Delres['value'] = $Beres[0]->value;
+						$resData[] = (object)$Delres;
+						$userEditInfo = array_merge($userEditInfo, $resData);
+						$userEditInfo['lastSeen'] = $today;
+						$wgMemc->set( $key, $userEditInfo );
+					}
 				}else{
 					throw new Exception("Error getUserEditInfo/getPageEditCountOnWikiSiteFromUserId Bad Request");
 				}
