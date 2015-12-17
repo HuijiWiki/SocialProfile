@@ -40,28 +40,27 @@ class SpecialGlobalSearch extends SpecialPage {
 		$this->setHeaders();
 		$output = "<span>global search</span>";
 		$output .= "<form method='get' action='/wiki/special:globalsearch' >
-			<input type='text' name='key' >
+			<input type='text' name='key' value='".$key."' >
 			<input class='mw-ui-button mw-ui-progressive' type='submit' value='搜索'>
 			</form>";
 		if ( !is_null($key) ) {
 			$resJson = QueryInterface::pageSearch($key, $per_page, $star_page);
 			$resObj = json_decode($resJson);
-			if ( $resObj == null ) {
+			$resCount = $resObj->hits;
+			if ( $resCount == 0 ) {
 				$output .= "暂时没有此词条";
-				$resCount = 0;
 			}else{
-				$resCount = $resObj->hits;
 				$output .= "<div class=\"results-info\"><strong>".$resCount."</strong>条结果中的<strong>".$star_page."<span>到</span>".($per_page*$page)."</strong>条</div>
 						<ul class=\"mw-search-results\">";
 				foreach ($resObj->sites as $value) {
-					$d=strtotime($value->timestamp);
+					$d = strtotime($value->timestamp);
 					$output .= "<li><div class=\"mw-search-result-heading\">
 										<a href=\"http://".$value->address."\">".$value->title."</a><br>
 										<a href=\"http://".$value->sitePrefix.$wgHuijiSuffix."\">".$value->siteName."</a>
 									</div>
 									<div class=\"searchresult\">".$value->content."
 									</div>
-									<div class=\"mw-search-result-data\">".date("Y年m月d日 h:i", $d)."
+									<div class=\"mw-search-result-data\">".date("Y年m月d日 h:i:s", $d)."
 									</div>
 								</li>";
 				}

@@ -5,7 +5,7 @@ class QueryInterface
 
 	static function curl_post_json($type,$op,$data_string)
 	{
-		$url =  'http://test.huiji.wiki:8080/queryTest/webapi/'.$type.'/'.$op;
+		$url =  'http://test.huiji.wiki:8080/queryService/webapi/'.$type.'/'.$op;
 		$header = array(
 			'Content-Type: application/json',
 			'Content-Length: '.strlen($data_string),
