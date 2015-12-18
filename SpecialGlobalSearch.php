@@ -35,7 +35,7 @@ class SpecialGlobalSearch extends SpecialPage {
 		$key = empty($request->getVal( 'key' ))?null:$request->getVal( 'key' );
 		$page = empty($request->getVal('page'))?1:$request->getVal('page');
 		$per_page = 10;
-		$star_page = $per_page*($page-1)+1;
+		$star_page = $per_page*($page-1);
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
 		$output = "<span>global search</span>";
@@ -50,7 +50,7 @@ class SpecialGlobalSearch extends SpecialPage {
 			if ( $resCount == 0 ) {
 				$output .= "暂时没有此词条";
 			}else{
-				$output .= "<div class=\"results-info\"><strong>".$resCount."</strong>条结果中的<strong>".$star_page."<span>到</span>".($per_page*$page)."</strong>条</div>
+				$output .= "<div class=\"results-info\"><strong>".$resCount."</strong>条结果中的<strong>".($star_page+1)."<span>到</span>".($per_page*$page)."</strong>条</div>
 						<ul class=\"mw-search-results\">";
 				foreach ($resObj->sites as $value) {
 					$d = strtotime($value->timestamp);
