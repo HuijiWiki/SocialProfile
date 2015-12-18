@@ -38,7 +38,7 @@ class SpecialGlobalSearch extends SpecialPage {
 		$star_page = $per_page*($page-1);
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
-		$output = "<span>global search</span>";
+		$output = "";
 		$output .= "<form method='get' action='/wiki/special:globalsearch' >
 			<input type='text' name='key' value='".$key."' >
 			<input class='mw-ui-button mw-ui-progressive' type='submit' value='搜索'>
@@ -66,14 +66,33 @@ class SpecialGlobalSearch extends SpecialPage {
 				}
 				$output .= '</ul>';
 			}
+			/**
+			 * Build next/prev navigation links
+			 */
 			$pcount = $resCount;
-			$numofpages = $pcount / $per_page;
-
 			$page_link = $this->getPageTitle();
-
+			$numofpages = $pcount / $per_page;
+			// Middle is used to "center" pages around the current page.
+			$pager_middle = ceil( $per_page / 2 );
+			// first is the first page listed by this pager piece (re quantity)
+			$pagerFirst = $page - $pager_middle + 1;
+			// last is the last page listed by this pager piece (re quantity)
+			$pagerLast = $page + $per_page - $pager_middle;
+			// Prepare for generation loop.
+			$i = $pagerFirst;
+			if ( $pagerLast > $numofpages ) {
+				// Adjust "center" if at end of query.
+				$i = $i + ( $numofpages - $pagerLast );
+				$pagerLast = $numofpages;
+			}
+			if ( $i <= 0 ) {
+				// Adjust "center" if at start of query.
+				$pagerLast = $pagerLast + ( 1 - $i );
+				$i = 1;
+			}
 			if ( $numofpages > 1 ) {
 				$output .= '<div class="page-nav-wrapper"><nav class="page-nav pagination">';
-
+				$pagerEllipsis = '<li><span>...</span></li>';
 				if ( $page > 1 ) {
 					$output .= '<li>'.Linker::link(
 						$page_link,
@@ -92,27 +111,61 @@ class SpecialGlobalSearch extends SpecialPage {
 				}
 				if ( $numofpages >= 9 && $page < $pcount ) {
 					$numofpages = 9 + $page;
+					if ( $numofpages >= ( $pcount / $per_page ) ) {
+						$numofpages = ( $pcount / $per_page ) + 1;
+					}
 				}
-				// if ( $numofpages >= ( $total / $per_page ) ) {
-				// 	$numofpages = ( $total / $per_page ) + 1;
-				// }
-
-				for ( $i = 1; $i <= $numofpages; $i++ ) {
-					if ( $i == $page ) {
-						$output .= ( '<li class="active"><a href="#">'.$i.' <span class="sr-only">(current)</span></a></li>' );
-					} else {
-						$output .= '<li>' .Linker::link(
+				// Whether to display the "First page" link
+				if ( $i > 1 ) {
+					$output .= '<li>' .
+						Linker::link(
 							$page_link,
-							$i,
+							1,
 							array(),
 							array(
 								'key' => $key,
-								'page' => $i
+								// 'rel_type' => $rel_type,
+								'page' => 1
 							)
-						);
+						).'</li>';	
+				}
+				// When there is more than one page, create the pager list.
+				if ( $i != $numofpages ) {
+					if ( $i > 2 ) {
+						$output .= $pagerEllipsis;
+					}
+					for ( ; $i <= $pagerLast && $i <= $numofpages; $i++ ) {
+						if ( $i == $page ) {
+							$output .= ( '<li class="active"><a href="#">'.$i.' <span class="sr-only">(current)</span></a></li>' );
+						} else {
+							$output .= '<li>' .Linker::link(
+								$page_link,
+								$i,
+								array(),
+								array(
+									'key' => $key,
+									'page' => $i
+								)
+							).'</li>';
+						}
+					}
+					if ( $i < $numofpages ) {
+						$output .= $pagerEllipsis;
 					}
 				}
-
+				// Whether to display the "Last page" link
+				if ( $numofpages > ( $i - 1 ) ) {
+					$output .= '<li>' .
+						Linker::link(
+							$page_link,
+							$pcount,
+							array(),
+							array(
+								'key' => $key,
+								'page' => $pcount
+							)
+						).'</li>';
+				}
 				if ( ( $pcount - ( $per_page * $page ) ) > 0 ) {
 					$output .= '<li>' .
 						Linker::link(
@@ -126,7 +179,6 @@ class SpecialGlobalSearch extends SpecialPage {
 							)
 						).'</li>';	
 				}
-
 				$output .= '</nav></div>';
 			}
 		}
