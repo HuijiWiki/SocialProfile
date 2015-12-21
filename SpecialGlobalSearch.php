@@ -71,7 +71,7 @@ class SpecialGlobalSearch extends SpecialPage {
 			 */
 			$pcount = $resCount;
 			$page_link = $this->getPageTitle();
-			$numofpages = $pcount / $per_page;
+			$numofpages = ceil($pcount / $per_page);
 			// Middle is used to "center" pages around the current page.
 			$pager_middle = ceil( $per_page / 2 );
 			// first is the first page listed by this pager piece (re quantity)
@@ -106,15 +106,15 @@ class SpecialGlobalSearch extends SpecialPage {
 					) . '</li>';
 				}
 
-				if ( ( $pcount % $per_page ) != 0 ) {
-					$numofpages++;
-				}
-				if ( $numofpages >= 9 && $page < $pcount ) {
-					$numofpages = 9 + $page;
-					if ( $numofpages >= ( $pcount / $per_page ) ) {
-						$numofpages = ( $pcount / $per_page ) + 1;
-					}
-				}
+				// if ( ( $pcount % $per_page ) != 0 ) {
+				// 	$numofpages++;
+				// }
+				// if ( $numofpages >= 9 && $page < $pcount ) {
+				// 	$numofpages = 9 + $page;
+				// 	if ( $numofpages >= ( $pcount / $per_page ) ) {
+				// 		$numofpages = ( $pcount / $per_page ) + 1;
+				// 	}
+				// }
 				// Whether to display the "First page" link
 				if ( $i > 1 ) {
 					$output .= '<li>' .
@@ -158,11 +158,11 @@ class SpecialGlobalSearch extends SpecialPage {
 					$output .= '<li>' .
 						Linker::link(
 							$page_link,
-							$pcount,
+							$numofpages,
 							array(),
 							array(
 								'key' => $key,
-								'page' => $pcount
+								'page' => $numofpages
 							)
 						).'</li>';
 				}
