@@ -379,22 +379,5 @@ class SystemGifts {
 		}
 		return true;
 	}
-	/**
-	 * 7 xi
-	 */
-	static function getOneDayPageEditCountOnAllWikisFromUserId($userId){
-        $url =  'http://10.251.139.166:50007/getOneDayPageEditCountOnAllWikisFromUserId/';
-        $curl_opt_a = array(
-                CURLOPT_URL => $url,
-                CURLOPT_RETURNTRANSFER => 1,
-                CURLOPT_TIMEOUT => 1,
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => "userId=".$userId,
-        );
-        $ch = curl_init();
-        curl_setopt_array($ch,$curl_opt_a);
-        $out = curl_exec($ch);
-        curl_close($ch);
-        return json_decode($out)->result;
-	}
+	
 }

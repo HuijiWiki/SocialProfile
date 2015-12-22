@@ -92,6 +92,7 @@ $wgAutoloadClasses['SaeTClientV2'] = __DIR__ . '/UserProfile/weiboSdkClass.php';
 $wgAutoloadClasses['SpecialCallbackQQ'] = __DIR__ . '/SpecialCallbackQQ.php';
 $wgAutoloadClasses['SpecialCallbackWeibo'] = __DIR__ . '/SpecialCallbackWeibo.php';
 $wgAutoloadClasses['SpecialGlobalSearch'] = __DIR__ . '/SpecialGlobalSearch.php';
+$wgAutoloadClasses['SpecialUploadFiles'] = __DIR__ . '/SpecialUploadFiles.php';
 $wgAutoloadClasses['QueryInterface'] = __DIR__ . '/QueryInterface.php';
 
 // New special pages
@@ -124,6 +125,7 @@ $wgSpecialPages['CompleteUserInfo'] = 'SpecialCompleteUserInfo';
 $wgSpecialPages['CallbackQQ'] = 'SpecialCallbackQQ';
 $wgSpecialPages['CallbackWeibo'] = 'SpecialCallbackWeibo';
 $wgSpecialPages['GlobalSearch'] = 'SpecialGlobalSearch';
+$wgSpecialPages['UploadFiles'] = 'SpecialUploadFiles';
 
 // Necessary AJAX functions
 require_once( "$IP/extensions/SocialProfile/UserBoard/UserBoard_AjaxFunctions.php" );

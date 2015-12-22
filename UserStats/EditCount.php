@@ -38,6 +38,26 @@ function incEditCount( $article, $revision, $baseRevId ) {
 	if($sg){
 		$usg->sendSystemGift( 17 );
 	}
+	// //Christmas gift-- del next day
+	// $nowTime = time();
+	// $startTime = strtotime("2015-12-22 00:00:00");
+	// $endTime = strtotime("2015-12-23 00:00:00");
+	// if( $nowTime >= $startTime && $nowTime < $endTime ){
+	// 	$resCount = RecordStatistics::getRecentPageEditCountOnWikiSiteFromUserId( $wgUser->getId(), '', 'day' );
+	// 	if ($resCount->status == 'success') {
+	// 		$dayCount = $resCount->result;
+	// 	}else {
+	// 		$dayCount = 0;
+	// 	}
+	// 	// print_r($dayCount);die;
+	// 	if ($dayCount == 9) {
+	// 		$usg->sendSystemGift( 80 );
+	// 	}elseif ($dayCount == 12) {
+	// 		$usg->sendSystemGift( 31 );
+	// 	}elseif ($dayCount == 35) {
+	// 		$usg->sendSystemGift( 32 );
+	// 	}
+	// }
 	
 	$key = wfForeignMemcKey( 'huiji', '', 'revision', 'high_edit_site_followed', $wgUser->getName(), $wgHuijiPrefix );
 	$wgMemc->incr( $key );

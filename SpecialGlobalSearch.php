@@ -46,7 +46,7 @@ class SpecialGlobalSearch extends SpecialPage {
 		if ( !is_null($key) ) {
 			$resJson = QueryInterface::pageSearch($key, $per_page, $star_page);
 			$resObj = json_decode($resJson);
-			$resCount = $resObj->hits;
+			$resCount = empty($resObj->hits)?0:$resObj->hits;
 			if ( $resCount == 0 ) {
 				$output .= "暂时没有此词条";
 			}else{

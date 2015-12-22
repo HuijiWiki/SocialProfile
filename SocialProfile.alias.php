@@ -519,6 +519,7 @@ $specialPageAliases['zh-hans'] = array(
 	'CompleteUserInfo' => array('完善资料'),
 	'CallbackQQ' => array('回调页面'),
 	'GlobalSearch'=>array('全局搜索'),
+	'UploadFiles'=>array('文件上传'),
 );
 
 /** Traditional Chinese (中文（繁體）‎) */
