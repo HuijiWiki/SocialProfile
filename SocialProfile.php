@@ -91,7 +91,7 @@ $wgAutoloadClasses['SaeTOAuthV2'] = __DIR__ . '/UserProfile/weiboSdkClass.php';
 $wgAutoloadClasses['SaeTClientV2'] = __DIR__ . '/UserProfile/weiboSdkClass.php';
 $wgAutoloadClasses['SpecialCallbackQQ'] = __DIR__ . '/SpecialCallbackQQ.php';
 $wgAutoloadClasses['SpecialCallbackWeibo'] = __DIR__ . '/SpecialCallbackWeibo.php';
-$wgAutoloadClasses['SpecialGlobalSearch'] = __DIR__ . '/SpecialGlobalSearch.php';
+$wgAutoloadClasses['SpecialGlobalSearch'] = __DIR__ . '/GlobalSearch/SpecialGlobalSearch.php';
 $wgAutoloadClasses['SpecialUploadFiles'] = __DIR__ . '/SpecialUploadFiles.php';
 $wgAutoloadClasses['QueryInterface'] = __DIR__ . '/QueryInterface.php';
 
@@ -306,6 +306,13 @@ $wgResourceModules['ext.socialprofile.userboard.css'] = array(
 	'styles' => 'UserBoard.css',
 	'localBasePath' => __DIR__ . '/UserBoard',
 	'remoteExtPath' => 'SocialProfile/UserBoard',
+	'position' => 'top' // just in case
+);
+
+$wgResourceModules['ext.socialprofile.globalsearch.css'] = array(
+	'styles' => 'globalsearch.css',
+	'localBasePath' => __DIR__ . '/GlobalSearch',
+	'remoteExtPath' => 'SocialProfile/GlobalSearch',
 	'position' => 'top' // just in case
 );
 
