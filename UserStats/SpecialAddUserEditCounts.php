@@ -45,7 +45,7 @@ class SpecialAddUserEditCounts extends UnlistedSpecialPage{
 		$output .= "<form method='get' action='/wiki/special:addusereditcounts' >
 			用户名：<input type='text' name='user' >
 			补签次数：<input type='text' name='num' >
-			补签日期：<input type='text' name='date' >
+			补签日期：<input type='date' name='date' >
 			<input class='mw-ui-button mw-ui-progressive' type='submit' value='添加'>
 			</form>";
 
