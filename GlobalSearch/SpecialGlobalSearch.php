@@ -38,9 +38,10 @@ class SpecialGlobalSearch extends SpecialPage {
 		$star_page = $per_page*($page-1);
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
+		$out->addModuleStyles('ext.socialprofile.globalsearch.css');
 		$output = "";
-		$output .= "<form method='get' action='/wiki/special:globalsearch' >
-			<input type='text' name='key' value='".$key."' >
+		$output .= "<form method='get' class='form-inline' action='/wiki/special:globalsearch' >
+			<input type='text' class='form-control' name='key' value='".$key."' >
 			<input class='mw-ui-button mw-ui-progressive' type='submit' value='搜索'>
 			</form>";
 		if ( !is_null($key) ) {
