@@ -37,7 +37,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		$out->addModules( 'ext.socialprofile.admindashboard.css' );
 		
 		// Add js and message
-		// $out->addModules( 'skin.bootstrapmediawiki.huiji.getRecordsInterface.js' );
+		// $out->addModules( 'skins.bootstrapmediawiki.huiji.getRecordsInterface.js' );
 		$out->addModules( 'ext.socialprofile.admindashboard.js' );
 		$out->addModules('ext.socialprofile.userprofile.js');
 

@@ -1,6 +1,6 @@
 jQuery( document ).ready( function() {
     $.getScript('http://echarts.baidu.com/build/dist/echarts.js', function() {
-        mw.loader.using('skin.bootstrapmediawiki.huiji.getrecordsinterface.js', function(){
+        mw.loader.using('skins.bootstrapmediawiki.huiji.getrecordsinterface.js', function(){
          // 路径配置
             // console.log(huiji);
             require.config({
