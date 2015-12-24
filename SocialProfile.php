@@ -93,6 +93,7 @@ $wgAutoloadClasses['SpecialCallbackQQ'] = __DIR__ . '/SpecialCallbackQQ.php';
 $wgAutoloadClasses['SpecialCallbackWeibo'] = __DIR__ . '/SpecialCallbackWeibo.php';
 $wgAutoloadClasses['SpecialGlobalSearch'] = __DIR__ . '/SpecialGlobalSearch.php';
 $wgAutoloadClasses['SpecialUploadFiles'] = __DIR__ . '/SpecialUploadFiles.php';
+$wgAutoloadClasses['SpecialAddUserEditCounts'] = __DIR__ . '/UserStats/SpecialAddUserEditCounts.php';
 $wgAutoloadClasses['QueryInterface'] = __DIR__ . '/QueryInterface.php';
 
 // New special pages
@@ -126,6 +127,7 @@ $wgSpecialPages['CallbackQQ'] = 'SpecialCallbackQQ';
 $wgSpecialPages['CallbackWeibo'] = 'SpecialCallbackWeibo';
 $wgSpecialPages['GlobalSearch'] = 'SpecialGlobalSearch';
 $wgSpecialPages['UploadFiles'] = 'SpecialUploadFiles';
+$wgSpecialPages['AddUserEditCounts'] = 'SpecialAddUserEditCounts';
 
 // Necessary AJAX functions
 require_once( "$IP/extensions/SocialProfile/UserBoard/UserBoard_AjaxFunctions.php" );

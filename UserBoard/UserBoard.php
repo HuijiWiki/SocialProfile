@@ -12,5 +12,7 @@ $wgAvailableRights[] = 'SendToAllUsers';
 $wgGroupPermissions['staff']['SendToAllUsers'] = true;
 $wgAvailableRights[] = 'AdminDashboard';
 $wgGroupPermissions['sysop']['AdminDashboard'] = true;
+$wgAvailableRights[] = 'AddUserEditCounts';
+$wgGroupPermissions['staff']['AddUserEditCounts'] = true;
 
 $wgJobClasses['boardBlastJobs'] = 'BoardBlastJobs';

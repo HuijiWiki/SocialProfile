@@ -38,26 +38,25 @@ function incEditCount( $article, $revision, $baseRevId ) {
 	if($sg){
 		$usg->sendSystemGift( 17 );
 	}
-	// //Christmas gift-- del next day
-	// $nowTime = time();
-	// $startTime = strtotime("2015-12-22 00:00:00");
-	// $endTime = strtotime("2015-12-23 00:00:00");
-	// if( $nowTime >= $startTime && $nowTime < $endTime ){
-	// 	$resCount = RecordStatistics::getRecentPageEditCountOnWikiSiteFromUserId( $wgUser->getId(), '', 'day' );
-	// 	if ($resCount->status == 'success') {
-	// 		$dayCount = $resCount->result;
-	// 	}else {
-	// 		$dayCount = 0;
-	// 	}
-	// 	// print_r($dayCount);die;
-	// 	if ($dayCount == 9) {
-	// 		$usg->sendSystemGift( 80 );
-	// 	}elseif ($dayCount == 12) {
-	// 		$usg->sendSystemGift( 31 );
-	// 	}elseif ($dayCount == 35) {
-	// 		$usg->sendSystemGift( 32 );
-	// 	}
-	// }
+	//Christmas gift-- del next day
+	$nowTime = time();
+	$startTime = strtotime("2015-12-25 00:00:00");
+	$endTime = strtotime("2015-12-26 00:00:00");
+	if( $nowTime >= $startTime && $nowTime < $endTime ){
+		$resCount = RecordStatistics::getRecentPageEditCountOnWikiSiteFromUserId( $wgUser->getId(), '', 'day' );
+		if ($resCount->status == 'success') {
+			$dayCount = $resCount->result;
+		}else {
+			$dayCount = 0;
+		}
+		if ($dayCount == 3) {
+			$usg->sendSystemGift( 65 );
+		}elseif ($dayCount == 12) {
+			$usg->sendSystemGift( 66 );
+		}elseif ($dayCount == 25) {
+			$usg->sendSystemGift( 67 );
+		}
+	}
 	
 	$key = wfForeignMemcKey( 'huiji', '', 'revision', 'high_edit_site_followed', $wgUser->getName(), $wgHuijiPrefix );
 	$wgMemc->incr( $key );
