@@ -181,6 +181,16 @@ class UserStatus{
 		);
 		// $profileId = $dbw->insertId();
 		$wgMemc->delete( $key );
+		//Log
+		$log = new LogPage( 'profile' );
+			if ( !$wgUploadAvatarInRecentChanges ) {
+				$log->updateRecentChanges = false;
+			}
+		$log->addEntry(
+			'profile',
+			$wgUser->getUserPage(),
+			wfMessage( 'profile-ajax-all-log-entry' )->params($gender.$province.$city.$birthday.$status)->inContentLanguage()->text()
+		);    
 		return true;
 		// return $profileId;
 
@@ -219,6 +229,17 @@ class UserStatus{
 			);
 		}
 		$wgMemc->delete( $key );
+
+		//Log
+		$log = new LogPage( 'profile' );
+			if ( !$wgUpdateProfileInRecentChanges ) {
+				$log->updateRecentChanges = false;
+			}
+		$log->addEntry(
+			'profile',
+			$this->user->getUserPage(),
+			wfMessage( 'profile-ajax-field-log-entry' )->params($field, $value)->inContentLanguage()->text()
+		);      		  
 		return true;
 	}
 

@@ -16,7 +16,6 @@ class CropAvatar {
   private $isUserAvatar;
 
   function __construct($src, $data, $file, $isUserAvatar = true) {
-    // wfDebug('=====================================Constructing=================================');
     $this->isUserAvatar = $isUserAvatar;
     if (filter_var($src, FILTER_VALIDATE_URL)){
       $this->putExternalFile($src);
@@ -36,19 +35,6 @@ class CropAvatar {
       'message' => $this -> getMsg(),
       'result' => $this -> getResult(),
     );
-    // wfDebug('====================================='.json_encode($response).'=================================');
-    // ob_start();
-    // $response = $output->getRequest()->response();
-    // $response->header('Status Code: 200');
-    // $response->header("Content-Type: text/json");
-    // $response->header("Cache-Control', 'no-cache");
-    // echo json_encode($responseBody);
-    // ob_end_flush();
-    // $dbw = wfGetDB( DB_MASTER );
-    // $dbw->begin();
-    // /* Do queries */
-    // $dbw->commit();
-    // exit(0);
 
   }
   private function putExternalFile($src){
@@ -170,8 +156,7 @@ class CropAvatar {
               return $this -> msg = '请上传如下类型的图片: JPG, PNG, GIF（错误代码：14）';
           }
           $this->cleanUp($ext, $avatarKey, $uid);
-          /* I know this is bad but whatever */
-          $result = true;
+
           
           /* add log entry */
       		if ($this->isUserAvatar){
@@ -195,15 +180,10 @@ class CropAvatar {
         			wfMessage( 'site-avatar-log-entry' )->inContentLanguage()->text()
         		);      		  
       		}
-      		
-          if ($result) {
-            $this -> src = $src;
-            $this -> type = $type;
-            $this -> extension = $extension;
-            //$this -> setDst();
-          } else {
-             $this -> msg = '无法保存文件（错误代码：13）';
-          }
+          
+          $this -> src = $src;
+          $this -> type = $type;
+          $this -> extension = $extension;
         } else {
           $this -> msg = '请上传如下类型的图片: JPG, PNG, GIF（错误代码：12）';
         }
