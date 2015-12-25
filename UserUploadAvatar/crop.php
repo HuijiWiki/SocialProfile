@@ -172,7 +172,30 @@ class CropAvatar {
           $this->cleanUp($ext, $avatarKey, $uid);
           /* I know this is bad but whatever */
           $result = true;
-
+          
+          /* add log entry */
+      		if ($this->isUserAvatar){
+            $log = new LogPage( 'avatar' );
+      		  if ( !$wgUploadAvatarInRecentChanges ) {
+      			  $log->updateRecentChanges = false;
+      		  }
+        		$log->addEntry(
+        			'avatar',
+        			$wgUser->getUserPage(),
+        			wfMessage( 'user-profile-picture-log-entry' )->inContentLanguage()->text()
+        		);
+      		} else {
+            $log = new LogPage( 'site-avatar' );
+      		  if ( !$wgUploadAvatarInRecentChanges ) {
+      			  $log->updateRecentChanges = false;
+      		  }
+        		$log->addEntry(
+        			'site-avatar',
+        			$wgUser->getUserPage(),
+        			wfMessage( 'site-avatar-log-entry' )->inContentLanguage()->text()
+        		);      		  
+      		}
+      		
           if ($result) {
             $this -> src = $src;
             $this -> type = $type;
