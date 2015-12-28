@@ -117,6 +117,11 @@ $wgLogNames['avatar']            = 'avatarlogpage';
 $wgLogHeaders['avatar']          = 'avatarlogpagetext';
 $wgLogActions['avatar/avatar'] = 'avatarlogentry';
 
+$wgLogTypes[]                    = 'site-avatar';
+$wgLogNames['site-avatar']           = 'site-avatarlogpage';
+$wgLogHeaders['site-avatar']         = 'site-avatarlogpagetext';
+$wgLogActions['site-avatar/site-avatar'] = 'site-avatarlogentry';
+
 $wgHooks['ArticleFromTitle'][] = 'wfUserProfileFromTitle';
 
 /**

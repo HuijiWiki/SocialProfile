@@ -43,7 +43,7 @@ function wfUpdateUserStatus( $username, $field, $value ) {
 		// }
 		if ($us->setInfo($field, $value)){
 			// $out = ResponseGenerator::getJson(ResponseGenerator::SUCCESS);
-			$ret = array('success'=> true, 'result'=>$us->setInfo($field, $value) );
+			$ret = array('success'=> true, 'result'=>array($field => $value ));
 			$out = json_encode($ret);
 			return $out;
 		}

@@ -37,5 +37,7 @@
 	"ur-title-foe": "$1的仇敌清单",
 	"ur-title-friend": "$1的朋友清单",
 	"friend_request_subject": "$1已在{{SITENAME}}把您加入成为朋友！",
-	"friend_removed_subject": "哎唷！$1已在{{SITENAME}}把您从朋友清单移除了!"
+	"friend_removed_subject": "哎唷！$1已在{{SITENAME}}把您从朋友清单移除了!",
+	"profile-ajax-field-log-entry":"修改了$1为$2",
+	"profile-ajax-all-log-entry":"将个人状态设置为$1"
 }

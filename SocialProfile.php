@@ -35,6 +35,7 @@ $wgMessagesDirs['SocialProfileUserSiteFollows'] = __DIR__ . '/UserSiteFollows/i1
 $wgMessagesDirs['SocialProfileUserUserFollows'] = __DIR__ . '/UserUserFollows/i18n';
 $wgMessagesDirs['SocialProfileAdminDashboard'] = __DIR__ . '/AdminDashboard/i18n';
 $wgMessagesDirs['SocialProfileSiteStatus'] = __DIR__ . '/SiteStatus/i18n';
+$wgMessagesDirs['SocialProfileUserStatus'] = __DIR__ . '/UserStatus/i18n';
 $wgExtensionMessagesFiles['SocialProfileNamespaces'] = __DIR__ . '/SocialProfile.namespaces.php';
 $wgExtensionMessagesFiles['AvatarMagic'] = __DIR__ . '/UserProfile/Avatar.magic.i18n.php';
 
@@ -92,7 +93,7 @@ $wgAutoloadClasses['SaeTClientV2'] = __DIR__ . '/UserProfile/weiboSdkClass.php';
 $wgAutoloadClasses['SpecialCallbackQQ'] = __DIR__ . '/SpecialCallbackQQ.php';
 $wgAutoloadClasses['SpecialCallbackWeibo'] = __DIR__ . '/SpecialCallbackWeibo.php';
 $wgAutoloadClasses['SpecialGlobalSearch'] = __DIR__ . '/GlobalSearch/SpecialGlobalSearch.php';
-$wgAutoloadClasses['SpecialUploadFiles'] = __DIR__ . '/SpecialUploadFiles.php';
+$wgAutoloadClasses['SpecialUploadFiles'] = __DIR__ . '/UploadFiles/SpecialUploadFiles.php';
 $wgAutoloadClasses['SpecialAddUserEditCounts'] = __DIR__ . '/UserStats/SpecialAddUserEditCounts.php';
 $wgAutoloadClasses['SpecialAddFestivalGift'] = __DIR__ . '/SystemGifts/SpecialAddFestivalGift.php';
 $wgAutoloadClasses['QueryInterface'] = __DIR__ . '/QueryInterface.php';
@@ -343,6 +344,20 @@ $wgResourceModules['ext.socialprofile.userboard.boardblast.js'] = array(
 	),
 	'localBasePath' => __DIR__ . '/UserBoard',
 	'remoteExtPath' => 'SocialProfile/UserBoard',
+);
+
+//uploadfiles
+$wgResourceModules['ext.socialprofile.uploadfiles.css'] = array(
+	'styles' => 'uploadfiles.css',
+	'localBasePath' => __DIR__ . '/GlobalSearch',
+	'remoteExtPath' => 'SocialProfile/GlobalSearch',
+	'position' => 'top' // just in case
+);
+
+$wgResourceModules['ext.socialprofile.uploadfiles.js'] = array(
+	'scripts' => 'uploadfiles.js',
+	'localBasePath' => __DIR__ . '/UploadFiles',
+	'remoteExtPath' => 'SocialProfile/UploadFiles',
 );
 
 // UserRelationship
