@@ -39,7 +39,7 @@ function deletePage($article, $user, $reason, $id){
 
 function curl_post_json($type,$data_string)
         {
-                $url =  'http://localhost:8080/queryTest/webapi/page/'.$type;
+                $url =  'http://huijidata.com:8080/queryService/webapi/page/'.$type;
                 $header = array(
                         'Content-Type: application/json',
                         'Content-Length: '.strlen($data_string),
