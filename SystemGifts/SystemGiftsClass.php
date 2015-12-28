@@ -379,5 +379,93 @@ class SystemGifts {
 		}
 		return true;
 	}
+
+	/**
+	 * add festival gift to database
+	 * @param $festival $editNum $startTime $endTime
+	 */
+	static function addFestivalGift( $giftId, $editNum, $startTime, $endTime ){
+
+		global $wgMemc;
+		if ( $giftId != null && $editNum != null && $startTime != null && $endTime != null ) {
+			if( $startTime > $endTime ){
+				return false;
+			}
+			$dbw = wfGetDB( DB_MASTER );
+			$res = $dbw->insert(
+				'festival_gift',
+				array(
+					'startTime' => $startTime,
+					'endTime' => $endTime,
+					'giftId' => $giftId,
+					'editNum' => $editNum,
+					'addTime' => date( 'Y-m-d H:i:s', time() ),
+				),
+				__METHOD__
+			);
+			if($res != false){
+				$wgMemc->delete( wfForeignMemcKey('huiji','', 'FestivalGiftInfo', 'all', 'festivalgiftlist' ) );
+				return $dbw->insertId();
+			}else{
+				return false;
+			}
+		}
+
+	}
+
+	/**
+	 * get festival gift from festival_gift
+	 */
 	
+	static function getInfoFromFestivalGift(){
+
+		$data = self::getInfoFromFestivalGiftCache();
+		if ( $data == null ) {
+			$data = self::getInfoFromFestivalGiftDB();
+		}
+		return $data;
+
+	}
+	static function getInfoFromFestivalGiftCache(){
+
+		global $wgMemc;
+		$key = wfForeignMemcKey('huiji','', 'FestivalGiftInfo', 'all', 'festivalgiftlist' );
+		$data = $wgMemc->get( $key );
+		return $data;
+
+	}
+	static function getInfoFromFestivalGiftDB(){
+
+		global $wgMemc;
+		$dbr = wfGetDB( DB_SLAVE );
+		$res = $dbr->select(
+			'festival_gift',
+			array(
+				'startTime',
+				'endTime',
+				'giftId',
+				'editNum',
+				'addTime'
+			),
+			array(),
+			__METHOD__,
+			array( 'ORDER BY' => 'addTime DESC' )
+		);
+		if( $res != false ){
+			$reslut = $fData = array();
+			foreach ($res as $value) {
+				$fData['startTime'] = $value->startTime;
+				$fData['endTime'] = $value->endTime;
+				$fData['giftId'] = $value->giftId;
+				$fData['editNum'] = $value->editNum;
+				$fData['addTime'] = $value->addTime;
+				$reslut[] = $fData;
+			}
+			$key = wfForeignMemcKey('huiji','', 'FestivalGiftInfo', 'all', 'festivalgiftlist' );
+			$wgMemc->set( $key, $reslut );
+			return $reslut;
+		}
+
+	}
+
 }

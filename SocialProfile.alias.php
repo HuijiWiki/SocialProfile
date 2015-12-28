@@ -520,6 +520,7 @@ $specialPageAliases['zh-hans'] = array(
 	'CallbackQQ' => array('回调页面'),
 	'GlobalSearch'=>array('全局搜索'),
 	'AddUserEditCounts'=>array('补签'),
+	'AddFestivalGift'=>array('节日成就'),
 	'UploadFiles'=>array('文件上传'),
 );
 
