@@ -1781,7 +1781,7 @@ class UserActivity {
 	 * @return array
 	 */
 	private function streamlineForeignDBRepo( $prefix ){
-		global $wgDBtype, $wgDBserver, $wgDBuser, $wgDBpassword, $isProduction, $wgThumbnailScriptPath, $wgHuijiSuffix, $wgCdnScriptPath;
+		global $wgDBtype, $wgDBserver, $wgDBuser, $wgDBpassword, $isProduction, $wgSharedThumbnailScriptPath, $wgGenerateThumbnailOnParse, $wgHuijiSuffix, $wgCdnScriptPath;
 		$lowDashPrefix = str_replace('.', '_', $prefix);
 		$dotPrefix = str_replace('_', '.', $prefix);
 		if ($isProduction){

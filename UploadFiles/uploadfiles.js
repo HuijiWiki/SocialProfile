@@ -6,13 +6,15 @@ $(function(){
     console.log(token);
     $('#upload-btn').click(function(){
         var formData = new FormData(document.getElementById( "uploadfiles" ));
-        var file = document.getElementById('file');
+        var file = document.getElementById('file').files[0];
+        var banarystring = new FileReader().readAsDataURL(file);
+        alert(banarystring)
         $.ajax({
             url: '/api.php',
             data: {
                 action: "upload",
                 filename: 'new.png',
-                file:formData,
+                file:banarystring,
                 token:token,
                 format:'json'
             },
