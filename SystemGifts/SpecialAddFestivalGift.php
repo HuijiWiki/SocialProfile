@@ -33,10 +33,10 @@ class SpecialAddFestivalGift extends SpecialPage{
 		/**
 		 * only staff can operate this special page
 		 */
-		// if ( !$wgUser->isAllowed( 'AddFestivalGift' ) ) {
-		// 	$out->permissionRequired( 'AddFestivalGift' );
-		// 	return;
-		// }
+		if ( !$wgUser->isAllowed( 'AddFestivalGift' ) ) {
+			$out->permissionRequired( 'AddFestivalGift' );
+			return;
+		}
 		$output = "";
 		$output .= "<form method='get' action='/wiki/special:addfestivalgift' >
 			成就ID：<input type='text' name='giftId' >
