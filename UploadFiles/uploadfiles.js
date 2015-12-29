@@ -6,23 +6,31 @@ $(function(){
     console.log(token);
     $('#upload-btn').click(function(){
         var formData = new FormData(document.getElementById( "uploadfiles" ));
-        var file = document.getElementById('file');
-        $.ajax({
-            url: '/api.php',
-            data: {
-                action: "upload",
-                filename: 'new.png',
-                file:formData,
-                token:token,
-                format:'json'
-            },
-            processData: false,
-            contentType: false,
-            type: 'POST',
-            success: function(data){
-                console.log(data);
-            }
-        })
+        var file = document.getElementById('file').files[0];
+        var reader = new FileReader();
+        var content='';
+        reader.readAsBinaryString(file);
+        reader.onload = function(){
+            content = this.result;
+            alert(content);
+            $.ajax({
+                url: '/api.php',
+                data: {
+                    action: "upload",
+                    filename: 'new.png',
+                    file: content,
+                    token:token,
+                    format:'json'
+                },
+                processData: false,
+                contentType: false,
+                type: 'POST',
+                success: function(data){
+                    console.log(data);
+                }
+            })
+        }
+
     });
 
 //    var api = new mw.Api()

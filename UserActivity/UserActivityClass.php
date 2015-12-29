@@ -1781,7 +1781,7 @@ class UserActivity {
 	 * @return array
 	 */
 	private function streamlineForeignDBRepo( $prefix ){
-		global $wgDBtype, $wgDBserver, $wgDBuser, $wgDBpassword, $isProduction, $wgThumbnailScriptPath, $wgHuijiSuffix, $wgCdnScriptPath;
+		global $wgDBtype, $wgDBserver, $wgDBuser, $wgDBpassword, $isProduction, $wgSharedThumbnailScriptPath, $wgGenerateThumbnailOnParse, $wgHuijiSuffix, $wgCdnScriptPath;
 		$lowDashPrefix = str_replace('.', '_', $prefix);
 		$dotPrefix = str_replace('_', '.', $prefix);
 		if ($isProduction){
@@ -1894,7 +1894,9 @@ class UserActivity {
 				$repo = new ForeignDBRepo($this->streamlineForeignDBRepo($page_data['prefix'][0]));
 				$f =  ForeignDBFile::newFromTitle($page_title, $repo);
 				return ' <a href="'.htmlspecialchars( $f->getDescriptionUrl() ).'"><img src="' .htmlspecialchars( $f->createThumb(200,100) ). '"></img></a>';
-			} else {
+			} if($page_title->inNamespace( NS_TOPIC )){
+				
+			}else {
 				return ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
 
 			}

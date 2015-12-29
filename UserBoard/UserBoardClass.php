@@ -86,7 +86,7 @@ class UserBoard {
 		         'mentioned-users' => $mentionedUsers,
 		         'board-content' => $message,
 		     ),
-			'agent' => $agent,
+			'agent' => $agent,Echo
 		) );
 	}
 
@@ -575,6 +575,7 @@ class UserBoard {
             'email-body-batch-message' => 'notification-board-email-batch-body',
             'email-body-batch-params' => array( 'agent', 'b2b', 'main-title-text' ),
             'icon' => 'chat',
+            'section' => 'message',
         );
         return true;
     }
