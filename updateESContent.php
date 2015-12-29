@@ -10,7 +10,13 @@ $wgHooks['ArticleDeleteComplete'][] = 'deletePage';
 
 function updatePageContent($article, $rev, $baseID, $user ){
 	global $wgHuijiPrefix, $wgSitename;
-	
+	$old_rev = Revision::newFromId($baseID);
+//	$old_page = WikiPage::newFromID($old_rev->getPage(),"fromdbmaster");
+	$file = fopen("/mnt/file1.txt","w");
+//	fwrite($file,$old_rev->getId());
+	fwrite($file,$article->getId());
+//	fwrite($file,implode(",",$article->getCategories()));
+//	fwrite($file,implode("|",$olde_page->getCategories()));
 	$title = ($article->getText() == "首页") ? $wgSitename : $article->getTitle()->getText();
 	$post_data = array(
 		'timestamp' => $rev->getTimestamp(),

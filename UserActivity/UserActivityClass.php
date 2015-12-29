@@ -1894,7 +1894,9 @@ class UserActivity {
 				$repo = new ForeignDBRepo($this->streamlineForeignDBRepo($page_data['prefix'][0]));
 				$f =  ForeignDBFile::newFromTitle($page_title, $repo);
 				return ' <a href="'.htmlspecialchars( $f->getDescriptionUrl() ).'"><img src="' .htmlspecialchars( $f->createThumb(200,100) ). '"></img></a>';
-			} else {
+			} if($page_title->inNamespace( NS_TOPIC )){
+				
+			}else {
 				return ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
 
 			}
