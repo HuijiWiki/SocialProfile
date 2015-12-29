@@ -95,7 +95,7 @@ function wfGetForkCountByPageId( $page_id ){
 }
 
 //get template fork info by pageid
-function wfGetForkInfoByPageId( $page_id ){
+function wfGetForkInfoByPageId( $target_id ){
 	$dbr = wfGetDB(DB_SLAVE);
 	$res = $dbr->select(
 		'template_fork',
