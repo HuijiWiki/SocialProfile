@@ -458,6 +458,7 @@ class UserSystemGifts {
             'tooltip' => 'echo-pref-tooltip-system-gift-receive',
         );
         $notifications['system-gift-receive'] = array(
+        	'primary-link' => array('message' => 'notification-link-text-respond-to-user', 'destination' => 'giftview'),
             'category' => 'system-gift-receive',
             'group' => 'positive',
             'formatter-class' => 'EchoSystemGiftFormatter',
@@ -473,6 +474,7 @@ class UserSystemGifts {
             'email-body-batch-message' => 'notification-system-gift-email-batch-body',
             'email-body-batch-params' => array( 'main-title-text' ),
             'icon' => 'featured',
+            'section' => 'alert',
         );
         return true;
     }
