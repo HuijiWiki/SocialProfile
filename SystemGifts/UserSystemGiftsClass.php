@@ -521,7 +521,7 @@ class EchoSystemGiftFormatter extends EchoCommentFormatter {
 	            if ( !isset( $eventData['gift-id'])) {
 	                return array($titleData, array());
 	            } else {
-        			return array($titleData, array('fromnotif' => 1, 'gift_id' => $eventData['gift-id']);
+        			return array($titleData, array('fromnotif' => 1, 'gift_id' => $eventData['gift-id']));
         		}
 			default:
 				return parent::getLinkParams( $event, $user, $destination );
