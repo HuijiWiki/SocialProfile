@@ -11,7 +11,7 @@ $wgHooks['ArticleDeleteComplete'][] = 'deletePage';
 function updatePageContent($article, $rev, $baseID, $user ){
 	global $wgHuijiPrefix, $wgSitename;
 	
-	$title = ($article->getId() == 1) ? $wgSitename : $article->getTitle()->getText();
+	$title = ($article->getText() == "首页") ? $wgSitename : $article->getTitle()->getText();
 	$post_data = array(
 		'timestamp' => $rev->getTimestamp(),
 		'content' => ContentHandler::getContentText($rev->getContent(Revision::RAW)),
