@@ -157,6 +157,7 @@ class UserSystemMessage {
             'tooltip' => 'echo-pref-tooltip-advancement',
         );
         $notifications['advancement'] = array(
+        	'primary-link' => array('message' => 'notification-link-text-respond-to-user', 'destination' => 'lvl'),
             'category' => 'advancement',
             'group' => 'positive',
             'formatter-class' => 'EchoAdvancementFormatter',
@@ -172,6 +173,7 @@ class UserSystemMessage {
             'email-body-batch-message' => 'notification-advancement-email-batch-body',
             'email-body-batch-params' => array( 'title', 'main-title-text' ),
             'icon' => 'featured',
+            'section' => 'alert',
         );
         return true;
     }

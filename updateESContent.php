@@ -10,13 +10,23 @@ $wgHooks['ArticleDeleteComplete'][] = 'deletePage';
 
 function updatePageContent($article, $rev, $baseID, $user ){
 	global $wgHuijiPrefix, $wgSitename;
-	$old_rev = Revision::newFromId($baseID);
-//	$old_page = WikiPage::newFromID($old_rev->getPage(),"fromdbmaster");
-	$file = fopen("/mnt/file1.txt","w");
-//	fwrite($file,$old_rev->getId());
-	fwrite($file,$article->getId());
-//	fwrite($file,implode(",",$article->getCategories()));
-//	fwrite($file,implode("|",$olde_page->getCategories()));
+	$old_redirect =null;
+	$temp = null;
+	$out = null;
+	$old_rev = $rev->getPrevious();
+
+	if($old_rev != null && ($old_content = $old_rev->getContent(Revision::RAW)) != null) $old_redirect = $old_content->getRedirectTarget();
+	if(($new_content = $rev->getContent(Revision::RAW)) != null) $new_redirect = $new_content->getRedirectTarget();
+
+	if($old_redirect != null){$old = $old_redirect->getText();}
+	if($new_redirect != null){$new = $new_redirect->getText();}
+	
+	$category = array();
+	foreach($article->getCategories() as $val){
+		$category[] =  $val->getText();
+	}
+	
+	wfErrorLog(implode(',',$category),"/var/log/mediawiki/SocialProfile.log");
 	$title = ($article->getText() == "首页") ? $wgSitename : $article->getTitle()->getText();
 	$post_data = array(
 		'timestamp' => $rev->getTimestamp(),

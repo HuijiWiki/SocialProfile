@@ -398,6 +398,7 @@ class UserUserFollow{
             'tooltip' => 'echo-pref-tooltip-follow-msg',
         );
         $notifications['follow-msg'] = array(
+        	'primary-link' => array('message' => 'notification-link-text-respond-to-user', 'destination' => 'agent-link'),
             'category' => 'follow-msg',
             'group' => 'positive',
             'formatter-class' => 'EchoFollowFormatter',
@@ -413,6 +414,7 @@ class UserUserFollow{
             'email-body-batch-message' => 'notification-follow-email-batch-body',
             'email-body-batch-params' => array( 'agent', 'main-title-text' ),
             'icon' => 'gratitude',
+            'section' => 'alert',
         );
         return true;
     }

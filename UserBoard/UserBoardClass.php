@@ -86,7 +86,7 @@ class UserBoard {
 		         'mentioned-users' => $mentionedUsers,
 		         'board-content' => $message,
 		     ),
-			'agent' => $agent,Echo
+			'agent' => $agent,
 		) );
 	}
 
@@ -560,6 +560,7 @@ class UserBoard {
             'tooltip' => 'echo-pref-tooltip-board-msg',
         );
         $notifications['board-msg'] = array(
+        	'primary-link' => array('message' => 'notification-link-text-respond-to-user', 'destination' => 'b2b'),
             'category' => 'board-msg',
             'group' => 'positive',
             'formatter-class' => 'EchoBoardFormatter',
