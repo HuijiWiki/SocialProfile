@@ -30,7 +30,7 @@ function wfAddForkCount( $page_id ){
 }
 
 //add fork info
-function wfAddForkInfo( $page_id, $fork_from, $prefix ){
+function wfAddForkInfo( $page_id, $ns_num, $page_title, $fork_from, $prefix ){
 	global $wgUser, $isProduction;
 	$fork_user = $wgUser->getName();
 	if ($prefix != null) {
@@ -42,11 +42,27 @@ function wfAddForkInfo( $page_id, $fork_from, $prefix ){
 			$prefix = 'huiji_'.str_replace('.', '_', $prefix);
 		}
 	}
+	$page_title = substr(strrchr($page_title, ":"), 1);
 	$dbw = wfGetDB(DB_MASTER, array(), $prefix);
+	$res_page = $dbw->select(
+		'page',
+		array(
+			'page_id'
+		),
+		array(
+			'page_namespace' => $ns_num,
+			'page_title' => $page_title
+		),
+		__METHOD__
+	);
+	foreach ($res_page as $value) {
+		$res_pageid = $value->page_id;
+	}
 	$res = $dbw->insert(
 		'template_fork',
 		array(
 			'template_id' => $page_id,
+			'target_id' => $res_pageid,
 			'fork_from' => $fork_from,
 			'fork_user' => $fork_user,
 			'fork_date' => date( 'Y-m-d H:i:s' ),
@@ -58,8 +74,8 @@ function wfAddForkInfo( $page_id, $fork_from, $prefix ){
 
 //get template fork count by pageid
 function wfGetForkCountByPageId( $page_id ){
-	$dbw = wfGetDB(DB_SLAVE);
-	$res = $dbw->select(
+	$dbr = wfGetDB(DB_SLAVE);
+	$res = $dbr->select(
 		'template_fork_count',
 		array(
 			'fork_count'
@@ -79,9 +95,9 @@ function wfGetForkCountByPageId( $page_id ){
 }
 
 //get template fork info by pageid
-function wfGetForkInfoByPageId( $page_id ){
-	$dbw = wfGetDB(DB_SLAVE);
-	$res = $dbw->select(
+function wfGetForkInfoByPageId( $target_id ){
+	$dbr = wfGetDB(DB_SLAVE);
+	$res = $dbr->select(
 		'template_fork',
 		array(
 			'fork_from',
@@ -89,7 +105,7 @@ function wfGetForkInfoByPageId( $page_id ){
 			'fork_date',
 		),
 		array(
-			'template_id' => $page_id
+			'target_id' => $target_id
 		),
 		__METHOD__,
 		array( 
