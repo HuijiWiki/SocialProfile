@@ -62,12 +62,17 @@ class SpecialAddFestivalGift extends SpecialPage{
 			}
 		}
 		if ( $method == 'add' ) {
-			$result = SystemGifts::addFestivalGift( $giftId, $editNum, $startTime, $endTime );
-			if( $result !== false && $result !== null ){
-				$output .= "<script>alert('success');location.reload();</script>";
-			}elseif(  $giftId == null || $editNum == null || $startTime == null || $endTime == null ){
-				$output .= "<h1>填写不完整</h1>";
+			if ( is_numeric($giftId) && is_numeric($editNum) ) {
+				$result = SystemGifts::addFestivalGift( $giftId, $editNum, $startTime, $endTime );
+				if( $result !== false && $result !== null ){
+					$output .= "<script>alert('success');location.reload();</script>";
+				}elseif(  $giftId == null || $editNum == null || $startTime == null || $endTime == null ){
+					$output .= "<h1>填写不完整</h1>";
+				}
+			}else{
+				$output .= "<h1>输入有误</h1>";
 			}
+			
 		}
 		$out->addHTML( $output );
 	}
