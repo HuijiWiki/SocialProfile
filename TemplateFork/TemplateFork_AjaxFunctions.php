@@ -9,6 +9,7 @@ $wgAjaxExportList[] = 'wfGetForkInfoByPageId';
 
 //add fork count
 function wfAddForkCount( $page_id ){
+	global $wgMemc;
 	$count = AllSitesInfo::getPageForkCount( $page_id );
 	$pageCount = (!is_null($count))?$count:0;
 	$dbw = wfGetDB( DB_MASTER );
@@ -26,12 +27,13 @@ function wfAddForkCount( $page_id ){
 		),			
 		__METHOD__
 	);
+	$wgMemc->delete( wfForeignMemcKey('huiji','', 'getForkCountByPageId', 'onesite', $page_id ) );
 	return 'success';
 }
 
 //add fork info
 function wfAddForkInfo( $page_id, $ns_num, $page_title, $fork_from, $prefix ){
-	global $wgUser, $isProduction;
+	global $wgUser, $isProduction, $wgMemc;
 	$fork_user = $wgUser->getName();
 	if ($prefix != null) {
 		if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
@@ -69,6 +71,7 @@ function wfAddForkInfo( $page_id, $ns_num, $page_title, $fork_from, $prefix ){
 		),
 		__METHOD__
 	);
+	$wgMemc->delete( wfForeignMemcKey('huiji','', 'getInfoByPageId', 'onesite', $res_pageid ) );
 	return 'success';
 }
 
@@ -96,30 +99,9 @@ function wfGetForkCountByPageId( $page_id ){
 
 //get template fork info by pageid
 function wfGetForkInfoByPageId( $target_id ){
-	$dbr = wfGetDB(DB_SLAVE);
-	$res = $dbr->select(
-		'template_fork',
-		array(
-			'fork_from',
-			'fork_user',
-			'fork_date',
-		),
-		array(
-			'target_id' => $target_id
-		),
-		__METHOD__,
-		array( 
-			'ORDER BY' => 'fork_date DESC'
-		)
-	);
-	$result = array();
-	if( $res ){
-		foreach ($res as $value) {
-			$result['fork_from'] = $value->fork_from;
-			$result['fork_user'] = $value->fork_user;
-			$result['fork_date'] = $value->fork_date;
-		}
+	$result = TemplateFork::getForkInfoByPageId( $target_id );
+	if ( $result != null ) {
+		return $result;
 	}
-	return json_encode( $result );
 }
 

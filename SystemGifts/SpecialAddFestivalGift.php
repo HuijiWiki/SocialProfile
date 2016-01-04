@@ -38,7 +38,7 @@ class SpecialAddFestivalGift extends SpecialPage{
 			return;
 		}
 		$output = "";
-		$output .= "<form method='get' action='/wiki/special:addfestivalgift' >
+		$output .= "<form method='post' action='/wiki/special:addfestivalgift?method=add' >
 			成就ID：<input type='text' name='giftId' >
 			达成次数：<input type='text' name='editnum' >
 			开始时间：<input type='date' name='starttime' >
@@ -49,6 +49,7 @@ class SpecialAddFestivalGift extends SpecialPage{
 		$editNum = $request->getVal('editnum');
 		$startTime = $request->getVal('starttime');
 		$endTime = $request->getVal('endtime');
+		$method = $request->getVal('method');
 		$giftList = SystemGifts::getInfoFromFestivalGift();
 		$i = 0;
 		if ($giftList != null) {
@@ -60,12 +61,12 @@ class SpecialAddFestivalGift extends SpecialPage{
 				$i++;
 			}
 		}
-		if ( $giftId != null && $editNum != null && $startTime != null && $endTime != null ) {
+		if ( $method == 'add' ) {
 			$result = SystemGifts::addFestivalGift( $giftId, $editNum, $startTime, $endTime );
-			if( $result !== false ){
-				$output .= "<h1>success</h1>";
-			}else{
-				$output .= "<h1>error</h1>";
+			if( $result !== false && $result !== null ){
+				$output .= "<script>alert('success');location.reload();</script>";
+			}elseif(  $giftId == null || $editNum == null || $startTime == null || $endTime == null ){
+				$output .= "<h1>填写不完整</h1>";
 			}
 		}
 		$out->addHTML( $output );

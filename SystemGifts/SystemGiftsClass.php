@@ -391,6 +391,14 @@ class SystemGifts {
 			if( $startTime > $endTime ){
 				return false;
 			}
+			$gInfo = self::getInfoFromFestivalGift();
+			foreach ($gInfo as $value) {
+				$giftIdArr[] = $value['giftId'];
+			}
+			// return $giftIdArr;die;
+			if(in_array($giftId, $giftIdArr)){
+				return false;
+			}
 			$dbw = wfGetDB( DB_MASTER );
 			$res = $dbw->insert(
 				'festival_gift',
@@ -403,7 +411,7 @@ class SystemGifts {
 				),
 				__METHOD__
 			);
-			if($res != false){
+			if($res === true){
 				$wgMemc->delete( wfForeignMemcKey('huiji','', 'FestivalGiftInfo', 'all', 'festivalgiftlist' ) );
 				return $dbw->insertId();
 			}else{
