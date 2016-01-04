@@ -560,7 +560,7 @@ class UserBoard {
             'tooltip' => 'echo-pref-tooltip-board-msg',
         );
         $notifications['board-msg'] = array(
-        	'primary-link' => array('message' => 'notification-link-text-respond-to-user', 'destination' => 'b2b'),
+        	'primary-link' => array('message' => 'notification-link-text-respond-to-user', 'destination' => 'board-page'),
             'category' => 'board-msg',
             'group' => 'positive',
             'formatter-class' => 'EchoBoardFormatter',
@@ -625,6 +625,30 @@ class EchoBoardFormatter extends EchoCommentFormatter {
 		   	default:
 		        return parent::formatPayload( $payload, $event, $user );
 		        break;
+		}
+	}
+	/**
+	 * Helper function for getLink()
+	 *
+	 * @param \EchoEvent $event
+	 * @param \User $user The user receiving the notification
+	 * @param string $destination The destination type for the link
+	 * @return array including target and query parameters
+	 * @throws FlowException
+	 */
+	protected function getLinkParams( $event, $user, $destination ) {
+		// Set up link parameters based on the destination (or pass to parent)
+		switch ( $destination ) {
+			case 'board-page':
+				$titleData = $event->getTitle();
+				$eventData = $event->getExtra();
+	            if ( !isset( $eventData['board-user']) || !isset( $eventData['board-user-conv'] ) ) {
+	                return array($titleData, array());
+	            } else {
+        			return array($titleData, array('fromnotif' => 1, 'user' => $eventData['board-user'], 'conv'=> $eventData['board-user-conv']));
+        		}
+			default:
+				return parent::getLinkParams( $event, $user, $destination );
 		}
 	}
    /**

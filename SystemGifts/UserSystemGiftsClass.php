@@ -458,7 +458,7 @@ class UserSystemGifts {
             'tooltip' => 'echo-pref-tooltip-system-gift-receive',
         );
         $notifications['system-gift-receive'] = array(
-        	'primary-link' => array('message' => 'notification-link-text-respond-to-user', 'destination' => 'giftview'),
+        	'primary-link' => array('message' => 'notification-link-text-respond-to-user', 'destination' => 'gift-page'),
             'category' => 'system-gift-receive',
             'group' => 'positive',
             'formatter-class' => 'EchoSystemGiftFormatter',
@@ -503,6 +503,30 @@ class UserSystemGifts {
 
 }
 class EchoSystemGiftFormatter extends EchoCommentFormatter {
+	/**
+	 * Helper function for getLink()
+	 *
+	 * @param \EchoEvent $event
+	 * @param \User $user The user receiving the notification
+	 * @param string $destination The destination type for the link
+	 * @return array including target and query parameters
+	 * @throws FlowException
+	 */
+	protected function getLinkParams( $event, $user, $destination ) {
+		// Set up link parameters based on the destination (or pass to parent)
+		switch ( $destination ) {
+			case 'gift-page':
+				$titleData = $event->getTitle();
+				$eventData = $event->getExtra();
+	            if ( !isset( $eventData['gift-id'])) {
+	                return array($titleData, array());
+	            } else {
+        			return array($titleData, array('fromnotif' => 1, 'gift_id' => $eventData['gift-id']));
+        		}
+			default:
+				return parent::getLinkParams( $event, $user, $destination );
+		}
+	}
    /**
      * @param $event EchoEvent
      * @param $param

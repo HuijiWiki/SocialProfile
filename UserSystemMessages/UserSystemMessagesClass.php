@@ -157,7 +157,7 @@ class UserSystemMessage {
             'tooltip' => 'echo-pref-tooltip-advancement',
         );
         $notifications['advancement'] = array(
-        	'primary-link' => array('message' => 'notification-link-text-respond-to-user', 'destination' => 'lvl'),
+        	'primary-link' => array('message' => 'notification-link-text-respond-to-user', 'destination' => 'advancement-page'),
             'category' => 'advancement',
             'group' => 'positive',
             'formatter-class' => 'EchoAdvancementFormatter',
@@ -202,6 +202,25 @@ class UserSystemMessage {
 
 }
 class EchoAdvancementFormatter extends EchoCommentFormatter {
+	/**
+	 * Helper function for getLink()
+	 *
+	 * @param \EchoEvent $event
+	 * @param \User $user The user receiving the notification
+	 * @param string $destination The destination type for the link
+	 * @return array including target and query parameters
+	 * @throws FlowException
+	 */
+	protected function getLinkParams( $event, $user, $destination ) {
+		// Set up link parameters based on the destination (or pass to parent)
+		switch ( $destination ) {
+			case 'advancement-page':
+				$titleData = $event->getTitle();
+        		return array($titleData, array());
+			default:
+				return parent::getLinkParams( $event, $user, $destination );
+		}
+	}
    /**
      * @param $event EchoEvent
      * @param $param
