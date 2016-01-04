@@ -77,24 +77,10 @@ function wfAddForkInfo( $page_id, $ns_num, $page_title, $fork_from, $prefix ){
 
 //get template fork count by pageid
 function wfGetForkCountByPageId( $page_id ){
-	$dbr = wfGetDB(DB_SLAVE);
-	$res = $dbr->select(
-		'template_fork_count',
-		array(
-			'fork_count'
-		),
-		array(
-			'template_id' => $page_id
-		),
-		__METHOD__
-	);
-	$result = 0;
-	if( $res !== false ){
-		foreach ($res as $value) {
-			$result = $value->fork_count;
-		}
+	$result = TemplateFork::getForkCountByPageId( $page_id );
+	if ( $result != null ) {
+		return $result;
 	}
-	return json_encode( $result );
 }
 
 //get template fork info by pageid
