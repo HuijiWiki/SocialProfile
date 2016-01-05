@@ -11,7 +11,7 @@
 		static function getForkInfoByPageId( $target_id, $prefix ){
 			$result = self::getInfoByPageIdCache( $target_id, $prefix );
 			if ( $result == null ) {
-				$result = self::getForkInfoByPageIdDB( $target_id );
+				$result = self::getForkInfoByPageIdDB( $target_id, $prefix );
 			}
 			return $result;
 		}
@@ -23,7 +23,7 @@
 			return $result;
 		}
 
-		static function getForkInfoByPageIdDB( $target_id ){
+		static function getForkInfoByPageIdDB( $target_id, $prefix ){
 			global $wgMemc;
 			$dbr = wfGetDB(DB_SLAVE);
 			$res = $dbr->select(
@@ -53,7 +53,7 @@
 				}
 			}
 			$jsonRes = json_encode( $result );
-			$key = wfForeignMemcKey('huiji','', 'getInfoByPageId', 'onesite', $target_id, $result['fork_from'] );
+			$key = wfForeignMemcKey('huiji','', 'getInfoByPageId', 'onesite', $target_id, $prefix );
 			$wgMemc->set( $key, $jsonRes );
 			return $jsonRes;
 		}
@@ -65,29 +65,28 @@
 		 * @return [type]            [result json]
 		 * 
 		 */
-		static function getForkCountByPageId( $page_id ){
-			$res = self::getForkInfoByPageIdDB( $page_id );
-			// print_r($res);die;
+		static function getForkCountByPageId( $page_id, $prefix ){
+			$res = self::getForkInfoByPageId( $page_id, $prefix );
 			$res = json_decode($res);
-			// print_r($res);
 			$template_id = $res->template_id;
-			$prefix = $res->fork_from;
-			$result = self::getForkCountByPageIdCache( $template_id, $prefix );
+			$prefix_from = $res->fork_from;
+			$result = self::getForkCountByPageIdCache( $template_id, $prefix_from );
 			if ( $result == null ) {
-				$result = self::getForkCountByPageIdDB( $template_id, $prefix );
+				$result = self::getForkCountByPageIdDB( $template_id, $prefix_from );
 			}
 			return $result;
 		}
 
-		static function getForkCountByPageIdCache( $page_id, $prefix ){
+		static function getForkCountByPageIdCache( $template_id, $prefix_from ){
 			global $wgMemc;
-			$key = wfForeignMemcKey('huiji','', 'getForkCountByPageId', 'onesite', $page_id, $prefix );
+			$key = wfForeignMemcKey('huiji','', 'getForkCountByPageId', 'onesite', $template_id, $prefix_from );
 			$result = $wgMemc->get( $key );
 			return $result;
 		}
 
-		static function getForkCountByPageIdDB( $page_id, $prefix ){
+		static function getForkCountByPageIdDB( $template_id, $prefix ){
 			global $wgMemc, $isProduction;
+			$prefix_form = $prefix;
 			if ( !is_null($prefix) ) {
 				if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
 					$prefix = 'huiji_home';
@@ -106,7 +105,7 @@
 					'fork_count'
 				),
 				array(
-					'template_id' => $page_id
+					'template_id' => $template_id
 				),
 				__METHOD__
 			);
@@ -117,8 +116,8 @@
 				}
 			}
 			$jsonRes = json_encode( $result );
-			$key = wfForeignMemcKey('huiji','', 'getForkCountByPageId', 'onesite', $page_id, $prefix);
-			// $wgMemc->set( $key, $jsonRes );
+			$key = wfForeignMemcKey('huiji','', 'getForkCountByPageId', 'onesite', $template_id, $prefix_form);
+			$wgMemc->set( $key, $jsonRes );
 			return $jsonRes;
 		}
 

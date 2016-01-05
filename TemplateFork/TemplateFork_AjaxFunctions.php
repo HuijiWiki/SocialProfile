@@ -34,6 +34,7 @@ function wfAddForkCount( $page_id, $prefix ){
 //add fork info
 function wfAddForkInfo( $page_id, $ns_num, $page_title, $fork_from, $prefix ){
 	global $wgUser, $isProduction, $wgMemc;
+	$c_prefix = $prefix;
 	$fork_user = $wgUser->getName();
 	if ($prefix != null) {
 		if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
@@ -71,13 +72,13 @@ function wfAddForkInfo( $page_id, $ns_num, $page_title, $fork_from, $prefix ){
 		),
 		__METHOD__
 	);
-	$wgMemc->delete( wfForeignMemcKey('huiji','', 'getInfoByPageId', 'onesite', $res_pageid, $prefix ) );
+	$wgMemc->delete( wfForeignMemcKey('huiji','', 'getInfoByPageId', 'onesite', $res_pageid, $c_prefix ) );
 	return 'success';
 }
 
 //get template fork count by pageid
-function wfGetForkCountByPageId( $page_id ){
-	$result = TemplateFork::getForkCountByPageId( $page_id );
+function wfGetForkCountByPageId( $page_id, $prefix ){
+	$result = TemplateFork::getForkCountByPageId( $page_id, $prefix );
 	if ( $result != null ) {
 		return $result;
 	}
