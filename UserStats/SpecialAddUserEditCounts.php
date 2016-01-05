@@ -51,12 +51,14 @@ class SpecialAddUserEditCounts extends UnlistedSpecialPage{
 
 		if( $userName != null && $num != null && $date != null ){
 			$user = User::newFromName( $userName );
-			$resJson = RecordStatistics::upsertFakedPageEditRecord( $user->getId(), $num, $date );
-			$resObj = json_decode($resJson);
-			if ($resObj->status !== 'fail') {
-				$output .= "<h1>success</h1>";
-				$key = wfForeignMemcKey('huiji','', 'user_daily_edit', 'all_days', $user->getId() );
-				$wgMemc->delete($key);
+			if( !empty($user->getId()) && is_numeric($num) ){
+				$resJson = RecordStatistics::upsertFakedPageEditRecord( $user->getId(), $num, $date );
+				$resObj = json_decode($resJson);
+				if ( $resObj->status !== 'fail' ) {
+					$output .= "<h1>success</h1>";
+					$key = wfForeignMemcKey('huiji','', 'user_daily_edit', 'all_days', $user->getId() );
+					$wgMemc->delete($key);
+				}
 			}else{
 				$output .= "<h1> something wrong~ </h1>";
 			}
