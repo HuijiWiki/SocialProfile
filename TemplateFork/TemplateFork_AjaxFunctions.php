@@ -4,7 +4,6 @@
  */
 $wgAjaxExportList[] = 'wfAddForkCount';
 $wgAjaxExportList[] = 'wfAddForkInfo';
-$wgAjaxExportList[] = 'wfGetForkCountByPageId';
 $wgAjaxExportList[] = 'wfGetForkInfoByPageId';
 
 //add fork count
@@ -74,14 +73,6 @@ function wfAddForkInfo( $page_id, $ns_num, $page_title, $fork_from, $prefix ){
 	);
 	$wgMemc->delete( wfForeignMemcKey('huiji','', 'getInfoByPageId', 'onesite', $res_pageid, $c_prefix ) );
 	return 'success';
-}
-
-//get template fork count by pageid
-function wfGetForkCountByPageId( $page_id, $prefix ){
-	$result = TemplateFork::getForkCountByPageId( $page_id, $prefix );
-	if ( $result != null ) {
-		return $result;
-	}
 }
 
 //get template fork info by pageid

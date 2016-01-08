@@ -65,12 +65,8 @@
 		 * @return [type]            [result json]
 		 * 
 		 */
-		static function getForkCountByPageId( $page_id, $prefix ){
-			$res = self::getForkInfoByPageId( $page_id, $prefix );
-			$res = json_decode($res);
-			$template_id = $res->template_id;
-			$prefix_from = $res->fork_from;
-			$result = self::getForkCountByPageIdCache( $template_id, $prefix_from );
+		static function getForkCountByPageId( $template_id, $prefix_from ){
+			// $result = self::getForkCountByPageIdCache( $template_id, $prefix_from );
 			if ( $result == null ) {
 				$result = self::getForkCountByPageIdDB( $template_id, $prefix_from );
 			}
@@ -85,20 +81,8 @@
 		}
 
 		static function getForkCountByPageIdDB( $template_id, $prefix ){
-			global $wgMemc, $isProduction;
-			$prefix_form = $prefix;
-			if ( !is_null($prefix) ) {
-				if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
-					$prefix = 'huiji_home';
-				}elseif ( $isProduction == true ) {
-					$prefix = 'huiji_sites-'.str_replace('.', '_', $prefix);
-				}else{
-					$prefix = 'huiji_'.str_replace('.', '_', $prefix);
-				}
-			}else{
-				die( "error: empty $prefix;function:getAllUploadFileCount.\n" );
-			}
-			$dbr = wfGetDB( DB_SLAVE,$groups = array(),$wiki = $prefix );
+			global $wgMemc;
+			$dbr = wfGetDB( DB_SLAVE );
 			$res = $dbr->select(
 				'template_fork_count',
 				array(
@@ -115,12 +99,11 @@
 					$result = $value->fork_count;
 				}
 			}
-			$jsonRes = json_encode( $result );
 			$key = wfForeignMemcKey('huiji','', 'getForkCountByPageId', 'onesite', $template_id, $prefix_form);
-			$wgMemc->set( $key, $jsonRes );
-			return $jsonRes;
+			$wgMemc->set( $key, $result );
+			return $result;
 		}
 
 	}
-
+	
 ?>
