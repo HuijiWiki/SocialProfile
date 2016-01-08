@@ -1792,7 +1792,7 @@ class UserActivity {
 				    'url' => "http://cdn.huijiwiki.com/{$dotPrefix}/uploads",
 				    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
 				    'hashLevels' => 2, // This must be the same for the other family member
-				    'thumbScriptUrl' => $wgSharedThumbnailScriptPath,
+				    'thumbScriptUrl' => "http://cdn.huijiwiki.com/{$dotPrefix}/thumb.php",
 				    'transformVia404' => !$wgGenerateThumbnailOnParse,
 				    'dbType' => $wgDBtype,
 				    'dbServer' => $wgDBserver,
@@ -1813,7 +1813,7 @@ class UserActivity {
 				    'url' => "http://cdn.huijiwiki.com/{$dotPrefix}/uploads",
 				    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
 				    'hashLevels' => 2, // This must be the same for the other family member
-				    'thumbScriptUrl' => $wgSharedThumbnailScriptPath,
+				    'thumbScriptUrl' => "http://cdn.huijiwiki.com/{$dotPrefix}/thumb.php",
 				    'transformVia404' => !$wgGenerateThumbnailOnParse,
 				    'dbType' => $wgDBtype,
 				    'dbServer' => $wgDBserver,
@@ -1837,7 +1837,7 @@ class UserActivity {
 		    'url' => "http://{$dotPrefix}{$wgHuijiSuffix}/uploads",
 		    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
 		    'hashLevels' => 0, // This must be the same for the other family member
-		    'thumbScriptUrl' => $wgSharedThumbnailScriptPath,
+		    'thumbScriptUrl' => "http://cdn.huijiwiki.com/{$dotPrefix}/thumb.php",
 		    'transformVia404' => !$wgGenerateThumbnailOnParse,
 		    'dbType' => $wgDBtype,
 		    'dbServer' => $wgDBserver,
@@ -1895,7 +1895,7 @@ class UserActivity {
 				$f =  ForeignDBFile::newFromTitle($page_title, $repo);
 				return ' <a href="'.htmlspecialchars( $f->getDescriptionUrl() ).'"><img src="' .htmlspecialchars( $f->createThumb(200,100) ). '"></img></a>';
 			} if($page_title->inNamespace( NS_TOPIC )){
-				
+				return ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
 			}else {
 				return ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
 
