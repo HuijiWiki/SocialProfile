@@ -1,0 +1,124 @@
+#uploadfiles img{
+    height: 120px;
+}
+p{
+    margin-bottom: 0;
+}
+h4{
+    margin-bottom: 0;
+}
+#wiki-body li{
+    margin-bottom: 0;
+    line-height: 1.2;
+}
+.gray{
+    color: #999;
+}
+span.gray{
+    margin-bottom: 20px;
+    display: block;
+}
+#file{
+    display: none;
+}
+#drag-area{
+    text-align: center;
+    border: 2px dashed #999;
+    padding: 100px;
+    width: 500px;
+    margin: 20px auto;
+}
+#wiki-body #drag-area p{
+    color: #999;
+    line-height: 1.2;
+    margin-bottom: 10px;
+}
+#drag-area b{
+    display: block;
+}
+.file-btn{
+    padding: 5px 8px;
+    color: #fff;
+    background: #428bca;
+    cursor: pointer;
+}
+.file-wrap{
+    float: left;
+    margin-right: 10px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #fff;
+    height: 150px;
+    margin-bottom: 20px;
+}
+.continue{
+    border: 1px solid #999;
+    padding: 20px;
+    margin-top: 20px;
+}
+.continue #drag-area{
+    width: 120px;
+    height: 120px;
+    padding: 0;
+    margin: 0;
+    float: left;
+}
+.opacity{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 120px;
+    background: rgba(225,225,225,.5);
+}
+.default i{
+    margin-top: 50px;
+    font-size: 24px;
+}
+.file-delete{
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    color: #ff0000;
+    cursor: pointer;
+}
+.default{
+    width: 120px;
+    height: 120px;
+    text-align: center;
+}
+.file-name{
+    color: #428bca;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    position: absolute;
+    top: 120px;
+}
+.new-file-name{
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    height:25px;
+    width: 100%;
+}
+.warning{
+    border: 1px solid crimson;
+    text-align: center;
+    font-size: 14px;
+}
+.prompt{
+    font-size: 14px;
+    position: absolute;
+    top: 20px;
+    color: crimson;
+}
+.suggest{
+    border: 1px solid blanchedalmond;
+}
+.suggest .prompt{
+    color: blanchedalmond;
+}
+#upload-btn{
+    color: #fff;
+}

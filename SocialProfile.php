@@ -350,9 +350,9 @@ $wgResourceModules['ext.socialprofile.userboard.boardblast.js'] = array(
 //uploadfiles
 $wgResourceModules['ext.socialprofile.uploadfiles.css'] = array(
 	'styles' => 'uploadfiles.css',
-	'localBasePath' => __DIR__ . '/GlobalSearch',
-	'remoteExtPath' => 'SocialProfile/GlobalSearch',
-	'position' => 'top' // just in case
+	'localBasePath' => __DIR__ . '/UploadFiles',
+	'remoteExtPath' => 'SocialProfile/UploadFiles',
+	'position' => 'bottom' // just in case
 );
 
 $wgResourceModules['ext.socialprofile.uploadfiles.js'] = array(
