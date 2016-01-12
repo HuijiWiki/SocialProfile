@@ -13,6 +13,8 @@ class SpecialUploadFiles extends SpecialPage{
 	}
 
 	public function execute( $params ) {
+		// Set the page title, robot policies, etc.
+		$this->setHeaders();
 		$out = $this->getOutput();
 		$output = '';
 		$output .="<h1>图像上传</h1><h4>关于维基共享资源著作权的提示</h4><span class='gray'>（如果您是本维基的管理员，您可以点击<a>这里</a>编辑这段内容）</span>";
