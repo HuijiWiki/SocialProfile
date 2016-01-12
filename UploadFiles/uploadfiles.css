@@ -154,3 +154,10 @@ span.gray{
     margin-right: 10px;
     color: #fff;
 }
+.upload-progress{
+    position: absolute;
+    bottom: 28px;
+    height: 3px;
+    background: #09c;
+    width: 0;
+}

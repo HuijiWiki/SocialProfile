@@ -357,6 +357,7 @@ $wgResourceModules['ext.socialprofile.uploadfiles.css'] = array(
 
 $wgResourceModules['ext.socialprofile.uploadfiles.js'] = array(
 	'scripts' => 'uploadfiles.js',
+	'dependencies' => 'mediawiki.notification',
 	'localBasePath' => __DIR__ . '/UploadFiles',
 	'remoteExtPath' => 'SocialProfile/UploadFiles',
 );
