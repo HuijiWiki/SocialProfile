@@ -36,6 +36,7 @@ $wgMessagesDirs['SocialProfileUserUserFollows'] = __DIR__ . '/UserUserFollows/i1
 $wgMessagesDirs['SocialProfileAdminDashboard'] = __DIR__ . '/AdminDashboard/i18n';
 $wgMessagesDirs['SocialProfileSiteStatus'] = __DIR__ . '/SiteStatus/i18n';
 $wgMessagesDirs['SocialProfileUserStatus'] = __DIR__ . '/UserStatus/i18n';
+$wgMessagesDirs['SocialProfileUploadFiles'] = __DIR__ . '/UploadFiles/i18n';
 $wgExtensionMessagesFiles['SocialProfileNamespaces'] = __DIR__ . '/SocialProfile.namespaces.php';
 $wgExtensionMessagesFiles['AvatarMagic'] = __DIR__ . '/UserProfile/Avatar.magic.i18n.php';
 
