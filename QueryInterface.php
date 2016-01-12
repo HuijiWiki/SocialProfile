@@ -44,50 +44,6 @@ class QueryInterface
 		return self::curl_post_json('wikisite','search',$data);	
 
 	}
-
-
-	
-
-	static function upsert($sitePrefix,$siteName,$id,$title,$content,$timestamp)
-	{
-		$data = json_encode(array(
-					'sitePrefix'=>$sitePrefix,
-					'siteName' => $siteName,
-					'id' => $id,
-					'title' => $title,
-					'content' => $content,
-					'timestamp'=>$timestamp
-					)
-				);
-		self::curl_post_json('page','upsert',$data);
-	}
-
-
-	static function searchWithLogInfo($ip, $userId, $siteId, $content, $size, $offset)
-	{
-		$data = json_encode(array(
-					'ip' => $ip,
-					'userId' => $userId,
-					'siteId' => $siteId,
-					'content' => $content,
-					'size' => $size,
-					'offset' => $offset
-					)
-				);
-
-		return self::curl_post_json('page','searchWithLogInfo',$data);
-	}
-
-	static function delete($sitePrefix, $id){
-	
-		$data = json_encode(array(
-					'sitePrefix'=>$sitePrefix,
-					'id' => $id,
-					)
-				);
-		self::curl_post_json('page','delete',$data);
-	}
-
 }
 
 //var_dump(QueryInterface::wikisiteSearch("魔戒",1,0));
