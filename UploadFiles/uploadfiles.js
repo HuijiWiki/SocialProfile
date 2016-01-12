@@ -27,6 +27,7 @@ var uploadfiles = {
         var files = e.target.files||e.dataTransfer.files;
         var num = files.length;
         var self = this;
+        mw.notification.autoHideSeconds = 1;
         //多个文件被选中进行遍历
         for(var i=0;i<num;i++) {
             var formData = new FormData();
@@ -62,7 +63,7 @@ var uploadfiles = {
             type: 'POST',
             success: function (data) {
                 if (data.upload.result == "Success") {
-                    var content = '<img src="/wiki/特殊:上传藏匿/file/' + data.upload.filekey + '" data-filekey="' + data.upload.filekey + '" data-name="' + name + '" class="file-source" >' +
+                    var content = '<img src="/wiki/特殊:上传藏匿/file/' + data.upload.filekey + '" data-filekey="' + data.upload.filekey + '" data-name="' + name + '" class="file-source wait" >' +
                         '<p class="prompt"></p><p class="file-name">' + name + '</p>';
                     $('#wrap' + index + ' .fa').remove();
                     $('#wrap' + index).removeClass('default').append(content);
@@ -71,12 +72,12 @@ var uploadfiles = {
 
                 } else if (data.upload.result == "Warning") {
                     if (data.upload.warnings.exists) {
-                        var content = '<img src="/wiki/特殊:上传藏匿/file/' + data.upload.filekey + '" data-filekey="' + data.upload.filekey + '" data-name="' + name + '" class="file-source" >' +
+                        var content = '<img src="/wiki/特殊:上传藏匿/file/' + data.upload.filekey + '" data-filekey="' + data.upload.filekey + '" data-name="' + name + '" class="file-source wait" >' +
                             '<p class="prompt">已存在相同名称，请点名称重新命名</p><p class="file-name">' + name + '</p>';
                         $('#wrap' + index + ' .fa').remove();
                         $('#wrap' + index).removeClass('default').append(content).addClass('warning');
                     } else if (data.upload.warnings.duplicate) {
-                        var content = '<img src="/wiki/特殊:上传藏匿/file/' + data.upload.filekey + '" data-filekey="' + data.upload.filekey + '" data-name="' + name + '" class="file-source" >' +
+                        var content = '<img src="/wiki/特殊:上传藏匿/file/' + data.upload.filekey + '" data-filekey="' + data.upload.filekey + '" data-name="' + name + '" class="file-source wait" >' +
                             '<p class="prompt">已存在相同内容，建议删除本文件</p><p class="file-name">' + name + '</p>';
                         $('#wrap' + index + ' .fa').remove();
                         $('#wrap' + index).removeClass('default').append(content).addClass('suggest');
@@ -91,14 +92,22 @@ var uploadfiles = {
     funContinue: function(){
         //添加第一张图片后改变样式
         $('#uploadfiles').addClass('continue');
+        $('.file-btn').text('添加更多');
+        if($('#des-btn').length==0){
+            var content = "<div class='btn mw-ui-button mw-ui-constructive' id='des-btn' data-toggle='modal' data-target='.img-description'>批量描述</div>";
+            $('#upload-btn').after(content);
+        }
     },
     funFirst: function(){
         //当没有图片时返回样式
         $('#uploadfiles').removeClass('continue');
+        $('.file-btn').text('选择电脑上的图片');
+        $('#des-btn').remove();
     },
     funChangeName: function(){
         var self = this;
-        $('#uploadfiles').on('click','.file-name',function(){
+        $('#uploadfiles').on('click','.file-name',function(e){
+            e.stopPropagation();
             var that = $(this);
             var text = $(this).text();
             var end = text.substring(text.length-4,text.length);
@@ -161,11 +170,33 @@ var uploadfiles = {
     },
     funDelete: function(){
         var self = this;
-        $('#uploadfiles').on('click','.file-delete',function(){
+        $('#uploadfiles').on('click','.file-delete',function(e){
+            e.stopPropagation();
             $(this).parents('.file-wrap').remove();
             if($('.file-wrap').length == 0){
                 self.funFirst();
             }
+        });
+    },
+    funGlobalDescription: function(){
+        $('.des-save').click(function(){
+            $('.file-source').attr('data-description',$('#des-text').val());
+            mw.notification.notify('批量描述保存成功');
+            $('.img-description').modal('hide');
+        });
+    },
+    funSelfDescription: function(){
+        $('#uploadfiles').on('click','.file-wrap',function(){
+            $('.self-img-description').modal('show');
+            var that = $(this);
+            $('#self-des-text').val(that.find('img').data('description'));
+            $('.self-des-save').click(function(){
+                that.find('img').attr('data-description',$('#self-des-text').val());
+            });
+        });
+        $('.self-des-save').click(function(){
+            mw.notification.notify('描述保存成功');
+            $('.self-img-description').modal('hide');
         });
     },
     funBtn:function(e){
@@ -177,17 +208,19 @@ var uploadfiles = {
     funUpload: function(e){
         var self = this;
         if($('.file-source').length==0){
-            mw.notification.notify('上传成功');
+            mw.notification.notify('请选择文件');
         }else if($('.file-wrap').hasClass('warning')){
             mw.notification.notify('请处理命名已存在的文件');
         }else {
-            $('.file-source').each(function (index) {
+            $('.file-source.wait').each(function (index) {
                 var xhr = new XMLHttpRequest();
                 var formData = new FormData();
                 var that = $(this);
                 formData.append('action', 'upload');
                 formData.append('filename', $(this).data('name'));
                 formData.append('filekey', $(this).data('filekey'));
+                formData.append('comment','upload');
+                formData.append('text',$(this).data('description'));
                 formData.append('token', self.token);
                 formData.append('format', 'json');
                 if (xhr.upload) {
@@ -202,11 +235,11 @@ var uploadfiles = {
                 function uploadComplete(evt){
                     var data = JSON.parse(evt.target.responseText);
                     if(data.upload){
-                        that.siblings('.opacity').remove();
+                        that.siblings('.opacity,.prompt').remove();
+                        that.removeClass('wait');
                         if(index == $('.file-source').length-1){
                             mw.notification.notify('上传成功');
                             $('#upload-btn').button('reset');
-                            $('.file-wrap').remove();
                         }
                     }else{
                         console.log(data);
@@ -224,6 +257,8 @@ var uploadfiles = {
         this.funDelete();
         this.funChangeName();
         this.funBtn();
+        this.funGlobalDescription();
+        this.funSelfDescription();
     },
     init: function(){
         var self = this;
