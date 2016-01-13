@@ -62,6 +62,8 @@ var uploadfiles = {
             type: 'POST',
             success: function (data) {
                 var src = "/wiki/特殊:上传藏匿/file/"+data.upload.filekey;
+                if(size>1048576)
+                src = "/resources/assets/toolarge.jpg";
                 if (data.upload.result == "Success") {
                     var content = '<img src="' + src + '" data-filekey="' + data.upload.filekey + '" data-name="' + name + '" class="file-source wait" >' +
                         '<p class="prompt"></p><p class="file-name">' + name + '</p>';
