@@ -47,22 +47,50 @@ class SpecialGlobalSearch extends SpecialPage {
 		if ( !is_null($key) ) {
 			$resJson = QueryInterface::pageSearch($key, $per_page, $star_page);
 			$resObj = json_decode($resJson);
+			// print_r($resObj);exit;
 			$resCount = empty($resObj->hits)?0:$resObj->hits;
 			if ( $resCount == 0 ) {
 				$output .= "暂时没有此词条";
 			}else{
-				$output .= "<div class=\"results-info\"><strong>".$resCount."</strong>条结果中的<strong>".($star_page+1)."<span>到</span>".($per_page*$page)."</strong>条</div>
+				if ( $page*$per_page > $resCount ) {
+					$endPageNum = $resCount;
+				}else{
+				    $endPageNum = ( $resCount < 10 )?$resCount:$per_page*$page;
+				}
+				$output .= "<div class=\"results-info\"><strong>".$resCount."</strong>条结果中的<strong>".($star_page+1)."<span>到</span>".$endPageNum."</strong>条</div>
 						<ul class=\"mw-search-results\">";
 				foreach ($resObj->sites as $value) {
 					$d = strtotime($value->timestamp);
 					$output .= "<li><div class=\"mw-search-result-heading\">
-										<a href=\"http://".$value->address."\">".$value->title."</a><br>
-										<a href=\"http://".$value->sitePrefix.$wgHuijiSuffix."\">".$value->siteName."</a>
-									</div>
-									<div class=\"searchresult\">".$value->content."
-									</div>
-									<div class=\"mw-search-result-data\">".date("Y年m月d日 h:i:s", $d)."
-									</div>
+									<a href=\"".$value->address."\">".$value->title."</a><br>";
+					$redCount = count($value->redirects);
+					if( $redCount > 0 ){
+						$maxNum = ($redCount >= 5)?5:$redCount;
+						$output .= "<b>重定向页面:</b>";
+						for ($i=0; $i<$maxNum ; $i++) { 
+							$output .= "<span>&nbsp&nbsp".$value->redirects[$i]."</span>";
+						}
+						if ( $redCount > 5 ) {
+							$output .= "<b>…</b>";
+						}
+					}
+					$output .="<a href=\"http://".$value->sitePrefix.$wgHuijiSuffix."\">".$value->siteName."</a>
+								</div>
+								<div class=\"searchresult\">".$value->content."
+								</div>";
+					$cateCount = count($value->category);
+					if( $cateCount > 0 ){
+						$maxNum = ($cateCount >= 5)?5:$cateCount;
+						$output .= "<b>分类:</b>";
+						for ($i=0; $i<$maxNum ; $i++) { 
+							$output .= "<span>&nbsp&nbsp".$value->category[$i]."</span>";
+						}
+						if ( $cateCount > 5 ) {
+							$output .= "<b>…</b>";
+						}
+					}
+					$output .= "<div class=\"mw-search-result-data\">".date("Y年m月d日 h:i:s", $d)."
+								</div>
 								</li>";
 				}
 				$output .= '</ul>';
