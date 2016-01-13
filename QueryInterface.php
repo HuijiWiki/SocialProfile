@@ -5,7 +5,7 @@ class QueryInterface
 
 	static function curl_post_json($type,$op,$data_string)
 	{
-		$url =  'http://test.huiji.wiki:8080/queryService/webapi/'.$type.'/'.$op;
+		$url =  'http://121.42.179.100:8080/queryService/webapi/'.$type.'/'.$op;
 		$header = array(
 			'Content-Type: application/json',
 			'Content-Length: '.strlen($data_string),
@@ -48,7 +48,7 @@ class QueryInterface
 
 //var_dump(QueryInterface::wikisiteSearch("魔戒",1,0));
 
-//var_dump(QueryInterface::pageSearch("wei",1,0));
+var_dump(QueryInterface::pageSearch("Hawkeye",1,0));
 //TestQuery::upsert('zhang','zhang','1','niubi','niiuuuuuu','today')
 //TestQuery::searchWithLogInfo('1232.343.555.5','343',-1,"yezhu",30,0);
 ?>
