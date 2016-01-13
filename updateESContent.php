@@ -45,7 +45,7 @@ function unDeletePage($title, $revision, $oldPageId){
 		
 	);
 	$post_data_string = json_encode($post_data);
-	wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile.log");
+//	wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile.log");
 	curl_post_json('upsert',$post_data_string);
 
 }
@@ -81,9 +81,6 @@ function updatePage($article, $user, $content, $summary, $isMinor, $isWatch, $se
        	$output = $new_content->getParserOutput( $article->getTitle(), $rev->getId(), $options );
        	$category = array_map( 'strval', array_keys( $output->getCategories() ) );
 
-//	wfErrorLog($old_redirectId."   ".$new_redirectId,"/var/log/mediawiki/SocialProfile.log");
-//	wfErrorLog(implode(',',$category),"/var/log/mediawiki/SocialProfile.log");
-
 	$title = ($article->getTitle()->getText() == "首页") ? $wgSitename : $article->getTitle()->getText();
 	$preTitle = $old_rev != null ? $old_rev->getTitle()->getText():null;
 	$redirectPageTitle = $new_redirect != null ? $new_redirect->getText():null;
@@ -102,7 +99,7 @@ function updatePage($article, $user, $content, $summary, $isMinor, $isWatch, $se
 		
 	);
 	$post_data_string = json_encode($post_data);
-	wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile.log");
+//	wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile.log");
 	curl_post_json('upsert',$post_data_string);
 }
 
