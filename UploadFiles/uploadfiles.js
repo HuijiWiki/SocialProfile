@@ -210,7 +210,7 @@ var uploadfiles = {
     },
     funUpload: function(e){
         var self = this;
-        if($('.file-source').length==0){
+        if($('.file-source.wait').length==0){
             mw.notification.notify('请选择文件');
         }else if($('.file-wrap').hasClass('warning')){
             mw.notification.notify('请处理命名已存在的文件');
@@ -244,7 +244,7 @@ var uploadfiles = {
                 var data = JSON.parse(evt.target.responseText);
                     that.siblings('.opacity,.prompt').remove();
                     that.removeClass('wait');
-                    if(index == $('.file-source').length-1){
+                    if(index == $('.file-source.wait').length-1){
                         mw.notification.notify('上传成功');
                         $('#upload-btn').button('reset');
                     }
