@@ -62,17 +62,18 @@ class SpecialGlobalSearch extends SpecialPage {
 				foreach ($resObj->sites as $value) {
 					$d = strtotime($value->timestamp);
 					$output .= "<li><div class=\"mw-search-result-heading\">
-									<a href=\"".$value->address."\">".$value->title."</a><br>";
+									<a href=\"".$value->address."\">".$value->title."</a>";
 					$redCount = count($value->redirects);
 					if( $redCount > 0 ){
 						$maxNum = ($redCount >= 5)?5:$redCount;
-						$output .= "<b>重定向页面:</b>";
+						$output .= "(";
 						for ($i=0; $i<$maxNum ; $i++) { 
-							$output .= "<span>&nbsp&nbsp".$value->redirects[$i]."</span>";
+							$output .= "<span style='color:#c9c9c9; font-size: 10px;'>&nbsp&nbsp".$value->redirects[$i]."</span>";
 						}
 						if ( $redCount > 5 ) {
-							$output .= "<b>…</b>";
+							$output .= "…";
 						}
+						$output .= ")";
 					}
 					$output .="<a href=\"http://".$value->sitePrefix.$wgHuijiSuffix."\">".$value->siteName."</a>
 								</div>
