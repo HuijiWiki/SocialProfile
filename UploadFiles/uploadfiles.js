@@ -70,6 +70,8 @@ var uploadfiles = {
                     $('#wrap' + index + ' .fa').remove();
                     $('#wrap' + index).removeClass('default').append(content);
                     var width = (data.upload.imageinfo.width) / (data.upload.imageinfo.height) * 120;
+                    if (size>1048576)
+                    width = 120;
                     $('#wrap' + index).css('max-width', width + 'px');
 
                 } else if (data.upload.result == "Warning") {
@@ -210,7 +212,8 @@ var uploadfiles = {
     },
     funUpload: function(e){
         var self = this;
-        if($('.file-source').length==0){
+        var len = $('.file-source.wait').length;
+        if(len==0){
             mw.notification.notify('请选择文件');
         }else if($('.file-wrap').hasClass('warning')){
             mw.notification.notify('请处理命名已存在的文件');
@@ -241,13 +244,13 @@ var uploadfiles = {
                 xhr.open('POST',self.url);
                 xhr.send(formData);
                 function uploadComplete(evt){
-                var data = JSON.parse(evt.target.responseText);
+                    var data = JSON.parse(evt.target.responseText);
                     that.siblings('.opacity,.prompt').remove();
-                    that.removeClass('wait');
-                    if(index == $('.file-source').length-1){
+                    if(index == len-1){
                         mw.notification.notify('上传成功');
                         $('#upload-btn').button('reset');
                     }
+                    that.removeClass('wait');
                 }
             });
         }
@@ -261,7 +264,6 @@ var uploadfiles = {
     onProgress: function(that,loaded,total){
         //获得上传进度动态百分比
         var  percent = 50+(loaded / total * 50).toFixed(2) + '%';
-        console.log(percent);
         that.siblings('.upload-progress').css('width',percent);
     },
     funAddEvent: function(){
