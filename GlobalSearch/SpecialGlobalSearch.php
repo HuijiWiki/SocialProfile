@@ -66,14 +66,14 @@ class SpecialGlobalSearch extends SpecialPage {
 					$redCount = count($value->redirects);
 					if( $redCount > 0 ){
 						$maxNum = ($redCount >= 5)?5:$redCount;
-						$output .= "  [";
+						$output .= "		[";
 						for ($i=0; $i<$maxNum ; $i++) { 
 							$output .= "<span style='color:#c9c9c9; font-size: 10px;'>&nbsp&nbsp".$value->redirects[$i]."</span>";
 						}
 						if ( $redCount > 5 ) {
 							$output .= "…";
 						}
-						$output .= "]";
+						$output .= " ]";
 					}
 					$output .="<a href=\"http://".$value->sitePrefix.$wgHuijiSuffix."\">".$value->siteName."</a>
 								</div>
