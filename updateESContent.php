@@ -11,6 +11,7 @@ $wgHooks['ArticleRevisionUndeleted'][] = 'unDeletePage';
 
 function unDeletePage($title, $revision, $oldPageId){
 	global $wgHuijiPrefix, $wgSitename;
+	if(strpos($wgHuijiPrefix, '.test') !== false) return;
 	//title
 	$titleT = ($title->getText() == "首页") ? $wgSitename : $title->getText();
 	// new_content ,   new_redirect 
@@ -52,6 +53,7 @@ function unDeletePage($title, $revision, $oldPageId){
 
 function updatePage($article, $user, $content, $summary, $isMinor, $isWatch, $section, $flags, $revision, $status, $baseRevId){
 	global $wgHuijiPrefix, $wgSitename;
+	if(strpos($wgHuijiPrefix, '.test') !== false) return;
 	$rev = $revision;
 	if($rev == null) return;
 	$old_rev = $rev->getPrevious();
@@ -105,7 +107,7 @@ function updatePage($article, $user, $content, $summary, $isMinor, $isWatch, $se
 
 function deletePage($article, $user, $reason, $id){
 	global $wgHuijiPrefix, $wgSitename;
-	
+	if(strpos($wgHuijiPrefix, '.test') !== false) return;
 	$post_data = array(
 		'sitePrefix' => $wgHuijiPrefix,
 		'id' => $id
@@ -116,7 +118,7 @@ function deletePage($article, $user, $reason, $id){
 
 
 function curl_post_json($type,$data_string)
-        {
+{
                 $url =  'http://121.42.179.100:8080/queryService/webapi/page/'.$type;
                 $header = array(
                         'Content-Type: application/json',
