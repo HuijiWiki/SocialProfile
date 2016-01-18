@@ -216,7 +216,7 @@ class UserSystemGifts {
 	 * @param $id Integer: system gift ID number
 	 * @return Array: array containing information about the system gift
 	 */
-	static function getUserGift( $id ) {
+	static function getUserGift( $id, $user_name ) {
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select(
 			array( 'user_system_gift', 'system_gift' ),
@@ -224,29 +224,49 @@ class UserSystemGifts {
 				'sg_id', 'sg_user_id', 'sg_user_name', 'gift_id', 'sg_date',
 				'gift_name', 'gift_description', 'gift_given_count', 'sg_status'
 			),
-			array( "sg_id = {$id}" ),
+			array( 
+				"sg_gift_id = {$id}",
+				'sg_user_name' => $user_name,
+			 ),
 			__METHOD__,
 			array(
-				'LIMIT' => 1,
-				'OFFSET' => 0
+				// 'LIMIT' => 1,
+				// 'OFFSET' => 0
 			),
 			array( 'system_gift' => array( 'INNER JOIN', 'sg_gift_id = gift_id' ) )
 		);
-		$row = $dbr->fetchObject( $res );
-		$gift = array();
-		if ( $row ) {
-			$gift['id'] = $row->sg_id;
-			$gift['user_id'] = $row->sg_user_id;
-			$gift['user_name'] = $row->sg_user_name;
-			$gift['gift_count'] = $row->gift_given_count;
-			$gift['timestamp'] = $row->sg_date;
-			$gift['gift_id'] = $row->gift_id;
-			$gift['name'] = $row->gift_name;
-			$gift['description'] = $row->gift_description;
-			$gift['status'] = $row->sg_status;
+		$result = array();
+		if ( $res != false ) {
+			foreach ($res as $value) {
+				$gift['id'] = $value->sg_id;
+				$gift['user_id'] = $value->sg_user_id;
+				$gift['user_name'] = $value->sg_user_name;
+				$gift['gift_count'] = $value->gift_given_count;
+				$gift['timestamp'] = $value->sg_date;
+				$gift['gift_id'] = $value->gift_id;
+				$gift['name'] = $value->gift_name;
+				$gift['description'] = $value->gift_description;
+				$gift['status'] = $value->sg_status;
+				$result[] = $gift;
+			}
 		}
+		
+		return $result;
+		// $row = $dbr->fetchObject( $res );
+		// $gift = array();
+		// if ( $row ) {
+		// 	$gift['id'] = $row->sg_id;
+		// 	$gift['user_id'] = $row->sg_user_id;
+		// 	$gift['user_name'] = $row->sg_user_name;
+		// 	$gift['gift_count'] = $row->gift_given_count;
+		// 	$gift['timestamp'] = $row->sg_date;
+		// 	$gift['gift_id'] = $row->gift_id;
+		// 	$gift['name'] = $row->gift_name;
+		// 	$gift['description'] = $row->gift_description;
+		// 	$gift['status'] = $row->sg_status;
+		// }
 
-		return $gift;
+		// return $gift;
 	}
 
 	/**
@@ -369,7 +389,17 @@ class UserSystemGifts {
 		if ( $limit > 0 && $page ) {
 			$limitvalue = $page * $limit - ( $limit );
 		}
-
+		if ( $limit == 0 && $page == 0 ) {
+			$condition = array(
+				'ORDER BY' => 'sg_id DESC'
+				);
+		}else{
+			$condition = array(
+				'ORDER BY' => 'sg_id DESC',
+				'LIMIT' => $limit,
+				'OFFSET' => $limitvalue
+			);
+		}
 		$res = $dbr->select(
 			array( 'user_system_gift', 'system_gift' ),
 			array(
@@ -379,11 +409,7 @@ class UserSystemGifts {
 			),
 			array( "sg_user_id = {$this->user_id}" ),
 			__METHOD__,
-			array(
-				'ORDER BY' => 'sg_id DESC',
-				'LIMIT' => $limit,
-				'OFFSET' => $limitvalue
-			),
+			$condition,
 			array( 'system_gift' => array( 'INNER JOIN', 'sg_gift_id = gift_id' ) )
 		);
 

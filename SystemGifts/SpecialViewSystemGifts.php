@@ -79,7 +79,7 @@ class ViewSystemGifts extends SpecialPage {
 		 */
 		$rel = new UserSystemGifts( $user_name );
 
-		$gifts = $rel->getUserGiftList( 0, $per_page, $page );
+		// $gifts = $rel->getUserGiftList( 0, $per_page, $page );
 		$total = '<span style="color:#428bca;font-size:20px;font-weight: bold;">'.$rel->getGiftCountByUsername( $user_name ).'</span>';
 		$curUserObj = User::newFromName($user_name);
 		$uuf = new UserUserFollow();
@@ -121,18 +121,34 @@ class ViewSystemGifts extends SpecialPage {
 		$output .= '<div><a href="'.$allGiftList.'">查看所有奖励</a></div><div class="giftlist">';
 		// Safelinks
 		$view_system_gift_link = SpecialPage::getTitleFor( 'ViewSystemGift' );
-		// print_r($gifts);
-		
-		// print_r($countRes);
-		if ( $gifts ) {
-			foreach ( $gifts as $gift ) {
+		//get all gift user had got
+		$all_gifts = $rel->getUserGiftList( 0, 0, 0 );
+		if(!empty($all_gifts)){
+			foreach ($all_gifts as $value) {
+				$gift_name[] = $value['gift_name'];
+			}
+			// count every gift total number
+			$gift_count = array_count_values($gift_name);
+			// del the repeat gift from list
+			$repeat = array();
+			foreach ($all_gifts as $key => $value) {
+				if(isset($repeat[$value['gift_name']])){
+		            unset($all_gifts[$key]);
+		        }else{
+		            $repeat[$value['gift_name']] = $value['gift_name'];
+		        }
+				$repeat[] = $value['gift_name'];
+			}
+			$star = $per_page*($page-1);
+			$res_arr = array_slice($all_gifts, $star, $per_page);
+			foreach ( $res_arr as $key =>$gift ) {
 				$gift_image = "<div class='img'><img src=\"{$wgUploadPath}/awards/" .
 					SystemGifts::getGiftImage( $gift['gift_id'], 'l' ) .
 					'" border="0" alt="" /></div>';
 
 				$output .= "<div class=\"ga-item have\">
 					<a href=\"" .
-                    htmlspecialchars( $view_system_gift_link->getFullURL( 'gift_id=' . $gift['id'] ) ) .
+                    htmlspecialchars( $view_system_gift_link->getFullURL( 'user='.$gift['user_name'] .'&gift_id=' . $gift['gift_id'] ) ) .
                     "\" data-toggle='popover' data-trigger='hover' title='{$gift['gift_name']}' data-content='{$gift['gift_description']}'>
                     {$gift_image}";
 
@@ -144,17 +160,20 @@ class ViewSystemGifts extends SpecialPage {
 					/*$output .= '&nbsp<span class="label label-success">' .
 						$this->msg( 'ga-new' )->plain() . '</span>';*/
 				}
-
+				$gift_count_str = ($gift_count[$gift['gift_name']]>1)?$gift_count[$gift['gift_name']].'次':'';
 				$output .= '<div class="cleared"></div>
-				</a></div>';
+				</a><span class="gift-count-num">已获得'.$gift_count_str.'</span></div>';
 			}
 			$output .= '</div>';
+		}else{
+			$output .= "<br><div>你暂时还没收到奖励哟~</div>";
 		}
 
 		/**
 		 * Build next/prev nav
 		 */
-		$pcount = $rel->getGiftCountByUsername( $user_name );
+		// $pcount = $rel->getGiftCountByUsername( $user_name );
+		$pcount = count($all_gifts);
 		$numofpages = $pcount / $per_page;
 
 		$page_link = $this->getPageTitle();

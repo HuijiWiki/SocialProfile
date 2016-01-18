@@ -217,7 +217,7 @@
 .ga-item .img img{
     width: 100%;
 }
-.have:after{
+/*.have:after{
     content: "已获得";
     position: absolute;
     top: 45px;
@@ -241,7 +241,7 @@
     text-shadow: 0 0 2px #c00;
     box-shadow: 0 0 2px #c00;
     font-size: 12px;
-}
+}*/
 .ga-item .img{
     width: 120px;
     height: 120px;
@@ -261,4 +261,28 @@
     bottom: 5px;
     box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.5);
     z-index: -1;
+}
+.gift-count-num{
+	position: absolute;
+    top: 45px;
+    left: 35px;
+    z-index: 1;
+    font-family: Arial,sans-serif;
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    color: #c00;
+    background: #fff;
+    border: solid 4px #c00;
+    padding: 5px;
+    border-radius: 5px;
+    zoom: 1;
+    filter: alpha(opacity=20);
+     opacity: 0.8;
+    -webkit-text-shadow: 0 0 2px #c00;
+    text-shadow: 0 0 2px #c00;
+    box-shadow: 0 0 2px #c00;
+    font-size: 12px;
 }

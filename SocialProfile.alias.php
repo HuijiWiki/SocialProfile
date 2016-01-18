@@ -515,6 +515,7 @@ $specialPageAliases['zh-hans'] = array(
 	'GiftManager' => array('礼物管理'),
 	'SystemGiftManager' => array('系统礼物管理'),
 	'ViewSystemGifts' => array('收到的奖励'),
+	'ViewSystemGift' => array('奖励详情'),
 	'SystemGiftList' => array('礼物列表'),
 	'CompleteUserInfo' => array('完善资料'),
 	'CallbackQQ' => array('回调页面'),
