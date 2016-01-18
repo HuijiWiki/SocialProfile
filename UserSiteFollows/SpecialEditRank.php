@@ -74,6 +74,11 @@ class SpecialEditRank extends SpecialPage {
 		$target_user = User::newFromId( $user_id );
 		$userPage = Title::makeTitle( NS_USER, $user_name );
 		$sitefollows = UserSiteFollow::getSiteFollowersWithDetails($target_user, $wgHuijiPrefix);
+		foreach ($sitefollows as $key => $value) {
+			if( $value['count'] == 0 ){
+	            unset($sitefollows[$key]);
+	        }
+		}
 		$total = count($sitefollows);
 		$star_page = $per_page*($page-1);
 		$result = array_slice($sitefollows,$star_page ,$per_page );
