@@ -229,10 +229,7 @@ class UserSystemGifts {
 				'sg_user_name' => $user_name,
 			 ),
 			__METHOD__,
-			array(
-				// 'LIMIT' => 1,
-				// 'OFFSET' => 0
-			),
+			array( ),
 			array( 'system_gift' => array( 'INNER JOIN', 'sg_gift_id = gift_id' ) )
 		);
 		$result = array();
@@ -250,23 +247,8 @@ class UserSystemGifts {
 				$result[] = $gift;
 			}
 		}
-		
-		return $result;
-		// $row = $dbr->fetchObject( $res );
-		// $gift = array();
-		// if ( $row ) {
-		// 	$gift['id'] = $row->sg_id;
-		// 	$gift['user_id'] = $row->sg_user_id;
-		// 	$gift['user_name'] = $row->sg_user_name;
-		// 	$gift['gift_count'] = $row->gift_given_count;
-		// 	$gift['timestamp'] = $row->sg_date;
-		// 	$gift['gift_id'] = $row->gift_id;
-		// 	$gift['name'] = $row->gift_name;
-		// 	$gift['description'] = $row->gift_description;
-		// 	$gift['status'] = $row->sg_status;
-		// }
 
-		// return $gift;
+		return $result;
 	}
 
 	/**
