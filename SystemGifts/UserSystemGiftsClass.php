@@ -229,7 +229,9 @@ class UserSystemGifts {
 				'sg_user_name' => $user_name,
 			 ),
 			__METHOD__,
-			array( ),
+			array(
+				'ORDER BY' => 'sg_date DESC'
+			),
 			array( 'system_gift' => array( 'INNER JOIN', 'sg_gift_id = gift_id' ) )
 		);
 		$result = array();
@@ -373,11 +375,11 @@ class UserSystemGifts {
 		}
 		if ( $limit == 0 && $page == 0 ) {
 			$condition = array(
-				'ORDER BY' => 'sg_id DESC'
+				'ORDER BY' => 'sg_date DESC'
 				);
 		}else{
 			$condition = array(
-				'ORDER BY' => 'sg_id DESC',
+				'ORDER BY' => 'sg_date DESC',
 				'LIMIT' => $limit,
 				'OFFSET' => $limitvalue
 			);

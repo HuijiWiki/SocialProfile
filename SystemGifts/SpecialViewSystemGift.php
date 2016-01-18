@@ -51,6 +51,7 @@ class ViewSystemGift extends UnlistedSpecialPage {
 			$this->msg( 'ga-back-link', $profileURL, $user_name )->text() .
 		'</div>';
 		if ( count($gift) > 0 ) {
+			$i = 1;
 			foreach ($gift as $value) {
 				$out->setPageTitle( $this->msg( 'ga-gift-title', $value['user_name'], $value['name'] )->parse() );
 
@@ -82,28 +83,10 @@ class ViewSystemGift extends UnlistedSpecialPage {
 						'LIMIT' => 6
 					)
 				);
-
-				
-
-				$message = $out->parse( trim( $value['description'] ), false );
-				$output .= '<div class="ga-description-container">';
-
-				$giftImage = "<img src=\"{$wgUploadPath}/awards/" .
-					SystemGifts::getGiftImage( $value['gift_id'], 'l' ) .
-					'" border="0" alt=""/>';
-
-				$output .= "<div class=\"ga-description\">
-						{$giftImage}
-						<div class=\"ga-name\">{$value['name']}</div>
-						<div class=\"ga-timestamp\">({$value['timestamp']})</div>
-						<div class=\"ga-description-message\">{$message}</div>";
-				$output .= '<div class="cleared"></div>
-					</div>';
-
 				// If someone else in addition to the current user has gotten this
 				// award, then and only then show the "Other recipients of this
 				// award" header and the list of avatars
-				if ( $value['gift_count'] > 1 ) {
+				if ( $value['gift_count'] > 1 && $i == 1){
 					$output .= '<div class="ga-recent">
 						<div class="ga-recent-title">' .
 							$this->msg( 'ga-recent-recipients-award' )->plain() .
@@ -130,7 +113,22 @@ class ViewSystemGift extends UnlistedSpecialPage {
 					</div>'; // .ga-recent
 				}
 
-				$output .= '</div><br>';
+				$message = $out->parse( trim( $value['description'] ), false );
+				$output .= '<div class="ga-description-container">';
+
+				$giftImage = "<img src=\"{$wgUploadPath}/awards/" .
+					SystemGifts::getGiftImage( $value['gift_id'], 'l' ) .
+					'" border="0" alt=""/>';
+
+				$output .= "<div class=\"ga-description\">
+						{$giftImage}
+						<div class=\"ga-name\">{$value['name']}</div>
+						<div class=\"ga-timestamp\">({$value['timestamp']})</div>
+						<div class=\"ga-description-message\">{$message}</div>";
+				$output .= '<div class="cleared"></div>
+					</div>';
+				$output .= '</div>';
+				$i++;
 			}
 			$out->addHTML( $output );
 

@@ -1986,7 +1986,7 @@ class UserProfilePage extends Article {
 				if ( $gift['status'] == 1 ) {
 					$class = 'class="user-page-new"';
 				}
-				$output .= '<a href="' . htmlspecialchars( $gift_link->getFullURL( 'gift_id=' . $gift['id'] ) ) .
+				$output .= '<a href="' . htmlspecialchars( $gift_link->getFullURL( 'user='.$user_name .'&gift_id=' . $gift['gift_id'] ) ) .
 					'" ' . $class . " rel=\"nofollow\">
 					{$gift_image}
 				</a>";
