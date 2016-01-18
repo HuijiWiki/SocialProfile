@@ -160,9 +160,9 @@ class ViewSystemGifts extends SpecialPage {
 					/*$output .= '&nbsp<span class="label label-success">' .
 						$this->msg( 'ga-new' )->plain() . '</span>';*/
 				}
-				$gift_count_str = ($gift_count[$gift['gift_name']]>1)?$gift_count[$gift['gift_name']].'次':'';
+				$gift_count_str = ($gift_count[$gift['gift_name']]>1)?'×'.$gift_count[$gift['gift_name']]:'';
 				$output .= '<div class="cleared"></div>
-				</a><span class="gift-count-num">已获得'.$gift_count_str.'</span></div>';
+				</a><span class="gift-count-num">'.$gift_count_str.'</span></div>';
 			}
 			$output .= '</div>';
 		}else{
