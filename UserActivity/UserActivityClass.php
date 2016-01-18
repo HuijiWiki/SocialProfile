@@ -948,7 +948,7 @@ class UserActivity {
 										)->text(),
 						'hasShowcase' => true,
 						'showcase' =>  
-									'<a href="' . htmlspecialchars( $system_gift_link->getFullURL( 'gift_id=' . $row->sg_id ) ) . "\" rel=\"nofollow\">
+									'<a href="' . htmlspecialchars( $system_gift_link->getFullURL( 'user='.$row->sg_user_name.'&gift_id=' . $row->gift_id ) ) . "\" rel=\"nofollow\">
 											{$system_gift_image}
 											{$row->gift_name}
 									</a>

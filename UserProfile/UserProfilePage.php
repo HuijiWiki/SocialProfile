@@ -1472,8 +1472,8 @@ class UserProfilePage extends Article {
 			} else {
 				$style_limit = $limit;
 			}
-
 			foreach ( $activity as $item ) {
+				$user_gift = new UserSystemGifts( $item['username'] );
 				$item_html = '';
 				$title = Title::makeTitle( $item['namespace'], $item['pagetitle'] );
 				$user_title = Title::makeTitle( NS_USER, $item['username'] );
@@ -1553,9 +1553,10 @@ class UserProfilePage extends Article {
 							SystemGifts::getGiftImage( $item['namespace'], 'm' ) .
 							'" border="0" alt="" />';
 						$viewSystemGift = SpecialPage::getTitleFor( 'ViewSystemGift' );
+						$sgift_id = $user_gift->getGiftIdByGetId( $item['id'] );
 						$item_html .= wfMessage( 'user-recent-system-gift' )->escaped() . " {$item_time}
 								<div class=\"item\">
-									<a href=\"" . htmlspecialchars( $viewSystemGift->getFullURL( "gift_id={$item['id']}" ) ) . "\" rel=\"nofollow\">
+									<a href=\"" . htmlspecialchars( $viewSystemGift->getFullURL( "user={$item['username']}&gift_id={$sgift_id}" ) ) . "\" rel=\"nofollow\">
 										{$gift_image}
 										{$item['pagetitle']}
 									</a>
@@ -1680,6 +1681,7 @@ class UserProfilePage extends Article {
 			}
 
 			foreach ( $activity as $item ) {
+				$user_gifts = new UserSystemGifts( $item['username'] );
 				$item_html = '';
 				$title = Title::makeTitle( $item['namespace'], $item['pagetitle'], '', $item['prefix'] );
 				$user_title = Title::makeTitle( NS_USER, $item['username'] );
@@ -1757,9 +1759,10 @@ class UserProfilePage extends Article {
 							SystemGifts::getGiftImage( $item['namespace'], 'm' ) .
 							'" border="0" alt="" />';
 						$viewSystemGift = SpecialPage::getTitleFor( 'ViewSystemGift' );
+						$sgift_id = $user_gifts->getGiftIdByGetId( $item['id'] );
 						$item_html .= wfMessage( 'user-recent-system-gift' )->escaped() . " {$item_time}
 								<div class=\"user-home-item-gift\">
-									<a href=\"" . htmlspecialchars( $viewSystemGift->getFullURL( "gift_id={$item['id']}" ) ) . "\" rel=\"nofollow\">
+									<a href=\"" . htmlspecialchars( $viewSystemGift->getFullURL( "user={$item['username']}&gift_id={$sgift_id}" ) ) . "\" rel=\"nofollow\">
 										{$gift_image}
 										{$item['pagetitle']}
 									</a>

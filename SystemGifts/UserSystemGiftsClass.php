@@ -253,6 +253,29 @@ class UserSystemGifts {
 		return $result;
 	}
 
+	public function getGiftIdByGetId( $id ){
+		$dbr = wfGetDB( DB_SLAVE );
+		$res = $dbr->select(
+			array( 'user_system_gift' ),
+			array(
+				'sg_gift_id'
+			),
+			array( 
+				"sg_id = {$id}",
+			 ),
+			__METHOD__,
+			array(
+			)
+		);
+		$giftId = 0;
+		if( $res != false){
+			foreach ($res as $value) {
+				$giftId = $value->sg_gift_id;
+			}
+		}
+		return $giftId;
+	}
+
 	/**
 	 * Increase the amount of new system gifts for the user with ID = $user_id.
 	 *
