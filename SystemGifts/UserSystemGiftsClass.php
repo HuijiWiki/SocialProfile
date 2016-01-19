@@ -567,12 +567,15 @@ class EchoSystemGiftFormatter extends EchoCommentFormatter {
      * @param $user User
      */
     protected function processParam( $event, $param, $message, $user ) {
+    	global $wgUser;
         if ( $param === 'giftview' ) {
             $eventData = $event->getExtra();
             if ( !isset( $eventData['gift-id']) ) {
                 $message->params( '' );
                 return;
             }
+            $usg = new UserSystemGifts( $wgUser->getName() );
+			$gift_id = $usg->getGiftIdByGetId( $eventData['gift-id'] );
             $this->setTitleLink(
                 $event,
                 $message,
@@ -580,7 +583,8 @@ class EchoSystemGiftFormatter extends EchoCommentFormatter {
                     'class' => 'mw-echo-system-gift-view',
                     'linkText' => wfMessage( 'notification-system-gift-view-link' )->text(),
                     'param' => array(
-                        'gift_id' => $eventData['gift-id'],
+                    	'user' => $wgUser->getName(),
+                        'gift_id' => $gift_id,
                     )
                 )
             );
