@@ -13,6 +13,7 @@ class SpecialUploadFiles extends SpecialPage{
 	}
 
 	public function execute( $params ) {
+    global $wgFileExtensions;
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
 		$out = $this->getOutput();
@@ -22,12 +23,13 @@ class SpecialUploadFiles extends SpecialPage{
 		$output = '';
 		$output .="<h4>".$title."</h4><span class='gray'>".$subtitle."</span>";
 		$output .="<div class='gray'>".$line."</div>";
+    $output .= "<div class='gray'><p>允许上传的文件类型为".implode("，",$wgFileExtensions)."</div>";
 		$output .="<form id='uploadfiles' enctype='multipart/form-data' method='post' class='clear'>
 		                <input id='hiddenText' type='text' style='display:none' >
 		                <input type='file' id='file' name='file' multiple='multiple'>
 		                <div id='drag-area'>
                             <p>把要上传的文件拖动到此处<b>或</b></p>
-                            <span class='file-btn'>选择电脑上的图片</span>
+                            <span class='file-btn'>选择电脑上的文件</span>
 		                </div>
 		          </form>
 		          <div class='clear'><div class='btn mw-ui-button mw-ui-constructive' id='upload-btn' data-loading-text='上传中...'>上传</div></div>";
@@ -70,8 +72,8 @@ class SpecialUploadFiles extends SpecialPage{
                                </div>
                            </div>';
 		$out->addHTML( $output );
-        $out->addModuleStyles('ext.socialprofile.uploadfiles.css');
-        $out->addModules( 'ext.socialprofile.uploadfiles.js' );
+    $out->addModuleStyles('ext.socialprofile.uploadfiles.css');
+    $out->addModules( 'ext.socialprofile.uploadfiles.js' );
 	}
 
 

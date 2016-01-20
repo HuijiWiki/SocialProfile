@@ -7,6 +7,30 @@ if(!defined('MEDIAWIKI')){
 $wgHooks['PageContentSaveComplete'][] = 'updatePage';
 $wgHooks['ArticleDeleteComplete'][] = 'deletePage';
 $wgHooks['ArticleRevisionUndeleted'][] = 'unDeletePage';
+$wgHooks['TitleMoveComplete'][] = 'movePage';
+
+
+
+
+function movePage($oldTitle, $newTitle, $user, $oldId, $newId, $reason,$rev){
+	global $wgHuijiPrefix, $wgSitename;
+//	if(strpos($wgHuijiPrefix, '.test') !== false) return;
+	$post_data = array(
+		'sitePrefix' => $wgHuijiPrefix,
+		'siteName' => $wgSitename,
+		'oldTitle' => $oldTitle->getText(),
+		'newTitle' => $newTitle->getText(),
+		'oldId' => $oldId,
+		'newId' => $newId,
+	);
+	$post_data_string = json_encode($post_data);
+
+
+	wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile.log");
+
+}
+
+
 
 
 function unDeletePage($title, $revision, $oldPageId){
