@@ -840,7 +840,7 @@ class UserActivity {
 					'" border="0" alt="" />';
 				$view_gift_link = SpecialPage::getTitleFor( 'ViewGift' );
 				$avatar = new wAvatar($row->ug_user_id_to, 'ml');
-				$avatarUrl = $avatar->getAvatarURL();
+				$avatarUrl = $avatar->getAvatarAnchor();
 				$user_name_short = $wgLang->truncate( $row->ug_user_name_to, 25 );
 				// $timeago = HuijiFunctions::getTimeAgo($row->item_date);
 				/* build html */
@@ -932,7 +932,7 @@ class UserActivity {
 				$system_gift_link = SpecialPage::getTitleFor( 'ViewSystemGift' );
 				$user_name_short = $wgLang->truncate( $row->sg_user_name, 25 );
 				$avatar = new wAvatar( $row->sg_user_id, 'ml');
-				$avatarUrl = $avatar->getAvatarURL();
+				$avatarUrl = $avatar->getAvatarAnchor();
 				// $timeago = HuijiFunctions::getTimeAgo($row->item_date).'前';
 				/* build html */
 				$html = $this->templateParser->processTemplate(
@@ -1145,7 +1145,7 @@ class UserActivity {
 				$user_title = Title::makeTitle( NS_USER, $row->um_user_name );
 				$user_name_short = $wgLang->truncate( $row->um_user_name, 15 );
 				$avatar = new wAvatar( $row->um_user_id, 'ml');
-				$avatarUrl = $avatar->getAvatarHtml();
+				$avatarUrl = $avatar->getAvatarAnchor();
 				// $timeago = HuijiFunctions::getTimeAgo($row->item_date).'前';
 				/* build html */
 				$html = $this->templateParser->processTemplate(
@@ -1329,7 +1329,7 @@ class UserActivity {
 				$page_link = '<a href="' . $domainUrl .
 					"\" rel=\"nofollow\">{$row->domain_name}</a>";
 				$avatar = new wAvatar($row->domain_founder_id, 'ml');
-				$avatarUrl = $avatar->getAvatarURL();
+				$avatarUrl = $avatar->getAvatarAnchor();
 				/* build html */
 				$html = $this->templateParser->processTemplate(
 					'user-home-item',
@@ -1580,7 +1580,7 @@ class UserActivity {
 					} else {
 						$avatar = new wAvatar(User::idFromName($user_name), 'ml');
 					}
-					$avatarUrl = $avatar->getAvatarHtml();
+					$avatarUrl = $avatar->getAvatarAnchor();
 					
 					if ( $count_users == 1 && $count_actions > 1 ) {
 						$pages .= wfMessage( 'word-separator' )->text();
