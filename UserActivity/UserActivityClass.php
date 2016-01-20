@@ -1577,10 +1577,12 @@ class UserActivity {
 					/* get User Avatar for display */
 					if ($this->show_following_sites){
 						$avatar = new wSiteAvatar($page_data['prefix'][0], 'ml');
+						$avatarUrl = $avatar->getAvatarAnchor();
 					} else {
 						$avatar = new wAvatar(User::idFromName($user_name), 'ml');
+						$avatarUrl = $avatar->getAvatarAnchor();
 					}
-					$avatarUrl = $avatar->getAvatarAnchor();
+					
 					
 					if ( $count_users == 1 && $count_actions > 1 ) {
 						$pages .= wfMessage( 'word-separator' )->text();
