@@ -547,14 +547,17 @@ class EchoSystemGiftFormatter extends EchoCommentFormatter {
 	 */
 	protected function getLinkParams( $event, $user, $destination ) {
 		// Set up link parameters based on the destination (or pass to parent)
+		global $wgUser;
 		switch ( $destination ) {
 			case 'gift-page':
 				$titleData = $event->getTitle();
 				$eventData = $event->getExtra();
+				$usg = new UserSystemGifts( $wgUser->getName() );
+				$gift_id = $usg->getGiftIdByGetId( $eventData['gift-id'] );
 	            if ( !isset( $eventData['gift-id'])) {
 	                return array($titleData, array());
 	            } else {
-        			return array($titleData, array('fromnotif' => 1, 'gift_id' => $eventData['gift-id']));
+        			return array($titleData, array('user' => $wgUser->getName(), 'gift_id' => $gift_id));
         		}
 			default:
 				return parent::getLinkParams( $event, $user, $destination );
