@@ -9,7 +9,7 @@ var uploadfiles = {
     submitBtn: $('#upload-btn').get(0),
     token: mw.user.tokens.get('editToken'),
     url: '/api.php',
-    type:'png，jpg，jpeg，ogg，doc，xls，ppt，sxc，pdf，gif，ass，svg，ogg，ogv，oga，flac，wav，webm',
+    type:'png，jpg，jpeg，ogg，doc，xls，ppt，sxc，pdf，gif，ass，svg，ogg，ogv，oga，flac，wav，webm，ttf',
     index: 0,
     filter: null,
     //触发隐藏input的事件
@@ -63,8 +63,17 @@ var uploadfiles = {
         reader.onload=function(e){
             var src = this.result;
             var result = '';
-            if(file.type.indexOf('image') === -1)
-            src = '/resources/assets/file-type-icons/fileicon.png';
+            if(file.type.indexOf('image') === -1) {
+                if(file.name.substr(file.name.lastIndexOf(".")+1).toLowerCase() == 'pdf'){
+                    src = '/resources/assets/file-type-icons/fileicon-pdf.png';
+                }else if(file.name.substr(file.name.lastIndexOf(".")+1).toLowerCase() == 'ogg'){
+                    src = '/resources/assets/file-type-icons/fileicon-ogg.png';
+                }else if(file.name.substr(file.name.lastIndexOf(".")+1).toLowerCase() == 'ttf'){
+                    src = '/resources/assets/file-type-icons/fileicon-ttf.png';
+                }else{
+                    src = '/resources/assets/file-type-icons/fileicon.png';
+                }
+            }
             result='<img src="' + src +'" data-name="'+name+'" data-description="" class="file-source wait" alt="" /><p class="prompt"></p><p class="file-name">' + name + '</p>';
             selector.find('i').remove();
             selector.append(result);
