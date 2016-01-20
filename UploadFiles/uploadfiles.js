@@ -48,12 +48,20 @@ var uploadfiles = {
             formData.append('file', file);
             formData.append('token', self.token);
             formData.append('format', 'json');
-            self.funDrawImg(index,formData,file.name,file.size);
+            self.funDrawImg(index,formData,file.name,file.size,file);
             self.index++;
         }
     },
-    funDrawImg: function(index,formData,name,size){
+    funDrawImg: function(index,formData,name,size,file){
         var self = this;
+        var reader = new FileReader();
+        //将文件以Data URL形式读入页面
+        reader.readAsDataURL(file);
+        reader.onload=function(e){
+            var result=document.getElementById("wrap"+index);
+            //显示文件
+            result.innerHTML='<img src="' + this.result +'" alt="" /><p class="prompt"></p><p class="file-name">' + name + '</p>';
+        };
         $.ajax({
             url: self.url,
             data: formData,
@@ -61,9 +69,11 @@ var uploadfiles = {
             contentType: false,
             type: 'POST',
             success: function (data) {
-                var src = "/wiki/特殊:上传藏匿/file/"+data.upload.filekey;
-                if(size>1048576)
-                src = "/resources/assets/toolarge.jpg";
+//                var src = "/wiki/特殊:上传藏匿/file/"+data.upload.filekey;
+//                if(size>1048576)
+//                src = "/resources/assets/toolarge.jpg";
+//
+                $('#wrap'+index).attr('data-filekey','')
                 if (data.upload.result == "Success") {
                     var content = '<img src="' + src + '" data-filekey="' + data.upload.filekey + '" data-name="' + name + '" class="file-source wait" >' +
                         '<p class="prompt"></p><p class="file-name">' + name + '</p>';
@@ -210,6 +220,12 @@ var uploadfiles = {
             $(this).button('loading');
         });
     },
+    funHref: function(){
+        $('#uploadfiles').on('click','.file-wrap img',function(e){
+            e.stopPropagation();
+            window.open('/wiki/文件:'+$(this).data('name'));
+        });
+    },
     funUpload: function(e){
         var self = this;
         var len = $('.file-source.wait').length;
@@ -250,6 +266,7 @@ var uploadfiles = {
                         mw.notification.notify('上传成功');
                         $('#upload-btn').button('reset');
                     }
+                    that.parents('.file-wrap').removeClass('suggest');
                     that.removeClass('wait');
                 }
             });
@@ -258,12 +275,11 @@ var uploadfiles = {
     onUploadProgress: function(that,loaded,total){
         //获得上传进度动态百分比
         var  percent = (loaded / total * 50).toFixed(2) + '%';
-        console.log(percent);
         that.siblings('.upload-progress').css('width',percent);
     },
     onProgress: function(that,loaded,total){
-        //获得上传进度动态百分比
-        var  percent = 50+(loaded / total * 50).toFixed(2) + '%';
+        //获得下载进度动态百分比
+        var  percent = 50+parseInt((loaded / total * 50).toFixed(2)) + '%';
         that.siblings('.upload-progress').css('width',percent);
     },
     funAddEvent: function(){
@@ -273,6 +289,7 @@ var uploadfiles = {
         this.funBtn();
         this.funGlobalDescription();
         this.funSelfDescription();
+        this.funHref();
     },
     init: function(){
         var self = this;

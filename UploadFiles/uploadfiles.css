@@ -1,5 +1,6 @@
 #uploadfiles img{
     height: 120px;
+    cursor: pointer;
 }
 p{
     margin-bottom: 0;
@@ -107,7 +108,7 @@ span.gray{
 }
 .default{
     width: 120px;
-    height: 120px;
+    height: 150px;
     text-align: center;
 }
 .file-name{
@@ -160,4 +161,5 @@ span.gray{
     height: 3px;
     background: #09c;
     width: 0;
+    transition: width .1s;
 }
