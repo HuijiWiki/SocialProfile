@@ -1665,7 +1665,7 @@ class UserActivity {
 				$user_name_short = $wgLang->truncate( $user_name, 15 );
 
 				$safeTitle = htmlspecialchars( $user_title->getText() );
-				$users .= ' <b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\" title=\"{$safeTitle}\">{$user_name_short}</a></b>";
+				$users .= ' <b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\" title=\"{$safeTitle}\" class='mw-userlink'>{$user_name_short}</a></b>";
 			}
 			/* memcache checking */
 			$html = $wgMemc->get($key);

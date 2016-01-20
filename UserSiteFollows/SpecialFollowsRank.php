@@ -125,7 +125,7 @@ class SpecialFollowsRank extends SpecialPage {
 			$output .= "<div class=\"top-fan-row\">
 				<span class=\"top-fan-num\">{$x}.</span>
 				<span class=\"top-fan\">
-					{$commentIcon} <a href='" . $user['userUrl'] . "'>" .
+					{$commentIcon} <a class='mw-userlink' href='" . $user['userUrl'] . "'>" .
 						$user['user'] .'</a><i>'.$user['level'] .'
 				</i></span>';
 

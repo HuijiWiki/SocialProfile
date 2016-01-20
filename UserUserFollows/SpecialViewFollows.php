@@ -125,7 +125,7 @@ class SpecialViewFollows extends SpecialPage {
 			$query2 = array('user' => $user_name, 'rel_type' => 2);
 			$rem = $this->msg( 'ur-remove-relationship-friend' )->plain();
 			$output .= '<div class="back-links">
-			<a href="' . htmlspecialchars( $back_link->getFullURL() ) . '">' .
+			<a class="mw-userlink" href="' . htmlspecialchars( $back_link->getFullURL() ) . '">' .
 				$this->msg( 'ur-backlink', $user_name )->parse() .
 			'</a> | '.Linker::LinkKnown($target, $noticestr, array(), $query2).'
 		</div>
@@ -140,7 +140,7 @@ class SpecialViewFollows extends SpecialPage {
 			$total = $followerCount;
 			$rem = $this->msg( 'ur-remove-relationship-foe' )->plain();
 			$output .= '<div class="back-links">
-			<a href="' . htmlspecialchars( $back_link->getFullURL() ) . '">' .
+			<a class="mw-userlink" href="' . htmlspecialchars( $back_link->getFullURL() ) . '">' .
 				$this->msg( 'ur-backlink', $user_name )->parse() .
 			'</a> | '.Linker::LinkKnown($target, $noticedstr, array(), $query1);
 			if( $user_name == $wgUser->getName() ){
@@ -202,10 +202,10 @@ class SpecialViewFollows extends SpecialPage {
 					$genderIcon = '♂/♀';
 				}
 				$output .= "<div class=\"relationship-item\">
-					<a href=\"{$userPageURL}\" data-name=\"{$user_name_display}\">{$avatar_img}</a>
+					<a class='mw-userlink' href=\"{$userPageURL}\" data-name=\"{$user_name_display}\">{$avatar_img}</a>
 					<div class=\"relationship-info\">
 						<div class=\"relationship-name\">
-							<a href=\"{$userPageURL}\">{$user_name_display}</a><i>{$genderIcon}</i><i>{$user_level}</i>
+							<a class='mw-userlink' href=\"{$userPageURL}\">{$user_name_display}</a><i>{$genderIcon}</i><i>{$user_level}</i>
 						</div>
 					<div class=\"relationship-actions\">";
 				if(empty($user_status)){
