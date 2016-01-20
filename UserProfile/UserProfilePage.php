@@ -1934,9 +1934,25 @@ class UserProfilePage extends Article {
 		// Try cache
 		$sg_key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'system_gifts', "{$sg->user_id}" );
 		$data = $wgMemc->get( $sg_key );
+		$system_gifts = $sg->getUserGiftList( 0 );
+		foreach ($system_gifts as $value) {
+			$gift_name[] = $value['gift_name'];
+		}
+		// count every gift total number
+		$gift_count = array_count_values($gift_name);
+
 		if ( !$data ) {
 			wfDebug( "Got profile awards for user {$user_name} from DB\n" );
-			$system_gifts = $sg->getUserGiftList( 0, 5 );
+			$system_gifts = $sg->getUserGiftList( 0 );
+			$repeat = array();
+			foreach ($system_gifts as $key => $value) {
+				if(isset($repeat[$value['gift_name']])){
+		            unset($system_gifts[$key]);
+		        }else{
+		            $repeat[$value['gift_name']] = $value['gift_name'];
+		        }
+				$repeat[] = $value['gift_name'];
+			}
 			$wgMemc->set( $sg_key, $system_gifts, 60 * 60 * 4 );
 		} else {
 			wfDebug( "Got profile awards for user {$user_name} from cache\n" );
@@ -1972,8 +1988,10 @@ class UserProfilePage extends Article {
 			</div>
 			<div class="cleared"></div>
 			<div class="user-gift-container panel-body">';
-
 			foreach ( $system_gifts as $gift ) {
+				if ( $x == 6) {
+					break;
+				}
 				if ( $gift['status'] == 1 && $user_name == $wgUser->getName() ) {
 					$sg->clearUserGiftStatus( $gift['id'] );
 					$wgMemc->delete( $sg_key );
@@ -1989,11 +2007,12 @@ class UserProfilePage extends Article {
 				if ( $gift['status'] == 1 ) {
 					$class = 'class="user-page-new"';
 				}
-				$output .= '<a href="' . htmlspecialchars( $gift_link->getFullURL( 'user='.$user_name .'&gift_id=' . $gift['gift_id'] ) ) .
+				$output .= '<div class="gift-wrap"><a href="' . htmlspecialchars( $gift_link->getFullURL( 'user='.$user_name .'&gift_id=' . $gift['gift_id'] ) ) .
 					'" ' . $class . " rel=\"nofollow\">
 					{$gift_image}
 				</a>";
-
+				$str = ($gift_count[$gift['gift_name']]>1)?'×'.$gift_count[$gift['gift_name']]:'';
+				$output .= "<span class=\"gift-count-num\">".$str."</span></div>";
 				if ( $x == count( $system_gifts ) || $x != 1 && $x % $per_row == 0 ) {
 					$output .= '<div class="cleared"></div>';
 				}
