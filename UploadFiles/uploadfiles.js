@@ -57,7 +57,6 @@ var uploadfiles = {
         var self = this;
         var reader = new FileReader();
         var selector = $('#wrap'+index);
-        console.log(file);
         //将文件以Data URL形式读入页面
         reader.readAsDataURL(file);
         reader.onload=function(e){
@@ -149,7 +148,6 @@ var uploadfiles = {
                     },
                     type: 'POST',
                     success: function (data) {
-                        console.log(data);
                         if(data.upload.result == "Success"){
                             that.parents('.file-wrap').removeClass('warning');
                             that.siblings('.prompt').text('');
