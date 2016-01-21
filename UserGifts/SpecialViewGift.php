@@ -106,11 +106,9 @@ class ViewGift extends UnlistedSpecialPage {
 			}
 			$output .= '<div class="cleared"></div>
 					<div class="g-describe">' . $gift['description'] . '</div>
-					<div class="g-actions">
-						<a href="' . htmlspecialchars( $giveGiftLink->getFullURL( 'gift_id=' . $gift['gift_id'] ) ) . '">' .
-							$this->msg( 'g-to-another' )->plain() . '</a>';
+					<div class="g-actions">';
 			if ( $gift['user_name_to'] == $user->getName() ) {
-				$output .= $this->msg( 'pipe-separator' )->escaped();
+				// $output .= $this->msg( 'pipe-separator' )->escaped();
 				$output .= '<a href="' . htmlspecialchars( $removeGiftLink->getFullURL( 'gift_id=' . $gift['id'] ) ) . '">' .
 					$this->msg( 'g-remove-gift' )->plain() . '</a>';
 			}

@@ -287,7 +287,7 @@ class GiveGift extends SpecialPage {
 	}
 
 	function displayFormAll() {
-		global $wgGiveGiftPerRow, $wgUploadPath;
+		global $wgGiveGiftPerRow, $wgUploadPath, $wgUser;
 
 		$out = $this->getOutput();
 
@@ -303,9 +303,19 @@ class GiveGift extends SpecialPage {
 		if ( !$per_row ) {
 			$per_row = 3;
 		}
-
+		//get user group
+		$user_group = $wgUser->getGroups();
+		if ( in_array( 'staff', $user_group ) ) {
+			$group = 1;
+		}elseif ( in_array( 'bureaucrat', $user_group ) ){
+			$group = 2;
+		}elseif ( in_array( 'sysop', $user_group ) ){
+			$group = 3;
+		}elseif ( empty($user_group) ) {
+			$group = 4;
+		}
 		$total = Gifts::getGiftCount();
-		$gifts = Gifts::getGiftList( $per_page, $page, 'gift_name' );
+		$gifts = Gifts::getGiftList( $group, $per_page, $page, 'gift_name' );
 		$output = '';
 
 		if ( $gifts ) {
@@ -409,8 +419,9 @@ class GiveGift extends SpecialPage {
 			'</div>
 				<textarea name="message" id="message" rows="4" cols="50"></textarea>
 				<div class="g-buttons">
-					<input type="hidden" name="gift_id" value="0" />
-					<input type="hidden" name="user_name" value="' . addslashes( $this->user_name_to ) . '" />
+					<input type="hidden" name="gift_id" id="to_user_gift_id" value="0" />
+					<input type="hidden" name="user_name" id="gift-user-name" value="' . addslashes( $this->user_name_to ) . '" />
+					<input type="hidden" name="user_id" id="gift-user-id" value="' . User::idFromName($this->user_name_to) . '" />
 					<input type="button" id="send-gift-button" class="site-button" value="' . $this->msg( 'g-send-gift' )->plain() . '" size="20" />
 					<input type="button" class="site-button" value="' . $this->msg( 'g-cancel' )->plain() . '" size="20" onclick="history.go(-1)" />
 				</div>

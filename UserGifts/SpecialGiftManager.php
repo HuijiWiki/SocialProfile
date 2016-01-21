@@ -57,7 +57,7 @@ class GiftManager extends SpecialPage {
 				$giftId = Gifts::addGift(
 					$request->getVal( 'gift_name' ),
 					$request->getVal( 'gift_description' ),
-					$request->getInt( 'access' )
+					$request->getInt( 'group' )
 				);
 				$out->addHTML(
 					'<span class="view-status">' .
@@ -70,7 +70,7 @@ class GiftManager extends SpecialPage {
 					$giftId,
 					$request->getVal( 'gift_name' ),
 					$request->getVal( 'gift_description' ),
-					$request->getInt( 'access' )
+					$request->getInt( 'group' )
 				);
 				$out->addHTML(
 					'<span class="view-status">' .
@@ -269,24 +269,38 @@ class GiftManager extends SpecialPage {
 		// If the user isn't in the gift admin group, they can only create
 		// private gifts
 		if ( !$user->isAllowed( 'giftadmin' ) ) {
-			$form .= '<input type="hidden" name="access" value="1" />';
+			$form .= '<input type="hidden" name="group" value="1" />';
 		} else {
-			$publicSelected = $privateSelected = '';
-			if ( isset( $gift['access'] ) && $gift['access'] == 0 ) {
-				$publicSelected = ' selected="selected"';
+			// staff 行政（bureaucrat）员 sysop user
+			$staff = $bureaucrat = $sysop = $commonUser = '';
+			// $publicSelected = $privateSelected = '';
+			if ( isset( $gift['group'] ) && $gift['group'] == 1 ) {
+				$staff = ' selected="selected"';
 			}
-			if ( isset( $gift['access'] ) && $gift['access'] == 1 ) {
-				$privateSelected = ' selected="selected"';
+			if ( isset( $gift['group'] ) && $gift['group'] == 2 ) {
+				$bureaucrat = ' selected="selected"';
+			}
+			if ( isset( $gift['group'] ) && $gift['group'] == 3 ) {
+				$sysop = ' selected="selected"';
+			}
+			if ( isset( $gift['group'] ) && $gift['group'] == 4 ) {
+				$commonUser = ' selected="selected"';
 			}
 			$form .= '<tr>
-				<td class="view-form">' . $this->msg( 'giftmanager-access' )->plain() . '</td>
+				<td class="view-form">' . $this->msg( 'giftmanager-group' )->plain() . '</td>
 				<td>
-				<select name="access">
-					<option value="0"' . $publicSelected . '>' .
-						$this->msg( 'giftmanager-public' )->plain() .
+				<select name="group">
+					<option value="1"' . $staff . '>' .
+						$this->msg( 'giftmanager-staff' )->plain() .
 					'</option>
-					<option value="1"' . $privateSelected . '>' .
-						$this->msg( 'giftmanager-private' )->plain() .
+					<option value="2"' . $bureaucrat . '>' .
+						$this->msg( 'giftmanager-bureaucrat' )->plain() .
+					'</option>
+					<option value="3"' . $sysop . '>' .
+						$this->msg( 'giftmanager-sysop' )->plain() .
+					'</option>
+					<option value="4"' . $commonUser . '>' .
+						$this->msg( 'giftmanager-commonUser' )->plain() .
 					'</option>
 				</select>
 				</td>

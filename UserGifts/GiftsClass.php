@@ -17,7 +17,7 @@ class Gifts {
 	 * @param $gift_description Mixed: a short description about the gift, as supplied by the user
 	 * @param $gift_access Integer: 0 by default
 	 */
-	static function addGift( $gift_name, $gift_description, $gift_access = 0 ) {
+	static function addGift( $gift_name, $gift_description, $gift_group = 1 ) {
 		global $wgUser;
 
 		$dbw = wfGetDB( DB_MASTER );
@@ -30,7 +30,7 @@ class Gifts {
 				'gift_createdate' => date( 'Y-m-d H:i:s' ),
 				'gift_creator_user_id' => $wgUser->getID(),
 				'gift_creator_user_name' => $wgUser->getName(),
-				'gift_access' => $gift_access,
+				'gift_group' => $gift_group,
 			), __METHOD__
 		);
 		return $dbw->insertId();
@@ -43,13 +43,13 @@ class Gifts {
 	 * @param $gift_description Mixed: a short description about the gift, as supplied by the user
 	 * @param $gift_access Integer: 0 by default
 	 */
-	public function updateGift( $id, $gift_name, $gift_description, $access = 0 ) {
+	public function updateGift( $id, $gift_name, $gift_description, $gift_group = 1 ) {
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->update( 'gift',
 			/* SET */array(
 				'gift_name' => $gift_name,
 				'gift_description' => $gift_description,
-				'gift_access' => $access
+				'gift_group' => $gift_group
 			),
 			/* WHERE */array( 'gift_id' => $id ),
 			__METHOD__
@@ -70,7 +70,7 @@ class Gifts {
 			'gift',
 			array(
 				'gift_id', 'gift_name', 'gift_description',
-				'gift_creator_user_id', 'gift_creator_user_name', 'gift_access'
+				'gift_creator_user_id', 'gift_creator_user_name', 'gift_group'
 			),
 			array( "gift_id = {$id}" ),
 			__METHOD__,
@@ -84,7 +84,7 @@ class Gifts {
 			$gift['gift_description'] = $row->gift_description;
 			$gift['creator_user_id'] = $row->gift_creator_user_id;
 			$gift['creator_user_name'] = $row->gift_creator_user_name;
-			$gift['access'] = $row->gift_access;
+			$gift['group'] = $row->gift_group;
 		}
 		return $gift;
 	}
@@ -101,7 +101,7 @@ class Gifts {
 		return $img . '?r=' . rand();
 	}
 
-	static function getGiftList( $limit = 0, $page = 0, $order = 'gift_createdate DESC' ) {
+	static function getGiftList( $group, $limit = 0, $page = 0, $order = 'gift_createdate DESC' ) {
 		global $wgUser;
 
 		$dbr = wfGetDB( DB_SLAVE );
@@ -116,6 +116,11 @@ class Gifts {
 			$params['OFFSET'] = $limitvalue;
 		}
 
+		// if ( $group == 1) {
+		// 	$condition = array("gift_group >= {$group} OR gift_creator_user_id = {$wgUser->getID()}");
+		// }elseif ( $group == 2 ) {
+		// 	$condition = array("gift_group >= {$group} OR gift_creator_user_id = {$wgUser->getID()}");
+		// }
 		$params['ORDER BY'] = $order;
 		$res = $dbr->select(
 			'gift',
@@ -123,7 +128,7 @@ class Gifts {
 				'gift_id', 'gift_createdate', 'gift_name', 'gift_description',
 				'gift_given_count'
 			),
-			array( "gift_access = 0 OR gift_creator_user_id = {$wgUser->getID()}" ),
+			array( "gift_group >= {$group} OR gift_creator_user_id = {$wgUser->getID()}" ),
 			__METHOD__,
 			$params
 		);
@@ -163,7 +168,7 @@ class Gifts {
 			'gift',
 			array(
 				'gift_id', 'gift_createdate', 'gift_name', 'gift_description',
-				'gift_given_count', 'gift_access', 'gift_creator_user_id',
+				'gift_given_count', 'gift_group', 'gift_creator_user_id',
 				'gift_creator_user_name'
 			),
 			$where,
