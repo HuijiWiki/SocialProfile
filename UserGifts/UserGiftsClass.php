@@ -150,13 +150,14 @@ class UserGifts {
 		$s = $dbr->selectRow(
 			'user_gift',
 			array( 'ug_user_id_to' ),
-			array( 'ug_id' => $ug_id ),
+			array( 
+				'ug_gift_id' => $ug_id,
+				'ug_user_id_to' => $user_id
+			 ),
 			__METHOD__
 		);
 		if ( $s !== false ) {
-			if ( $user_id == $s->ug_user_id_to ) {
-				return true;
-			}
+			return true;
 		}
 		return false;
 	}
