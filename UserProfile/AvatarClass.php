@@ -101,6 +101,25 @@ class wAvatar {
 
 		return Html::element( 'img', $params, '' );
 	}
+	/**
+	 * @param Array $extraParams: array of extra parameters to give to the image
+	 * @return String: <a> HTML Anchor tag with full path to the avatar image
+	 * */
+	function getAvatarAnchor( $extraParams = array() ) {
+		global $wgUploadPath;
+		$user_id = $this->user_id;
+		$user = User::newFromId( $user_id );
+		$defaultParams = array(
+			'src' => "{$wgUploadPath}/avatars/{$this->getAvatarImage()}",
+			'alt' => 'avatar',
+			'border' => '0',
+			'class' => 'headimg',
+			'data-name' => $user->getName()
+		);
+		$params = array_merge( $extraParams, $defaultParams );
+		$linker = Linker::LinkKnown($user->getUserPage(), Html::element( 'img', $params, '' ));
+		return $linker;
+	}	
 
 
 }

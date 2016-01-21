@@ -97,8 +97,8 @@ class SpecialEditRank extends SpecialPage {
 			$commentIcon = $user['url'];
 			$output .= "<div class=\"top-fan-row {$active}\">
 				<span class=\"top-fan-num\">{$x}.</span>
-				<span class=\"top-fan\"><a href='" . $user['userUrl'] . "'>
-					{$commentIcon} </a><a href='" . $user['userUrl'] . "'>" .
+				<span class=\"top-fan\"><a class='mw-userlink' href='" . $user['userUrl'] . "'>
+					{$commentIcon} </a><a class='mw-userlink' href='" . $user['userUrl'] . "'>" .
 						$user['user'] .'</a><i class="hidden-xs hidden-sm">'.$user['level'] .'
 				</i></span>';
 			$output .= '<span class="top-fan-points"><b>' .

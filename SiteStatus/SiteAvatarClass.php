@@ -59,4 +59,15 @@ class wSiteAvatar extends wAvatar{
 
 		return Html::element( 'img', $params, '' );
 	}
+	/**
+	 * @param Array $extraParams: array of extra parameters to give to the image
+	 * @return String: <a> HTML Anchor tag with full path to the avatar image
+	 * */
+	function getAvatarAnchor( $extraParams = array() ) {
+		global $wgUploadPath, $wgHuijiSuffix;
+		$site_prefix = $this->user_id;
+		$url = HuijiPrefix::PrefixToUrl($site_prefix);
+		$linker = "<a href={$url} class='mw-sitelink'>".$this->getAvatarHtml($extraParams)."</a>";
+		return $linker;
+	}	
 }

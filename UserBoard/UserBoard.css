@@ -140,9 +140,9 @@ select#message_type {
     width: 50px;
     padding: 1px;
 }
-.user-board-message-image>a>img:hover{
-    border: 1px solid #666;
-}
+/*.user-board-message-image>a>img:hover{*/
+    /*border: 1px solid #666;*/
+/*}*/
 .user-board-message-content{
     margin-top: 10px;
 }

@@ -22,7 +22,7 @@ class TopUsersPoints extends SpecialPage {
 				    	'activeList' => $activeList,
 				    	'followed' => $followed,
 				    	'hasFollowed' => count($followed) > 0,
-				    	'wgHuijiSuffix' => $wgHuijiSuffix,
+				    	'suffix' => '.huiji.wiki',
 				    )
 				);
 		return $output;
@@ -178,8 +178,8 @@ class TopUsersPoints extends SpecialPage {
 			}
 			$output .= "<div class=\"top-fan-row {$active}\">
 				<span class=\"top-fan-num\">{$x}.</span>
-				<span class=\"top-fan\"><a href='" . htmlspecialchars( $user_title->getFullURL() ) . "'>
-					{$commentIcon} </a><a href='" . htmlspecialchars( $user_title->getFullURL() ) . "'>" .
+				<span class=\"top-fan\"><a href='" . htmlspecialchars( $user_title->getFullURL() ) . "' class='mw-userlink'>
+					{$commentIcon} </a><a href='" . htmlspecialchars( $user_title->getFullURL() ) . "' class='mw-userlink'>" .
 						$item['user_name'] . '</a>
 				</span>';
 
