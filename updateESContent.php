@@ -4,7 +4,7 @@ if(!defined('MEDIAWIKI')){
 	die("This is not a valid entry point.\n");
 }
 
-$wgHooks['PageContentSaveComplete'][] = 'updatePage';
+$wgHooks['PageContentSaveComplete'][] = 'savePage';
 $wgHooks['ArticleDeleteComplete'][] = 'deletePage';
 $wgHooks['ArticleRevisionUndeleted'][] = 'unDeletePage';
 $wgHooks['TitleMoveComplete'][] = 'movePage';
@@ -14,20 +14,34 @@ $wgHooks['TitleMoveComplete'][] = 'movePage';
 
 function movePage($oldTitle, $newTitle, $user, $oldId, $newId, $reason,$rev){
 	global $wgHuijiPrefix, $wgSitename;
-//	if(strpos($wgHuijiPrefix, '.test') !== false) return;
-	$post_data = array(
-		'sitePrefix' => $wgHuijiPrefix,
-		'siteName' => $wgSitename,
-		'oldTitle' => $oldTitle->getText(),
-		'newTitle' => $newTitle->getText(),
-		'oldId' => $oldId,
-		'newId' => $newId,
-	);
-	$post_data_string = json_encode($post_data);
-
-
-	wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile.log");
-
+	if(strpos($wgHuijiPrefix, '.test') !== false) return;	
+	$new_ns = $newTitle->getNamespace();
+	$old_ns = $oldTitle->getNamespace();
+	
+	if($old_ns === 0 && $new_ns !== 0){
+		$post_data = array(
+			'sitePrefix' => $wgHuijiPrefix,
+			'id' => $oldTitle->getArticleID()
+		);
+		$post_data_string = json_encode($post_data);
+		curl_post_json('delete',$post_data_string);	
+	}else if($old_ns !== 0 && $new_ns === 0){
+		upsertPage($newTitle, $rev);
+	}else if($old_ns === 0 && $new_ns === 0){
+		$post_data = array(
+			'sitePrefix' => $wgHuijiPrefix,
+			'siteName' => $wgSitename,
+			'oldTitle' => $oldTitle->getText(),
+			'newTitle' => $newTitle->getText(),
+			'oldId' => $oldId,
+			'newId' => $newId,
+		);
+		$post_data_string = json_encode($post_data);
+//		wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile.log");
+		curl_post_json('move',$post_data_string);
+	}else{
+		return;
+	}
 }
 
 
@@ -37,6 +51,7 @@ function unDeletePage($title, $revision, $oldPageId){
 	global $wgHuijiPrefix, $wgSitename;
 	if(strpos($wgHuijiPrefix, '.test') !== false) return;
 	//title
+	if($title == null || $title->getNamespace() !== 0) return;
 	$titleT = ($title->getText() == "首页") ? $wgSitename : $title->getText();
 	// new_content ,   new_redirect 
 	if(($new_content = $revision->getContent(Revision::RAW)) != null) $new_redirect = $new_content->getRedirectTarget();
@@ -75,11 +90,15 @@ function unDeletePage($title, $revision, $oldPageId){
 
 }
 
-function updatePage($article, $user, $content, $summary, $isMinor, $isWatch, $section, $flags, $revision, $status, $baseRevId){
+
+function savePage($article, $user, $content, $summary, $isMinor, $isWatch, $section, $flags, $revision, $status, $baseRevId){
+	if($article == null || $revision == null || $article->getTitle() == null) return;
+	upsertPage($article->getTitle(), $revision);
+}
+function upsertPage($title, $rev){
 	global $wgHuijiPrefix, $wgSitename;
 	if(strpos($wgHuijiPrefix, '.test') !== false) return;
-	$rev = $revision;
-	if($rev == null) return;
+	if($rev == null || $title == null || $title->getNamespace() !== 0) return;
 	$old_rev = $rev->getPrevious();
 	$old_redirectId = -1;
 	$new_redirectId = -1;
@@ -104,10 +123,10 @@ function updatePage($article, $user, $content, $summary, $isMinor, $isWatch, $se
 
 	//category
 	$options = $new_content->getContentHandler()->makeParserOptions( 'canonical' );
-       	$output = $new_content->getParserOutput( $article->getTitle(), $rev->getId(), $options );
+       	$output = $new_content->getParserOutput( $title, $rev->getId(), $options );
        	$category = array_map( 'strval', array_keys( $output->getCategories() ) );
 
-	$title = ($article->getTitle()->getText() == "首页") ? $wgSitename : $article->getTitle()->getText();
+	$titleName = ($title->getText() == "首页") ? $wgSitename : $title->getText();
 	$preTitle = $old_rev != null ? $old_rev->getTitle()->getText():null;
 	$redirectPageTitle = $new_redirect != null ? $new_redirect->getText():null;
 	$post_data = array(
@@ -115,8 +134,8 @@ function updatePage($article, $user, $content, $summary, $isMinor, $isWatch, $se
 		'content' => ContentHandler::getContentText($rev->getContent(Revision::RAW)),
 		'sitePrefix' => $wgHuijiPrefix,
 		'siteName' => $wgSitename,
-		'id' => $article->getId(),
-		'title' => $title,
+		'id' => $title->getArticleID(),
+		'title' => $titleName,
 		'preTitle' => $preTitle,
 		'preRedirectPageId' => $old_redirectId,
 		'redirectPageId' => $new_redirectId,
@@ -132,11 +151,13 @@ function updatePage($article, $user, $content, $summary, $isMinor, $isWatch, $se
 function deletePage($article, $user, $reason, $id){
 	global $wgHuijiPrefix, $wgSitename;
 	if(strpos($wgHuijiPrefix, '.test') !== false) return;
+	if($article->getTitle()->getNamespace() !== 0) return;
 	$post_data = array(
 		'sitePrefix' => $wgHuijiPrefix,
 		'id' => $id
 	);
 	$post_data_string = json_encode($post_data);
+//	wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile.log");
 	curl_post_json('delete',$post_data_string);
 }
 
