@@ -37,7 +37,7 @@
 	"g-file-instructions": "图像的扩展名必须为jpeg、png或gif（不能含有动画）。图片不能超过10mb。",
 	"g-gift": "礼物",
 	"g-gift-name": "赠送礼物",
-	"g-give-gift": "礼物名称",
+	"g-give-gift": "赠送",
 	"g-give-all": "想要对$1赠送礼物?\n请选择一个礼物然后点击\"赠送礼物\".\n就这么简单~",
 	"g-give-all-message-title": "添加赠言",
 	"g-give-all-title": "送礼物给$1",

@@ -125,15 +125,11 @@ class ViewGifts extends SpecialPage {
 				$gift_image = "<img src=\"{$wgUploadPath}/awards/" .
 					Gifts::getGiftImage( $gift['gift_id'], 'l' ) .
 					'" border="0" alt="" />';
-
 				$output .= '<div class="g-item">
-					<a href="' . htmlspecialchars( $viewGiftLink->getFullURL( 'gift_id=' . $gift['id'] ) ) . '">' .
+					<a data-toggle="popover" data-trigger="hover" data-original-title='.$gift_name_display."from".$gift['user_name_from'].' data-content="'.$gift['gift_description'].'" href="' . htmlspecialchars( $viewGiftLink->getFullURL( 'gift_id=' . $gift['id'] ) ) . '">' .
 						$gift_image .
 					'</a>
-					<div class="g-title">
-						<a href="' . htmlspecialchars( $viewGiftLink->getFullURL( 'gift_id=' . $gift['id'] ) ) . '">' .
-							$gift_name_display .
-						'</a>';
+					<div class="g-title">';
 				if ( $gift['status'] == 1 ) {
 					if ( $user_name == $currentUser->getName() ) {
 						$rel->clearUserGiftStatus( $gift['id'] );
@@ -145,9 +141,7 @@ class ViewGifts extends SpecialPage {
 				}
 				$output .= '</div>';
 
-				$output .= '<div class="g-from">' .
-					$this->msg( 'g-from', htmlspecialchars( $user_from->getFullURL() ), $gift['user_name_from'] )->text() .
-				'</div>
+				$output .= '
 					<div class="g-actions">';
 				if ( $rel->user_name == $currentUser->getName() ) {
 					$output .= '&#160;';
