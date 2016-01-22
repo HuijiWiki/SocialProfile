@@ -66,13 +66,13 @@ function unDeletePage($title, $revision, $oldPageId){
 
 	//category
 	$options = $new_content->getContentHandler()->makeParserOptions( 'canonical' );
-       	$output = $new_content->getParserOutput( $title, $revision->getId(), $options );
+       	$output = $new_content->getParserOutput( $title, $revision->getId(), $options,true);
        	$category = array_map( 'strval', array_keys( $output->getCategories() ) );
 
 
 	$post_data = array(
 		'timestamp' => $revision->getTimestamp(),
-		'content' => $new_content,
+		'content' => $output->getText(),
 		'sitePrefix' => $wgHuijiPrefix,
 		'siteName' => $wgSitename,
 		'id' => $title->getArticleID(),
@@ -97,7 +97,7 @@ function savePage($article, $user, $content, $summary, $isMinor, $isWatch, $sect
 }
 function upsertPage($title, $rev){
 	global $wgHuijiPrefix, $wgSitename;
-	if(strpos($wgHuijiPrefix, '.test') !== false) return;
+//	if(strpos($wgHuijiPrefix, '.test') !== false) return;
 	if($rev == null || $title == null || $title->getNamespace() !== 0) return;
 	$old_rev = $rev->getPrevious();
 	$old_redirectId = -1;
@@ -123,7 +123,7 @@ function upsertPage($title, $rev){
 
 	//category
 	$options = $new_content->getContentHandler()->makeParserOptions( 'canonical' );
-       	$output = $new_content->getParserOutput( $title, $rev->getId(), $options );
+       	$output = $new_content->getParserOutput( $title, $rev->getId(), $options,true);
        	$category = array_map( 'strval', array_keys( $output->getCategories() ) );
 
 	$titleName = ($title->getText() == "首页") ? $wgSitename : $title->getText();
@@ -131,7 +131,7 @@ function upsertPage($title, $rev){
 	$redirectPageTitle = $new_redirect != null ? $new_redirect->getText():null;
 	$post_data = array(
 		'timestamp' => $rev->getTimestamp(),
-		'content' => ContentHandler::getContentText($rev->getContent(Revision::RAW)),
+		'content' => $output->getText(),
 		'sitePrefix' => $wgHuijiPrefix,
 		'siteName' => $wgSitename,
 		'id' => $title->getArticleID(),
@@ -144,8 +144,8 @@ function upsertPage($title, $rev){
 		
 	);
 	$post_data_string = json_encode($post_data);
-//	wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile.log");
-	curl_post_json('upsert',$post_data_string);
+	wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile.log");
+//	curl_post_json('upsert',$post_data_string);
 }
 
 function deletePage($article, $user, $reason, $id){
