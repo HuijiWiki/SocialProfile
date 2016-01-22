@@ -199,7 +199,7 @@ class SystemGifts {
 			$awardCategory = $this->categories[$category];
 		}
 		if ( in_array( $awardCategory, $this->repeatableGifts ) ){
-			$s = $dbr->selectRow(
+			$s = $dbr->select(
 				'system_gift',
 				array( 'gift_id' ),
 				array(
@@ -208,7 +208,7 @@ class SystemGifts {
 				__METHOD__
 			);
 		}else{
-			$s = $dbr->selectRow(
+			$s = $dbr->select(
 				'system_gift',
 				array( 'gift_id' ),
 				array(
@@ -221,7 +221,12 @@ class SystemGifts {
 		if ( $s === false ) {
 			return false;
 		} else {
-			return $s->gift_id;
+			$res = $result = array();
+			foreach ($s as $value) {
+				$res['gift_id'] = $value->gift_id;
+				$result[] = $res;
+			}
+			return $result;
 		}
 	}
 

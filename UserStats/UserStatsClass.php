@@ -198,14 +198,15 @@ class UserStatsTrack {
 				$repeatableGift = $g->getRepeatableGifts();
 				$categories = array_flip( $g->getCategories() );
 				$systemGiftID = $g->doesGiftExistForThreshold( $field, $field_count );
-				// echo $field;die;
 				if ( $systemGiftID ) {
 					$wgMemc->set( $key, $systemGiftID, 60 * 30 );
 				}
 			}
 			if ( !empty($systemGiftID) && $field != "points_winner_weekly" && $field != "points_winner_monthly" ) {
 				$sg = new UserSystemGifts( $this->user_name );
-				$sg->sendSystemGift( $systemGiftID );
+				foreach ($systemGiftID as $value) {
+					$sg->sendSystemGift( $value['gift_id'] );
+				}
 			}
 		}
 	}
