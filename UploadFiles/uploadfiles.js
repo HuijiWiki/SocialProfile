@@ -96,7 +96,7 @@ var uploadfiles = {
                     } else {
                         console.log(data)
                     }
-                }else if(data.)
+                }else if(data.error){}
             }
 
         });

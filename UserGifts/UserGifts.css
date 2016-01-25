@@ -16,11 +16,11 @@
 	padding: 7px;
 	float: left;
 	margin: 0px 15px 15px 0px;
-	width: 350px;
 }
 
 .g-item a {
 	text-decoration: none;
+    display: inline-block;
 }
 
 .g-item img {
@@ -28,8 +28,6 @@
 	background-color: #fff;
 	padding: 3px;
 	display: block;
-	float: left;
-	margin: 0px 10px 0px 0px;
 }
 
 .g-title {
