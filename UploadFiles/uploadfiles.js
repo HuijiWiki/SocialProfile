@@ -85,7 +85,7 @@ var uploadfiles = {
             contentType: false,
             type: 'POST',
             success: function (data) {
-                selector.find('img').attr('data-filekey',data.upload.filekey).removeClass('default');
+                selector.removeClass('default').find('img').attr('data-filekey',data.upload.filekey);
                 if (data.upload.result == "Warning") {
                     if (data.upload.warnings.exists) {
                         selector.find('.prompt').text('已存在相同名称，请点名称重新命名');
@@ -96,7 +96,7 @@ var uploadfiles = {
                     } else {
                         console.log(data)
                     }
-                }
+                }else if(data.)
             }
 
         });
