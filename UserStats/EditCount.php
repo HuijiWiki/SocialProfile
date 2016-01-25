@@ -41,15 +41,20 @@ function incEditCount( $article, $revision, $baseRevId ) {
 	//festival gift
 	$today = date("Y-m-d H:i:s");
 	$giftList = SystemGifts::getInfoFromFestivalGift();
-	$resCount = RecordStatistics::getRecentPageEditCountOnWikiSiteFromUserId( $wgUser->getId(), '', 'day' );
-	if ($resCount->status == 'success') {
-		$dayCount = $resCount->result;
-	}else {
-		$dayCount = 0;
-	}
+	$dayCount = 0;
 	foreach ($giftList as $value) {
-		if ( $today >= $value['startTime'] && $today <= $value['endTime'] && $dayCount == $value['editNum'] ) {
-			$usg->sendSystemGift( $value['giftId'] );
+		if ( $today >= $value['startTime'] && $today <= $value['endTime'] ) {
+			if ( (strtotime( $value['endTime'] )-strtotime( $value['startTime'] ) ) == 86400 ) {
+				$resCount = RecordStatistics::getRecentPageEditCountOnWikiSiteFromUserId( $wgUser->getId(), '', 'day' );
+				if ($resCount->status == 'success' && $resCount->result == $value['editNum'] ) {
+					$usg->sendSystemGift( $value['giftId'] );
+				}
+			}else{
+				$resCount = RecordStatistics::getEditRecordsFromUserIdGroupByWikiSite( $wgUser->getId(), $value['startTime'], $value['endTime'] );
+				if ($resCount->status == 'success' && $resCount->result[0]->value == $value['editNum'] ) {
+					$usg->sendSystemGift( $value['giftId'] );
+				}
+			}
 		}
 	}
 
