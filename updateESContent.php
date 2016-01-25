@@ -97,7 +97,7 @@ function savePage($article, $user, $content, $summary, $isMinor, $isWatch, $sect
 }
 function upsertPage($title, $rev){
 	global $wgHuijiPrefix, $wgSitename;
-//	if(strpos($wgHuijiPrefix, '.test') !== false) return;
+	if(strpos($wgHuijiPrefix, '.test') !== false) return;
 	if($rev == null || $title == null || $title->getNamespace() !== 0) return;
 	$old_rev = $rev->getPrevious();
 	$old_redirectId = -1;
@@ -144,8 +144,8 @@ function upsertPage($title, $rev){
 		
 	);
 	$post_data_string = json_encode($post_data);
-	wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile.log");
-//	curl_post_json('upsert',$post_data_string);
+//	wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile.log");
+	curl_post_json('upsert',$post_data_string);
 }
 
 function deletePage($article, $user, $reason, $id){
