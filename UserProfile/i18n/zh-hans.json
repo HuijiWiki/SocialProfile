@@ -151,5 +151,6 @@
 	"site-avatar-log-entry":"上传了站点logo",
 	"user-profile-picture-log-delete-entry": "删除了$1的站点logo",
 	"avatarlogentry": "",
-	"site-avatarlogentry": ""
+	"site-avatarlogentry": "",
+	"familytree": "家族树"
 }
