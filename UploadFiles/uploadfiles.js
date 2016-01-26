@@ -89,14 +89,22 @@ var uploadfiles = {
                 if (data.upload.result == "Warning") {
                     if (data.upload.warnings.exists) {
                         selector.find('.prompt').text('已存在相同名称，请点名称重新命名');
-                        selector.addClass('warning');
+                        selector.addClass('suggest');
                     } else if (data.upload.warnings.duplicate) {
                         selector.find('.prompt').text('已存在相同内容，建议删除本文件');
                         selector.addClass('suggest');
                     } else {
                         console.log(data)
                     }
-                }else if(data.error){}
+                }else if(data.error){
+                    if(data.error.code=="file-too-large"){
+                        selector.find('.prompt').text('图片过大,请压缩后上传');
+                        selector.addClass('warning');
+                    }else{
+                        selector.find('.prompt').text(data.error.code);
+                        selector.addClass('warning');
+                    }
+                }
             }
 
         });
