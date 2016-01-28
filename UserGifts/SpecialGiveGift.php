@@ -428,7 +428,7 @@ class GiveGift extends SpecialPage {
 			</form>';
 		} else {
 			$out->setPageTitle( $this->msg( 'g-error-title' )->plain() );
-			$out->addHTML( $this->msg( 'g-error-message-invalid-link' )->plain() );
+			$out->addHTML( $this->msg( 'g-error-message-no-gift' )->plain() );
 		}
 
 		return $output;

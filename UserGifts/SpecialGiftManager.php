@@ -273,7 +273,6 @@ class GiftManager extends SpecialPage {
 		} else {
 			// staff 行政（bureaucrat）员 sysop user
 			$staff = $bureaucrat = $sysop = $commonUser = '';
-			// $publicSelected = $privateSelected = '';
 			if ( isset( $gift['group'] ) && $gift['group'] == 1 ) {
 				$staff = ' selected="selected"';
 			}

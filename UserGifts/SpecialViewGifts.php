@@ -126,7 +126,7 @@ class ViewGifts extends SpecialPage {
 					Gifts::getGiftImage( $gift['gift_id'], 'l' ) .
 					'" border="0" alt="" />';
 				$output .= '<div class="g-item">
-					<a data-toggle="popover" data-trigger="hover" data-original-title='.$gift_name_display."(来自".$gift['user_name_from'].")".' data-content="'.$gift['gift_description'].'" href="' . htmlspecialchars( $viewGiftLink->getFullURL( 'gift_id=' . $gift['id'] ) ) . '">' .
+					<a data-toggle="popover" data-trigger="hover" data-original-title='.str_replace(' ', '', $gift_name_display)."（来自".$gift['user_name_from']."）".' data-content="'.$gift['gift_description'].'" href="' . htmlspecialchars( $viewGiftLink->getFullURL( 'gift_id=' . $gift['id'] ) ) . '">' .
 						$gift_image .
 					'</a>
 					<div class="g-title">';
