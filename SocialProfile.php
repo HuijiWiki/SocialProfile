@@ -366,6 +366,21 @@ $wgResourceModules['ext.socialprofile.uploadfiles.js'] = array(
 	'remoteExtPath' => 'SocialProfile/UploadFiles',
 );
 
+//familytree
+$wgResourceModules['ext.socialprofile.familytree.css'] = array(
+	'styles' => 'FamilyTree.css',
+	'localBasePath' => __DIR__ . '/FamilyTree',
+	'remoteExtPath' => 'SocialProfile/FamilyTree',
+	'position' => 'bottom' // just in case
+);
+
+$wgResourceModules['ext.socialprofile.familytree.js'] = array(
+	'scripts' => 'FamilyTree.js',
+	'dependencies' => 'mediawiki.notification',
+	'localBasePath' => __DIR__ . '/FamilyTree',
+	'remoteExtPath' => 'SocialProfile/FamilyTree',
+);
+
 // UserRelationship
 $wgResourceModules['ext.socialprofile.userrelationship.css'] = array(
 	'styles' => 'UserRelationship.css',

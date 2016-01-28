@@ -73,7 +73,7 @@ var uploadfiles = {
                     src = '/resources/assets/file-type-icons/fileicon.png';
                 }
             }
-            result='<img src="' + src +'" data-name="'+name+'" data-description="" class="file-source wait" alt="" /><p class="prompt"></p><p class="file-name">' + name + '</p>';
+            result='<img src="' + src +'" data-name="'+name+'" data-description="" data-category="" class="file-source wait" alt="" /><p class="prompt"></p><p class="file-name">' + name + '</p>';
             selector.find('i').remove();
             selector.append(result);
 
@@ -135,7 +135,7 @@ var uploadfiles = {
             $(this).parents('.file-wrap').append(content);
             $('.new-file-name').focus().blur(function(){
                 var val = $(this).val();
-                var filekey = $(this).siblings('img').data('filekey');
+                var filekey = $(this).siblings('img').attr('data-filekey');
                 //添加文件尾名
                 if(val.substr(val.lastIndexOf(".")).toLowerCase()!=end){
                     val+=end;
@@ -201,7 +201,8 @@ var uploadfiles = {
     },
     funGlobalDescription: function(){
         $('.des-save').click(function(){
-            $('.file-source').attr('data-description',$('#des-text').val());
+            $('.file-source.wait').attr('data-description',$('#des-text').val());
+            $('.file-source.wait').attr('data-category',$('#des-category').val());
             mw.notification.notify('批量描述保存成功');
             $('.img-description').modal('hide');
         });
@@ -210,9 +211,11 @@ var uploadfiles = {
         $('#uploadfiles').on('click','.opacity',function(){
             $('.self-img-description').modal('show');
             var that = $(this);
-            $('#self-des-text').val(that.siblings('img').data('description'));
+            $('#self-des-text').val(that.siblings('img').attr('data-description'));
+            $('#self-des-category').val(that.siblings('img').attr('data-category'));
             $('.self-des-save').click(function(){
                 that.siblings('img').attr('data-description',$('#self-des-text').val());
+                that.siblings('img').attr('data-category',$('#self-des-category').val());
             });
         });
         $('.self-des-save').click(function(){
@@ -222,14 +225,14 @@ var uploadfiles = {
     },
     funBtn:function(e){
         $('#upload-btn').on('click', function () {
-            if($('.file-wrap.warning').length==0&&$('.file-wrap').length!=0)
+            if($('.file-wrap.warning').length==0&&$('.file-source.wait').length!=0)
             $(this).button('loading');
         });
     },
     funHref: function(){
         $('#uploadfiles').on('click','.file-wrap img',function(e){
             e.stopPropagation();
-            window.open('/wiki/文件:'+$(this).data('name'));
+            window.open('/wiki/文件:'+$(this).attr('data-name'));
         });
     },
     funUpload: function(e){
@@ -238,18 +241,22 @@ var uploadfiles = {
         if(len==0){
             mw.notification.notify('请选择文件');
         }else if($('.file-wrap').hasClass('warning')){
-            mw.notification.notify('请处理命名已存在的文件');
+            mw.notification.notify('请处理警告的文件');
         }else {
             $('.file-source.wait').each(function (index) {
                 var xhr = new XMLHttpRequest();
                 var formData = new FormData();
                 var that = $(this);
+                var category = that.attr('data-category').replace(/\s+/g, ' ');
+                if(category!=''&&category!=' ')
+                category = '[[Category:'+category+']]';
+                console.log(that.attr('data-description'));
                 formData.append('action', 'upload');
-                formData.append('filename', $(this).data('name'));
-                formData.append('filekey', $(this).data('filekey'));
+                formData.append('filename', that.attr('data-name'));
+                formData.append('filekey', that.attr('data-filekey'));
                 formData.append('ignorewarnings','true');
                 formData.append('comment','upload');
-                formData.append('text',$(this).data('description'));
+                formData.append('text',that.attr('data-description')+category);
                 formData.append('token', self.token);
                 formData.append('format', 'json');
                 that.before('<div class="upload-progress"></div>');
@@ -271,6 +278,7 @@ var uploadfiles = {
                     if(index == len-1){
                         mw.notification.notify('上传成功');
                         $('#upload-btn').button('reset');
+                        $('#des-btn').remove();
                     }
                     that.parents('.file-wrap').removeClass('suggest');
                     that.removeClass('wait');
@@ -320,7 +328,7 @@ var uploadfiles = {
     }
 };
 $(function(){
-    mw.notification.autoHideSeconds = 1;
+    mw.notification.autoHideSeconds = 3;
     uploadfiles.init();
     
 });
