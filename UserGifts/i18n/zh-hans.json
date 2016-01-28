@@ -9,6 +9,8 @@
 	"giftmanager": "礼物管理器",
 	"giftmanager-addgift": "添加一个新礼物",
 	"giftmanager-group": "礼品权限",
+	"giftmanager-repeat": "可重复获得",
+	"giftmanager-prefix": "站点前缀",
 	"giftmanager-description": "礼物说明",
 	"giftmanager-giftimage": "礼品图像",
 	"giftmanager-image": "加入／替换图片",

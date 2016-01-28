@@ -334,13 +334,22 @@ class GiveGift extends SpecialPage {
 			$x = 1;
 
 			foreach ( $gifts as $gift ) {
+				$toUser = User::newFromID($this->user_id_to);
+				$ug = new UserGifts( $toUser->getName() );
+				$res = $ug->doesUserOwnGift( $this->user_id_to, $gift['id'] );
 				$gift_image = "<img id=\"gift_image_{$gift['id']}\" src=\"{$wgUploadPath}/awards/" .
 					Gifts::getGiftImage( $gift['id'], 'l' ) .
 					'" border="0" alt="" />';
-
-				$output .= "<div id=\"give_gift_{$gift['id']}\" class=\"g-give-all\">
+				if ($res == true && $gift['repeat'] == 2 ) {
+					$gclass = 'g-give-all g-had-got';
+				}else{
+					$gclass = 'g-give-all';
+				}
+				$output .= "<div id=\"give_gift_{$gift['id']}\" class='".$gclass."'>
+					<div class=\"gift-warning\">不可重复获得</div>
 					{$gift_image}
 					<div class=\"g-title g-blue\">{$gift['gift_name']}</div>";
+
 				if ( $gift['gift_description'] ) {
 					$output .= "<div class=\"g-describe\">{$gift['gift_description']}</div>";
 				}
@@ -429,6 +438,13 @@ class GiveGift extends SpecialPage {
 		} else {
 			$out->setPageTitle( $this->msg( 'g-error-title' )->plain() );
 			$out->addHTML( $this->msg( 'g-error-message-no-gift' )->plain() );
+			$output .= "<div><span><b>Q：</b>怎么才能给别人送礼物？</span><br>
+						<span><b>A：</b>只有当礼物被创建了之后，才会出现在礼物列表中</span><br>
+						<span><b>Q：</b>如何创建礼物？</span><br>
+						<span><b>A：</b>如果您是站点管理员的话，可以发送邮件至 support@huiji.wiki 并说明要创建的礼物名称及介绍。我们小编会及时回复您的:）</span><br>
+						<span><b>Q：</b>如果我不是管理员怎么办？</span><br>
+						<span><b>A：</b>那你倒是快去联系你们管理员啊！！！</span>
+						</div>";
 		}
 
 		return $output;

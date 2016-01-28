@@ -57,7 +57,8 @@ class GiftManager extends SpecialPage {
 				$giftId = Gifts::addGift(
 					$request->getVal( 'gift_name' ),
 					$request->getVal( 'gift_description' ),
-					$request->getInt( 'group' )
+					$request->getInt( 'group' ),
+					$request->getInt( 'repeat' )
 				);
 				$out->addHTML(
 					'<span class="view-status">' .
@@ -70,7 +71,8 @@ class GiftManager extends SpecialPage {
 					$giftId,
 					$request->getVal( 'gift_name' ),
 					$request->getVal( 'gift_description' ),
-					$request->getInt( 'group' )
+					$request->getInt( 'group' ),
+					$request->getInt( 'repeat' )
 				);
 				$out->addHTML(
 					'<span class="view-status">' .
@@ -254,11 +256,17 @@ class GiftManager extends SpecialPage {
 		<td width="200" class="view-form" valign="top">' . $this->msg( 'giftmanager-description' )->plain() . '</td>
 		<td width="695"><textarea class="createbox" name="gift_description" rows="2" cols="30">' .
 			( isset( $gift['gift_description'] ) ? $gift['gift_description'] : '' ) . '</textarea></td>
+		</tr>
+		<tr>
+		<td width="200" class="view-form" valign="top">' . $this->msg('giftmanager-prefix')->plain() . '</td>
+		<td width="695"><input type="text" size="45" class="createbox" name="gift_name" value="' .
+			( isset( $gift['gift_prefix'] ) ? $gift['gift_prefix'] : '' ) . '"/></td>
+		</tr>
 		</tr>';
 		if ( $gift_id ) {
 			$creator = Title::makeTitle( NS_USER, $gift['creator_user_name'] );
 			$form .= '<tr>
-			<td class="view-form">' .
+			<td class="view-form">&nbsp' .
 				$this->msg( 'g-created-by', $gift['creator_user_name'] )->parse() .
 			'</td>
 			<td><a href="' . htmlspecialchars( $creator->getFullURL() ) . '">' .
@@ -285,25 +293,43 @@ class GiftManager extends SpecialPage {
 			if ( isset( $gift['group'] ) && $gift['group'] == 4 ) {
 				$commonUser = ' selected="selected"';
 			}
+			$repeat = $unrepeat = '';
+			if ( isset( $gift['repeat'] ) && $gift['repeat'] == 1 ) {
+				$repeat = ' selected="selected"';
+			}
+			if ( isset( $gift['repeat'] ) && $gift['repeat'] == 2 ) {
+				$unrepeat = ' selected="selected"';
+			}
 			$form .= '<tr>
-				<td class="view-form">' . $this->msg( 'giftmanager-group' )->plain() . '</td>
-				<td>
-				<select name="group">
-					<option value="1"' . $staff . '>' .
-						$this->msg( 'giftmanager-staff' )->plain() .
-					'</option>
-					<option value="2"' . $bureaucrat . '>' .
-						$this->msg( 'giftmanager-bureaucrat' )->plain() .
-					'</option>
-					<option value="3"' . $sysop . '>' .
-						$this->msg( 'giftmanager-sysop' )->plain() .
-					'</option>
-					<option value="4"' . $commonUser . '>' .
-						$this->msg( 'giftmanager-commonUser' )->plain() .
-					'</option>
-				</select>
-				</td>
-			</tr>';
+						<td class="view-form">' . $this->msg( 'giftmanager-group' )->plain() . '</td>
+						<td>
+						<select name="group">
+							<option value="1"' . $staff . '>' .
+								$this->msg( 'giftmanager-staff' )->plain() .
+							'</option>
+							<option value="2"' . $bureaucrat . '>' .
+								$this->msg( 'giftmanager-bureaucrat' )->plain() .
+							'</option>
+							<option value="3"' . $sysop . '>' .
+								$this->msg( 'giftmanager-sysop' )->plain() .
+							'</option>
+							<option value="4"' . $commonUser . '>' .
+								$this->msg( 'giftmanager-commonUser' )->plain() .
+							'</option>
+						</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="view-form">'. $this->msg( 'giftmanager-repeat' )->plain() .'</td>
+						<td>
+						<select name="repeat">
+							<option value="1"' . $repeat . '>是
+							</option>
+							<option value="2"' . $unrepeat . '>否
+							</option>
+						</select>
+						</td>
+					</tr>';
 		}
 
 		if ( $gift_id ) {

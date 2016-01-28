@@ -319,20 +319,20 @@ class UserGifts {
 		return $newGiftCount;
 	}
 
-	public function getUserGiftList( $type, $limit = 0, $page = 0 ) {
+	public function getUserGiftList( $type ) {
 		$dbr = wfGetDB( DB_SLAVE );
 		$params = array();
 
-		if ( $limit > 0 ) {
-			$limitvalue = 0;
-			if ( $page ) {
-				$limitvalue = $page * $limit - ( $limit );
-			}
-			$params['LIMIT'] = $limit;
-			$params['OFFSET'] = $limitvalue;
-		}
+		// if ( $limit > 0 ) {
+		// 	$limitvalue = 0;
+		// 	if ( $page ) {
+		// 		$limitvalue = $page * $limit - ( $limit );
+		// 	}
+		// 	$params['LIMIT'] = $limit;
+		// 	$params['OFFSET'] = $limitvalue;
+		// }
 
-		// $params['ORDER BY'] = 'ug_id DESC';
+		$params['ORDER BY'] = 'ug_date DESC';
 		$res = $dbr->select(
 			array( 'user_gift', 'gift' ),
 			array(

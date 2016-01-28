@@ -8,9 +8,10 @@ var UserGifts = {
 		}
 
 		// Select new gift
-		jQuery( '#give_gift_' + id ).addClass( 'g-give-all-selected' );
-
-		UserGifts.selected_gift = id;
+		if(jQuery( '#give_gift_' + id ).hasClass('g-had-got')==false){
+			jQuery( '#give_gift_' + id ).addClass( 'g-give-all-selected' );
+			UserGifts.selected_gift = id;
+		}
 	},
 
 	highlightGift: function( id ) {
@@ -26,23 +27,10 @@ var UserGifts = {
 			alert( '请选择一个礼物' );
 			return false;
 		}
-		$.ajax({
-			url: mw.util.wikiScript(),
-			data:{
-					action: 'ajax',
-					rs: 'wfCheckUserIsHaveGift',
-					rsargs: [$('#gift-user-id').attr('value'),UserGifts.selected_gift]
-				},
-			success: function(data){
-				console.log(data);
-				if(data == "success"){
-					document.gift.gift_id.value = UserGifts.selected_gift;
-					document.gift.submit();
-				}else{
-					alert('用户已经获得该成就，请重新选取')
-				}
-			}
-		})
+
+		document.gift.gift_id.value = UserGifts.selected_gift;
+		document.gift.submit();
+
 	},
 
 	chooseFriend: function( friend ) {

@@ -17,7 +17,7 @@ class Gifts {
 	 * @param $gift_description Mixed: a short description about the gift, as supplied by the user
 	 * @param $gift_access Integer: 0 by default
 	 */
-	static function addGift( $gift_name, $gift_description, $gift_group = 1 ) {
+	static function addGift( $gift_name, $gift_description, $gift_group = 1, $repeat ) {
 		global $wgUser;
 
 		$dbw = wfGetDB( DB_MASTER );
@@ -31,6 +31,7 @@ class Gifts {
 				'gift_creator_user_id' => $wgUser->getID(),
 				'gift_creator_user_name' => $wgUser->getName(),
 				'gift_group' => $gift_group,
+				'isrepeat' => $repeat,
 			), __METHOD__
 		);
 		return $dbw->insertId();
@@ -43,13 +44,14 @@ class Gifts {
 	 * @param $gift_description Mixed: a short description about the gift, as supplied by the user
 	 * @param $gift_access Integer: 0 by default
 	 */
-	public function updateGift( $id, $gift_name, $gift_description, $gift_group = 1 ) {
+	public function updateGift( $id, $gift_name, $gift_description, $gift_group = 1, $repeat ) {
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->update( 'gift',
 			/* SET */array(
 				'gift_name' => $gift_name,
 				'gift_description' => $gift_description,
-				'gift_group' => $gift_group
+				'gift_group' => $gift_group,
+				'isrepeat' => $repeat,
 			),
 			/* WHERE */array( 'gift_id' => $id ),
 			__METHOD__
@@ -70,7 +72,7 @@ class Gifts {
 			'gift',
 			array(
 				'gift_id', 'gift_name', 'gift_description',
-				'gift_creator_user_id', 'gift_creator_user_name', 'gift_group'
+				'gift_creator_user_id', 'gift_creator_user_name', 'gift_group', 'isrepeat'
 			),
 			array( "gift_id = {$id}" ),
 			__METHOD__,
@@ -85,6 +87,7 @@ class Gifts {
 			$gift['creator_user_id'] = $row->gift_creator_user_id;
 			$gift['creator_user_name'] = $row->gift_creator_user_name;
 			$gift['group'] = $row->gift_group;
+			$gift['repeat'] = $row->isrepeat;
 		}
 		return $gift;
 	}
@@ -126,7 +129,7 @@ class Gifts {
 			'gift',
 			array(
 				'gift_id', 'gift_createdate', 'gift_name', 'gift_description',
-				'gift_given_count'
+				'gift_given_count', 'isrepeat'
 			),
 			array( "gift_group >= {$group} OR gift_creator_user_id = {$wgUser->getID()}" ),
 			__METHOD__,
@@ -140,7 +143,8 @@ class Gifts {
 				'timestamp' => ( $row->gift_createdate ),
 				'gift_name' => $row->gift_name,
 				'gift_description' => $row->gift_description,
-				'gift_given_count' => $row->gift_given_count
+				'gift_given_count' => $row->gift_given_count,
+				'repeat' => $row->isrepeat,
 			);
 		}
 		return $gifts;
@@ -169,7 +173,7 @@ class Gifts {
 			array(
 				'gift_id', 'gift_createdate', 'gift_name', 'gift_description',
 				'gift_given_count', 'gift_group', 'gift_creator_user_id',
-				'gift_creator_user_name'
+				'gift_creator_user_name', 'isrepeat',
 			),
 			$where,
 			__METHOD__,
@@ -183,7 +187,8 @@ class Gifts {
 				'timestamp' => ( $row->gift_createdate ),
 				'gift_name' => $row->gift_name,
 				'gift_description' => $row->gift_description,
-				'gift_given_count' => $row->gift_given_count
+				'gift_given_count' => $row->gift_given_count,
+				'repeat' => $row->isrepeat,
 			);
 		}
 		return $gifts;

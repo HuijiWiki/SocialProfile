@@ -85,7 +85,8 @@ class ViewGifts extends SpecialPage {
 		 */
 		$rel = new UserGifts( $user_name );
 
-		$gifts = $rel->getUserGiftList( 0, $per_page, $page );
+		// $gifts = $rel->getUserGiftList( 0, $per_page, $page );
+		$gifts = $rel->getUserGiftList( 0 );
 		$total = $rel->getGiftCountByUsername( $user_name );
 
 		/**
@@ -101,16 +102,32 @@ class ViewGifts extends SpecialPage {
 		<div class="g-count">' .
 			$this->msg( 'g-count', $rel->user_name, $total )->parse() .
 		'</div>';
-
+// print_r($gifts);die();
 		if ( $gifts ) {
 			$x = 1;
-
+			foreach ($gifts as $value) {
+				$gift_name[] = $value['gift_name'];
+			}
+			// count every gift total number
+			$gift_count = array_count_values($gift_name);
+			// del the repeat gift from list
+			$repeat = array();
+			foreach ($gifts as $key => $value) {
+				if(isset($repeat[$value['gift_name']])){
+		            unset($gifts[$key]);
+		        }else{
+		            $repeat[$value['gift_name']] = $value['gift_name'];
+		        }
+				$repeat[] = $value['gift_name'];
+			}
+			$star = $per_page*($page-1);
+			$res_arr = array_slice($gifts, $star, $per_page);
 			// Safe links
 			$viewGiftLink = SpecialPage::getTitleFor( 'ViewGift' );
 			$giveGiftLink = SpecialPage::getTitleFor( 'GiveGift' );
 			$removeGiftLink = SpecialPage::getTitleFor( 'RemoveGift' );
 
-			foreach ( $gifts as $gift ) {
+			foreach ( $res_arr as $gift ) {
 				$giftname_length = strlen( $gift['gift_name'] );
 				$giftname_space = stripos( $gift['gift_name'], ' ' );
 
@@ -122,14 +139,16 @@ class ViewGifts extends SpecialPage {
 				}
 
 				$user_from = Title::makeTitle( NS_USER, $gift['user_name_from'] );
+				$gift_count_str = ($gift_count[$gift['gift_name']]>1)?'×'.$gift_count[$gift['gift_name']]:'';
 				$gift_image = "<img src=\"{$wgUploadPath}/awards/" .
 					Gifts::getGiftImage( $gift['gift_id'], 'l' ) .
 					'" border="0" alt="" />';
 				$output .= '<div class="g-item">
 					<a data-toggle="popover" data-trigger="hover" data-original-title='.str_replace(' ', '', $gift_name_display)."（来自".str_replace(' ', '', $gift['user_name_from'])."）".' data-content="'.$gift['gift_description'].'" href="' . htmlspecialchars( $viewGiftLink->getFullURL( 'gift_id=' . $gift['id'] ) ) . '">' .
 						$gift_image .
-					'</a>
+					'<span class="gift-count-num">'.$gift_count_str.'</span></a>
 					<div class="g-title">';
+				
 				if ( $gift['status'] == 1 ) {
 					if ( $user_name == $currentUser->getName() ) {
 						$rel->clearUserGiftStatus( $gift['id'] );
@@ -140,7 +159,6 @@ class ViewGifts extends SpecialPage {
 					'</span>';
 				}
 				$output .= '</div>';
-
 				$output .= '
 					<div class="g-actions">';
 				if ( $rel->user_name == $currentUser->getName() ) {
