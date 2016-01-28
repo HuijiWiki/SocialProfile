@@ -65,7 +65,7 @@ class SpecialUploadFiles extends SpecialPage{
                                            <div class="form-group">
                                                <label for="self-des-text" class="control-label">描述:</label>
                                                <textarea class="form-control" id="self-des-text"></textarea>
-                                               <label for="self-des-category" class="control-label">分类:</label>
+                                               <label for="self-des-category" class="control-label">分类:（多个分类用逗号分隔）</label>
                                                <input class="form-control" type="text" id="self-des-category">
                                            </div>
                                        </div>

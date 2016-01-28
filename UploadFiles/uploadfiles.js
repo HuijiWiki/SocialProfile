@@ -248,15 +248,19 @@ var uploadfiles = {
                 var formData = new FormData();
                 var that = $(this);
                 var category = that.attr('data-category').replace(/\s+/g, ' ');
-                if(category!=''&&category!=' ')
-                category = '[[Category:'+category+']]';
-                console.log(that.attr('data-description'));
+                var cate = '';
+                if(category!=''&&category!=' '){
+                    category = category.split(',');
+                    category.forEach(function(item,i){
+                        cate+='[[Category:'+item+']]'
+                    });
+                }
                 formData.append('action', 'upload');
                 formData.append('filename', that.attr('data-name'));
                 formData.append('filekey', that.attr('data-filekey'));
                 formData.append('ignorewarnings','true');
                 formData.append('comment','upload');
-                formData.append('text',that.attr('data-description')+category);
+                formData.append('text',that.attr('data-description')+cate);
                 formData.append('token', self.token);
                 formData.append('format', 'json');
                 that.before('<div class="upload-progress"></div>');
