@@ -42,8 +42,10 @@ class SpecialUploadFiles extends SpecialPage{
                                </div>
                                <div class="modal-body">
                                    <div class="form-group">
-                                       <label for="message-text" class="control-label">描述:</label>
+                                       <label for="des-text" class="control-label">描述:</label>
                                        <textarea class="form-control" id="des-text"></textarea>
+                                       <label for="des-category" class="control-label">分类:</label>
+                                       <input class="form-control" type="text" id="des-category">
                                    </div>
                                </div>
                                <div class="modal-footer">
@@ -61,8 +63,10 @@ class SpecialUploadFiles extends SpecialPage{
                                        </div>
                                        <div class="modal-body">
                                            <div class="form-group">
-                                               <label for="message-text" class="control-label">描述:</label>
+                                               <label for="self-des-text" class="control-label">描述:</label>
                                                <textarea class="form-control" id="self-des-text"></textarea>
+                                               <label for="self-des-category" class="control-label">分类:</label>
+                                               <input class="form-control" type="text" id="self-des-category">
                                            </div>
                                        </div>
                                        <div class="modal-footer">
