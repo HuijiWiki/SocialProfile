@@ -54,7 +54,7 @@ class ViewGift extends UnlistedSpecialPage {
 				<a href="' . htmlspecialchars( Title::makeTitle( NS_USER, $user_name )->getFullURL() ) . '">'
 				. $this->msg( 'g-back-link', $user_name )->parse() . '</a>
 			</div>';
-		if ( count($page_gifts) > 1 ) {
+		if ( count($page_gifts) >= 1 ) {
 			foreach ($page_gifts as $key => $gift) {
 				if ( $gift['status'] == 1 ) {
 					if ( $gift['user_name_to'] == $user->getName() ) {
