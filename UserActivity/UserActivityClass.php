@@ -823,7 +823,6 @@ class UserActivity {
 			$option,
 			array( 'gift' => array( 'INNER JOIN', 'gift_id = ug_gift_id' ) )
 		);
-
 		foreach ( $res as $row ) {
 			global $wgUploadPath, $wgMemc;
 			$key = wfForeignMemcKey('huiji', '', 'setGiftsRec', $row->ug_id);
@@ -856,7 +855,7 @@ class UserActivity {
 									)->text(),
 						'hasShowcase' => true,
 						'showcase' =>  
-									"<a href=\"" . htmlspecialchars( $view_gift_link->getFullURL( 'gift_id=' . $row->ug_id ) ) . "\" rel=\"nofollow\">
+									"<a href=\"" . htmlspecialchars( $view_gift_link->getFullURL( 'user='.$user_name_short.'&gift_id=' . $row->gift_id ) ) . "\" rel=\"nofollow\">
 											{$gift_image}
 											{$row->gift_name}
 										</a>

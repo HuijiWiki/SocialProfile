@@ -77,7 +77,7 @@ class ViewGifts extends SpecialPage {
 		/**
 		 * Config for the page
 		 */
-		$per_page = 10;
+		$per_page = 5;
 		$per_row = 2;
 
 		/**
@@ -126,7 +126,6 @@ class ViewGifts extends SpecialPage {
 			$viewGiftLink = SpecialPage::getTitleFor( 'ViewGift' );
 			$giveGiftLink = SpecialPage::getTitleFor( 'GiveGift' );
 			$removeGiftLink = SpecialPage::getTitleFor( 'RemoveGift' );
-
 			foreach ( $res_arr as $gift ) {
 				$giftname_length = strlen( $gift['gift_name'] );
 				$giftname_space = stripos( $gift['gift_name'], ' ' );
@@ -144,7 +143,7 @@ class ViewGifts extends SpecialPage {
 					Gifts::getGiftImage( $gift['gift_id'], 'l' ) .
 					'" border="0" alt="" />';
 				$output .= '<div class="g-item">
-					<a data-toggle="popover" data-trigger="hover" data-original-title='.str_replace(' ', '', $gift_name_display)."（来自".str_replace(' ', '', $gift['user_name_from'])."）".' data-content="'.$gift['gift_description'].'" href="' . htmlspecialchars( $viewGiftLink->getFullURL( 'gift_id=' . $gift['id'] ) ) . '">' .
+					<a data-toggle="popover" data-trigger="hover" data-original-title='.str_replace(' ', '', $gift_name_display)."（来自".str_replace(' ', '', $gift['user_name_from'])."）".' data-content="'.$gift['gift_description'].'" href="' . htmlspecialchars( $viewGiftLink->getFullURL( 'gift_id=' . $gift['gift_id'] .'&user='.$user_name ) ) . '">' .
 						$gift_image .
 					'<span class="gift-count-num">'.$gift_count_str.'</span></a>
 					<div class="g-title">';
@@ -180,39 +179,40 @@ class ViewGifts extends SpecialPage {
 		/**
 		 * Build next/prev nav
 		 */
-		$numofpages = $total / $per_page;
+		$pcount = count($gifts);
+		$numofpages = $pcount / $per_page;
 
 		$pageLink = $this->getPageTitle();
 
 		if ( $numofpages > 1 ) {
-			$output .= '<div class="page-nav">';
+			$output .= '<div class="page-nav-wrapper"><nav class="page-nav pagination">';
 			if ( $page > 1 ) {
-				$output .= Linker::link(
+				$output .= '<li>'.Linker::link(
 					$pageLink,
-					$this->msg( 'g-previous' )->plain(),
+					'<span aria-hidden="true">&laquo;</span>',
 					array(),
 					array(
 						'user' => $user_name,
 						'page' => ( $page - 1 )
 					)
-				) . $this->msg( 'word-separator' )->plain();
+				) . '</li>';
 			}
 
-			if ( ( $total % $per_page ) != 0 ) {
+			if ( ( $pcount % $per_page ) != 0 ) {
 				$numofpages++;
 			}
-			if ( $numofpages >= 9 && $page < $total ) {
+			if ( $numofpages >= 9 && $page < $pcount ) {
 				$numofpages = 9 + $page;
 			}
-			if ( $numofpages >= ( $total / $per_page ) ) {
-				$numofpages = ( $total / $per_page ) + 1;
+			if ( $numofpages >= ( $pcount / $per_page ) ) {
+				$numofpages = ( $pcount / $per_page ) + 1;
 			}
 
 			for ( $i = 1; $i <= $numofpages; $i++ ) {
 				if ( $i == $page ) {
-					$output .= ( $i . ' ' );
+					$output .= ( '<li class="active"><a href="#">'.$i.' <span class="sr-only">(current)</span></a></li>' );
 				} else {
-					$output .= Linker::link(
+					$output .= '<li>' .Linker::link(
 						$pageLink,
 						$i,
 						array(),
@@ -220,23 +220,23 @@ class ViewGifts extends SpecialPage {
 							'user' => $user_name,
 							'page' => $i
 						)
-					) . $this->msg( 'word-separator' )->plain();
+					) .'</li>';
 				}
 			}
 
-			if ( ( $total - ( $per_page * $page ) ) > 0 ) {
-				$output .= $this->msg( 'word-separator' )->plain() .
+			if ( ( $pcount - ( $per_page * $page ) ) > 0 ) {
+				$output .= '<li>' .
 					Linker::link(
 						$pageLink,
-						$this->msg( 'g-next' )->plain(),
+						'<span aria-hidden="true">&raquo;</span>',
 						array(),
 						array(
 							'user' => $user_name,
 							'page' => ( $page + 1 )
 						)
-					);
+					).'</li>';
 			}
-			$output .= '</div>';
+			$output .= '</nav></div>';
 		}
 
 		$out->addHTML( $output );

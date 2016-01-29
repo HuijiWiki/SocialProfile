@@ -1530,7 +1530,7 @@ class UserProfilePage extends Article {
 							'" border="0" alt="" />';
 						$item_html .= wfMessage( 'user-recent-activity-gift-sent' )->escaped() . " {$user_link_2} {$item_time}
 						<div class=\"item\">
-							<a href=\"" . htmlspecialchars( $viewGift->getFullURL( "gift_id={$item['id']}" ) ) . "\" rel=\"nofollow\">
+							<a href=\"" . htmlspecialchars( $viewGift->getFullURL( "user={$item['comment']}&gift_id={$item['namespace']}" ) ) . "\" rel=\"nofollow\">
 								{$gift_image}
 								{$item['pagetitle']}
 							</a>
@@ -1542,7 +1542,7 @@ class UserProfilePage extends Article {
 							'" border="0" alt="" />';
 						$item_html .= wfMessage( 'user-recent-activity-gift-rec' )->escaped() . " {$user_link_2} {$item_time}</span>
 								<div class=\"item\">
-									<a href=\"" . htmlspecialchars( $viewGift->getFullURL( "gift_id={$item['id']}" ) ) . "\" rel=\"nofollow\">
+									<a href=\"" . htmlspecialchars( $viewGift->getFullURL( "user={$item['username']}&gift_id={$item['namespace']}" ) ) . "\" rel=\"nofollow\">
 										{$gift_image}
 										{$item['pagetitle']}
 									</a>
@@ -1841,11 +1841,12 @@ class UserProfilePage extends Article {
 
 		// Try cache
 		$key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'gifts', "{$g->user_id}" );
-		$data = $wgMemc->get( $key );
+		// $data = $wgMemc->get( $key );
+		$data = '';
 
 		if ( !$data ) {
 			wfDebug( "Got profile gifts for user {$user_name} from DB\n" );
-			$gifts = $g->getUserGiftList( 0, 4 );
+			$gifts = $g->getUserGiftList( 0 );
 			$wgMemc->set( $key, $gifts, 60 * 60 * 4 );
 		} else {
 			wfDebug( "Got profile gifts for user {$user_name} from cache\n" );
@@ -1887,28 +1888,45 @@ class UserProfilePage extends Article {
 
 			$x = 1;
 
+			foreach ($gifts as $value) {
+				$g_name[] = $value['gift_name'];
+			}
+			$gift_count = array_count_values($g_name);
+			
+			$grepeat = array();
+			foreach ($gifts as $key => $value) {
+				if(isset($grepeat[$value['gift_name']])){
+		            unset($gifts[$key]);
+		        }else{
+		            $grepeat[$value['gift_name']] = $value['gift_name'];
+		        }
+				$grepeat[] = $value['gift_name'];
+			}
 			foreach ( $gifts as $gift ) {
-				if ( $gift['status'] == 1 && $user_name == $wgUser->getName() ) {
-					$g->clearUserGiftStatus( $gift['id'] );
-					$wgMemc->delete( $key );
-					$g->decNewGiftCount( $wgUser->getID() );
-				}
+				if ( $x <= 4 ) {
+					if ( $gift['status'] == 1 && $user_name == $wgUser->getName() ) {
+						$g->clearUserGiftStatus( $gift['id'] );
+						$wgMemc->delete( $key );
+						$g->decNewGiftCount( $wgUser->getID() );
+					}
 
-				$user = Title::makeTitle( NS_USER, $gift['user_name_from'] );
-				$gift_image = '<img src="' . $wgUploadPath . '/awards/' .
-					Gifts::getGiftImage( $gift['gift_id'], 'ml' ) .
-					'" border="0" alt="" />';
-				$gift_link = $user = SpecialPage::getTitleFor( 'ViewGift' );
-				$class = '';
-				if ( $gift['status'] == 1 ) {
-					$class = 'class="user-page-new"';
+					$user = Title::makeTitle( NS_USER, $gift['user_name_from'] );
+					$gift_image = '<img src="' . $wgUploadPath . '/awards/' .
+						Gifts::getGiftImage( $gift['gift_id'], 'ml' ) .
+						'" border="0" alt="" />';
+					$gift_link = $user = SpecialPage::getTitleFor( 'ViewGift' );
+					$class = '';
+					if ( $gift['status'] == 1 ) {
+						$class = 'class="user-page-new"';
+					}
+					$output .= '<div class="gift-wrap"><a href="' . htmlspecialchars( $gift_link->getFullURL( 'user='.$user_name.'&gift_id=' . $gift['gift_id'] ) ) . '" ' .
+						$class . " rel=\"nofollow\">{$gift_image}</a>";
+					$str = ($gift_count[$gift['gift_name']]>1)?'×'.$gift_count[$gift['gift_name']]:'';
+					$output .= "<span class=\"gift-count-num\">".$str."</span></div>";
+					if ( $x == count( $gifts ) || $x != 1 && $x % $per_row == 0 ) {
+						$output .= '<div class="cleared"></div>';
+					}
 				}
-				$output .= '<a href="' . htmlspecialchars( $gift_link->getFullURL( 'gift_id=' . $gift['id'] ) ) . '" ' .
-					$class . " rel=\"nofollow\">{$gift_image}</a>";
-				if ( $x == count( $gifts ) || $x != 1 && $x % $per_row == 0 ) {
-					$output .= '<div class="cleared"></div>';
-				}
-
 				$x++;
 			}
 

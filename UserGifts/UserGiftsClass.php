@@ -178,11 +178,14 @@ class UserGifts {
 	 * @param $id Integer: gift ID number
 	 * @return Array: array containing gift info, such as its ID, sender, etc.
 	 */
-	static function getUserGift( $id ) {
+	static function getUserGift( $user_name, $id, $limit ) {
 		if ( !is_numeric( $id ) ) {
 			return '';
 		}
-
+		$params = $gift = $result = array();
+		if( $limit != 0  ){
+			$params = array('LIMIT' => $limit, 'OFFSET' => 0 );
+		}
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select(
 			array( 'user_gift', 'gift' ),
@@ -192,26 +195,46 @@ class UserGifts {
 				'ug_date', 'ug_status', 'gift_name', 'gift_description',
 				'gift_given_count'
 			),
-			array( "ug_id = {$id}" ),
+			array( "ug_gift_id = {$id} AND ug_user_name_to='$user_name'" ),
 			__METHOD__,
-			array( 'LIMIT' => 1, 'OFFSET' => 0 ),
+			$params,
 			array( 'gift' => array( 'INNER JOIN', 'ug_gift_id = gift_id' ) )
 		);
-		$row = $dbr->fetchObject( $res );
-		if ( $row ) {
-			$gift['id'] = $row->ug_id;
-			$gift['user_id_from'] = $row->ug_user_id_from;
-			$gift['user_name_from'] = $row->ug_user_name_from;
-			$gift['user_id_to'] = $row->ug_user_id_to;
-			$gift['user_name_to'] = $row->ug_user_name_to;
-			$gift['message'] = $row->ug_message;
-			$gift['gift_count'] = $row->gift_given_count;
-			$gift['timestamp'] = $row->ug_date;
-			$gift['gift_id'] = $row->gift_id;
-			$gift['name'] = $row->gift_name;
-			$gift['description'] = $row->gift_description;
-			$gift['status'] = $row->ug_status;
+		if ( $res ) {
+			foreach ($res as $value) {
+				$gift['id'] = $value->ug_id;
+				$gift['user_id_from'] = $value->ug_user_id_from;
+				$gift['user_name_from'] = $value->ug_user_name_from;
+				$gift['user_id_to'] = $value->ug_user_id_to;
+				$gift['user_name_to'] = $value->ug_user_name_to;
+				$gift['message'] = $value->ug_message;
+				$gift['gift_count'] = $value->gift_given_count;
+				$gift['timestamp'] = $value->ug_date;
+				$gift['gift_id'] = $value->gift_id;
+				$gift['name'] = $value->gift_name;
+				$gift['description'] = $value->gift_description;
+				$gift['status'] = $value->ug_status;
+				$result[] = $gift;
+			}
+			if( $result ){
+				return $result;
+			}
 		}
+		// $row = $dbr->fetchObject( $res );
+		// if ( $row ) {
+			// $gift['id'] = $row->ug_id;
+			// $gift['user_id_from'] = $row->ug_user_id_from;
+			// $gift['user_name_from'] = $row->ug_user_name_from;
+			// $gift['user_id_to'] = $row->ug_user_id_to;
+			// $gift['user_name_to'] = $row->ug_user_name_to;
+			// $gift['message'] = $row->ug_message;
+			// $gift['gift_count'] = $row->gift_given_count;
+			// $gift['timestamp'] = $row->ug_date;
+			// $gift['gift_id'] = $row->gift_id;
+			// $gift['name'] = $row->gift_name;
+			// $gift['description'] = $row->gift_description;
+			// $gift['status'] = $row->ug_status;
+		// }
 
 		return $gift;
 	}

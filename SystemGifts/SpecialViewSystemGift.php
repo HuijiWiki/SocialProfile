@@ -136,73 +136,73 @@ class ViewSystemGift extends UnlistedSpecialPage {
 				$i++;
 			}
 			/**
-		 * Build next/prev nav
-		 */
-		// $pcount = $rel->getGiftCountByUsername( $user_name );
-		$pcount = count($gift);
-		$numofpages = $pcount / $per_page;
+			 * Build next/prev nav
+			 */
+			// $pcount = $rel->getGiftCountByUsername( $user_name );
+			$pcount = count($gift);
+			$numofpages = $pcount / $per_page;
 
-		$page_link = $this->getPageTitle();
+			$page_link = $this->getPageTitle();
 
-		if ( $numofpages > 1 ) {
-			$output .= '<div class="page-nav-wrapper"><nav class="page-nav pagination">';
+			if ( $numofpages > 1 ) {
+				$output .= '<div class="page-nav-wrapper"><nav class="page-nav pagination">';
 
-			if ( $page > 1 ) {
-				$output .= '<li>'.Linker::link(
-					$page_link,
-					'<span aria-hidden="true">&laquo;</span>',
-					array(),
-					array(
-						'user' => $user_name,
-						'gift_id' => $giftId,
-						'page' => ( $page - 1 )
-					)
-				) . '</li>';
-			}
-
-			if ( ( $pcount % $per_page ) != 0 ) {
-				$numofpages++;
-			}
-			if ( $numofpages >= 9 && $page < $pcount ) {
-				$numofpages = 9 + $page;
-			}
-			// if ( $numofpages >= ( $total / $per_page ) ) {
-			// 	$numofpages = ( $total / $per_page ) + 1;
-			// }
-
-			for ( $i = 1; $i <= $numofpages; $i++ ) {
-				if ( $i == $page ) {
-					$output .= ( '<li class="active"><a href="#">'.$i.' <span class="sr-only">(current)</span></a></li>' );
-				} else {
-					$output .= '<li>' .Linker::link(
+				if ( $page > 1 ) {
+					$output .= '<li>'.Linker::link(
 						$page_link,
-						$i,
+						'<span aria-hidden="true">&laquo;</span>',
 						array(),
 						array(
 							'user' => $user_name,
 							'gift_id' => $giftId,
-							'page' => $i
+							'page' => ( $page - 1 )
 						)
-					);
+					) . '</li>';
 				}
-			}
 
-			if ( ( $pcount - ( $per_page * $page ) ) > 0 ) {
-				$output .= '<li>' .
-					Linker::link(
-						$page_link,
-						'<span aria-hidden="true">&raquo;</span>',
-						array(),
-						array(
-							'user' => $user_name,
-							'gift_id' => $giftId,
-							'page' => ( $page + 1 )
-						)
-					).'</li>';	
-			}
+				if ( ( $pcount % $per_page ) != 0 ) {
+					$numofpages++;
+				}
+				if ( $numofpages >= 9 && $page < $pcount ) {
+					$numofpages = 9 + $page;
+				}
+				// if ( $numofpages >= ( $total / $per_page ) ) {
+				// 	$numofpages = ( $total / $per_page ) + 1;
+				// }
 
-			$output .= '</nav></div>';
-		}
+				for ( $i = 1; $i <= $numofpages; $i++ ) {
+					if ( $i == $page ) {
+						$output .= ( '<li class="active"><a href="#">'.$i.' <span class="sr-only">(current)</span></a></li>' );
+					} else {
+						$output .= '<li>' .Linker::link(
+							$page_link,
+							$i,
+							array(),
+							array(
+								'user' => $user_name,
+								'gift_id' => $giftId,
+								'page' => $i
+							)
+						);
+					}
+				}
+
+				if ( ( $pcount - ( $per_page * $page ) ) > 0 ) {
+					$output .= '<li>' .
+						Linker::link(
+							$page_link,
+							'<span aria-hidden="true">&raquo;</span>',
+							array(),
+							array(
+								'user' => $user_name,
+								'gift_id' => $giftId,
+								'page' => ( $page + 1 )
+							)
+						).'</li>';	
+				}
+
+				$output .= '</nav></div>';
+			}
 			$out->addHTML( $output );
 
 		} else {

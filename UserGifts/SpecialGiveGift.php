@@ -114,36 +114,39 @@ class GiveGift extends SpecialPage {
 					// reset the cache
 					$wgMemc->set( $key, $lastUniqueGifts );
 				}
+				$numg = 0;
+				$sent_gift = UserGifts::getUserGift( $this->user_name_to,$request->getInt( 'gift_id' ) , $numg );
+				if ($sent_gift) {
+					$gift_image = '<img src="' . $wgUploadPath . '/awards/' .
+						Gifts::getGiftImage( $sent_gift[0]['gift_id'], 'l' ) .
+						'" border="0" alt="" />';
 
-				$sent_gift = UserGifts::getUserGift( $ug_gift_id );
-				$gift_image = '<img src="' . $wgUploadPath . '/awards/' .
-					Gifts::getGiftImage( $sent_gift['gift_id'], 'l' ) .
-					'" border="0" alt="" />';
+					$out->setPageTitle( $this->msg( 'g-sent-title', $this->user_name_to )->parse() );
 
-				$out->setPageTitle( $this->msg( 'g-sent-title', $this->user_name_to )->parse() );
-
-				$output .= '<div class="back-links">
-					<a href="' . htmlspecialchars( $user_title->getFullURL() ) . '">' .
-						$this->msg( 'g-back-link', $this->user_name_to )->parse() .
-					'</a>
-				</div>
-				<div class="g-message">' .
-					$this->msg( 'g-sent-message', $this->user_name_to )->parse() .
-				'</div>
-				<div class="g-container">' .
-					$gift_image .
-				'<div class="g-title">' . $sent_gift['name'] . '</div>';
-				if ( $sent_gift['message'] ) {
-					$output .= '<div class="g-user-message">' .
-						$sent_gift['message'] .
-					'</div>';
+					$output .= '<div class="back-links">
+						<a href="' . htmlspecialchars( $user_title->getFullURL() ) . '">' .
+							$this->msg( 'g-back-link', $this->user_name_to )->parse() .
+						'</a>
+					</div>
+					<div class="g-message">' .
+						$this->msg( 'g-sent-message', $this->user_name_to )->parse() .
+					'</div>
+					<div class="g-container">' .
+						$gift_image .
+					'<div class="g-title">' . $sent_gift[0]['name'] . '</div>';
+					if ( $sent_gift[0]['message'] ) {
+						$output .= '<div class="g-user-message">' .
+							$sent_gift[0]['message'] .
+						'</div>';
+					}
+					$output .= '</div>
+					<div class="cleared"></div>
+					<div class="g-buttons">
+						<input type="button" class="site-button" value="' . $this->msg( 'g-main-page' )->plain() . '" size="20" onclick="window.location=\'index.php?title=' . $this->msg( 'mainpage' )->inContentLanguage()->escaped() . '\'" />
+						<input type="button" class="site-button" value="' . $this->msg( 'g-your-profile' )->plain() . '" size="20" onclick="window.location=\'' . htmlspecialchars( $user->getUserPage()->getFullURL() ) . '\'" />
+					</div>';
 				}
-				$output .= '</div>
-				<div class="cleared"></div>
-				<div class="g-buttons">
-					<input type="button" class="site-button" value="' . $this->msg( 'g-main-page' )->plain() . '" size="20" onclick="window.location=\'index.php?title=' . $this->msg( 'mainpage' )->inContentLanguage()->escaped() . '\'" />
-					<input type="button" class="site-button" value="' . $this->msg( 'g-your-profile' )->plain() . '" size="20" onclick="window.location=\'' . htmlspecialchars( $user->getUserPage()->getFullURL() ) . '\'" />
-				</div>';
+				
 
 				$out->addHTML( $output );
 			} else {
@@ -183,7 +186,7 @@ class GiveGift extends SpecialPage {
 			return false;
 		}
 
-		if ( $gift['access'] == 1 && $this->getUser()->getID() != $gift['creator_user_id'] ) {
+		if ( $gift['group'] == 1 && $this->getUser()->getID() != $gift['creator_user_id'] ) {
 			return $this->displayFormAll();
 		}
 
