@@ -458,9 +458,10 @@ class UserProfilePage extends Article {
 
 		$wgOut->addHTML( $this->getRelationships( $this->user_name, 1 ) );
 		$wgOut->addHTML( $this->getRelationships( $this->user_name, 2 ) );
+		$wgOut->addHTML( $this->getAwards( $this->user_name ) );
 		$wgOut->addHTML( $this->getGifts( $this->user_name ) );
 		$wgOut->addHTML( $this->getCustomInfo( $this->user_name ) );
-		$wgOut->addHTML( $this->getInterests( $this->user_name ) );
+
 		$wgOut->addHTML( $this->getFanBoxes( $this->user_name ) );
 		$wgOut->addHTML( $this->getUserStats( $this->user_id, $this->user_name ) );
         $wgOut->addHTML( $this->getEditingActivity( $this->user_name ) );
@@ -480,7 +481,7 @@ class UserProfilePage extends Article {
 		if ( !wfRunHooks( 'UserProfileBeginRight', array( &$this ) ) ) {
 			wfDebug( __METHOD__ . ": UserProfileBeginRight messed up profile!\n" );
 		}
-        $wgOut->addHTML( $this->getAwards( $this->user_name ) );
+        $wgOut->addHTML( $this->getInterests( $this->user_name ) );
 		$wgOut->addHTML( $this->getPersonalInfo( $this->user_id, $this->user_name ) );
 		// Hook for BlogPage
 		if ( !wfRunHooks( 'UserProfileRightSideAfterActivity', array( $this ) ) ) {
