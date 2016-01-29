@@ -287,7 +287,7 @@ class GiveGift extends SpecialPage {
 	}
 
 	function displayFormAll() {
-		global $wgGiveGiftPerRow, $wgUploadPath, $wgUser;
+		global $wgGiveGiftPerRow, $wgUploadPath, $wgUser, $wgHuijiPrefix;
 
 		$out = $this->getOutput();
 
@@ -314,8 +314,8 @@ class GiveGift extends SpecialPage {
 		}elseif ( empty($user_group) ) {
 			$group = 4;
 		}
-		$total = Gifts::getGiftCount();
-		$gifts = Gifts::getGiftList( $group, $per_page, $page, 'gift_name' );
+		$total = Gifts::getGiftCount( $wgHuijiPrefix );
+		$gifts = Gifts::getGiftList( $group, $per_page, $page, $wgHuijiPrefix );
 		$output = '';
 
 		if ( $gifts ) {
@@ -332,7 +332,6 @@ class GiveGift extends SpecialPage {
 			<form action="" method="post" enctype="multipart/form-data" name="gift">';
 
 			$x = 1;
-
 			foreach ( $gifts as $gift ) {
 				$toUser = User::newFromID($this->user_id_to);
 				$ug = new UserGifts( $toUser->getName() );
@@ -370,17 +369,19 @@ class GiveGift extends SpecialPage {
 			$user_name = $user->getText();
 
 			if ( $numofpages > 1 ) {
-				$output .= '<div class="page-nav">';
+				$output .= '<div class="page-nav-wrapper"><nav class="page-nav pagination">';
 				if ( $page > 1 ) {
-					$output .= Linker::link(
+					$output .= '<li>'.Linker::link(
 						$giveGiftLink,
-						$this->msg( 'g-previous' )->plain(),
+						'<span aria-hidden="true">&laquo;</span>',
+						// $this->msg( 'g-previous' )->plain(),
 						array(),
 						array(
 							'user' => $user_name,
 							'page' => ( $page - 1 )
 						)
-					) . $this->msg( 'word-separator' )->plain();
+					) . '</li>';
+					// ) . $this->msg( 'word-separator' )->plain();
 				}
 
 				if ( ( $total % $per_page ) != 0 ) {
@@ -391,9 +392,10 @@ class GiveGift extends SpecialPage {
 				}
 				for ( $i = 1; $i <= $numofpages; $i++ ) {
 					if ( $i == $page ) {
-						$output .= ( $i . ' ' );
+						$output .= ( '<li class="active"><a href="#">'.$i.' <span class="sr-only">(current)</span></a></li>' );
+						// $output .= ( $i . ' ' );
 					} else {
-						$output .= Linker::link(
+						$output .= '<li>'.Linker::link(
 							$giveGiftLink,
 							$i,
 							array(),
@@ -401,15 +403,18 @@ class GiveGift extends SpecialPage {
 								'user' => $user_name,
 								'page' => $i
 							)
-						) . $this->msg( 'word-separator' )->plain();
+						) . '</li>';
+						// ) . $this->msg( 'word-separator' )->plain();
 					}
 				}
 
 				if ( ( $total - ( $per_page * $page ) ) > 0 ) {
-					$output .= $this->msg( 'word-separator' )->plain() .
+					$output .= '<li>' .
+					// $output .= $this->msg( 'word-separator' )->plain() .
 						Linker::link(
 							$giveGiftLink,
-							$this->msg( 'g-next' )->plain(),
+							'<span aria-hidden="true">&raquo;</span>',
+							// $this->msg( 'g-next' )->plain(),
 							array(),
 							array(
 								'user' => $user_name,
@@ -417,7 +422,7 @@ class GiveGift extends SpecialPage {
 							)
 						);
 				}
-				$output .= '</div>';
+				$output .= '</nav></div>';
 			}
 
 			/**

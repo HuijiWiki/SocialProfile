@@ -58,7 +58,8 @@ class GiftManager extends SpecialPage {
 					$request->getVal( 'gift_name' ),
 					$request->getVal( 'gift_description' ),
 					$request->getInt( 'group' ),
-					$request->getInt( 'repeat' )
+					$request->getInt( 'repeat' ),
+					$request->getVal( 'gift_prefix' )
 				);
 				$out->addHTML(
 					'<span class="view-status">' .
@@ -72,7 +73,8 @@ class GiftManager extends SpecialPage {
 					$request->getVal( 'gift_name' ),
 					$request->getVal( 'gift_description' ),
 					$request->getInt( 'group' ),
-					$request->getInt( 'repeat' )
+					$request->getInt( 'repeat' ),
+					$request->getVal( 'gift_prefix' )
 				);
 				$out->addHTML(
 					'<span class="view-status">' .
@@ -259,7 +261,7 @@ class GiftManager extends SpecialPage {
 		</tr>
 		<tr>
 		<td width="200" class="view-form" valign="top">' . $this->msg('giftmanager-prefix')->plain() . '</td>
-		<td width="695"><input type="text" size="45" class="createbox" name="gift_name" value="' .
+		<td width="695"><input type="text" size="45" class="createbox" name="gift_prefix" value="' .
 			( isset( $gift['gift_prefix'] ) ? $gift['gift_prefix'] : '' ) . '"/></td>
 		</tr>
 		</tr>';

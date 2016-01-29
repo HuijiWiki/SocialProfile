@@ -216,7 +216,7 @@ class ViewSystemGifts extends SpecialPage {
 							'user' => $user_name,
 							'page' => $i
 						)
-					);
+					).'</li>';
 				}
 			}
 
