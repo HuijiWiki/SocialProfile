@@ -1906,7 +1906,7 @@ class UserActivity {
 				$oldDB = $wgFlowDefaultWikiDb;
 				if (!$isProduction){
 					$wgFlowDefaultWikiDb = "huiji_".$page_data['prefix'][0];
-				} elseif ( $page_data['prefix'][0] = "www" ){
+				} elseif ( $page_data['prefix'][0] == "www" ){
 					$wgFlowDefaultWikiDb = "huiji_home";
 				} else {
 					$wgFlowDefaultWikiDb = "huiji_sites-".$page_data['prefix'][0];
