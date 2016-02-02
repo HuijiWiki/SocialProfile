@@ -1913,7 +1913,7 @@ class UserActivity {
 					wfDebug('Setting $wgFlowDefaultWikiDb = '."huiji_sites-".$page_data['prefix'][0]);
 				}
 				Container::reset();
-				$id = UUID::create(strtolower( $page_title->getText() ));
+				$id = UUID::create(strtolower( substr($page_title->getFullText(), 6) ));
 				$pc = PostCollection::newFromId($id);
 				$pcr = $pc->getRoot()->getLastRevision();
 				$topicDisplayText = Container::get( 'templating' )->getContent( $pcr, 'wikitext' );
