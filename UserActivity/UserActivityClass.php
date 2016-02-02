@@ -1896,7 +1896,7 @@ class UserActivity {
 	 * @return String: "fixed" comment
 	 */
 	function fixPageTitle( $page_title, $page_data ) {
-		global $isProduction;
+		global $isProduction, $wgFlowDefaultWikiDb;
 		if ($page_title instanceOf Title){
 			if ($page_title->inNamespace( NS_FILE )){
 				$repo = new ForeignDBRepo($this->streamlineForeignDBRepo($page_data['prefix'][0]));
