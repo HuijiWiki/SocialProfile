@@ -1910,6 +1910,7 @@ class UserActivity {
 					$wgFlowDefaultWikiDb = "huiji_home";
 				} else {
 					$wgFlowDefaultWikiDb = "huiji_sites-".$page_data['prefix'][0];
+					wfDebug('Setting $wgFlowDefaultWikiDb = '."huiji_sites-".$page_data['prefix'][0]);
 				}
 				Container::reset();
 				$id = UUID::create(strtolower( $page_title->getText() ));
