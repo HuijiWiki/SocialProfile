@@ -1918,7 +1918,7 @@ class UserActivity {
 				} else {
 					$strid = $page_title->getText();
 				}
-				
+				wfDebug('Setting $UUID = '.$strid);
 				$id = UUID::create(strtolower( $strid ));
 				$pc = PostCollection::newFromId($id);
 				$pcr = $pc->getRoot()->getLastRevision();
