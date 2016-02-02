@@ -53,7 +53,7 @@ class ViewGifts extends SpecialPage {
 		 */
 		$login = SpecialPage::getTitleFor( 'Userlogin' );
 	    if ( $wgUser->getID() == 0 || $wgUser->getName() == '' ) {
-		    $output .= '请先<a class="login-in" data-toggle="modal" data-target=".user-login">登录</a>或<a href="'.$login->getFullURL( 'type=singup' ).'">创建用户</a>。';
+		    $output .= '请先<a class="login-in" data-toggle="modal" data-target=".user-login">登录</a>或<a href="'.$login->getFullURL( 'type=signup' ).'">创建用户</a>。';
 		    $out->addHTML( $output );
 		    return false;
 	    }
