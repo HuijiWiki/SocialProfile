@@ -44,12 +44,12 @@ class ViewSystemGifts extends SpecialPage {
 		 * Redirect Non-logged in users to Login Page
 		 * It will automatically return them to the ViewSystemGifts page
 		 */
-		if ( $user->getID() == 0 && $user_name == '' ) {
-			$out->setPageTitle( $this->msg( 'ga-error-title' )->plain() );
-			$login = SpecialPage::getTitleFor( 'Userlogin' );
-			$out->redirect( htmlspecialchars( $login->getFullURL( 'returnto=Special:ViewSystemGifts' ) ) );
-			return false;
-		}
+		$login = SpecialPage::getTitleFor( 'Userlogin' );
+	    if ( $wgUser->getID() == 0 || $wgUser->getName() == '' ) {
+	      $output .= '请先<a class="login-in" data-toggle="modal" data-target=".user-login">登录</a>或<a href="'.$login->getFullURL( 'type=singup' ).'">创建用户</a>。';
+	      $out->addHTML( $output );
+	      return false;
+	    }
 
 		/**
 		 * If no user is set in the URL, we assume it's the current user

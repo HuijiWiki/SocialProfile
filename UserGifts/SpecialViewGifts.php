@@ -31,7 +31,7 @@ class ViewGifts extends SpecialPage {
 	 * @param $par Mixed: parameter passed to the page or null
 	 */
 	public function execute( $par ) {
-		global $wgUploadPath;
+		global $wgUploadPath, $wgUser;
 
 		$out = $this->getOutput();
 		$request = $this->getRequest();
@@ -45,16 +45,18 @@ class ViewGifts extends SpecialPage {
 
 		$user_name = $request->getVal( 'user' );
 		$page = $request->getInt( 'page', 1 );
+		$output = '';
 
 		/**
 		 * Redirect Non-logged in users to Login Page
 		 * It will automatically return them to the ViewGifts page
 		 */
-		if ( $currentUser->getID() == 0 && $user_name == '' ) {
-			$login = SpecialPage::getTitleFor( 'Userlogin' );
-			$out->redirect( htmlspecialchars( $login->getFullURL( 'returnto=Special:ViewGifts' ) ) );
-			return false;
-		}
+		$login = SpecialPage::getTitleFor( 'Userlogin' );
+	    if ( $wgUser->getID() == 0 || $wgUser->getName() == '' ) {
+		    $output .= '请先<a class="login-in" data-toggle="modal" data-target=".user-login">登录</a>或<a href="'.$login->getFullURL( 'type=singup' ).'">创建用户</a>。';
+		    $out->addHTML( $output );
+		    return false;
+	    }
 
 		/**
 		 * If no user is set in the URL, we assume it's the current user
@@ -94,7 +96,7 @@ class ViewGifts extends SpecialPage {
 		 */
 		$out->setPageTitle( $this->msg( 'g-list-title', $rel->user_name )->parse() );
 
-		$output = '<div class="back-links">
+		$output .= '<div class="back-links">
 			<a href="' . $user->getFullURL() . '">' .
 				$this->msg( 'g-back-link', $rel->user_name )->parse() .
 			'</a>

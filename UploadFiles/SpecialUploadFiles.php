@@ -13,14 +13,28 @@ class SpecialUploadFiles extends SpecialPage{
 	}
 
 	public function execute( $params ) {
-    global $wgFileExtensions;
-		// Set the page title, robot policies, etc.
-		$this->setHeaders();
-		$out = $this->getOutput();
+    global $wgFileExtensions, $wgUser;
+    // Set the page title, robot policies, etc.
+    $this->setHeaders();
+    $out = $this->getOutput();
+    $output = '';
+    /**
+     * Redirect Non-logged in users to Login Page
+     * $login = SpecialPage::getTitleFor( 'Userlogin' );
+      *$login->getFullURL( 'returnto=Special:SystemGiftList' )
+     * It will automatically return them to the ViewSystemGifts page
+     */
+    $login = SpecialPage::getTitleFor( 'Userlogin' );
+    if ( $wgUser->getID() == 0 || $wgUser->getName() == '' ) {
+      $output .= '请先<a class="login-in" data-toggle="modal" data-target=".user-login">登录</a>或<a href="'.$login->getFullURL( 'type=singup' ).'">创建用户</a>。';
+      $out->addHTML( $output );
+      return false;
+    }
+		
     $title = wfMessage('uploadfiles-info-title')->parse();
     $subtitle = wfMessage('uploadfiles-info-can-be-modified')->parse();
     $line = wfMessage('uploadfiles-info')->parse();
-		$output = '';
+		
 		$output .="<h4>".$title."</h4><span class='gray'>".$subtitle."</span>";
 		$output .="<div class='gray'>".$line."</div>";
     $output .= "<div class='gray'><p>允许上传的文件类型为".implode("，",$wgFileExtensions)."</div>";
@@ -65,7 +79,7 @@ class SpecialUploadFiles extends SpecialPage{
                                            <div class="form-group">
                                                <label for="self-des-text" class="control-label">描述:</label>
                                                <textarea class="form-control" id="self-des-text"></textarea>
-                                               <label for="self-des-category" class="control-label">分类:（多个分类用逗号分隔）</label>
+                                               <label for="self-des-category" class="control-label">分类:</label>
                                                <input class="form-control" type="text" id="self-des-category">
                                            </div>
                                        </div>
