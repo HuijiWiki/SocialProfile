@@ -2070,8 +2070,9 @@ class UserProfilePage extends Article {
 		$output = ''; // Prevent E_NOTICE
 
 		// Add JS
+		// $wgOut->addModules( 'skins.editable' );
 		$wgOut->addModules( 'ext.socialprofile.userprofile.js' );
-		$wgOut->addModules( 'skins.editable' );
+		
 		$rel = new UserRelationship( $user_name );
 		$friends = $rel->getRelationshipList( 1, 4 );
 
