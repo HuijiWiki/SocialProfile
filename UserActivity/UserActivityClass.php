@@ -1914,7 +1914,7 @@ class UserActivity {
 				}
 				Container::reset();
 				if (strpos($page_title->getText(), 'Topic:') == 0){
-					$strid = substr($page_title->getText(), 6)
+					$strid = substr($page_title->getText(), 6);
 				} else {
 					$strid = $page_title->getText();
 				}
