@@ -447,11 +447,9 @@ class GiveGift extends SpecialPage {
 			$out->setPageTitle( $this->msg( 'g-error-title' )->plain() );
 			$out->addHTML( $this->msg( 'g-error-message-no-gift' )->plain() );
 			$output .= "<div><span><b>Q：</b>怎么才能给别人送礼物？</span><br>
-						<span><b>A：</b>只有当礼物被创建了之后，才会出现在礼物列表中</span><br>
+						<span><b>A：</b>只有当礼物被创建了之后，才会出现在礼物列表中。</span><br>
 						<span><b>Q：</b>如何创建礼物？</span><br>
-						<span><b>A：</b>如果您是站点管理员的话，可以发送邮件至 support@huiji.wiki 并说明要创建的礼物名称及介绍。我们小编会及时回复您的:）</span><br>
-						<span><b>Q：</b>如果我不是管理员怎么办？</span><br>
-						<span><b>A：</b>那你倒是快去联系你们管理员啊！！！</span>
+						<span><b>A：</b>请联系本站点管理员，将要创建的礼物名称及介绍发邮件至 support@huiji.wiki 。我们小编会及时回复您的:）</span>
 						</div>";
 		}
 
