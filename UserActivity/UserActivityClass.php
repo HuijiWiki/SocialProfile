@@ -1,5 +1,11 @@
 <?php
 use Flow\Model\Workflow;
+use Flow\Model\UUID;
+use Flow\Container;
+use Flow\Collection\PostCollection;
+//1.27
+//use Flow\Conversion\Utils;
+use Flow\Model\PostRevision;
 /**
  * UserActivity class
  * step1: determine where clasue.
@@ -270,7 +276,7 @@ class UserActivity {
 			if ( !$isProduction ){
 				$dbr->selectDB('huiji_'.str_replace('.', '_', $table));
 				$DBprefix = '';
-				break;
+				//break;
 			} elseif ( $table == 'www'){
 				// $dbr->selectDB('huiji_home');
 				// $DBprefix = '';
@@ -545,7 +551,7 @@ class UserActivity {
 			if ( !$isProduction ){
 				$dbr->selectDB('huiji_'.str_replace('.', '_', $table));
 				$DBprefix = '';
-				break;
+				//break;
 			} elseif ( $table == 'www'){
 				// $dbr->selectDB('huiji_home');
 				// $DBprefix = '';
@@ -664,7 +670,7 @@ class UserActivity {
 			if ( !$isProduction ){
 				$dbr->selectDB('huiji_'.str_replace('.', '_', $table));
 				$DBprefix = '';
-				break;
+				//break;
 			} elseif ( $table == 'www'){
 				// $dbr->selectDB('huiji_home');
 				// $DBprefix = '';
@@ -1890,16 +1896,31 @@ class UserActivity {
 	 * @return String: "fixed" comment
 	 */
 	function fixPageTitle( $page_title, $page_data ) {
-		global $wgUser;
+		global $isProduction;
 		if ($page_title instanceOf Title){
 			if ($page_title->inNamespace( NS_FILE )){
 				$repo = new ForeignDBRepo($this->streamlineForeignDBRepo($page_data['prefix'][0]));
 				$f =  ForeignDBFile::newFromTitle($page_title, $repo);
 				return ' <a href="'.htmlspecialchars( $f->getDescriptionUrl() ).'"><img src="' .htmlspecialchars( $f->createThumb(200,100) ). '"></img></a>';
 			} if($page_title->inNamespace( NS_TOPIC )){
-				$workflow = Workflow::create( 'topic', $page_title );
-				$owner = $workflow->getOwnerTitle();
-				return ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">".$owner->getText()."</a>";
+				$oldDB = $wgFlowDefaultWikiDb;
+				if (!$isProduction){
+					$wgFlowDefaultWikiDb = "huiji_".$page_data['prefix'][0];
+				} elseif ( $page_data['prefix'][0] = "www" ){
+					$wgFlowDefaultWikiDb = "huiji_home";
+				} else {
+					$wgFlowDefaultWikiDb = "huiji_sites-".$page_data['prefix'][0];
+				}
+				$id = UUID::create(strtolower( $page_title->getText() ));
+				$pc = PostCollection::newFromId($id);
+				$pcr = $pc->getRoot()->getLastRevision();
+				$topicDisplayText = Container::get( 'templating' )->getContent( $pcr, 'wikitext' );
+				// 1.27 
+				// $topicDisplayText = Utils::htmlToPlaintext(
+				// 	Container::get( 'templating' )->getContent( $pcr, 'topic-title-html' )
+				// );
+				$wgFlowDefaultWikiDb = $oldDB;
+				return ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">".$topicDisplayText."</a>";
 			}else {
 				return ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
 
