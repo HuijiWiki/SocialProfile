@@ -412,6 +412,9 @@ class UserProfilePage extends Article {
 				    $Suntime = strtotime($sunDay); 
 					$Sundate = date('Y',$Suntime)-1;
 				    $sunDay = UserEditBox::getSunday($mon,$Sundate);
+				    if(!isset($translate[$sunDay])){
+				    	$sunDay = UserEditBox::getSunday($mon,$Sundate, 1);
+				    }
 				}
 			    foreach ($translate as $key => $value) {
 			    	if ( strtotime($key) == strtotime($sunDay)) {

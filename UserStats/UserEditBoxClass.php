@@ -78,7 +78,7 @@ class UserEditBox{
 		}
 		return $editNum;
 	}
-	static function getSunday($mon,$year){
+	static function getSunday( $mon, $year, $zero=0 ){
 		$i=mktime(0,0,0,$mon,1,$year);
 		$arrSun = array();
         while(1){
@@ -89,7 +89,7 @@ class UserEditBox{
                 $arrSun[] = "{$day['year']}-{$day['mon']}-{$day['mday']}";
             $i+=24*3600;
         }
-        return $arrSun[0];
+        return $arrSun[$zero];
 	}
 	//pe
 	public function getSiteEditCount( $userId,$wikiSite,$fromTime,$toTime ){
