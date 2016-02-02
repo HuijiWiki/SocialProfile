@@ -334,5 +334,4 @@ var uploadfiles = {
 $(function(){
     mw.notification.autoHideSeconds = 3;
     uploadfiles.init();
-    
 });

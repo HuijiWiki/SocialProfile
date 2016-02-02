@@ -1890,13 +1890,16 @@ class UserActivity {
 	 * @return String: "fixed" comment
 	 */
 	function fixPageTitle( $page_title, $page_data ) {
+		global $wgUser;
 		if ($page_title instanceOf Title){
 			if ($page_title->inNamespace( NS_FILE )){
 				$repo = new ForeignDBRepo($this->streamlineForeignDBRepo($page_data['prefix'][0]));
 				$f =  ForeignDBFile::newFromTitle($page_title, $repo);
 				return ' <a href="'.htmlspecialchars( $f->getDescriptionUrl() ).'"><img src="' .htmlspecialchars( $f->createThumb(200,100) ). '"></img></a>';
 			} if($page_title->inNamespace( NS_TOPIC )){
-				return ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
+				$workflow = Workflow::create( 'topic', $page_title );
+				$owner = $workflow->getOwnerTitle();
+				return ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">".$owner->getText()."</a>";
 			}else {
 				return ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
 
