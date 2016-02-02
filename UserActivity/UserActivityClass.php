@@ -1911,6 +1911,7 @@ class UserActivity {
 				} else {
 					$wgFlowDefaultWikiDb = "huiji_sites-".$page_data['prefix'][0];
 				}
+				Container::reset();
 				$id = UUID::create(strtolower( $page_title->getText() ));
 				$pc = PostCollection::newFromId($id);
 				$pcr = $pc->getRoot()->getLastRevision();
@@ -1920,6 +1921,7 @@ class UserActivity {
 				// 	Container::get( 'templating' )->getContent( $pcr, 'topic-title-html' )
 				// );
 				$wgFlowDefaultWikiDb = $oldDB;
+				Container::reset();
 				return ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">".$topicDisplayText."</a>";
 			}else {
 				return ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
