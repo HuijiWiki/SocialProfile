@@ -1,5 +1,5 @@
 <?php
-
+use Flow\Model\Workflow;
 /**
  * UserActivity class
  * step1: determine where clasue.
