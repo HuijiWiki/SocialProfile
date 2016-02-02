@@ -1902,7 +1902,7 @@ class UserActivity {
 				$repo = new ForeignDBRepo($this->streamlineForeignDBRepo($page_data['prefix'][0]));
 				$f =  ForeignDBFile::newFromTitle($page_title, $repo);
 				return ' <a href="'.htmlspecialchars( $f->getDescriptionUrl() ).'"><img src="' .htmlspecialchars( $f->createThumb(200,100) ). '"></img></a>';
-			} if($page_title->inNamespace( NS_TOPIC ) || strpos($page_title->getText(), 'Topic:') == 0){
+			} if($page_title->inNamespace( NS_TOPIC ) || strpos($page_title->getText(), 'Topic:') === 0){
 				$oldDB = $wgFlowDefaultWikiDb;
 				if (!$isProduction){
 					$wgFlowDefaultWikiDb = "huiji_".$page_data['prefix'][0];
@@ -1913,7 +1913,7 @@ class UserActivity {
 					wfDebug('Setting $wgFlowDefaultWikiDb = '."huiji_sites-".$page_data['prefix'][0]);
 				}
 				Container::reset();
-				if (strpos($page_title->getText(), 'Topic:') == 0){
+				if (strpos($page_title->getText(), 'Topic:') === 0){
 					$strid = substr($page_title->getText(), 6);
 				} else {
 					$strid = $page_title->getText();
