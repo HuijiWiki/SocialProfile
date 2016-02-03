@@ -430,6 +430,13 @@ $wgResourceModules['ext.socialprofile.siteactivity.css'] = array(
 	'remoteExtPath' => 'SocialProfile/UserActivity',
 	'position' => 'top' // just in case
 );
+$wgResourceModules['ext.socialprofile.siteactivity.js'] = array(
+	'scripts' => 'SiteActivityHook.js',
+	'localBasePath' => __DIR__ . '/UserActivity',
+	'remoteExtPath' => 'SocialProfile/UserActivity',
+	'position' => 'bottom' // just in case
+);
+
 // AdminDashboard
 $wgResourceModules['ext.socialprofile.admindashboard.css'] = array(
 	'styles' => array(

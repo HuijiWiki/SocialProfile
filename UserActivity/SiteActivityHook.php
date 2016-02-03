@@ -22,6 +22,7 @@ function wfSiteActivity( &$parser ) {
 function getSiteActivity( $input, $args, $parser ) {
 	global $wgMemc, $wgExtensionAssetsPath, $wgUser;
 	$parser->getOutput()->addModules('ext.socialprofile.siteactivity.css');
+	$parser->getOutput()->addModules('ext.socialprofile.siteactivity.js');
 	$parser->disableCache();
 
 	$limit = ( isset( $args['limit'] ) && is_numeric( $args['limit'] ) ) ? $args['limit'] : 10;
