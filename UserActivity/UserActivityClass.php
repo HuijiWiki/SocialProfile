@@ -1903,16 +1903,16 @@ class UserActivity {
 				$f =  ForeignDBFile::newFromTitle($page_title, $repo);
 				return ' <a href="'.htmlspecialchars( $f->getDescriptionUrl() ).'"><img src="' .htmlspecialchars( $f->createThumb(200,100) ). '"></img></a>';
 			} if($page_title->inNamespace( NS_TOPIC ) || strpos($page_title->getText(), 'Topic:') === 0){
-				$oldDB = $wgFlowDefaultWikiDb;
-				if (!$isProduction){
-					$wgFlowDefaultWikiDb = "huiji_".$page_data['prefix'][0];
-				} elseif ( $page_data['prefix'][0] == "www" ){
-					$wgFlowDefaultWikiDb = "huiji_home";
-				} else {
-					$wgFlowDefaultWikiDb = "huiji_sites-".$page_data['prefix'][0];
-					wfDebug('Setting $wgFlowDefaultWikiDb = '."huiji_sites-".$page_data['prefix'][0]);
-				}
-				Container::reset();
+				// $oldDB = $wgFlowDefaultWikiDb;
+				// if (!$isProduction){
+				// 	$wgFlowDefaultWikiDb = "huiji_".$page_data['prefix'][0];
+				// } elseif ( $page_data['prefix'][0] == "www" ){
+				// 	$wgFlowDefaultWikiDb = "huiji_home";
+				// } else {
+				// 	$wgFlowDefaultWikiDb = "huiji_sites-".$page_data['prefix'][0];
+				// 	wfDebug('Setting $wgFlowDefaultWikiDb = '."huiji_sites-".$page_data['prefix'][0]);
+				// }
+				// Container::reset();
 				if (strpos($page_title->getText(), 'Topic:') === 0){
 					$strid = substr($page_title->getText(), 6);
 				} else {
@@ -1927,8 +1927,8 @@ class UserActivity {
 				// $topicDisplayText = Utils::htmlToPlaintext(
 				// 	Container::get( 'templating' )->getContent( $pcr, 'topic-title-html' )
 				// );
-				$wgFlowDefaultWikiDb = $oldDB;
-				Container::reset();
+				// $wgFlowDefaultWikiDb = $oldDB;
+				// Container::reset();
 				return ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">".$topicDisplayText."</a>";
 			}else {
 				return ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
