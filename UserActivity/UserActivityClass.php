@@ -1635,6 +1635,7 @@ class UserActivity {
 										$page_title2 = Title::newFromText( $page_name2.':' );
 									}  elseif ($type == 'image_upload'){
 										$page_title2 = Title::newFromText( $page_name2, NS_FILE );
+										$count_actions2 = 1;
 									}  else {
 										$page_title2 = Title::newFromText( $page_name2 );
 									}

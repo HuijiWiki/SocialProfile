@@ -1495,8 +1495,29 @@ class UserProfilePage extends Article {
 				if (array_key_exists('prefix', $item)){
 					$site_link = '<b><a href="' . HuijiPrefix::prefixToUrl($item['prefix']).'">'.HuijiPrefix::prefixToSiteName($item['prefix'])  . '</a></b> ';					
 				}
-				$page_link = '<b><a href="' . htmlspecialchars( $title->getFullURL() ) .
-					"{$comment_url}\">" . $title->getPrefixedText() . '</a></b> ';
+				if($title->inNamespace( NS_TOPIC ) || strpos($title->getText(), 'Topic:') === 0){
+					if (strpos($title->getText(), 'Topic:') === 0){
+						$strid = substr($title->getText(), 6);
+					} else {
+						$strid = $title->getText();
+					}
+					wfDebug('Setting $UUID = '.$strid);
+					$id = UUID::create(strtolower( $strid ));
+					$pc = PostCollection::newFromId($id);
+					$pcr = $pc->getRoot()->getLastRevision();
+					$topicDisplayText = Container::get( 'templating' )->getContent( $pcr, 'wikitext' );
+					// 1.27 
+					// $topicDisplayText = Utils::htmlToPlaintext(
+					// 	Container::get( 'templating' )->getContent( $pcr, 'topic-title-html' )
+					// );
+					// $wgFlowDefaultWikiDb = $oldDB;
+					// Container::reset();
+					$page_link = '<b><a href="' . htmlspecialchars( $title->getFullURL() ) . "\">".$topicDisplayText."</a></b>";
+				else {
+					$page_link = '<b><a href="' . htmlspecialchars( $title->getFullURL() ) .
+						"{$comment_url}\">" . $title->getPrefixedText() . '</a></b> ';
+				}
+
 				$b = new UserBoard(); // Easier than porting the time-related functions here
 				$item_time = '<span class="item-small">' .
 					wfMessage( 'user-time-ago', $b->getTimeAgo( $item['timestamp'] ) )->escaped() .
