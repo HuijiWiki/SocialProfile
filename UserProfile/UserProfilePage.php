@@ -1513,7 +1513,7 @@ class UserProfilePage extends Article {
 					// $wgFlowDefaultWikiDb = $oldDB;
 					// Container::reset();
 					$page_link = '<b><a href="' . htmlspecialchars( $title->getFullURL() ) . "\">".$topicDisplayText."</a></b>";
-				else {
+				}else {
 					$page_link = '<b><a href="' . htmlspecialchars( $title->getFullURL() ) .
 						"{$comment_url}\">" . $title->getPrefixedText() . '</a></b> ';
 				}
