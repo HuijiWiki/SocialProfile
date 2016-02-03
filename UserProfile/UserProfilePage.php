@@ -8,7 +8,13 @@
  * @copyright Copyright © 2007, Wikia Inc.
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License 2.0 or later
  */
-
+use Flow\Model\Workflow;
+use Flow\Model\UUID;
+use Flow\Container;
+use Flow\Collection\PostCollection;
+//1.27
+//use Flow\Conversion\Utils;
+use Flow\Model\PostRevision;
 class UserProfilePage extends Article {
 
 	/**
