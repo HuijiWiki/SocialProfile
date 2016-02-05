@@ -97,7 +97,7 @@ $wgAutoloadClasses['SpecialGlobalSearch'] = __DIR__ . '/GlobalSearch/SpecialGlob
 $wgAutoloadClasses['SpecialUploadFiles'] = __DIR__ . '/UploadFiles/SpecialUploadFiles.php';
 $wgAutoloadClasses['SpecialAddUserEditCounts'] = __DIR__ . '/UserStats/SpecialAddUserEditCounts.php';
 $wgAutoloadClasses['SpecialAddFestivalGift'] = __DIR__ . '/SystemGifts/SpecialAddFestivalGift.php';
-$wgAutoloadClasses['SpecialFamilyTree'] = __DIR__ . '/FamilyTree/SpecialFamilyTree.php';
+// $wgAutoloadClasses['SpecialFamilyTree'] = __DIR__ . '/FamilyTree/SpecialFamilyTree.php';
 $wgAutoloadClasses['QueryInterface'] = __DIR__ . '/QueryInterface.php';
 $wgAutoloadClasses['TemplateFork'] = __DIR__ . '/TemplateFork/TemplateForkClass.php';
 
@@ -134,7 +134,7 @@ $wgSpecialPages['GlobalSearch'] = 'SpecialGlobalSearch';
 $wgSpecialPages['UploadFiles'] = 'SpecialUploadFiles';
 $wgSpecialPages['AddUserEditCounts'] = 'SpecialAddUserEditCounts';
 $wgSpecialPages['AddFestivalGift'] = 'SpecialAddFestivalGift';
-$wgSpecialPages['FamilyTree'] = 'SpecialFamilyTree';
+// $wgSpecialPages['FamilyTree'] = 'SpecialFamilyTree';
 
 
 // Necessary AJAX functions
