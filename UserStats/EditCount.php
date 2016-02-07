@@ -31,18 +31,22 @@ function incEditCount( $article, $revision, $baseRevId ) {
 		$stats = new UserStatsTrack( $wgUser->getID(), $wgUser->getName() );
 		$stats->incStatField( 'edit' );
 	}
-	$dbr = wfGetDB( DB_SLAVE );
-	$num = SiteStats::edits();
-	$sg = SystemGifts::checkEditsCounts($num);
-	$usg = new UserSystemGifts( $wgUser->getName() );
-	if($sg){
+        if (HuijiFunctions::addLock( 'USG-17-'.$wgUser->getId() ) ){
+	    $dbr = wfGetDB( DB_SLAVE );
+	    $num = SiteStats::edits();
+	    $sg = SystemGifts::checkEditsCounts($num);
+	    $usg = new UserSystemGifts( $wgUser->getName() );
+	    if($sg){
 		$usg->sendSystemGift( 17 );
-	}
+	    }
+            HuijiFunctions::releaseLock('USG-17-'.$wgUser->getId())
+        }
 	//festival gift
 	$today = date("Y-m-d H:i:s");
 	$giftList = SystemGifts::getInfoFromFestivalGift();
 	$dayCount = 0;
 	foreach ($giftList as $value) {
+            if (HuijiFunctions::addLock( 'USG-'.$value['giftId'].'-'.$wgUser->getId() ) ){
 		if ( $today >= $value['startTime'] && $today <= $value['endTime'] ) {
 			if ( (strtotime( $value['endTime'] )-strtotime( $value['startTime'] ) ) == 86400 ) {
 				$resCount = RecordStatistics::getRecentPageEditCountOnWikiSiteFromUserId( $wgUser->getId(), '', 'day' );
@@ -56,6 +60,8 @@ function incEditCount( $article, $revision, $baseRevId ) {
 				}
 			}
 		}
+                HuijiFunctions::releaseLock( 'USG-'.$value['giftId'].'-'.$wgUser->getId() );
+            }
 	}
 
 	$key = wfForeignMemcKey( 'huiji', '', 'revision', 'high_edit_site_followed', $wgUser->getName(), $wgHuijiPrefix );
