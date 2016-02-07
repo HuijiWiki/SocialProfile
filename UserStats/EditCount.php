@@ -46,7 +46,7 @@ function incEditCount( $article, $revision, $baseRevId ) {
 	$giftList = SystemGifts::getInfoFromFestivalGift();
 	$dayCount = 0;
 	foreach ($giftList as $value) {
-            if (HuijiFunctions::addLock( 'USG-'.$value['giftId'].'-'.$wgUser->getId() , 1 ){
+            if (HuijiFunctions::addLock( 'USG-'.$value['giftId'].'-'.$wgUser->getId() , 1 )){
 		if ( $today >= $value['startTime'] && $today <= $value['endTime'] ) {
 			if ( (strtotime( $value['endTime'] )-strtotime( $value['startTime'] ) ) == 86400 ) {
 				$resCount = RecordStatistics::getRecentPageEditCountOnWikiSiteFromUserId( $wgUser->getId(), '', 'day' );
