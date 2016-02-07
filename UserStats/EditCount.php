@@ -31,7 +31,7 @@ function incEditCount( $article, $revision, $baseRevId ) {
 		$stats = new UserStatsTrack( $wgUser->getID(), $wgUser->getName() );
 		$stats->incStatField( 'edit' );
 	}
-        if (HuijiFunctions::addLock( 'USG-17-'.$wgUser->getId() ) ){
+        if (HuijiFunctions::addLock( 'USG-17-'.$wgUser->getId(), 1 ) ){
 	    $dbr = wfGetDB( DB_SLAVE );
 	    $num = SiteStats::edits();
 	    $sg = SystemGifts::checkEditsCounts($num);
@@ -46,7 +46,7 @@ function incEditCount( $article, $revision, $baseRevId ) {
 	$giftList = SystemGifts::getInfoFromFestivalGift();
 	$dayCount = 0;
 	foreach ($giftList as $value) {
-            if (HuijiFunctions::addLock( 'USG-'.$value['giftId'].'-'.$wgUser->getId() ) ){
+            if (HuijiFunctions::addLock( 'USG-'.$value['giftId'].'-'.$wgUser->getId() ), 1 ){
 		if ( $today >= $value['startTime'] && $today <= $value['endTime'] ) {
 			if ( (strtotime( $value['endTime'] )-strtotime( $value['startTime'] ) ) == 86400 ) {
 				$resCount = RecordStatistics::getRecentPageEditCountOnWikiSiteFromUserId( $wgUser->getId(), '', 'day' );
