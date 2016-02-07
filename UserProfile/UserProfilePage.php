@@ -322,6 +322,7 @@ class UserProfilePage extends Article {
 	        		$currentMaxlen = 0;
 	        	}
 	        }
+                if (HuijiFunctions::addLock( 'USG-maxlen-'.$this->user->getId() ){
 	        $usg = new UserSystemGifts( $this->user->getName() );
 	        if ($maxlen == 2) {
 				$usg->sendSystemGift( 33 );
@@ -352,6 +353,8 @@ class UserProfilePage extends Article {
 	        }elseif ($maxlen == 2333) {
 				$usg->sendSystemGift( 46 ); 
 	        }
+                HuijiFunctions::releaseLock( 'USG-maxlen-'.$this->user->getId() );
+                }
 	        $wgOut->addHTML('
 	            <div class="check-wrapper"><svg width="725" height="110" class=" ">
 	                <g transform="translate(20, 20)">
