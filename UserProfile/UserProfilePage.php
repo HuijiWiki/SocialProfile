@@ -322,7 +322,7 @@ class UserProfilePage extends Article {
 	        		$currentMaxlen = 0;
 	        	}
 	        }
-                if (HuijiFunctions::addLock( 'USG-maxlen-'.$this->user->getId() ){
+                if (HuijiFunctions::addLock( 'USG-maxlen-'.$this->user->getId() )){
 	        $usg = new UserSystemGifts( $this->user->getName() );
 	        if ($maxlen == 2) {
 				$usg->sendSystemGift( 33 );
