@@ -39,7 +39,7 @@ function incEditCount( $article, $revision, $baseRevId ) {
 	    if($sg){
 		$usg->sendSystemGift( 17 );
 	    }
-            HuijiFunctions::releaseLock('USG-17-'.$wgUser->getId())
+            HuijiFunctions::releaseLock('USG-17-'.$wgUser->getId());
         }
 	//festival gift
 	$today = date("Y-m-d H:i:s");
