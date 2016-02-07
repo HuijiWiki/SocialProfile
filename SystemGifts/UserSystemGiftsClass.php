@@ -41,8 +41,8 @@ class UserSystemGifts {
 		}
 		//is bot
 		$user = User::newFromId( $this->user_id );
-        $user_group = $user->getEffectiveGroups();
-        if ( !in_array('bot', $user_group) && !in_array('bot-global',$user_group) ) {
+        	$user_group = $user->getEffectiveGroups();
+        	if ( !in_array('bot', $user_group) && !in_array('bot-global',$user_group) && isset($this->user_id) ) {
 			$dbw = wfGetDB( DB_MASTER );
 			$dbw->insert(
 				'user_system_gift',
