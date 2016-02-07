@@ -155,59 +155,61 @@ class UserStatsTrack {
 	 */
 	function incStatField( $field, $val = 1 ) {
 		global $wgUser, $wgMemc, $wgSystemGifts, $wgUserStatsTrackWeekly, $wgUserStatsTrackMonthly;
-
-		if ( !$wgUser->isAllowed( 'bot' ) && !$wgUser->isAnon() && $this->stats_fields[$field] ) {
-			$dbw = wfGetDB( DB_MASTER );
-			$dbw->update(
-				'user_stats',
-				array( $this->stats_fields[$field] . '=' . $this->stats_fields[$field] . "+{$val}" ),
-				array( 'stats_user_id' => $this->user_id  ),
-				__METHOD__
-			);
-			$this->updateTotalPoints();
-
-			$this->clearCache();
-
-			// update weekly/monthly points
-			if ( isset( $this->point_values[$field] ) && !empty( $this->point_values[$field] ) ) {
-				if ( $wgUserStatsTrackWeekly ) {
-					$this->updateWeeklyPoints( $this->point_values[$field] );
+		if ( HuijiFunctions::addLock('incStatField-'.$wgUser->getId(), 1) ){
+			if ( !$wgUser->isAllowed( 'bot' ) && !$wgUser->isAnon() && $this->stats_fields[$field] ) {
+				$dbw = wfGetDB( DB_MASTER );
+				$dbw->update(
+					'user_stats',
+					array( $this->stats_fields[$field] . '=' . $this->stats_fields[$field] . "+{$val}" ),
+					array( 'stats_user_id' => $this->user_id  ),
+					__METHOD__
+				);
+				$this->updateTotalPoints();
+	
+				$this->clearCache();
+	
+				// update weekly/monthly points
+				if ( isset( $this->point_values[$field] ) && !empty( $this->point_values[$field] ) ) {
+					if ( $wgUserStatsTrackWeekly ) {
+						$this->updateWeeklyPoints( $this->point_values[$field] );
+					}
+					if ( $wgUserStatsTrackMonthly ) {
+						$this->updateMonthlyPoints( $this->point_values[$field] );
+					}
 				}
-				if ( $wgUserStatsTrackMonthly ) {
-					$this->updateMonthlyPoints( $this->point_values[$field] );
+	
+				$s = $dbw->selectRow(
+					'user_stats',
+					array( $this->stats_fields[$field] ),
+					array( 'stats_user_id' => $this->user_id ),
+					__METHOD__
+				);
+				$stat_field = $this->stats_fields[$field];
+				$field_count = $s->$stat_field;
+	
+				$key = wfForeignMemcKey( 'huiji', '', 'system_gift', 'id', $field . '-' . $field_count );
+				$data = $wgMemc->get( $key );
+	
+				if ( $data != '' && is_int($data)  ) {
+					wfDebug( "Got system gift ID from cache\n" );
+					$systemGiftID = $data;
+				} else {
+					$g = new SystemGifts();
+					$repeatableGift = $g->getRepeatableGifts();
+					$categories = array_flip( $g->getCategories() );
+					$systemGiftID = $g->doesGiftExistForThreshold( $field, $field_count );
+					if ( $systemGiftID ) {
+						$wgMemc->set( $key, $systemGiftID, 60 * 30 );
+					}
+				}
+				if ( !empty($systemGiftID) && $field != "points_winner_weekly" && $field != "points_winner_monthly" ) {
+					$sg = new UserSystemGifts( $this->user_name );
+					foreach ($systemGiftID as $value) {
+						$sg->sendSystemGift( $value['gift_id'] );
+					}
 				}
 			}
-
-			$s = $dbw->selectRow(
-				'user_stats',
-				array( $this->stats_fields[$field] ),
-				array( 'stats_user_id' => $this->user_id ),
-				__METHOD__
-			);
-			$stat_field = $this->stats_fields[$field];
-			$field_count = $s->$stat_field;
-
-			$key = wfForeignMemcKey( 'huiji', '', 'system_gift', 'id', $field . '-' . $field_count );
-			$data = $wgMemc->get( $key );
-
-			if ( $data != '' && is_int($data)  ) {
-				wfDebug( "Got system gift ID from cache\n" );
-				$systemGiftID = $data;
-			} else {
-				$g = new SystemGifts();
-				$repeatableGift = $g->getRepeatableGifts();
-				$categories = array_flip( $g->getCategories() );
-				$systemGiftID = $g->doesGiftExistForThreshold( $field, $field_count );
-				if ( $systemGiftID ) {
-					$wgMemc->set( $key, $systemGiftID, 60 * 30 );
-				}
-			}
-			if ( !empty($systemGiftID) && $field != "points_winner_weekly" && $field != "points_winner_monthly" ) {
-				$sg = new UserSystemGifts( $this->user_name );
-				foreach ($systemGiftID as $value) {
-					$sg->sendSystemGift( $value['gift_id'] );
-				}
-			}
+			HuijiFunctions::releaseLock('incStatField-'.$wgUser->getId());
 		}
 	}
 
