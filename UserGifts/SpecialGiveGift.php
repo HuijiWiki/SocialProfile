@@ -73,83 +73,95 @@ class GiveGift extends SpecialPage {
 
 			if ( $request->wasPosted() && $_SESSION['alreadysubmitted'] == false ) {
 				$_SESSION['alreadysubmitted'] = true;
-
-				$ug_gift_id = $gift->sendGift(
-					$this->user_name_to,
-					$request->getInt( 'gift_id' ),
-					0,
-					$request->getVal( 'message' )
-				);
-
-				// clear the cache for the user profile gifts for this user
-				$wgMemc->delete( wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'gifts', $this->user_id_to ) );
-
-				$key = wfForeignMemcKey( 'huiji', '', 'gifts', 'unique', 4 );
-				$data = $wgMemc->get( $key );
-
-				// check to see if this type of gift is in the unique list
-				$lastUniqueGifts = $data;
-				$found = 1;
-
-				if ( is_array( $lastUniqueGifts ) ) {
-					foreach ( $lastUniqueGifts as $lastUniqueGift ) {
-						if ( $request->getInt( 'gift_id' ) == $lastUniqueGift['gift_id'] ) {
-							$found = 0;
+				if ( HuijiFunctions::addLock('UG-'.$request->getInt( 'gift_id' ).$this->user_id_to)){
+					$ug_gift_id = $gift->sendGift(
+						$this->user_name_to,
+						$request->getInt( 'gift_id' ),
+						0,
+						$request->getVal( 'message' )
+					);
+		
+					// clear the cache for the user profile gifts for this user
+					$wgMemc->delete( wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'gifts', $this->user_id_to ) );
+		
+					$key = wfForeignMemcKey( 'huiji', '', 'gifts', 'unique', 4 );
+					$data = $wgMemc->get( $key );
+		
+					// check to see if this type of gift is in the unique list
+					$lastUniqueGifts = $data;
+					$found = 1;
+		
+					if ( is_array( $lastUniqueGifts ) ) {
+						foreach ( $lastUniqueGifts as $lastUniqueGift ) {
+							if ( $request->getInt( 'gift_id' ) == $lastUniqueGift['gift_id'] ) {
+								$found = 0;
+							}
 						}
 					}
-				}
-
-				if ( $found ) {
-					// add new unique to array
-					$lastUniqueGifts[] = array(
-						'id' => $ug_gift_id,
-						'gift_id' => $request->getInt( 'gift_id' )
-					);
-
-					// remove oldest value
-					if ( count( $lastUniqueGifts ) > 4 ) {
-						array_shift( $lastUniqueGifts );
+		
+					if ( $found ) {
+						// add new unique to array
+						$lastUniqueGifts[] = array(
+							'id' => $ug_gift_id,
+							'gift_id' => $request->getInt( 'gift_id' )
+						);
+		
+						// remove oldest value
+						if ( count( $lastUniqueGifts ) > 4 ) {
+							array_shift( $lastUniqueGifts );
+						}
+		
+						// reset the cache
+						$wgMemc->set( $key, $lastUniqueGifts );
 					}
-
-					// reset the cache
-					$wgMemc->set( $key, $lastUniqueGifts );
-				}
-				$numg = 0;
-				$sent_gift = UserGifts::getUserGift( $this->user_name_to,$request->getInt( 'gift_id' ) , $numg );
-				if ($sent_gift) {
-					$gift_image = '<img src="' . $wgUploadPath . '/awards/' .
-						Gifts::getGiftImage( $sent_gift[0]['gift_id'], 'l' ) .
-						'" border="0" alt="" />';
-
-					$out->setPageTitle( $this->msg( 'g-sent-title', $this->user_name_to )->parse() );
-
-					$output .= '<div class="back-links">
-						<a href="' . htmlspecialchars( $user_title->getFullURL() ) . '">' .
-							$this->msg( 'g-back-link', $this->user_name_to )->parse() .
-						'</a>
-					</div>
-					<div class="g-message">' .
-						$this->msg( 'g-sent-message', $this->user_name_to )->parse() .
-					'</div>
-					<div class="g-container">' .
-						$gift_image .
-					'<div class="g-title">' . $sent_gift[0]['name'] . '</div>';
-					if ( $sent_gift[0]['message'] ) {
-						$output .= '<div class="g-user-message">' .
-							$sent_gift[0]['message'] .
-						'</div>';
+					$numg = 0;
+					$sent_gift = UserGifts::getUserGift( $this->user_name_to,$request->getInt( 'gift_id' ) , $numg );
+					if ($sent_gift) {
+						$gift_image = '<img src="' . $wgUploadPath . '/awards/' .
+							Gifts::getGiftImage( $sent_gift[0]['gift_id'], 'l' ) .
+							'" border="0" alt="" />';
+		
+						$out->setPageTitle( $this->msg( 'g-sent-title', $this->user_name_to )->parse() );
+		
+						$output .= '<div class="back-links">
+							<a href="' . htmlspecialchars( $user_title->getFullURL() ) . '">' .
+								$this->msg( 'g-back-link', $this->user_name_to )->parse() .
+							'</a>
+						</div>
+						<div class="g-message">' .
+							$this->msg( 'g-sent-message', $this->user_name_to )->parse() .
+						'</div>
+						<div class="g-container">' .
+							$gift_image .
+						'<div class="g-title">' . $sent_gift[0]['name'] . '</div>';
+						if ( $sent_gift[0]['message'] ) {
+							$output .= '<div class="g-user-message">' .
+								$sent_gift[0]['message'] .
+							'</div>';
+						}
+						$output .= '</div>
+						<div class="cleared"></div>
+						<div class="g-buttons">
+							<input type="button" class="site-button" value="' . $this->msg( 'g-main-page' )->plain() . '" size="20" onclick="window.location=\'index.php?title=' . $this->msg( 'mainpage' )->inContentLanguage()->escaped() . '\'" />
+							<input type="button" class="site-button" value="' . $this->msg( 'g-your-profile' )->plain() . '" size="20" onclick="window.location=\'' . htmlspecialchars( $user->getUserPage()->getFullURL() ) . '\'" />
+						</div>';
 					}
-					$output .= '</div>
-					<div class="cleared"></div>
-					<div class="g-buttons">
-						<input type="button" class="site-button" value="' . $this->msg( 'g-main-page' )->plain() . '" size="20" onclick="window.location=\'index.php?title=' . $this->msg( 'mainpage' )->inContentLanguage()->escaped() . '\'" />
-						<input type="button" class="site-button" value="' . $this->msg( 'g-your-profile' )->plain() . '" size="20" onclick="window.location=\'' . htmlspecialchars( $user->getUserPage()->getFullURL() ) . '\'" />
-					</div>';
+					
+		
+					$out->addHTML( $output );
+					HuijiFunctions::releaseLock('UG-'.$request->getInt( 'gift_id' ).$this->user_id_to);
 				}
-				
-
-				$out->addHTML( $output );
+				else{
+					$_SESSION['alreadysubmitted'] = false;
+	
+					if ( $giftId ) {
+						$out->addHTML( $this->displayFormSingle() );
+					} else {
+						$out->addHTML( $this->displayFormAll() );
+					}					
+				}
 			} else {
+				
 				$_SESSION['alreadysubmitted'] = false;
 
 				if ( $giftId ) {
