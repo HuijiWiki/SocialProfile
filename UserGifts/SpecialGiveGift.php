@@ -319,14 +319,23 @@ class GiveGift extends SpecialPage {
 			$per_row = 3;
 		}
 		//get user group
-		$user_group = $wgUser->getGroups();
-		if ( in_array( 'staff', $user_group ) ) {
+		// $user_group = $wgUser->getGroups();
+		// if ( in_array( 'staff', $user_group ) ) {
+		// 	$group = 1;
+		// }elseif ( in_array( 'bureaucrat', $user_group ) ){
+		// 	$group = 2;
+		// }elseif ( in_array( 'sysop', $user_group ) ){
+		// 	$group = 3;
+		// }elseif ( empty($user_group) ) {
+		// 	$group = 4;
+		// }
+		if ($this->user->isAllowed('sendStaffGifts')){
 			$group = 1;
-		}elseif ( in_array( 'bureaucrat', $user_group ) ){
+		} elseif ($this->user->isAllowed('sendBureaucratGifts')){
 			$group = 2;
-		}elseif ( in_array( 'sysop', $user_group ) ){
+		} elseif ($this->user->isAllowed('sendSysopGifts')){
 			$group = 3;
-		}elseif ( empty($user_group) ) {
+		} elseif ($this->user->isAllowed('sendGifts')){
 			$group = 4;
 		}
 		$total = Gifts::getGiftCount( $wgHuijiPrefix );
