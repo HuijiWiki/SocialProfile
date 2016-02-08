@@ -308,7 +308,7 @@ class GiveGift extends SpecialPage {
 		global $wgGiveGiftPerRow, $wgUploadPath, $wgUser, $wgHuijiPrefix;
 
 		$out = $this->getOutput();
-
+		$u = $this->getUser();
 		$user = Title::makeTitle( NS_USER, $this->user_name_to );
 
 		$page = $this->getRequest()->getInt( 'page' );
@@ -332,13 +332,13 @@ class GiveGift extends SpecialPage {
 		// }elseif ( empty($user_group) ) {
 		// 	$group = 4;
 		// }
-		if ($user->isAllowed('sendStaffGifts')){
+		if ($u->isAllowed('sendStaffGifts')){
 			$group = 1;
-		} elseif ($user->isAllowed('sendBureaucratGifts')){
+		} elseif ($u->isAllowed('sendBureaucratGifts')){
 			$group = 2;
-		} elseif ($user->isAllowed('sendSysopGifts')){
+		} elseif ($u->isAllowed('sendSysopGifts')){
 			$group = 3;
-		} elseif ($user->isAllowed('sendGifts')){
+		} elseif ($u->isAllowed('sendGifts')){
 			$group = 4;
 		}
 		$total = Gifts::getGiftCount( $wgHuijiPrefix );
