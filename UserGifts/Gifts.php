@@ -7,6 +7,17 @@ $wgAvailableRights[] = 'giftadmin';
 $wgGroupPermissions['staff']['giftadmin'] = true;
 $wgGroupPermissions['sysop']['giftadmin'] = true;
 
+$wgAvailableRights[] = 'sendStaffGifts';
+$wgAvailableRights[] = 'sendBureaucratGifts';
+$wgAvailableRights[] = 'sendSysopGifts';
+$wgAvailableRights[] = 'sendGifts';
+
+$wgGroupPermissions['staff']['sendStaffGifts'] = true;
+$wgGroupPermissions['bureaucrat']['sendBureaucratGifts'] = true;
+$wgGroupPermissions['sysop']['sendSysopGifts'] = true;
+$wgGroupPermissions['user']['sendGifts'] = true;
+
+
 $wgUserGiftsDirectory = "$IP/extensions/SocialProfile/UserGifts";
 
 // Special Pages etc.
