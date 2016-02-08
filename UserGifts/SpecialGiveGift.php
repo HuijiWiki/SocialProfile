@@ -70,7 +70,11 @@ class GiveGift extends SpecialPage {
 			$out->addHTML( $this->msg( 'g-error-message-login' )->plain() );
 		} else {
 			$gift = new UserGifts( $user->getName() );
-
+			if ( $gift->doesUserOwnGift($user->getID(), $request->getInt( 'gift_id' ) ){
+				$out->setPageTitle( $this->msg( 'g-error-title' )->plain() );
+				$out->addHTML( $this->msg( 'g-error-already-owned-gift' )->plain() );				
+			} 
+			
 			if ( $request->wasPosted() && $_SESSION['alreadysubmitted'] == false ) {
 				$_SESSION['alreadysubmitted'] = true;
 				if ( HuijiFunctions::addLock('UG-'.$request->getInt( 'gift_id' ).$this->user_id_to)){
@@ -153,12 +157,8 @@ class GiveGift extends SpecialPage {
 				}
 				else{
 					$_SESSION['alreadysubmitted'] = false;
-	
-					if ( $giftId ) {
-						$out->addHTML( $this->displayFormSingle() );
-					} else {
-						$out->addHTML( $this->displayFormAll() );
-					}					
+					$out->setPageTitle( $this->msg( 'g-error-title' )->plain() );
+					$out->addHTML( $this->msg( 'g-error-system-busy' )->plain() );					
 				}
 			} else {
 				
