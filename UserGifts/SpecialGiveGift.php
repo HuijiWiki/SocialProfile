@@ -70,7 +70,7 @@ class GiveGift extends SpecialPage {
 			$out->addHTML( $this->msg( 'g-error-message-login' )->plain() );
 		} else {
 			$gift = new UserGifts( $user->getName() );
-			$giftInfo = Gifts::getGift( $request->getInt( 'gift_id' );
+			$giftInfo = Gifts::getGift( $request->getInt( 'gift_id' ) );
 			if ( (!$giftInfo['repeat']) && $gift->doesUserOwnGift($user->getID(), $request->getInt( 'gift_id' ) ) ){
 				$out->setPageTitle( $this->msg( 'g-error-title' )->plain() );
 				$out->addHTML( $this->msg( 'g-error-already-owned-gift' )->plain() );				
