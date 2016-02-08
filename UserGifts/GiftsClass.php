@@ -133,7 +133,7 @@ class Gifts {
 				'gift_id', 'gift_createdate', 'gift_name', 'gift_description',
 				'gift_given_count', 'isrepeat', 'gift_prefix'
 			),
-			array( "gift_group >= {$group} AND gift_prefix = '$gift_prefix' OR gift_prefix = 'www' " ),
+			array( "gift_group >= {$group} AND ( gift_prefix = '$gift_prefix' OR gift_prefix = 'www' ) " ),
 			__METHOD__,
 			$params
 		);
