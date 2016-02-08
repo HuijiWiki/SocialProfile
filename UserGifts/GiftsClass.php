@@ -106,6 +106,40 @@ class Gifts {
 		}
 		return $img . '?r=' . rand();
 	}
+	
+	static function isAllowedToSendGift($user_id, $gift_id){
+		global $wgHuijiPrefix;
+		$user = User::newFromId($user_id);
+		$dbr = wfGetDB( DB_SLAVE );
+		$params = array();
+		$result = $gift = array();
+		$res = $dbr->selectRow(
+			'gift',
+			array(
+				'gift_group', 'gift_prefix',
+			),
+			array( "gift_id = {$gift_id}" ),
+			__METHOD__
+		);	
+		if ($res != false){
+			$gift['group'] = $res->gift_group;
+			$gift['prefix'] = $res->gift_prefix;
+			if ( $gift['prefix'] != $wgHuijiPrefix && $gift['prefix'] != 'www'){
+				return false;
+			}
+			if ( $gift['group'] == 1){
+				return $user->isAllowed('sendStaffGifts');
+			} elseif ($gift['group'] == 2){
+				return $user->isAllowed('sendBureaucratGifts');
+			} elseif ($gift['group'] == 3){
+				return $user->isAllowed('sendSysopGifts');
+			} elseif ($gift['group'] == 4){
+				return $user->isAllowed('sendGifts');
+			}
+		} else {
+			return false;
+		}
+	}
 
 	static function getGiftList( $group, $limit = 0, $page = 0, $gift_prefix ) {
 		global $wgUser;
