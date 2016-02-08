@@ -332,13 +332,13 @@ class GiveGift extends SpecialPage {
 		// }elseif ( empty($user_group) ) {
 		// 	$group = 4;
 		// }
-		if ($this->user->isAllowed('sendStaffGifts')){
+		if ($user->isAllowed('sendStaffGifts')){
 			$group = 1;
-		} elseif ($this->user->isAllowed('sendBureaucratGifts')){
+		} elseif ($user->isAllowed('sendBureaucratGifts')){
 			$group = 2;
-		} elseif ($this->user->isAllowed('sendSysopGifts')){
+		} elseif ($user->isAllowed('sendSysopGifts')){
 			$group = 3;
-		} elseif ($this->user->isAllowed('sendGifts')){
+		} elseif ($user->isAllowed('sendGifts')){
 			$group = 4;
 		}
 		$total = Gifts::getGiftCount( $wgHuijiPrefix );
