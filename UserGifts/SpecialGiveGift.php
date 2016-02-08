@@ -73,7 +73,10 @@ class GiveGift extends SpecialPage {
 			if ( $gift->doesUserOwnGift($user->getID(), $request->getInt( 'gift_id' ) ){
 				$out->setPageTitle( $this->msg( 'g-error-title' )->plain() );
 				$out->addHTML( $this->msg( 'g-error-already-owned-gift' )->plain() );				
-			} 
+			}  elseif ( Gifts::isAllowedToSendGift( $user->getID(), $request->getInt( 'gift_id' ) ) ){
+				$out->setPageTitle( $this->msg( 'g-error-title' )->plain() );
+				$out->addHTML( $this->msg( 'g-error-not-previleged-to-send-gift' )->plain() );					
+			}
 			
 			if ( $request->wasPosted() && $_SESSION['alreadysubmitted'] == false ) {
 				$_SESSION['alreadysubmitted'] = true;
