@@ -14,6 +14,6 @@ function wfCheckUserIsHaveGift( $user_id, $gift_id ) {
 	if ($res == false) {
 		return 'success';
 	}else{
-		return 'faild';
+		return 'failed';
 	}
 }
