@@ -46,6 +46,7 @@ function incEditCount( $article, $revision, $baseRevId ) {
 	$giftList = SystemGifts::getInfoFromFestivalGift();
 	$dayCount = 0;
 	foreach ($giftList as $value) {
+          if ( $today >= $value['startTime'] && $today <= $value['endTime'] ) {
             if (HuijiFunctions::addLock( 'USG-'.$value['giftId'].'-'.$wgUser->getId() , 1 )){				
 		$resCount = RecordStatistics::getAllPageEditCountFromUserId( $wgUser->getId(), $value['startTime'], $value['endTime'] );
 		if ($resCount->status == 'success' && $resCount->result == $value['editNum'] ) {
@@ -53,6 +54,7 @@ function incEditCount( $article, $revision, $baseRevId ) {
 		}					
                 HuijiFunctions::releaseLock( 'USG-'.$value['giftId'].'-'.$wgUser->getId() );
             }
+          }
 	}
 
 	$key = wfForeignMemcKey( 'huiji', '', 'revision', 'high_edit_site_followed', $wgUser->getName(), $wgHuijiPrefix );
