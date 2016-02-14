@@ -31,16 +31,16 @@ function incEditCount( $article, $revision, $baseRevId ) {
 		$stats = new UserStatsTrack( $wgUser->getID(), $wgUser->getName() );
 		$stats->incStatField( 'edit' );
 	}
-        $usg = new UserSystemGifts( $wgUser->getName() );
-        if (HuijiFunctions::addLock( 'USG-17-'.$wgUser->getId(), 1 ) ){
-	    $dbr = wfGetDB( DB_SLAVE );
-	    $num = SiteStats::edits();
-	    $sg = SystemGifts::checkEditsCounts($num);  
-	    if($sg){
-		$usg->sendSystemGift( 17 );
-	    }
-            HuijiFunctions::releaseLock('USG-17-'.$wgUser->getId());
-        }
+    $usg = new UserSystemGifts( $wgUser->getName() );
+    if (HuijiFunctions::addLock( 'USG-17-'.$wgUser->getId(), 1 ) ){
+    $dbr = wfGetDB( DB_SLAVE );
+    $num = SiteStats::edits();
+    $sg = SystemGifts::checkEditsCounts($num);  
+    if($sg){
+	$usg->sendSystemGift( 17 );
+    }
+        HuijiFunctions::releaseLock('USG-17-'.$wgUser->getId());
+    }
 	//festival gift
 	$today = date("Y-m-d H:i:s");
 	$giftList = SystemGifts::getInfoFromFestivalGift();
@@ -55,6 +55,76 @@ function incEditCount( $article, $revision, $baseRevId ) {
                 HuijiFunctions::releaseLock( 'USG-'.$value['giftId'].'-'.$wgUser->getId() );
             }
           }
+	}
+
+	//Consecutive edit days 连续编辑天数
+	$ueb = new UserEditBox();
+    $editBox = $editData = array();
+    $userEditInfo = $ueb->getUserEditInfo($wgUser->getId());
+    $maxlen = 0; //init variables.
+    if ($userEditInfo != false) {
+        foreach ($userEditInfo as $value) {
+        	if (is_object($value) && !empty($value->_id) && $value->value > 0) {
+	        	$editBox[$value->_id] = $value->value;
+	        	$editData[] = $value->_id;
+        	}
+            
+        }
+        $today = date("Y-m-d");
+        $editBox[$today] = UserEditBox::getTodayEdit($wgUser->getId());
+        if (!empty($editBox[$today])) {
+        	$editData[] = $today;
+        }
+        sort($editData);
+        $totalEdit = count($editData);
+        if ($totalEdit > 0){
+	        $resArr[] = strtotime($editData[0]);
+	        $maxlen = 1;	        	
+        }
+
+        for($k=1;$k<count($editData);$k++){
+        	if(in_array(strtotime($editData[$k])-86400, $resArr)){
+        		$resArr[] = strtotime($editData[$k]);
+        		if(count($resArr) > $maxlen){
+        			$maxlen = count($resArr);
+        		}
+        	}else{
+        		$resArr = array();
+        		$resArr[] = strtotime($editData[$k]);
+        	}
+        }
+		if (HuijiFunctions::addLock( 'USG-maxlen-'.$wgUser->getID() )){
+	        if ($maxlen == 2) {
+				$usg->sendSystemGift( 33 );
+	        }elseif ($maxlen == 3) {
+				$usg->sendSystemGift( 34 );
+	        }elseif ($maxlen == 7) {
+				$usg->sendSystemGift( 35 ); 
+	        }elseif ($maxlen == 13) {
+				$usg->sendSystemGift( 36 ); 
+	        }elseif ($maxlen == 23) {
+				$usg->sendSystemGift( 37 ); 
+	        }elseif ($maxlen == 61) {
+				$usg->sendSystemGift( 38 ); 
+	        }elseif ($maxlen == 109) {
+				$usg->sendSystemGift( 39 ); 
+	        }elseif ($maxlen == 199) {
+				$usg->sendSystemGift( 40 ); 
+	        }elseif ($maxlen == 367) {
+				$usg->sendSystemGift( 41 ); 
+	        }elseif ($maxlen == 727) {
+				$usg->sendSystemGift( 42 ); 
+	        }elseif ($maxlen == 1213) {
+				$usg->sendSystemGift( 43 ); 
+	        }elseif ($maxlen == 1579) {
+				$usg->sendSystemGift( 44 ); 
+	        }elseif ($maxlen == 1949) {
+				$usg->sendSystemGift( 45 ); 
+	        }elseif ($maxlen == 2333) {
+				$usg->sendSystemGift( 46 ); 
+	        }
+	    	HuijiFunctions::releaseLock( 'USG-maxlen-'.$wgUser->getID() );
+	    }
 	}
 
 	$key = wfForeignMemcKey( 'huiji', '', 'revision', 'high_edit_site_followed', $wgUser->getName(), $wgHuijiPrefix );
