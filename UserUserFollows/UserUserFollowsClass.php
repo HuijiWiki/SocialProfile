@@ -398,7 +398,7 @@ class UserUserFollow{
             'tooltip' => 'echo-pref-tooltip-follow-msg',
         );
         $notifications['follow-msg'] = array(
-        	'primary-link' => array('message' => 'notification-link-text-respond-to-user', 'destination' => 'agent'),
+        	// 'primary-link' => array('message' => 'notification-link-text-respond-to-user', 'destination' => 'agent'),
             'category' => 'follow-msg',
             'group' => 'positive',
             'formatter-class' => 'EchoFollowFormatter',

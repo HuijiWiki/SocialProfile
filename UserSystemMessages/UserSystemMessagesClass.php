@@ -157,7 +157,7 @@ class UserSystemMessage {
             'tooltip' => 'echo-pref-tooltip-advancement',
         );
         $notifications['advancement'] = array(
-        	'primary-link' => array('message' => 'notification-link-text-respond-to-user', 'destination' => 'advancement-page'),
+        	// 'primary-link' => array('message' => 'notification-link-text-respond-to-user', 'destination' => 'advancement-page'),
             'category' => 'advancement',
             'group' => 'positive',
             'formatter-class' => 'EchoAdvancementFormatter',
