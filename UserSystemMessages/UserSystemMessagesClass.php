@@ -174,6 +174,7 @@ class UserSystemMessage {
             'email-body-batch-params' => array( 'title', 'main-title-text' ),
             'icon' => 'featured',
             'section' => 'alert',
+            'secondary-link' => array( ),
         );
         return true;
     }

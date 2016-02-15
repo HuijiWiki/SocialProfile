@@ -1974,6 +1974,7 @@ class UserProfilePage extends Article {
 		$sg_key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'system_gifts', "{$sg->user_id}" );
 		$data = $wgMemc->get( $sg_key );
 		$system_gifts = $sg->getUserGiftList( 0 );
+		$gift_name = array();
 		foreach ($system_gifts as $value) {
 			$gift_name[] = $value['gift_name'];
 		}
