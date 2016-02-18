@@ -127,7 +127,7 @@ select#message_type {
 }
 .user-page-message-box-button {
     height: 40px;
-    padding-right: 15px;
+    padding-right: 0;
 }
 .user-page-message-box-button .site-button{
     float: right;

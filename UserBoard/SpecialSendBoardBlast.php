@@ -91,7 +91,7 @@ class SpecialBoardBlast extends UnlistedSpecialPage {
 					<div class="blast-message-text">'
 						. $this->msg( 'boardblastprivatenote' )->escaped() .
 					'</div>
-					<textarea name="message" id="message" cols="63" rows="4"></textarea>
+					<textarea name="message" id="message" class="text-area" cols="63" rows="4"></textarea>
 				</form>
 		</div>
 		<div class="blast-nav">
