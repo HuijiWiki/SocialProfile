@@ -5,7 +5,7 @@ var UserBoard = {
 		if ( !perPage ) {
 			perPage = 25;
 		}
-		var message = document.getElementById( 'message' ).value,
+		var message = document.getElementById( 'message' ).textContent,
 			recipient = document.getElementById( 'user_name_to' ).value,
 			sender = document.getElementById( 'user_name_from' ).value;
 		if ( message && !UserBoard.posted ) {
@@ -20,7 +20,7 @@ var UserBoard = {
 					rsargs: [encodedName, encodedMsg, messageType, perPage]
 				},
 				function( data ) {
-					jQuery('#message').val('');
+					jQuery('#message').text('');
 					UserBoard.posted = 0;
 					var user_1, user_2;
 					if ( sender ) { // it's a board to board
@@ -56,6 +56,7 @@ var UserBoard = {
 			);
 		}
 	}
+
 };
 
 jQuery( document ).ready( function() {
@@ -68,4 +69,6 @@ jQuery( document ).ready( function() {
 	jQuery( 'div.user-page-message-box-button input[type="button"]' ).on( 'click', function() {
 		UserBoard.sendMessage( jQuery( this ).data( 'per-page' ) );
 	} );
-} );
+
+
+});
