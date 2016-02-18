@@ -49,7 +49,7 @@ function movePage($oldTitle, $newTitle, $user, $oldId, $newId, $reason,$rev){
 
 function unDeletePage($title, $revision, $oldPageId){
 	global $wgHuijiPrefix, $wgSitename;
-//	if(strpos($wgHuijiPrefix, '.test') !== false) return;
+	if(strpos($wgHuijiPrefix, '.test') !== false) return;
 	//title
 	if($title == null || $title->getNamespace() !== 0) return;
 	$titleT = ($title->getText() == "首页") ? $wgSitename : $title->getText();
