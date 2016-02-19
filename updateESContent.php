@@ -49,7 +49,7 @@ function movePage($oldTitle, $newTitle, $user, $oldId, $newId, $reason,$rev){
 
 function unDeletePage($title, $revision, $oldPageId){
 	global $wgHuijiPrefix, $wgSitename;
-//	if(strpos($wgHuijiPrefix, '.test') !== false) return;
+	if(strpos($wgHuijiPrefix, '.test') !== false) return;
 	//title
 	if($title == null || $title->getNamespace() !== 0) return;
 	$titleT = ($title->getText() == "首页") ? $wgSitename : $title->getText();
@@ -85,7 +85,7 @@ function unDeletePage($title, $revision, $oldPageId){
 		
 	);
 	$post_data_string = json_encode($post_data);
-	wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile.log");
+//	wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile.log");
 	curl_post_json('upsert',$post_data_string);
 
 }

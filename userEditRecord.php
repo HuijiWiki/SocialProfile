@@ -9,14 +9,14 @@ $wgHooks['NewRevisionFromEditComplete'][] = 'insertEditRecord';
 
 function insertEditRecord($article, $rev, $baseID, $user ){
 	global $wgHuijiPrefix, $wgSitename;
-	$url = 'http://10.251.139.166:50007/insertEditRecord/';
+	$url = 'http://huijidata.com:50007/insertEditRecord/';
 	$post_data = array(
 		'userName' => $user->getName(),
 		'userId' => $user->getId(),
 		'wikiSite' => $wgHuijiPrefix,
 		'siteName' => $wgSitename,
 		'articleId' => $article->getId(),
-		'titleName' => $article->getTitle()
+		'titleName' => $article->getTitle()->getText()
 	);
 
 	$post_data_string = '';
