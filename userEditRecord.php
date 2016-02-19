@@ -19,6 +19,7 @@ function insertEditRecord($article, $rev, $baseID, $user ){
 		'titleName' => $article->getTitle()->getText()
 	);
 
+//	wfErrorLog($article->getId()."    ".$article->getTitle()->getText(),"/var/log/mediawiki/SocialProfile.log");
 	$post_data_string = '';
 	foreach($post_data as $key => $value){
 		$post_data_string .= $key.'='.$value.'&';
