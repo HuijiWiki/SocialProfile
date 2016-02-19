@@ -98,7 +98,8 @@ class UserEditBox{
 		if ($receive->status == 'success') {
 			return $receive->result;
 		}else{
-			throw new Exception("Error getSiteEditCount/getPageEditCountOnWikiSiteFromUserId Bad Request");
+			return '暂无数据';
+			// throw new Exception("Error getSiteEditCount/getPageEditCountOnWikiSiteFromUserId Bad Request");
 		}
 	}
 	//pv
@@ -107,7 +108,8 @@ class UserEditBox{
 		if ($receive->status == 'success') {
 			return $receive->result;
 		}else{
-			throw new Exception("Error getSiteViewCount/getPageViewCountOnWikiSiteFromUserId Bad Request");
+			return '暂无数据';
+			// throw new Exception("Error getSiteViewCount/getPageViewCountOnWikiSiteFromUserId Bad Request");
 		}
 	}
 	//page edit user
