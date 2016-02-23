@@ -16,6 +16,7 @@ $wgHooks['NewRevisionFromEditComplete'][] = 'incEditCount';
 $wgHooks['ArticleDelete'][] = 'removeDeletedEdits';
 $wgHooks['ArticleUndelete'][] = 'restoreDeletedEdits';
 
+
 /**
  * Updates user's points after they've made an edit in a namespace that is
  * listed in the $wgNamespacesForEditPoints array.
@@ -161,6 +162,17 @@ function removeDeletedEdits( &$article, &$user, &$reason ) {
 			$wgMemc->decr( $key,$row->the_count );
 		}
 	}
+
+	//delete video
+	if ( NS_FILE == $article->getTitle()->getNamespace() ) {
+		$file_name = $article->getTitle()->getText();
+		$file_type = strrchr($file_name, ".");
+		$file_title = rtrim($file_name,$file_type);
+		$isHave = UploadVideos::checkFile( $file_title );
+		if ( count($isHave) >0 ) {
+			$del = UploadVideos::delVideoInfo( $file_title );
+		}
+	}
 	
 
 	return true;
@@ -195,6 +207,17 @@ function restoreDeletedEdits( &$title, $new ) {
 		}
 	}
 
+	//restore video info 
+	// print_r($title);die();
+	if ( NS_FILE == $title->getNamespace() ) {
+		$file_name = $title->getText();
+		$file_type = strrchr($file_name, ".");
+		$file_title = rtrim($file_name,$file_type);
+		$isHave = UploadVideos::checkFile( $file_title );
+		if ( count($isHave) >0 ) {
+			$del = UploadVideos::storeVideoInfo( $file_title );
+		}
+	}
 
 	return true;
 }

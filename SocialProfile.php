@@ -10,7 +10,6 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 		' more information about this extension.'
 	);
 }
-
 /**
  * This is the loader file for the SocialProfile extension. You should include
  * this file in your wiki's LocalSettings.php to activate SocialProfile.
@@ -37,6 +36,7 @@ $wgMessagesDirs['SocialProfileAdminDashboard'] = __DIR__ . '/AdminDashboard/i18n
 $wgMessagesDirs['SocialProfileSiteStatus'] = __DIR__ . '/SiteStatus/i18n';
 $wgMessagesDirs['SocialProfileUserStatus'] = __DIR__ . '/UserStatus/i18n';
 $wgMessagesDirs['SocialProfileUploadFiles'] = __DIR__ . '/UploadFiles/i18n';
+$wgMessagesDirs['SocialProfileVideos'] = __DIR__ . '/Videos/i18n';
 $wgExtensionMessagesFiles['SocialProfileNamespaces'] = __DIR__ . '/SocialProfile.namespaces.php';
 $wgExtensionMessagesFiles['AvatarMagic'] = __DIR__ . '/UserProfile/Avatar.magic.i18n.php';
 
@@ -95,11 +95,13 @@ $wgAutoloadClasses['SpecialCallbackQQ'] = __DIR__ . '/SpecialCallbackQQ.php';
 $wgAutoloadClasses['SpecialCallbackWeibo'] = __DIR__ . '/SpecialCallbackWeibo.php';
 $wgAutoloadClasses['SpecialGlobalSearch'] = __DIR__ . '/GlobalSearch/SpecialGlobalSearch.php';
 $wgAutoloadClasses['SpecialUploadFiles'] = __DIR__ . '/UploadFiles/SpecialUploadFiles.php';
+$wgAutoloadClasses['SpecialVideos'] = __DIR__ . '/Videos/SpecialVideos.php';
 $wgAutoloadClasses['SpecialAddUserEditCounts'] = __DIR__ . '/UserStats/SpecialAddUserEditCounts.php';
 $wgAutoloadClasses['SpecialAddFestivalGift'] = __DIR__ . '/SystemGifts/SpecialAddFestivalGift.php';
 // $wgAutoloadClasses['SpecialFamilyTree'] = __DIR__ . '/FamilyTree/SpecialFamilyTree.php';
 $wgAutoloadClasses['QueryInterface'] = __DIR__ . '/QueryInterface.php';
 $wgAutoloadClasses['TemplateFork'] = __DIR__ . '/TemplateFork/TemplateForkClass.php';
+$wgAutoloadClasses['UploadVideos'] = __DIR__ . '/Videos/UploadVideosClass.php';
 
 // New special pages
 // $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
@@ -132,6 +134,7 @@ $wgSpecialPages['CallbackQQ'] = 'SpecialCallbackQQ';
 $wgSpecialPages['CallbackWeibo'] = 'SpecialCallbackWeibo';
 $wgSpecialPages['GlobalSearch'] = 'SpecialGlobalSearch';
 $wgSpecialPages['UploadFiles'] = 'SpecialUploadFiles';
+$wgSpecialPages['Videos'] = 'SpecialVideos';
 $wgSpecialPages['AddUserEditCounts'] = 'SpecialAddUserEditCounts';
 $wgSpecialPages['AddFestivalGift'] = 'SpecialAddFestivalGift';
 // $wgSpecialPages['FamilyTree'] = 'SpecialFamilyTree';
@@ -148,6 +151,7 @@ require_once( "$IP/extensions/SocialProfile/UserActivity/UserActivity_AjaxFuncti
 require_once( "$IP/extensions/SocialProfile/TemplateFork/TemplateFork_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/UserProfile/OauthLogin_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/UserGifts/UserGift_AjaxFunctions.php" );
+require_once( "$IP/extensions/SocialProfile/Videos/UploadVideos_AjaxFunctions.php" );
 // What to display on social profile pages by default?
 $wgUserProfileDisplay['board'] = true;
 $wgUserProfileDisplay['foes'] = false;
@@ -292,7 +296,9 @@ $wgHooks['CanonicalNamespaces'][] = 'SocialProfileHooks::onCanonicalNamespaces';
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'SocialProfileHooks::onLoadExtensionSchemaUpdates';
 $wgHooks['ParserFirstCallInit'][] = 'AvatarParserFunction::setupAvatarParserFunction';
 $wgHooks['BeforePageDisplay'][] = 'SocialProfileHooks::onBeforePageDisplay';
-
+$wgHooks['MimeMagicGuessFromContent'][] = 'SocialProfileHooks::onMimeMagicGuessFromContent';
+$wgHooks['BitmapHandlerTransform'][] = 'SocialProfileHooks::onBitmapHandlerTransform';
+$wgHooks['ThumbnailBeforeProduceHTML'][] = 'SocialProfileHooks::onThumbnailBeforeProduceHTML';
 // For the Renameuser extension
 $wgHooks['RenameUserComplete'][] = 'SocialProfileHooks::onRenameUserComplete';
 
@@ -356,7 +362,6 @@ $wgResourceModules['ext.socialprofile.uploadfiles.css'] = array(
 	'styles' => 'uploadfiles.css',
 	'localBasePath' => __DIR__ . '/UploadFiles',
 	'remoteExtPath' => 'SocialProfile/UploadFiles',
-	'position' => 'bottom' // just in case
 );
 
 $wgResourceModules['ext.socialprofile.uploadfiles.js'] = array(
@@ -364,6 +369,21 @@ $wgResourceModules['ext.socialprofile.uploadfiles.js'] = array(
 	'dependencies' => 'mediawiki.notification',
 	'localBasePath' => __DIR__ . '/UploadFiles',
 	'remoteExtPath' => 'SocialProfile/UploadFiles',
+);
+
+//specialVideos
+$wgResourceModules['ext.socialprofile.videos.css'] = array(
+	'styles' => 'videos.css',
+	'localBasePath' => __DIR__ . '/Videos',
+	'remoteExtPath' => 'SocialProfile/Videos',
+
+);
+
+$wgResourceModules['ext.socialprofile.videos.js'] = array(
+	'scripts' => 'videos.js',
+	'dependencies' => 'mediawiki.notification',
+	'localBasePath' => __DIR__ . '/Videos',
+	'remoteExtPath' => 'SocialProfile/Videos',
 );
 
 //familytree

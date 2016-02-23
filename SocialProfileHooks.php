@@ -133,5 +133,33 @@ class SocialProfileHooks {
 	    $vars['wgCentralServer'] = $wgCentralServer;
 	    return true;
 	}
+	/**
+	 * modift vide mime type
+	 */
+	public static function onMimeMagicGuessFromContent( $mimeMagic, &$head, &$tail, $file, &$mime ) {
+		wfDebugLog('SocialProfile', 'onMimeMagicGuessFromContent'.$file);
+		$mime = 'application/pdf';
+	}
+
+	public static function onBitmapHandlerTransform( $handler, $image, &$scalerParams, &$mto ) { 
+		
+	}
+	public static function onThumbnailBeforeProduceHTML( $handler, &$attribs, &$linkAttribs ){
+		// $file = $handler->getFile();
+		// // print_r($file);die();
+		// $file_name = $file->title->mTextform;
+		// $file_type = strrchr($file_name, ".");
+		// $file_title = rtrim($file_name,$file_type);
+		// // echo $file_name;die();
+		// //判断 是不是 video
+		// $video_info = UploadVideos::checkFile( $file_title );
+		// // print_r($video_info);die();
+		// if ( isset($video_info) && count($video_info)>0 ){
+		// 	$linkAttribs['source'] = $video_info['video_from'];
+		// 	$linkAttribs['id'] = $video_info['video_key'];
+		// 	$linkAttribs['class'] = 'videoplayer';
+		// }
+
+	}
 
 }

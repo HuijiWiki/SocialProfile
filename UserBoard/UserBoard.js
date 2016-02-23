@@ -5,7 +5,7 @@ var UserBoard = {
 		if ( !perPage ) {
 			perPage = 25;
 		}
-		var message = document.getElementById( 'message' ).textContent,
+		var message = $('textarea#message').length>0?document.getElementById( 'message' ).value:document.getElementById( 'message' ).textContent,
 			recipient = document.getElementById( 'user_name_to' ).value,
 			sender = document.getElementById( 'user_name_from' ).value;
 		if ( message && !UserBoard.posted ) {
