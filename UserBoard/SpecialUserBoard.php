@@ -254,7 +254,7 @@ class SpecialViewUserBoard extends SpecialPage {
 						<option value="1">' . $this->msg( 'userboard_private' )->plain() . '</option>
 					</select>
 					<p>
-					<textarea name="message" id="message" class="text-area mention-area" rows="4"></textarea>
+					<p class="lead emoji-picker-container"><div name="message" id="message" class="text-area mention-area" rows="4" contenteditable="true"></div></p>
 
 					<div class="user-page-message-box-button">
 						<input type="button" value="' . $this->msg( 'userboard_sendbutton' )->plain() . '" class="site-button" data-per-page="' . $per_page . '" />

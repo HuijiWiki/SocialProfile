@@ -47,6 +47,7 @@ class UserActivity {
 	private $show_user_update_status = 1;
 	private $show_domain_creations = 1;
 	private $show_image_uploads = 1;
+	private $hide_bot = 0;
 
 	private $cached_where;
 	private $cached_tables;
@@ -109,6 +110,7 @@ class UserActivity {
 			$this->show_user_site_follows = 0;
 			$this->show_user_update_status = 0;
 			$this->show_domain_creations = 0;
+			$this->hide_bot = 1;
 		}
 		if ( strtoupper( $filter ) == 'THIS_SITE' ) {
 			$this->show_this_site = true;
@@ -122,7 +124,8 @@ class UserActivity {
 			$this->show_user_user_follows = 0;
 			$this->show_user_site_follows = 0;
 			$this->show_user_update_status = 0;
-			$this->show_domain_creations = 0;			
+			$this->show_domain_creations = 0;	
+			$this->hide_bot = 1;		
 		}
 	}
 
@@ -245,6 +248,15 @@ class UserActivity {
 					$userArray[] = $user->f_target_user_id;
 				}
 		
+			}
+			if ( !empty( $hide_bot ) ){
+				for (int $i = 0; $i < count($userArray); $i++ ){
+					if (User::newFromId($userArray[$i])->isAllowed('bot')){
+						unset($userArray[$i]);
+					};
+				}
+				/* normalize userArray */
+				$userArray = array_values($userArray);
 			}
 			//cache it
 			$this->cached_where = $userArray;

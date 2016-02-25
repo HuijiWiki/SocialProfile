@@ -161,5 +161,20 @@ class SocialProfileHooks {
 		// }
 
 	}
+	public static function onUploadComplete(&$uploadBase){
+		$video_info = UploadVideos::checkFile( $uploadBase->getLocalFile()->getTitle() );
+		if ( isset($video_info) && count($video_info) > 0 ){
+			$uploadBase->getLocalFile()->setProp(array('major_mime'=>'video', 'minor_mime'=>'youku', 'media_type'=>'PLAYABLE'));
+			$uploadBase->getLocalFile()->updateRow();
+			$uploadBase->getLocalFile()->publish($uploadBase->getTempPath(), [], []);
+		}
+	}
+	public static function onImagePageAfterImageLinks($imagePage, &$Html){
+
+	}
+
+	public static function onImageOpenShowImageInlineBefore($imagePage, &$out){
+
+	}
 
 }

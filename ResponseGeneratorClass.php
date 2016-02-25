@@ -6,6 +6,7 @@ class ResponseGenerator{
 	const ERROR_READ_ONLY = 3;
 	const ERROR_NOT_ALLOWED = 4;
 	const ERROR_UNKNOWN = 5;
+	const ERROR_DATABASE_FAILED = 6;
 
 	/**
 	 *
@@ -40,6 +41,12 @@ class ResponseGenerator{
 			  		"success": false,
 			  		"message": "'.wfMessage('socialprofile-error-not-allowed')->text()
 					.'"}';
+				return $data;
+			case self::ERROR_DATABASE_FAILED:
+			$data = '{
+		  		"success": false,
+		  		"message": "'.wfMessage('socialprofile-database-failed')->text()
+				.'"}';
 				return $data;
 			default:
 				$data = '{

@@ -9,7 +9,7 @@ function wfSendBoardMessage( $user_name, $message, $message_type, $count ) {
 	// Don't allow blocked users to send messages and also don't allow message
 	// sending when the database is locked for some reason
 	if ( $wgUser->isBlocked() || wfReadOnly() ) {
-		return '';
+		return 'user is blocked or database is locked';
 	}
 
 	$user_name = stripslashes( $user_name );
@@ -28,10 +28,9 @@ function wfSendBoardMessage( $user_name, $message, $message_type, $count ) {
 $wgAjaxExportList[] = 'wfDeleteBoardMessage';
 function wfDeleteBoardMessage( $ub_id ) {
 	global $wgUser;
-
 	// Don't allow deleting messages when the database is locked for some reason
 	if ( wfReadOnly() ) {
-		return '';
+		return 'database locked';
 	}
 
 	$b = new UserBoard();

@@ -23,7 +23,6 @@ $wgHooks['ArticleUndelete'][] = 'restoreDeletedEdits';
  */
 function incEditCount( $article, $revision, $baseRevId ) {
 	global $wgUser, $wgNamespacesForEditPoints,$wgMemc,$wgHuijiPrefix;
-
 	// only keep tally for allowable namespaces
 	if (
 		!is_array( $wgNamespacesForEditPoints ) ||
@@ -166,12 +165,8 @@ function removeDeletedEdits( &$article, &$user, &$reason ) {
 	//delete video
 	if ( NS_FILE == $article->getTitle()->getNamespace() ) {
 		$file_name = $article->getTitle()->getText();
-		$file_type = strrchr($file_name, ".");
-		$file_title = rtrim($file_name,$file_type);
-		$isHave = UploadVideos::checkFile( $file_title );
-		if ( count($isHave) >0 ) {
-			$del = UploadVideos::delVideoInfo( $file_title );
-		}
+		$pageId = $article->getTitle()->getArticleID();
+		$del = UploadVideos::delVideoInfo( $pageId );
 	}
 	
 
@@ -183,7 +178,7 @@ function removeDeletedEdits( &$article, &$user, &$reason ) {
  * $wgNamespacesForEditPoints array that they've edited has been restored after
  * it was originally deleted.
  */
-function restoreDeletedEdits( &$title, $new ) {
+function restoreDeletedEdits( &$title, $new, $commnent, $oldPageId ) {
 	global $wgNamespacesForEditPoints,$wgMemc,$wgHuijiPrefix;
 
 	// only keep tally for allowable namespaces
@@ -206,17 +201,16 @@ function restoreDeletedEdits( &$title, $new ) {
 			$wgMemc->incr( $key, $row->the_count );
 		}
 	}
-
-	//restore video info 
-	// print_r($title);die();
+// echo 'qqq';die();
+	//restore video info  storeVideoInfo
 	if ( NS_FILE == $title->getNamespace() ) {
-		$file_name = $title->getText();
-		$file_type = strrchr($file_name, ".");
-		$file_title = rtrim($file_name,$file_type);
-		$isHave = UploadVideos::checkFile( $file_title );
-		if ( count($isHave) >0 ) {
-			$del = UploadVideos::storeVideoInfo( $file_title );
-		}
+		$pageId = $title->getArticleID();
+		// echo $oldPageId;die();
+		$restore = UploadVideos::restoreVideoInfo( $pageId, $oldPageId );
+		// $file_name = $title->getText();
+		// $file_type = strrchr($file_name, ".");
+		// $file_title = rtrim($file_name,$file_type);
+		// $restor = UploadVideos::storeVideoInfo( $file_title );
 	}
 
 	return true;

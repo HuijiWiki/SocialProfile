@@ -2152,7 +2152,7 @@ class UserProfilePage extends Article {
 								wfMessage( 'userboard_private' )->escaped() .
 							'</option>
 						</select><p><div class="form-group" style="padding:14px;">
-                                      <textarea class="form-control" name="message" id="message" placeholder=""></textarea>
+                                      <p class="lead emoji-picker-container"><textarea name="message" id="message" class="text-area mention-area" rows="4" contenteditable="true"></textarea></p>
                                     </div>
 						
 						<div class="user-page-message-box-button">
