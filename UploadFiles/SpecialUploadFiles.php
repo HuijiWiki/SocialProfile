@@ -58,7 +58,7 @@ class SpecialUploadFiles extends SpecialPage{
                                    <div class="form-group">
                                        <label for="des-text" class="control-label">描述:</label>
                                        <textarea class="form-control" id="des-text"></textarea>
-                                       <label for="des-category" class="control-label">分类:</label>
+                                       <label for="des-category" class="control-label">分类:(使用半角英文","隔开)</label>
                                        <input class="form-control" type="text" id="des-category">
                                    </div>
                                </div>
@@ -79,7 +79,7 @@ class SpecialUploadFiles extends SpecialPage{
                                            <div class="form-group">
                                                <label for="self-des-text" class="control-label">描述:</label>
                                                <textarea class="form-control" id="self-des-text"></textarea>
-                                               <label for="self-des-category" class="control-label">分类:</label>
+                                               <label for="self-des-category" class="control-label">分类:(使用半角英文","隔开)</label>
                                                <input class="form-control" type="text" id="self-des-category">
                                            </div>
                                        </div>

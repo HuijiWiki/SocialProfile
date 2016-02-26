@@ -86,23 +86,26 @@ var uploadfiles = {
             type: 'POST',
             success: function (data) {
                 selector.removeClass('default').find('img').attr('data-filekey',data.upload.filekey);
-                if (data.upload.result == "Warning") {
+                if (data.upload && data.upload.result == "Warning") {
                     if (data.upload.warnings.exists) {
                         selector.find('.prompt').text('已存在相同名称，请点名称重新命名');
-                        selector.addClass('suggest');
+                        selector.addClass('warning');
                     } else if (data.upload.warnings.duplicate) {
                         selector.find('.prompt').text('已存在相同内容，建议删除本文件');
                         selector.addClass('suggest');
                     } else {
-                        console.log(data)
+                        for(var a in data.upload.warnings)
+                        selector.find('.prompt').text(data.upload.warnings[a]);
+                        selector.addClass('suggest');
                     }
                 }else if(data.error){
+                    console.log(data);
+                    selector.addClass('warning');
                     if(data.error.code=="file-too-large"){
                         selector.find('.prompt').text('图片过大,请压缩后上传');
-                        selector.addClass('warning');
                     }else{
                         selector.find('.prompt').text(data.error.code);
-                        selector.addClass('warning');
+
                     }
                 }
             }
@@ -122,6 +125,7 @@ var uploadfiles = {
         //当没有图片时返回样式
         $('#uploadfiles').removeClass('continue');
         $('.file-btn').text('选择电脑上的文件');
+        $('#upload-btn').text('上传');
         $('#des-btn').remove();
     },
     funChangeName: function(){
@@ -156,18 +160,26 @@ var uploadfiles = {
                     },
                     type: 'POST',
                     success: function (data) {
-                        if(data.upload.result == "Success"){
+                        if(data.upload && data.upload.result == "Success"){
                             that.parents('.file-wrap').removeClass('warning');
                             that.siblings('.prompt').text('');
-                        }else if(data.upload.warnings.exists){
-                            that.parents('.file-wrap').addClass('warning');
-                            that.siblings('.prompt').text('已存在相同名称，请点名称重新命名');
-                        }else if(data.upload.warnings.duplicate){
-                            that.parents('.file-wrap').removeClass('warning').addClass('suggest');
-                            that.siblings('.prompt').text('已存在相同内容，建议删除本文件');
+                        }else if(data.upload && data.upload.result == "Warning"){
+                            if(data.upload.warnings.exists){
+                                that.parents('.file-wrap').addClass('warning');
+                                that.siblings('.warning').text('已存在相同名称，请点名称重新命名');
+                            }else if(data.upload.warnings.duplicate){
+                                that.parents('.file-wrap').removeClass('warning').addClass('suggest');
+                                that.siblings('.prompt').text('已存在相同内容，建议删除本文件');
+                            }else{
+                                for(var a in data.upload.warnings)
+                                that.siblings('.prompt').text(data.upload.warnings[a]);
+                                that.parents('.file-wrap').removeClass('warning').addClass('suggest');
+                            }
                         }else{
-                            console.log(data);
+                            selector.removeClass('suggest').addClass('warning');
+                            selector.find('.prompt').text(data.error.code);
                         }
+
                     }
                 });
             }).keyup(function(e){
@@ -237,13 +249,11 @@ var uploadfiles = {
     },
     funUpload: function(e){
         var self = this;
-        var len = $('.file-source.wait').length;
+        var len = $('.file-wrap:not(".warning") .file-source.wait').length;
         if(len==0){
             mw.notification.notify('请选择文件');
-        }else if($('.file-wrap').hasClass('warning')){
-            mw.notification.notify('请处理警告的文件');
         }else {
-            $('.file-source.wait').each(function (index) {
+            $('.file-wrap:not(".warning") .file-source.wait').each(function (index) {
                 var xhr = new XMLHttpRequest();
                 var formData = new FormData();
                 var that = $(this);
@@ -280,8 +290,8 @@ var uploadfiles = {
                     var data = JSON.parse(evt.target.responseText);
                     that.siblings('.opacity,.prompt').remove();
                     if(index == len-1){
-                        mw.notification.notify('上传成功');
-                        $('#upload-btn').button('reset');
+                        mw.notification.notify('成功上传'+len+'张');
+                        $('#upload-btn').text('继续上传').button('reset');
                         $('#des-btn').remove();
                     }
                     that.parents('.file-wrap').removeClass('suggest');

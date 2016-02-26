@@ -62,6 +62,10 @@ class SocialProfileHooks {
 		$updater->addExtensionUpdate( array( 'addTable', 'template_fork', "$dir/TemplateFork/template_fork$dbExt.sql", true ) );
 		$updater->addExtensionUpdate( array( 'addTable', 'template_fork_count', "$dir/TemplateFork/template_fork_count$dbExt.sql", true ) );
 		$updater->addExtensionUpdate( array( 'addField', 'template_fork', 'target_id', "$dir/TemplateFork/modify_tb_template$dbExt.sql", true ) );
+		$updater->addExtensionUpdate( array( 'addTable', 'revision_binder', "$dir/Videos/revision_binder$dbExt.sql", true ) );
+		$updater->addExtensionUpdate( array( 'addTable', 'video_archive', "$dir/Videos/video_archive$dbExt.sql", true ) );
+		$updater->addExtensionUpdate( array( 'addTable', 'video_page', "$dir/Videos/video_page$dbExt.sql", true ) );
+		$updater->addExtensionUpdate( array( 'addTable', 'video_revision', "$dir/Videos/video_revision$dbExt.sql", true ) );
 		return true;
 	}
 
@@ -145,36 +149,38 @@ class SocialProfileHooks {
 		
 	}
 	public static function onThumbnailBeforeProduceHTML( $handler, &$attribs, &$linkAttribs ){
-		// $file = $handler->getFile();
-		// // print_r($file);die();
-		// $file_name = $file->title->mTextform;
-		// $file_type = strrchr($file_name, ".");
-		// $file_title = rtrim($file_name,$file_type);
-		// // echo $file_name;die();
-		// //判断 是不是 video
-		// $video_info = UploadVideos::checkFile( $file_title );
-		// // print_r($video_info);die();
-		// if ( isset($video_info) && count($video_info)>0 ){
-		// 	$linkAttribs['source'] = $video_info['video_from'];
-		// 	$linkAttribs['id'] = $video_info['video_key'];
-		// 	$linkAttribs['class'] = 'videoplayer';
-		// }
-
+		$file = $handler->getFile();
+		// print_r($file);die();
+		$title = $file->title;
+		// echo $file_name;die();
+		//判断 是不是 video
+		$isVideoTitle = VideoTitle::isVideoTitle( $title );
+		// print_r($video_info);die();
+		if ( $isVideoTitle ){
+			$vt = VideoTitle::newFromId( $title->getArticleId() );
+			$attribs['data-video'] = $vt->getPlayerUrl();
+			$attribs['class'] = 'video-player';
+		}
 	}
 	public static function onUploadComplete(&$uploadBase){
 		$video_info = UploadVideos::checkFile( $uploadBase->getLocalFile()->getTitle() );
 		if ( isset($video_info) && count($video_info) > 0 ){
-			$uploadBase->getLocalFile()->setProp(array('major_mime'=>'video', 'minor_mime'=>'youku', 'media_type'=>'PLAYABLE'));
+			$uploadBase->getLocalFile()->setProp(array('major_mime'=>'video', 'minor_mime'=>'youku', 'media_type'=>'playable'));
 			$uploadBase->getLocalFile()->updateRow();
 			$uploadBase->getLocalFile()->publish($uploadBase->getTempPath(), [], []);
 		}
 	}
-	public static function onImagePageAfterImageLinks($imagePage, &$Html){
-
-	}
 
 	public static function onImageOpenShowImageInlineBefore($imagePage, &$out){
+		$html = '<p>this is a fest</p>';
+		$out->addHtml($html);
+	}
 
+	public static function onImagePageAfterImageLinks($imagePage, &$html){
+		if ( VideoTitle::isVideoTitle($imagePage->getTitle() ) ){
+			$html = '<p>this is a test</p>';
+
+		}
 	}
 
 }

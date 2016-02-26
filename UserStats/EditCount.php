@@ -46,54 +46,55 @@ function incEditCount( $article, $revision, $baseRevId ) {
 	$giftList = SystemGifts::getInfoFromFestivalGift();
 	$dayCount = 0;
 	foreach ($giftList as $value) {
-          if ( $today >= $value['startTime'] && $today <= $value['endTime'] ) {
+        if ( $today >= $value['startTime'] && $today <= $value['endTime'] ) {
             if (HuijiFunctions::addLock( 'USG-'.$value['giftId'].'-'.$wgUser->getId() , 1 )){				
-		$resCount = RecordStatistics::getAllPageEditCountFromUserId( $wgUser->getId(), $value['startTime'], $value['endTime'] );
-		if ($resCount->status == 'success' && $resCount->result == $value['editNum'] ) {
-			$usg->sendSystemGift( $value['giftId'] );
-		}					
+				$resCount = RecordStatistics::getAllPageEditCountFromUserId( $wgUser->getId(), $value['startTime'], $value['endTime'] );
+				if ($resCount->status == 'success' && $resCount->result == $value['editNum'] ) {
+					$usg->sendSystemGift( $value['giftId'] );
+				}					
                 HuijiFunctions::releaseLock( 'USG-'.$value['giftId'].'-'.$wgUser->getId() );
             }
-          }
+        }
 	}
 
 	//Consecutive edit days 连续编辑天数
 	$ueb = new UserEditBox();
     $editBox = $editData = array();
     $userEditInfo = $ueb->getUserEditInfo($wgUser->getId());
-    $maxlen = 0; //init variables.
-    if ($userEditInfo != false) {
-        foreach ($userEditInfo as $value) {
-        	if (is_object($value) && !empty($value->_id) && $value->value > 0) {
-	        	$editBox[$value->_id] = $value->value;
-	        	$editData[] = $value->_id;
-        	}
-            
-        }
-        $today = date("Y-m-d");
-        $editBox[$today] = UserEditBox::getTodayEdit($wgUser->getId());
-        if (!empty($editBox[$today])) {
-        	$editData[] = $today;
-        }
-        sort($editData);
-        $totalEdit = count($editData);
-        if ($totalEdit > 0){
-	        $resArr[] = strtotime($editData[0]);
-	        $maxlen = 1;	        	
-        }
+    if (HuijiFunctions::addLock( 'USG-maxlen-'.$wgUser->getID() )){
+	    $maxlen = 0; //init variables.
+	    if ($userEditInfo != false) {
+	        foreach ($userEditInfo as $value) {
+	        	if (is_object($value) && !empty($value->_id) && $value->value > 0) {
+		        	$editBox[$value->_id] = $value->value;
+		        	$editData[] = $value->_id;
+	        	}
+	            
+	        }
+	        $today = date("Y-m-d");
+	        $editBox[$today] = UserEditBox::getTodayEdit($wgUser->getId());
+	        if (!empty($editBox[$today])) {
+	        	$editData[] = $today;
+	        }
+	        sort($editData);
+	        $totalEdit = count($editData);
+	        if ($totalEdit > 0){
+		        $resArr[] = strtotime($editData[0]);
+		        $maxlen = 1;	        	
+	        }
 
-        for($k=1;$k<count($editData);$k++){
-        	if(in_array(strtotime($editData[$k])-86400, $resArr)){
-        		$resArr[] = strtotime($editData[$k]);
-        		if(count($resArr) > $maxlen){
-        			$maxlen = count($resArr);
-        		}
-        	}else{
-        		$resArr = array();
-        		$resArr[] = strtotime($editData[$k]);
-        	}
-        }
-		if (HuijiFunctions::addLock( 'USG-maxlen-'.$wgUser->getID() )){
+	        for($k=1;$k<count($editData);$k++){
+	        	if(in_array(strtotime($editData[$k])-86400, $resArr)){
+	        		$resArr[] = strtotime($editData[$k]);
+	        		if(count($resArr) > $maxlen){
+	        			$maxlen = count($resArr);
+	        		}
+	        	}else{
+	        		$resArr = array();
+	        		$resArr[] = strtotime($editData[$k]);
+	        	}
+	        }
+		
 	        if ($maxlen == 2) {
 				$usg->sendSystemGift( 33 );
 	        }elseif ($maxlen == 3) {
@@ -123,10 +124,45 @@ function incEditCount( $article, $revision, $baseRevId ) {
 	        }elseif ($maxlen == 2333) {
 				$usg->sendSystemGift( 46 ); 
 	        }
-	    	HuijiFunctions::releaseLock( 'USG-maxlen-'.$wgUser->getID() );
 	    }
+	    HuijiFunctions::releaseLock( 'USG-maxlen-'.$wgUser->getID() );
 	}
-
+// echo $article->getFile()->getDescriptionText();die();
+	// revision update  $baseRevId
+	if ( NS_FILE == $article->getTitle()->getNamespace() 
+		&& VideoTitle::isVideoTitle( $article->getTitle()  )
+	){
+		$thumSha1 = $article->getFile()->getSha1();
+	if ( !empty($baseRevId) ) {
+		$videoRevision = UploadVideos::getVideoRevisionByPageRevision( $thumSha1 );
+		if ($videoRevision != ''){
+			$pageId = $article->getTitle()->getArticleID();
+			$updatePageVideo = UploadVideos::updateVideoPage( $pageId, $videoRevision );
+			//$addRevisionBinder = UploadVideos::addRevisionBinder( $thumSha1, $videoRevision );				
+		}
+	}
+		// if (  empty($baseRevId) ) {
+		// 	//insert revision binder
+		// 	// $pageRevision = $revision->getID();
+		// 	$pageId = $article->getTitle()->getArticleID();
+		// 	$video = VideoTitle::newFromId( $pageId );
+		// 	$videoRevisionId = $video->getVideoRevisionId();
+		// 	$addRevisionBinder = UploadVideos::addRevisionBinder( $thumSha1, $videoRevisionId );
+			
+		// }else{
+		// 	// echo '2';die();
+		// 	//insert binder  update page
+		// 	// selec video_revision_id by baserevid from revisionbinder
+		// 	// update page_video set revisionid= video_revision_id
+		// 	// insert revisionbinder set pagerevid= $revsion->getid(), videorevisionid = video_revision_id
+		// 	// $pageRevision = $revision->getID();
+		// 	$videoRevision = UploadVideos::getVideoRevisionByPageRevision( $thumSha1 );
+		// 	$pageId = $article->getTitle()->getArticleID();
+		// 	$updatePageVideo = UploadVideos::updateVideoPage( $pageId, $videoRevision );
+		// 	$addRevisionBinder = UploadVideos::addRevisionBinder( $thumSha1, $videoRevision );
+		// }
+	}
+	
 	$key = wfForeignMemcKey( 'huiji', '', 'revision', 'high_edit_site_followed', $wgUser->getName(), $wgHuijiPrefix );
 	$wgMemc->incr( $key );
 	$key = wfForeignMemcKey( 'huiji', '', 'revision', 'last_edit_user', $article->getTitle()->getArticleId(), $wgHuijiPrefix );
@@ -161,9 +197,11 @@ function removeDeletedEdits( &$article, &$user, &$reason ) {
 			$wgMemc->decr( $key,$row->the_count );
 		}
 	}
-
+	echo $article->getTitle()->getArticleID();
+// echo 's';die();
 	//delete video
-	if ( NS_FILE == $article->getTitle()->getNamespace() ) {
+	if ( NS_FILE == $article->getTitle()->getNamespace() && VideoTitle::isVideoTitle( $article->getTitle() ) ) {
+		// echo 'w';die();
 		$file_name = $article->getTitle()->getText();
 		$pageId = $article->getTitle()->getArticleID();
 		$del = UploadVideos::delVideoInfo( $pageId );
@@ -201,12 +239,18 @@ function restoreDeletedEdits( &$title, $new, $commnent, $oldPageId ) {
 			$wgMemc->incr( $key, $row->the_count );
 		}
 	}
-// echo 'qqq';die();
+	// $oldTitle = Title::newFromID($oldPageId);
+	// echo $oldPageId;die();
+	// echo VideoTitle::isVideoTitle( $oldTitle );die();
+// echo $title->getArticleID().'-'.$oldPageId;die();
 	//restore video info  storeVideoInfo
-	if ( NS_FILE == $title->getNamespace() ) {
+	if ( NS_FILE == $title->getNamespace() && VideoTitle::isVideoTitleIdByArchive( $oldPageId ) ) {
+		$article = new WikiFilePage($title);
+		$thumSha1 = $article->getFile()->getSha1();
+		$videoRevision = UploadVideos::getVideoRevisionByPageRevision( $thumSha1 );
 		$pageId = $title->getArticleID();
 		// echo $oldPageId;die();
-		$restore = UploadVideos::restoreVideoInfo( $pageId, $oldPageId );
+		$restore = UploadVideos::restoreVideoInfo( $pageId, $oldPageId, $videoRevision );
 		// $file_name = $title->getText();
 		// $file_type = strrchr($file_name, ".");
 		// $file_title = rtrim($file_name,$file_type);

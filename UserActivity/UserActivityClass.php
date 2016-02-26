@@ -250,7 +250,7 @@ class UserActivity {
 		
 			}
 			if ( !empty( $hide_bot ) ){
-				for (int $i = 0; $i < count($userArray); $i++ ){
+				for ( $i = 0; $i < count($userArray); $i++ ){
 					if (User::newFromId($userArray[$i])->isAllowed('bot')){
 						unset($userArray[$i]);
 					};

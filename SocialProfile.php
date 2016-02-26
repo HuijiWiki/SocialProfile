@@ -10,6 +10,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 		' more information about this extension.'
 	);
 }
+
 /**
  * This is the loader file for the SocialProfile extension. You should include
  * this file in your wiki's LocalSettings.php to activate SocialProfile.
@@ -96,12 +97,14 @@ $wgAutoloadClasses['SpecialCallbackWeibo'] = __DIR__ . '/SpecialCallbackWeibo.ph
 $wgAutoloadClasses['SpecialGlobalSearch'] = __DIR__ . '/GlobalSearch/SpecialGlobalSearch.php';
 $wgAutoloadClasses['SpecialUploadFiles'] = __DIR__ . '/UploadFiles/SpecialUploadFiles.php';
 $wgAutoloadClasses['SpecialVideos'] = __DIR__ . '/Videos/SpecialVideos.php';
+$wgAutoloadClasses['SpecialVideosList'] = __DIR__ . '/Videos/SpecialVideosList.php';
 $wgAutoloadClasses['SpecialAddUserEditCounts'] = __DIR__ . '/UserStats/SpecialAddUserEditCounts.php';
 $wgAutoloadClasses['SpecialAddFestivalGift'] = __DIR__ . '/SystemGifts/SpecialAddFestivalGift.php';
 // $wgAutoloadClasses['SpecialFamilyTree'] = __DIR__ . '/FamilyTree/SpecialFamilyTree.php';
 $wgAutoloadClasses['QueryInterface'] = __DIR__ . '/QueryInterface.php';
 $wgAutoloadClasses['TemplateFork'] = __DIR__ . '/TemplateFork/TemplateForkClass.php';
 $wgAutoloadClasses['UploadVideos'] = __DIR__ . '/Videos/UploadVideosClass.php';
+$wgAutoloadClasses['VideoTitle'] = __DIR__ . '/Videos/UploadVideosClass.php';
 
 // New special pages
 // $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
@@ -135,6 +138,7 @@ $wgSpecialPages['CallbackWeibo'] = 'SpecialCallbackWeibo';
 $wgSpecialPages['GlobalSearch'] = 'SpecialGlobalSearch';
 $wgSpecialPages['UploadFiles'] = 'SpecialUploadFiles';
 $wgSpecialPages['Videos'] = 'SpecialVideos';
+$wgSpecialPages['VideosList'] = 'SpecialVideosList';
 $wgSpecialPages['AddUserEditCounts'] = 'SpecialAddUserEditCounts';
 $wgSpecialPages['AddFestivalGift'] = 'SpecialAddFestivalGift';
 // $wgSpecialPages['FamilyTree'] = 'SpecialFamilyTree';
@@ -307,6 +311,10 @@ $wgHooks['AddNewAccount'][] = 'SocialProfileHooks::onAddNewAccount';
 
 // expose config vars to javascript
 $wgHooks['ResourceLoaderGetConfigVars'][] = 'SocialProfileHooks::onResourceLoaderGetConfigVars';
+//Image Hooks
+
+$wgHooks['ImageOpenShowImageInlineBefore'] = 'SocialProfileHooks::onImageOpenShowImageInlineBefore';
+$wgHooks['ImagePageAfterImageLinks'][] = 'SocialProfileHooks::onImagePageAfterImageLinks';
 
 // ResourceLoader module definitions for certain components which do not have
 // their own loader file
@@ -376,6 +384,7 @@ $wgResourceModules['ext.socialprofile.videos.css'] = array(
 	'styles' => 'videos.css',
 	'localBasePath' => __DIR__ . '/Videos',
 	'remoteExtPath' => 'SocialProfile/Videos',
+	'position' => 'top'
 
 );
 

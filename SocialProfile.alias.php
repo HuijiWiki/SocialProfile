@@ -524,6 +524,7 @@ $specialPageAliases['zh-hans'] = array(
 	'AddFestivalGift'=>array('节日成就'),
 	'UploadFiles'=>array('文件上传'),
 	'Videos'=>array('视频上传'),
+	'VideosList'=>array('视频列表'),
 	'FamilyTree'=>array('家族树'),
 );
 
