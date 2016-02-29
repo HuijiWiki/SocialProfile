@@ -5,7 +5,7 @@ var UserBoard = {
 		if ( !perPage ) {
 			perPage = 25;
 		}
-		var message = $('textarea#message').length>0?document.getElementById( 'message' ).value:document.getElementById( 'message' ).textContent,
+		var message = $('#message').text()||$('#message').val(),
 			recipient = document.getElementById( 'user_name_to' ).value,
 			sender = document.getElementById( 'user_name_from' ).value;
 		if ( message && !UserBoard.posted ) {
@@ -20,7 +20,7 @@ var UserBoard = {
 					rsargs: [encodedName, encodedMsg, messageType, perPage]
 				},
 				function( data ) {
-					jQuery('#message').text('');
+					jQuery('.mention-area').text('');
 					UserBoard.posted = 0;
 					var user_1, user_2;
 					if ( sender ) { // it's a board to board

@@ -23,7 +23,7 @@ var UserProfilePage = {
 				function( data ) {
 					jQuery( '#user-page-board' ).html( data );
 					UserProfilePage.posted = 0;
-					jQuery( '#message' ).val( '' );
+					jQuery( '.mention-area' ).text( '' );
 				}
 			);
 		}
