@@ -143,7 +143,6 @@ class SocialProfileHooks {
 	public static function onMimeMagicGuessFromContent( $mimeMagic, &$head, &$tail, $file, &$mime ) {
 		wfDebugLog('SocialProfile', 'onMimeMagicGuessFromContent'.$file);
 		$mime = 'application/pdf';
-		echo 'mime test'; die();
 	}
 
 	public static function onBitmapHandlerTransform( $handler, $image, &$scalerParams, &$mto ) { 
