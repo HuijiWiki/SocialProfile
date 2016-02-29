@@ -143,6 +143,7 @@ class SocialProfileHooks {
 	public static function onMimeMagicGuessFromContent( $mimeMagic, &$head, &$tail, $file, &$mime ) {
 		wfDebugLog('SocialProfile', 'onMimeMagicGuessFromContent'.$file);
 		$mime = 'application/pdf';
+		echo 'mime test'; die();
 	}
 
 	public static function onBitmapHandlerTransform( $handler, $image, &$scalerParams, &$mto ) { 
@@ -160,6 +161,10 @@ class SocialProfileHooks {
 			$vt = VideoTitle::newFromId( $title->getArticleId() );
 			$attribs['data-video'] = $vt->getPlayerUrl();
 			$attribs['class'] = 'video-player';
+			$attribs['data-video-link'] = $vt->getVideoLink();
+			$attribs['data-video-from'] = $vt->getVideoSource();
+			$attribs['data-video-title'] = $vt->getText();
+			$attribs['data-video-duration'] = $vt->getDuration();
 		}
 	}
 	public static function onUploadComplete(&$uploadBase){
@@ -172,15 +177,22 @@ class SocialProfileHooks {
 	}
 
 	public static function onImageOpenShowImageInlineBefore($imagePage, &$out){
-		$html = '<p>this is a fest</p>';
-		$out->addHtml($html);
+		if (VideoTitle::isVideoTitle($imagePage->getTitle())){
+			$vt = VideoTitle::newFromId($imagePage->getTitle()->getArticleId());
+			$source = $vt->getVideoSource();
+			$str = '本文件代表了一部来自'.$source.'的视频&nbsp;';
+			$out->addJsConfigVars('wgVideoLink', $vt->getVideoLink());
+			$out->addJsConfigVars('wgVideoSource', $source);
+			$out->setSubtitle( $str );
+			$out->addModules('ext.socialprofile.videopage.js');
+		}
 	}
 
 	public static function onImagePageAfterImageLinks($imagePage, &$html){
-		if ( VideoTitle::isVideoTitle($imagePage->getTitle() ) ){
-			$html = '<p>this is a test</p>';
+		// if ( VideoTitle::isVideoTitle($imagePage->getTitle() ) ){
+		// 	$html = '<p>this is a test</p>';
 
-		}
+		// }
 	}
 
 }

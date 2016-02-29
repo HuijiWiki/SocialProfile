@@ -392,6 +392,7 @@ class UserProfilePage extends Article {
 				    	$sunDay = UserEditBox::getSunday($mon,$Sundate, 1);
 				    }
 				}
+				$x = '';
 			    foreach ($translate as $key => $value) {
 			    	if ( strtotime($key) == strtotime($sunDay)) {
 			    		$x = $value;
@@ -1705,10 +1706,12 @@ class UserProfilePage extends Article {
 						$strid = $title->getText();
 					}
 					wfDebug('Setting $UUID = '.$strid);
+					wfErrorLog($title->getFullURL(),'/var/log/mediawiki/SocialProfile.log');
 					$id = UUID::create(strtolower( $strid ));
 					$pc = PostCollection::newFromId($id);
 					$pcr = $pc->getRoot()->getLastRevision();
 					$topicDisplayText = Container::get( 'templating' )->getContent( $pcr, 'wikitext' );
+					
 					// 1.27 
 					// $topicDisplayText = Utils::htmlToPlaintext(
 					// 	Container::get( 'templating' )->getContent( $pcr, 'topic-title-html' )
@@ -2152,7 +2155,7 @@ class UserProfilePage extends Article {
 								wfMessage( 'userboard_private' )->escaped() .
 							'</option>
 						</select><p><div class="form-group" style="padding:14px;">
-                                      <p class="lead emoji-picker-container"><textarea name="message" id="message" class="text-area mention-area" rows="4" contenteditable="true"></textarea></p>
+                                      <div class="lead emoji-picker-container"><div name="message" id="message" class="text-area mention-area" rows="4" contenteditable="true"  data-emojiable="true" data-emoji-input="unicode"></div></div>
                                     </div>
 						
 						<div class="user-page-message-box-button">

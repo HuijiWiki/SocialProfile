@@ -10,9 +10,9 @@ var UserProfilePage = {
 
 	sendMessage: function() {
 		var userTo = decodeURIComponent( mw.config.get( 'wgTitle' ) ), //document.getElementById( 'user_name_to' ).value;
-			encMsg = encodeURIComponent( document.getElementById( 'message' ).value ),
+			encMsg = encodeURIComponent( document.getElementById( 'message' ).value|| document.getElementById( 'message' ).textContent ),
 			msgType = document.getElementById( 'message_type' ).value;
-		if ( document.getElementById( 'message' ).value && !UserProfilePage.posted ) {
+		if ( document.getElementById( 'message' ).value|| document.getElementById( 'message' ).textContent  && !UserProfilePage.posted ) {
 			UserProfilePage.posted = 1;
 			jQuery.post(
 				mw.util.wikiScript(), {

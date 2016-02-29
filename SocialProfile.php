@@ -313,7 +313,7 @@ $wgHooks['AddNewAccount'][] = 'SocialProfileHooks::onAddNewAccount';
 $wgHooks['ResourceLoaderGetConfigVars'][] = 'SocialProfileHooks::onResourceLoaderGetConfigVars';
 //Image Hooks
 
-$wgHooks['ImageOpenShowImageInlineBefore'] = 'SocialProfileHooks::onImageOpenShowImageInlineBefore';
+$wgHooks['ImageOpenShowImageInlineBefore'][] = 'SocialProfileHooks::onImageOpenShowImageInlineBefore';
 $wgHooks['ImagePageAfterImageLinks'][] = 'SocialProfileHooks::onImagePageAfterImageLinks';
 
 // ResourceLoader module definitions for certain components which do not have
@@ -393,7 +393,17 @@ $wgResourceModules['ext.socialprofile.videos.js'] = array(
 	'dependencies' => 'mediawiki.notification',
 	'localBasePath' => __DIR__ . '/Videos',
 	'remoteExtPath' => 'SocialProfile/Videos',
+	'position' => 'bottom'
 );
+
+$wgResourceModules['ext.socialprofile.videopage.js'] = array(
+	'scripts' => 'VideoPage.js',
+	'dependencies' => 'mediawiki.notification',
+	'localBasePath' => __DIR__ . '/Videos',
+	'remoteExtPath' => 'SocialProfile/Videos',
+	'position' => 'bottom'
+);
+
 
 //familytree
 $wgResourceModules['ext.socialprofile.familytree.css'] = array(
