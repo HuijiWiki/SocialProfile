@@ -138,85 +138,92 @@ jQuery( document ).ready( function() {
 
 
     //修改个人资料
-    $.fn.editable.defaults.url = '/index.php';
-    $('.form-location.edit').editable({
-        type: 'text',
-        send: 'always',
-        params: function(params){
-            var data = {};
-            data['action']='ajax';
-            data['rs'] = 'wfUpdateUserStatus';
-            data['rsargs'] = [mw.config.get('wgTitle'),'up_location_city',params.value];
-            return data;
-        },
-        title: '居住城市'
-    });
-    var birthdate = $('.form-date').data('birthday');
-    $('.form-date.edit').editable({
-        type: 'date',
-        send: 'always',
-        format: 'yyyy-mm-dd',
-        value: birthdate,
-        viewformat: 'dd/mm/yyyy',
-        datepicker: {
-            weekStart: 1
-        },
-        params: function(params){
-            console.log(params);
-            var data = {};
-            data['action']='ajax';
-            data['rs'] = 'wfUpdateUserStatus';
-            data['rsargs'] = [mw.config.get('wgTitle'),'up_birthday',params.value];
-            return data;
-        },
-        display: function(value){
-            var age = new Date().getFullYear()-JSON.stringify(value).substring(1).split('-')[0]+'岁';
-            $(this).text(age);
-            if(value == null){
-                $(this).text('设置生日');
-            }
-        }
-    });
-    var sex = $('.form-sex').data('sex');
-    $('.form-sex.edit').editable({
-        type: 'select',
-        send: 'always',
-        value: sex,
-        source: [
-            {value: 'unkown', text: '无', val:'♂/♀'},
-            {value: 'male', text: '男', val:'♂'},
-            {value: 'female', text: '女', val:'♀'}
-        ],
-        params: function(params){
-            console.log(params);
-            var data = {};
-            data['action']='ajax';
-            data['rs'] = 'wfUpdateUserStatus';
-            data['rsargs'] = [mw.config.get('wgTitle'),'gender',params.value];
-            return data;
-        },
-        display: function(value, sourceData) {
-            var colors = {"unkown": "gray", "male": "green", "female": "blue"},
-                elem = $.grep(sourceData, function(o){return o.value == value;});
-            if(elem.length) {
-                $(this).text(elem[0].val).css("color", colors[value]);
-            } else {
-                $(this).text('♂/♀');
-            }
-        }
-    });
-    $('.form-autograph.edit').editable({
-        type:'textarea',
-        send: 'always',
-        params: function(params){
-            var data = {};
-            data['action']='ajax';
-            data['rs'] = 'wfUpdateUserStatus';
-            data['rsargs'] = [mw.config.get('wgTitle'),'up_about',params.value];
-            return data;
-        },
-        title:'个性签名'
-    });
+    
+    if ( !jQuery( '.avatar-view.upload-tool' ).length ){
+
+        mw.loader.using('skins.editable', function(){
+            $.fn.editable.defaults.url = '/index.php';
+            $('.form-location.edit').editable({
+                type: 'text',
+                send: 'always',
+                params: function(params){
+                    var data = {};
+                    data['action']='ajax';
+                    data['rs'] = 'wfUpdateUserStatus';
+                    data['rsargs'] = [mw.config.get('wgTitle'),'up_location_city',params.value];
+                    return data;
+                },
+                title: '居住城市'
+            });
+            var birthdate = $('.form-date').data('birthday');
+            $('.form-date.edit').editable({
+                type: 'date',
+                send: 'always',
+                format: 'yyyy-mm-dd',
+                value: birthdate,
+                viewformat: 'dd/mm/yyyy',
+                datepicker: {
+                    weekStart: 1
+                },
+                params: function(params){
+                    console.log(params);
+                    var data = {};
+                    data['action']='ajax';
+                    data['rs'] = 'wfUpdateUserStatus';
+                    data['rsargs'] = [mw.config.get('wgTitle'),'up_birthday',params.value];
+                    return data;
+                },
+                display: function(value){
+                    var age = new Date().getFullYear()-JSON.stringify(value).substring(1).split('-')[0]+'岁';
+                    $(this).text(age);
+                    if(value == null){
+                        $(this).text('设置生日');
+                    }
+                }
+            });
+            var sex = $('.form-sex').data('sex');
+            $('.form-sex.edit').editable({
+                type: 'select',
+                send: 'always',
+                value: sex,
+                source: [
+                    {value: 'unkown', text: '无', val:'♂/♀'},
+                    {value: 'male', text: '男', val:'♂'},
+                    {value: 'female', text: '女', val:'♀'}
+                ],
+                params: function(params){
+                    console.log(params);
+                    var data = {};
+                    data['action']='ajax';
+                    data['rs'] = 'wfUpdateUserStatus';
+                    data['rsargs'] = [mw.config.get('wgTitle'),'gender',params.value];
+                    return data;
+                },
+                display: function(value, sourceData) {
+                    var colors = {"unkown": "gray", "male": "green", "female": "blue"},
+                        elem = $.grep(sourceData, function(o){return o.value == value;});
+                    if(elem.length) {
+                        $(this).text(elem[0].val).css("color", colors[value]);
+                    } else {
+                        $(this).text('♂/♀');
+                    }
+                }
+            });
+            $('.form-autograph.edit').editable({
+                type:'textarea',
+                send: 'always',
+                params: function(params){
+                    var data = {};
+                    data['action']='ajax';
+                    data['rs'] = 'wfUpdateUserStatus';
+                    data['rsargs'] = [mw.config.get('wgTitle'),'up_about',params.value];
+                    return data;
+                },
+                title:'个性签名'
+            });
+        });
+    }
+
     if(!$('.form-date').hasClass('edit')&&$('.form-date').data('birthday')!=''){
        var age = new Date().getFullYear()-$('.form-date').data('birthday').split('-')[0]+'岁';
         $('.form-date').text(age);
