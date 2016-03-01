@@ -18,9 +18,7 @@ function insertEditRecord($article, $rev, $baseID, $user ){
 		'articleId' => $article->getId(),
 		'titleName' => $article->getTitle()->getText()
 	);
-	if($wgIsProduction == false){
-	wfErrorLog($wgSitename."d112","/var/log/mediawiki/SocialProfile.log");
-        }
+//	wfErrorLog($wgSitename."d112","/var/log/mediawiki/SocialProfile.log");
 	$post_data_string = '';
 	foreach($post_data as $key => $value){
 		$post_data_string .= $key.'='.$value.'&';
