@@ -377,16 +377,33 @@ Class VideoTitle extends Title{
 	 */
 	static function isVideoTitle(Title $title){
 		if ($title->isExternal()){
-			//Check external title database
-			$dbr = wfGetDB( DB_SLAVE );
-			$prefix = $title->getInterwiki();
-			if ($prefix == 'www'){
-				$dbr->selectDB('huiji_home');
-				$DBprefix = '';
+			if ($title->getInterwiki() == 'www'){
+				$DB = 'huiji_home';
 			} else {
-				$dbr->selectDB('huiji_sites');
-				$DBprefix = str_replace('.', '_', $prefix);
+				$DB = 'huiji_sites-'.str_replace('.', '_', $title->getInterwiki());
 			}
+			wfErrorLog($title->getDbKey().$title->getInterwiki(), '/var/log/mediawiki/SocialProfile.log');
+			$dbr = wfGetDB( DB_SLAVE, '', $DB );
+			$res = $dbr->select(
+						'page',
+						'page_id',
+						array(
+							'page_title' => $title->getDbKey(),
+							'page_namespace' => NS_FILE,
+						),
+						__METHOD__
+					);
+			if ( $res ){
+				foreach ($res as $key => $value) {
+					$pageId = $value->page_id;
+				}			
+			} else {
+				return false;
+			}
+			if (!isset($pageId)){
+				return false;
+			}
+
 			$res = $dbr->select(
 				'video_page',
 				array(
@@ -402,10 +419,8 @@ Class VideoTitle extends Title{
 				$videoPageId = $value->page_id;
 			}
 			if ( $videoPageId ) {
-				$wgMemc->set( $key, $videoPageId );
 				return true;
 			}else{
-				$wgMemc->set( $key, 0 );
 				return false;
 			}
 		} else {
@@ -489,6 +504,125 @@ Class VideoTitle extends Title{
        $t->loadFromRow( $row );
        return $t;
    }
+	public static function newFromText( $text, $defaultNamespace = NS_MAIN ) {
+		if ( is_object( $text ) ) {
+		   throw new InvalidArgumentException( '$text must be a string.' );
+		}
+		// DWIM: Integers can be passed in here when page titles are used as array keys.
+		if ( $text !== null && !is_string( $text ) && !is_int( $text ) ) {
+		   wfDebugLog( 'T76305', wfGetAllCallers( 5 ) );
+		   return null;
+		}
+		if ( $text === null ) {
+		   return null;
+		}
+
+		try {
+		   return self::newFromTextThrow( strval( $text ), $defaultNamespace );
+		} catch ( MalformedTitleException $ex ) {
+		   return null;
+		}
+	}
+
+	public static function newFromTextThrow( $text, $defaultNamespace = NS_MAIN ) {
+		if ( is_object( $text ) ) {
+		   throw new MWException( '$text must be a string, given an object' );
+		}
+
+	   	// Convert things like &eacute; &#257; or &#x3017; into normalized (bug 14952) text
+	   	$filteredText = Sanitizer::decodeCharReferencesAndNormalize( $text );
+
+		$t = new VideoTitle();
+		$t->mDbkeyform = strtr( $filteredText, ' ', '_' );
+		$t->mDefaultNamespace = intval( $defaultNamespace );
+
+		$t->secureAndSplit();
+		if ($t->isExternal()){
+			$t->loadFromExternalDB($t->getInterwiki(), $t->mDbkeyform);
+		}
+	 	return $t;
+	}
+	private function secureAndSplit() {
+	  # Initialisation
+	  $this->mInterwiki = '';
+	  $this->mFragment = '';
+	  $this->mNamespace = $this->mDefaultNamespace; # Usually NS_MAIN
+
+	  $dbkey = $this->mDbkeyform;
+
+	  // @note: splitTitleString() is a temporary hack to allow MediaWikiTitleCodec to share
+	  //        the parsing code with Title, while avoiding massive refactoring.
+	  // @todo: get rid of secureAndSplit, refactor parsing code.
+	  $titleParser = self::getMediaWikiTitleCodec();
+	  // MalformedTitleException can be thrown here
+	  $parts = $titleParser->splitTitleString( $dbkey, $this->getDefaultNamespace() );
+
+	  # Fill fields
+	  $this->setFragment( '#' . $parts['fragment'] );
+	  $this->mInterwiki = $parts['interwiki'];
+	  $this->mLocalInterwiki = $parts['local_interwiki'];
+	  $this->mNamespace = $parts['namespace'];
+	  $this->mUserCaseDBKey = $parts['user_case_dbkey'];
+
+	  $this->mDbkeyform = $parts['dbkey'];
+	  $this->mUrlform = wfUrlencode( $this->mDbkeyform );
+	  $this->mTextform = strtr( $this->mDbkeyform, '_', ' ' );
+
+	  # We already know that some pages won't be in the database!
+	  if ( $this->isExternal() || $this->mNamespace == NS_SPECIAL ) {
+	      $this->mArticleID = 0;
+	  }
+
+	  return true;
+	}
+
+	private static function getMediaWikiTitleCodec() {
+	   global $wgContLang, $wgLocalInterwikis;
+
+	   static $titleCodec = null;
+	   static $titleCodecFingerprint = null;
+
+	   // $wgContLang and $wgLocalInterwikis may change (especially while testing),
+	   // make sure we are using the right one. To detect changes over the course
+	   // of a request, we remember a fingerprint of the config used to create the
+	   // codec singleton, and re-create it if the fingerprint doesn't match.
+	   $fingerprint = spl_object_hash( $wgContLang ) . '|' . join( '+', $wgLocalInterwikis );
+
+	   if ( $fingerprint !== $titleCodecFingerprint ) {
+	       $titleCodec = null;
+	   }
+
+	   if ( !$titleCodec ) {
+	       $titleCodec = new MediaWikiTitleCodec(
+	           $wgContLang,
+	           GenderCache::singleton(),
+	           $wgLocalInterwikis
+	       );
+	       $titleCodecFingerprint = $fingerprint;
+	   }
+
+	   return $titleCodec;
+	}
+
+	private static function getTitleFormatter() {
+	   // NOTE: we know that getMediaWikiTitleCodec() returns a MediaWikiTitleCodec,
+	   //      which implements TitleFormatter.
+	   return self::getMediaWikiTitleCodec();
+	}
+	/**
+	 *
+	 */
+	public function loadFromExternalDB( $prefix, $text ) {
+		$video_info = self::getVideoInfoByPrefixAndText( $prefix, $text );
+		$this->mDuration = !is_null( $video_info['rev_video_duration'] ) ? $video_info['rev_video_duration'] : '';
+		$this->mTags = !is_null( $video_info['rev_video_tags'] ) ? $video_info['rev_video_tags'] : '';
+		$this->mVideoSource = !is_null( $video_info['rev_video_from'] ) ? $video_info['rev_video_from'] : '';
+		$this->mExternalId = !is_null( $video_info['rev_video_id'] ) ? $video_info['rev_video_id'] : '';
+		$this->mPlayerUrl = !is_null( $video_info['rev_video_player_url'] ) ? $video_info['rev_video_player_url'] : '';
+		$this->mAddedByUser = !is_null( $video_info['rev_upload_user'] ) ? $video_info['rev_upload_user'] : '';
+		$this->mAddedOnDate = !is_null( $video_info['rev_upload_date'] ) ? $video_info['rev_upload_date'] : '';
+		$this->mVideoRevisionId = !is_null( $video_info['rev_id'] ) ? $video_info['rev_id'] : '';
+	}
 	/**
 	 *
 	 */
@@ -590,15 +724,95 @@ Class VideoTitle extends Title{
 	/**
 	 * Generate HTML ready thumbnails.
 	 */
-	public function getThumbnail($w = 200, $h = 100, $repo=null){
+	public function getThumbnail($w = 200, $h = 100, $repo = null, $asyn = true){
 		global $wgLocalFileRepo;
 		if ($repo == null){
 			$repo = $wgLocalFileRepo;
 		}
 		$file = LocalFile::newFromTitle($this, new LocalRepo($repo));
+		$class= $asyn?"video-player video-player-asyn":"video-player";
         $output ='
-        <a href="#" class="video video-thumbnail image"><img class="video-player" src="'.htmlspecialchars( $file->createThumb($w, $h) ).'" alt="'.$this->getText().'" data-video-title="'.$this->getText().'" data-video="'.$this->getPlayerUrl().' data-video-from="'.$this->getVideoSource().'" data-video-link="'.$this->getVideoLink().'" data-video-duration="'.$this->getDuration().'" /></a>';
+        <a href="#" class="video video-thumbnail image"><img class="'.$class.'" src="'.htmlspecialchars( $file->createThumb($w, $h) ).'" alt="'.$this->getText().'" data-video-title="'.$this->getText().'" data-video="'.$this->getPlayerUrl().'" data-video-from="'.$this->getVideoSource().'" data-video-link="'.$this->getVideoLink().'" data-video-duration="'.$this->getDuration().'" /></a>';
 		return $output;
+	}
+	static function getVideoInfoByPrefixAndText( $prefix, $text ){
+		if ($prefix == 'www'){
+			$DB = 'huiji_home';
+		} else {
+			$DB = 'huiji_sites-'.str_replace('.', '_', $prefix);
+		}
+		wfErrorLog($DB, '/var/log/mediawiki/SocialProfile.log');
+		$dbr = wfGetDB( DB_SLAVE, '', $DB );
+		$res = $dbr->select(
+					'page',
+					'page_id',
+					array(
+						'page_title' => $text,
+						'page_namespace' => NS_FILE,
+					),
+					__METHOD__
+				);
+		if ( $res ){
+			foreach ($res as $key => $value) {
+				$pageId = $value->page_id;
+			}			
+		} else {
+			return;
+		}
+		$res = $dbr->select(
+					'video_page',
+					array(
+						'revision_id'
+					),
+					array(
+						'page_id' => $pageId,
+					),
+					__METHOD__
+				);
+		if ( $res ) {
+			foreach ($res as $key => $value) {
+				$revisionId = $value->revision_id;
+			}
+			$req = $dbr->select(
+				'video_revision',
+				array(
+					'rev_id',
+					'rev_page_id',
+					'rev_video_id',
+					'rev_video_title',
+					'rev_video_from',
+					'rev_video_player_url',
+					'rev_video_tags',
+					'rev_video_duration',
+					'rev_upload_user',
+					'rev_upload_date'
+				),
+				array(
+					'rev_id' => $revisionId,
+				),
+				__METHOD__
+			);
+			if ( $req ) {
+				$videoInfo = array();
+				foreach ($req as $key => $value) {
+					$videoInfo = array(
+									'rev_id' => $revisionId,
+									'rev_page_id' => $value->rev_page_id,
+									'rev_video_id' => $value->rev_video_id,
+									'rev_video_title' => $value->rev_video_title,
+									'rev_video_from' => $value->rev_video_from,
+									'rev_video_player_url' => $value->rev_video_player_url,
+									'rev_video_tags' => $value->rev_video_tags,
+									'rev_video_duration' => $value->rev_video_duration,
+									'rev_upload_user' => $value->rev_upload_user,
+									'rev_upload_date' => $value->rev_upload_date
+								);
+				}
+			}
+			return $videoInfo;
+			
+		}
+
 	}
 
 	static function getVideoInfoByPageId( $pageId ){

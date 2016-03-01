@@ -112,7 +112,7 @@ function wfUserActivityResponse( $username, $filter, $item_type, $limit, $earlie
 				/* There can be a very weird bug that leads to $item['data'] == 1 */
 				/* This is a temprary fix. */
 				if ($item['data'] == 1 ){
-					wfDebug("feed error: type:".$item_type['type']."time:".$item['timestamp']);
+					//wfDebug("feed error: type:".$item_type['type']."time:".$item['timestamp']);
 					continue;
 				}
 

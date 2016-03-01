@@ -159,7 +159,7 @@ class SocialProfileHooks {
 		if ( $isVideoTitle ){
 			$vt = VideoTitle::newFromId( $title->getArticleId() );
 			$attribs['data-video'] = $vt->getPlayerUrl();
-			$attribs['class'] = 'video-player';
+			$attribs['class'] = 'video-player video-player-asyn';
 			$attribs['data-video-link'] = $vt->getVideoLink();
 			$attribs['data-video-from'] = $vt->getVideoSource();
 			$attribs['data-video-title'] = $vt->getText();

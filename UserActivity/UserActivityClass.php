@@ -1566,7 +1566,8 @@ class UserActivity {
 			} elseif ($type == 'user_site_follow'){
 				$page_title = Title::newFromText( $page_name.':' );
 			} elseif ($type == 'image_upload'){
-				$page_title = Title::newFromText( $page_name, NS_FILE );
+					$safe_page_name = mb_substr($page_name, mb_strpos($page_name, ':')+1);
+					$page_title = Title::makeTitle( NS_FILE, $safe_page_name, '', $page_data['prefix'][0] );
 			} else {
 				$page_title = Title::newFromText( $page_name );
 			} 
@@ -1646,7 +1647,8 @@ class UserActivity {
 									}  elseif ($type == 'user_site_follow'){
 										$page_title2 = Title::newFromText( $page_name2.':' );
 									}  elseif ($type == 'image_upload'){
-										$page_title2 = Title::newFromText( $page_name2, NS_FILE );
+										$safe_page_name2 = mb_substr($page_name2, mb_strpos($page_name2, ':')+1);
+										$page_title2 = Title::makeTitle( NS_FILE, $safe_page_name2, '', $page_data2['prefix'][0] );
 										$count_actions2 = 1;
 									}  else {
 										$page_title2 = Title::newFromText( $page_name2 );
@@ -1913,7 +1915,8 @@ class UserActivity {
 		if ($page_title instanceOf Title){
 			if ($page_title->inNamespace( NS_FILE )){
 				if (VideoTitle::isVideoTitle($page_title)){
-					$vt = VideoTitle::newFromId($page_title->getArticleId());
+					$vt = VideoTitle::makeTitle(NS_FILE, $page_title->getText(), '', $page_data['prefix'][0] );
+					$vt->loadFromExternalDB($page_data['prefix'][0], $page_title->getDbKey());
 					return $vt->getThumbnail(200, 100, $this->streamlineForeignDBRepo($page_data['prefix'][0]));
 				}
 				$repo = new ForeignDBRepo($this->streamlineForeignDBRepo($page_data['prefix'][0]));
