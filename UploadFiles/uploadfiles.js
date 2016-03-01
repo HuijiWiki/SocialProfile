@@ -221,16 +221,18 @@ var uploadfiles = {
     },
     funSelfDescription: function(){
         $('#uploadfiles').on('click','.opacity',function(){
-            $('.self-img-description').modal('show');
             var that = $(this);
+            $('.opacity').removeClass('des-active');
+            $(this).addClass('des-active');
+            $('.self-img-description').modal('show');
             $('#self-des-text').val(that.siblings('img').attr('data-description'));
             $('#self-des-category').val(that.siblings('img').attr('data-category'));
-            $('.self-des-save').click(function(){
-                that.siblings('img').attr('data-description',$('#self-des-text').val());
-                that.siblings('img').attr('data-category',$('#self-des-category').val());
-            });
+
         });
         $('.self-des-save').click(function(){
+            $('.des-active').siblings('img').attr('data-description',$('#self-des-text').val());
+            $('.des-active').siblings('img').attr('data-category',$('#self-des-category').val());
+            $('.opacity').removeClass('des-active');
             mw.notification.notify('描述保存成功');
             $('.self-img-description').modal('hide');
         });

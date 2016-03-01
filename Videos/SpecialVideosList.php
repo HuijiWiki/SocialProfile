@@ -44,17 +44,16 @@
   	$output .= "视频列表";
     $output .= '<div class="clear"><ul class="video-list">';
     foreach ($res_arr as $key => $value) {
-        $title = Title::newFromID($value['rev_page_id']);
-        $userPage = Title::makeTitle( NS_USER, $value['rev_upload_user'] );
+        $vt = VideoTitle::newFromID($value['rev_page_id']);
+        // print_r($vt);die();
+        $userPage = Title::makeTitle( NS_USER, $vt->getAddedByUser() );
         $userPageURL = htmlspecialchars( $userPage->getFullURL() );
-        $file = LocalFile::newFromTitle($title, new LocalRepo($wgLocalFileRepo));
-        $output .='<li>
-        <a href="#" class="video video-thumbnail image lightbox hide-play fluid medium "><img class="video-player" src="'.htmlspecialchars( $file->createThumb(200,100) ).'" alt="'.$value['rev_video_title'].'" data-video="'.$value['rev_video_player_url'].'" /><span class="video-duration" itemprop="duration">'.gmstrftime('%H:%M:%S',$value['rev_video_duration']).'</span><span class="play-circle"></span></a>   
-         
+        $file = LocalFile::newFromTitle($vt, new LocalRepo($wgLocalFileRepo));
+        $output .='<li>'.$vt->getThumbnail().'
         <div class="info">
-         <a href="'.htmlspecialchars( $file->getDescriptionUrl() ).'">'.$value['rev_video_title'].'</a><br>
-          用户:<a href="'.$userPageURL.'" >'.$value['rev_upload_user'].'</a><br>
-          <span class="upload-date">上传时间:'.$value['rev_upload_date'].'</span>
+         <a href="'.htmlspecialchars( $file->getDescriptionUrl() ).'">'.$vt->getText().'</a><br>
+          用户:<a href="'.$userPageURL.'" >'.$vt->getAddedByUser().'</a><br>
+          <span class="upload-date">上传时间:'.$vt->getAddedOnDate().'</span>
         </div>
             </li>';
     }

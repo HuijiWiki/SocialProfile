@@ -16,6 +16,9 @@ jQuery( document ).ready( function() {
 		var removePlaceholder = function(){
 			jQuery('.placeholder').remove();
 		}
+		mw.loader.using('skins.bootstrapmediawiki.bottom', function(){
+			window.videoInitialize();
+		});
 		return function(){
 			showPlaceholder();
 			console.log( username + filter + item_type + limit + continuation);

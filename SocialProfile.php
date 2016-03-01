@@ -502,6 +502,7 @@ $wgResourceModules['ext.socialprofile.useractivity.js'] = array(
 	'scripts' => array(
 					'UserActivity.js',
 				),
+	'dependencies' => 'skins.bootstrapmediawiki.bottom',
 	'localBasePath' => __DIR__ . '/UserActivity',
 	'remoteExtPath' => 'SocialProfile/UserActivity',
 );

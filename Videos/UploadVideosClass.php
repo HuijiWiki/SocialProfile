@@ -376,8 +376,42 @@ Class VideoTitle extends Title{
 	 * @param Title $title: a title object in mediawiki.
 	 */
 	static function isVideoTitle(Title $title){
-		$pageId = $title->getArticleID();
-		return self::isVideoTitleId($pageId);
+		if ($title->isExternal()){
+			//Check external title database
+			$dbr = wfGetDB( DB_SLAVE );
+			$prefix = $title->getInterwiki();
+			if ($prefix == 'www'){
+				$dbr->selectDB('huiji_home');
+				$DBprefix = '';
+			} else {
+				$dbr->selectDB('huiji_sites');
+				$DBprefix = str_replace('.', '_', $prefix);
+			}
+			$res = $dbr->select(
+				'video_page',
+				array(
+					'page_id'
+				),
+				array(
+					'page_id' => $pageId
+				),
+				__METHOD__
+			);
+			$videoPageId = false;
+			foreach ($res as $key => $value) {
+				$videoPageId = $value->page_id;
+			}
+			if ( $videoPageId ) {
+				$wgMemc->set( $key, $videoPageId );
+				return true;
+			}else{
+				$wgMemc->set( $key, 0 );
+				return false;
+			}
+		} else {
+			$pageId = $title->getArticleID();
+			return self::isVideoTitleId($pageId);			
+		}
 	}
 	static function isVideoTitleId($pageId){
 		global $wgMemc;
@@ -552,6 +586,19 @@ Class VideoTitle extends Title{
 		if ( $this->getVideoSource() == 'youku') {
 			return self::YOUKULINK.$this->getExternalId();
 		}
+	}
+	/**
+	 * Generate HTML ready thumbnails.
+	 */
+	public function getThumbnail($w = 200, $h = 100, $repo=null){
+		global $wgLocalFileRepo;
+		if ($repo == null){
+			$repo = $wgLocalFileRepo;
+		}
+		$file = LocalFile::newFromTitle($this, new LocalRepo($repo));
+        $output ='
+        <a href="#" class="video video-thumbnail image"><img class="video-player" src="'.htmlspecialchars( $file->createThumb($w, $h) ).'" alt="'.$this->getText().'" data-video-title="'.$this->getText().'" data-video="'.$this->getPlayerUrl().' data-video-from="'.$this->getVideoSource().'" data-video-link="'.$this->getVideoLink().'" data-video-duration="'.$this->getDuration().'" /></a>';
+		return $output;
 	}
 
 	static function getVideoInfoByPageId( $pageId ){
