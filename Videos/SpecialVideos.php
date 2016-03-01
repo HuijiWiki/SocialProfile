@@ -41,7 +41,7 @@ class SpecialVideos extends SpecialPage{
     $line = wfMessage('videos-info')->parse();
         
         $output .="<div class='gray'>".$line."</div>";
-        $output .="<div>视频URL<input type='text' class='video-url' id='uploadvideos' name='uploadvideos' style='width: 500px;'><br>";
+        $output .="<div>视频URL<input type='text' class='video-url' id='uploadvideos' name='uploadvideos'><br>";
         if( !empty($reupload) ){
             if( !$wgUser->isAllowed('reupload') ){
                 $out->permissionRequired( 'reupload' );
@@ -52,7 +52,7 @@ class SpecialVideos extends SpecialPage{
         }else{
             $output .="视频名<input type='text' class='video-name' name='upload-video-name'>";
         }
-        $output .="</div><div class='upload-video-btn'><div class='btn mw-ui-button mw-ui-constructive' id='upload-video-btn'>添加</div>";
+        $output .="</div><div class='upload-video-btn'><button class='btn mw-ui-button mw-ui-constructive' id='upload-video-btn' disabled>添加</button></div>";
 
         $out->addHTML( $output );
 

@@ -8,7 +8,7 @@ $wgHooks['NewRevisionFromEditComplete'][] = 'insertEditRecord';
 
 
 function insertEditRecord($article, $rev, $baseID, $user ){
-	global $wgHuijiPrefix, $wgSitename;
+	global $wgHuijiPrefix, $wgSitename, $wgIsProduction;
 	$url = 'http://huijidata.com:50007/insertEditRecord/';
 	$post_data = array(
 		'userName' => $user->getName(),
@@ -18,8 +18,9 @@ function insertEditRecord($article, $rev, $baseID, $user ){
 		'articleId' => $article->getId(),
 		'titleName' => $article->getTitle()->getText()
 	);
-
-//	wfErrorLog($article->getId()."    ".$article->getTitle()->getText(),"/var/log/mediawiki/SocialProfile.log");
+	if($wgIsProduction == false){
+	wfErrorLog($wgSitename."d112","/var/log/mediawiki/SocialProfile.log");
+        }
 	$post_data_string = '';
 	foreach($post_data as $key => $value){
 		$post_data_string .= $key.'='.$value.'&';

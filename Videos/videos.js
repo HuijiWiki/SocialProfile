@@ -1,3 +1,20 @@
+var setVideoStatus =  (function(){
+    var videoSubmitted = false;
+    return function (isSubmitted){
+        if (isSubmitted == ''){
+            return videoSubmitted;
+        }
+        videoSubmitted = isSubmitted;
+        $('#upload-video-btn').prop('disabled', videoSubmitted);
+        if (videoSubmitted){
+            $('#upload-video-btn').html('<i class="fa fa-spinner fa-spin"></i>添加');
+        } else {
+            $('#upload-video-btn').html('添加');
+        }
+        console.log(videoSubmitted);
+        return videoSubmitted;
+    }
+})();
 function checkName(title,url,token,video_from, video_id, video_player_url, video_tags, video_duration, n){
     $.post('/api.php',{
         action:'upload',
@@ -22,18 +39,22 @@ function checkName(title,url,token,video_from, video_id, video_player_url, video
                         ignorewarnings: true,
                         format: 'json'
                     },function(data){
+                        var redirectTarget = '/wiki/File:'+data.upload.filename;
                         $.post(
                             mw.util.wikiScript(), {
                                 action: 'ajax',
                                 rs: 'wfinsertVideoInfo',
-                                rsargs: [video_from, title + n + '.video', video_id, title + n, video_player_url, video_tags, video_duration]
+                                rsargs: [video_from, data.upload.filename, video_id, title, video_player_url, video_tags, video_duration]
                             },
                             function (data) {
                                 var res = jQuery.parseJSON(data);
                                 if (res.success) {
                                     mw.notification.notify('上传成功');
+                                    setVideoStatus(false);
+                                    window.location = redirectTarget;
                                 } else {
                                     mw.notification.notify('上传失败');
+                                    setVideoStatus(false);
                                 }
                             }
                         );
@@ -45,18 +66,23 @@ function checkName(title,url,token,video_from, video_id, video_player_url, video
                  * api.php  upload file bigThumbnail as image
                  * named as video_title
                  */
+
+                var redirectTarget = '/wiki/File:'+data.upload.filename;
                 $.post(
                     mw.util.wikiScript(), {
                         action: 'ajax',
                         rs: 'wfinsertVideoInfo',
-                        rsargs: [video_from, title + n + '.video', video_id, title + n, video_player_url, video_tags, video_duration]
+                        rsargs: [video_from, data.upload.filename, video_id, title, video_player_url, video_tags, video_duration]
                     },
                     function (data) {
                         var res = jQuery.parseJSON(data);
                         if (res.success) {
                             mw.notification.notify('上传成功');
+                            setVideoStatus(false);
+                            window.location = redirectTarget;
                         } else {
                             mw.notification.notify('上传失败');
+                            setVideoStatus(false);
                         }
                     }
                 );
@@ -67,11 +93,26 @@ function checkName(title,url,token,video_from, video_id, video_player_url, video
     });
 }
 $(function(){
+    $('#uploadvideos').keyup(function() {
+        if($(this).val() != '') {
+           $('#upload-video-btn').prop('disabled', false);
+        }
+     });
 	$('#upload-video-btn').click(function(){
+        if ($('#uploadvideos').val() == ''){
+            mw.notification.notify('请输入视频URL');
+            return;
+        }
+        setVideoStatus(true);
+
 		var url = $('#uploadvideos').val();
 		//check url & get video_id
 		var regex = /\.(\w+)\.com/;
 		var match = url.match(regex);
+        if (!match){
+            mw.notification.notify('上传失败（URL不支持）');
+            return;
+        }
 		switch(match[1]){
 			case 'youku':
 				var regex2 = /id_([\w]+?)(?:==|\.html)/;
@@ -80,18 +121,32 @@ $(function(){
 					video_id = id[1];
 					video_from = 'youku';
 				}else{
-					alert('failed');
+					mw.notification.notify('上传失败（URL不支持）');
 				}
+                break;
 			// case 'qq':
-			// default: 
+			default:
+                mw.notification.notify('上传失败（URL不支持）'); 
 		}
 		//get video info from youkuapi
 		$.get("https://openapi.youku.com/v2/videos/show.json",{ 
 		'client_id':'adc1f452c0653f53', 
 		'video_id':video_id
 		},function(data){
-			var title_str = data.title.replace('.video','');
-			video_title = title_str.replace(/\s/g, '_');
+			// var title_str = data.title.replace('.video','');
+			var video_orig_title = data.title;
+            var video_full_name;
+            var video_name = $('.video-name').val();
+            if (video_name == ''){
+                video_name = video_orig_title;
+            }
+            if (video_name.indexOf('.video') < 0){
+                video_full_name = video_name + '.video';
+            } else {
+                video_full_name = video_name;
+                video_name = video_full_name.substr(0, video_full_name.lastIndexOf('.'));
+            }
+
 			// alert(video_title);
 			var video_player_url = data.player;
 			var video_tags = data.tags;
@@ -112,8 +167,14 @@ $(function(){
             		format: 'json',
             		comment: '添加视频'
             	},function(data){
-            		console.log(data);
+            		if (! data.upload){
+                        mw.notification.notify('上传失败（无法上传新版本）');
+                        setVideoStatus(false);
+                        return;
+                    }
             		// alert(data.upload.filename);
+
+                    var redirectTarget = '/wiki/File:'+data.upload.filename;
             		$.post(
 			            mw.util.wikiScript(), {
 			                action: 'ajax',
@@ -121,17 +182,20 @@ $(function(){
 			                rsargs: [video_from, data.upload.filename, video_id, video_name, video_player_url, video_tags, video_duration]
 			            },
 			            function( data ) {
-			            	console.log(data);
 			                var res = jQuery.parseJSON(data);
 			                if (res.success){
 			                	/**
 			                	 * api.php  upload file bigThumbnail as image 
 			                	 * named as video_title
 			                	 */
-			                	
-			                   alert('update success');
+                                mw.notification.notify('上传成功');
+			                	setVideoStatus(false);
+                                window.location = redirectTarget;
+
 			                }else{
-			                   alert('update filed');
+                                mw.notification.notify('上传失败（无法获取视频信息）');
+                                setVideoStatus(false);
+
 			                }
 			            }
 			        );
@@ -139,10 +203,8 @@ $(function(){
             	});
 				
 			}else{
-
-				checkName(video_title,video_thum,token,video_from, video_id, video_player_url, video_tags, video_duration,'');
+				checkName(video_name,video_thum,token,video_from, video_id, video_player_url, video_tags, video_duration,'');
 			}
-			console.log(data);
 			//ajax insert video's info
 		});
 

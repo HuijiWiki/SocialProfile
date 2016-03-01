@@ -4,11 +4,12 @@
 .video-name,.video-url{
 	margin-bottom: 10px;
 	margin-left: 10px;
-	width: 500px;
+	max-width: 450px;
+	width: 90%;
 }
 .upload-video-btn{
-	float: right;
-	margin-right: 565px;
+	width: 20%;
+	margin:auto;
 }
 .video-duration{
 	background: black;
