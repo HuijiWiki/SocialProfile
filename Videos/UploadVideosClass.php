@@ -724,14 +724,15 @@ Class VideoTitle extends Title{
 	/**
 	 * Generate HTML ready thumbnails.
 	 */
-	public function getThumbnail($w = 200, $h = 100, $repo = null, $asyn = true){
+	public function getThumbnail($w = 200, $h = 100, $repoArray = null, $asyn = true){
 		global $wgLocalFileRepo;
-		if ($repo == null){
+		if ($repoArray == null){
 			$repo = new LocalRepo($wgLocalFileRepo);
+			$file = LocalFile::newFromTitle($this, $repo);
 		} else {
-			$repo = new ForeignDBRepo($repo);
+			$repo = new ForeignDBRepo($repoArray);
+			$file = ForeignDBFile::newFromTitle($this, $repo);
 		}
-		$file = LocalFile::newFromTitle($this, new LocalRepo($repo));
 		$class= $asyn?"video-player video-player-asyn":"video-player";
         $output ='
         <a href="#" class="video video-thumbnail image"><img class="'.$class.'" src="'.htmlspecialchars( $file->createThumb($w, $h) ).'" alt="'.$this->getText().'" data-video-title="'.$this->getText().'" data-video="'.$this->getPlayerUrl().'" data-video-from="'.$this->getVideoSource().'" data-video-link="'.$this->getVideoLink().'" data-video-duration="'.$this->getDuration().'" /></a>';
