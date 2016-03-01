@@ -13,8 +13,8 @@ $wgHooks['TitleMoveComplete'][] = 'movePage';
 
 
 function movePage($oldTitle, $newTitle, $user, $oldId, $newId, $reason,$rev){
-	global $wgHuijiPrefix, $wgSitename;
-	if(strpos($wgHuijiPrefix, '.test') !== false) return;	
+	global $wgHuijiPrefix, $wgSitename, $wgIsProduction;
+	if($wgIsProduction == false) return;	
 	$new_ns = $newTitle->getNamespace();
 	$old_ns = $oldTitle->getNamespace();
 	
@@ -48,8 +48,8 @@ function movePage($oldTitle, $newTitle, $user, $oldId, $newId, $reason,$rev){
 
 
 function unDeletePage($title, $revision, $oldPageId){
-	global $wgHuijiPrefix, $wgSitename;
-	if(strpos($wgHuijiPrefix, '.test') !== false) return;
+	global $wgHuijiPrefix, $wgSitename,$wgIsProduction;
+	if($wgIsProduction == false) return;	
 	//title
 	if($title == null || $title->getNamespace() !== 0) return;
 	$titleT = ($title->getText() == "首页") ? $wgSitename : $title->getText();
@@ -96,8 +96,8 @@ function savePage($article, $user, $content, $summary, $isMinor, $isWatch, $sect
 	upsertPage($article->getTitle(), $revision);
 }
 function upsertPage($title, $rev){
-	global $wgHuijiPrefix, $wgSitename;
-	if(strpos($wgHuijiPrefix, '.test') !== false) return;
+	global $wgHuijiPrefix, $wgSitename,$wgIsProduction;
+	if($wgIsProduction == false) return;
 	if($rev == null || $title == null || $title->getNamespace() !== 0) return;
 	$old_rev = $rev->getPrevious();
 	$old_redirectId = -1;
@@ -149,8 +149,8 @@ function upsertPage($title, $rev){
 }
 
 function deletePage($article, $user, $reason, $id){
-	global $wgHuijiPrefix, $wgSitename;
-	if(strpos($wgHuijiPrefix, '.test') !== false) return;
+	global $wgHuijiPrefix, $wgSitename, $wgIsProduction;
+	if($wgIsProduction == false) return;
 	if($article->getTitle()->getNamespace() !== 0) return;
 	$post_data = array(
 		'sitePrefix' => $wgHuijiPrefix,
