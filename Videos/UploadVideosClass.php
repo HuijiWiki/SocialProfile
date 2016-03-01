@@ -727,7 +727,9 @@ Class VideoTitle extends Title{
 	public function getThumbnail($w = 200, $h = 100, $repo = null, $asyn = true){
 		global $wgLocalFileRepo;
 		if ($repo == null){
-			$repo = $wgLocalFileRepo;
+			$repo = new LocalRepo($wgLocalFileRepo);
+		} else {
+			$repo = new ForeignDBRepo($repo);
 		}
 		$file = LocalFile::newFromTitle($this, new LocalRepo($repo));
 		$class= $asyn?"video-player video-player-asyn":"video-player";
