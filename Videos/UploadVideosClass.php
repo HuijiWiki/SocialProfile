@@ -4,7 +4,6 @@
  * authur slx
  */
 class UploadVideos{
-
 	/**
 	 * insert video info
 	 * @return [bool] [success-> ture]
@@ -26,11 +25,9 @@ class UploadVideos{
 					),
 					__METHOD__
 				);
-
 		if( $res ){
 			$rev_id = $dbw->insertId();
 			// self::addRevisionBinder( $pageRevision, $rev_id );
-
 			$dbw -> upsert(
 				'video_page',
 				array(
@@ -44,19 +41,15 @@ class UploadVideos{
 					'revision_id' => $rev_id
 				),
 				__METHOD__
-
 			);
 			return $dbw->insertId();
 		}
-
 	}
-
 	/**
 	 * delete video info
 	 */
 	
 	static function delVideoInfo( $page_id ){
-
 		$dbw = wfGetDB( DB_MASTER );
 		$result = false;
 		$res = $dbw->select(
@@ -136,7 +129,6 @@ class UploadVideos{
 		}
 		return $result;
 	}
-
 	/**
 	 * restore video info
 	 */
@@ -218,7 +210,6 @@ class UploadVideos{
 			
 		}
 	}
-
 	/**
 	 * add revision binder
 	 */
@@ -235,7 +226,6 @@ class UploadVideos{
 		if ( $dbw->insertId() ) {
 			return true;
 		}
-
 	}
 	/**
 	 * get video_revision by page_revision
@@ -261,7 +251,6 @@ class UploadVideos{
 		}
 		return $videoRevsion;
 	}
-
 	/**
 	 * update page_video set revisionid= video_revision_id
 	 */
@@ -278,7 +267,6 @@ class UploadVideos{
 			__METHOD__
 		);
 	}
-
 	/**
 	 * get all video info
 	 */
@@ -307,7 +295,6 @@ class UploadVideos{
 			return $result;
 		}
 	}
-
 	/**
 	 * get video detail info by revisionId
 	 */
@@ -349,7 +336,6 @@ class UploadVideos{
 			return $result;
 		}
 	}
-
 }
 /**
  * A mock up title class that tries to manipulate external videos
@@ -366,11 +352,9 @@ Class VideoTitle extends Title{
 	protected /* int */$mVideoRevisionId;
 	protected /* string */$mVideoLink;
 	const /* string */YOUKULINK = 'http://v.youku.com/v_show/id_';
-
 	function __construct(){
 		parent::__construct();
 	}
-
 	/**
 	 * determine whether the given title is a video title.
 	 * @param Title $title: a title object in mediawiki.
@@ -403,7 +387,6 @@ Class VideoTitle extends Title{
 			if (!isset($pageId)){
 				return false;
 			}
-
 			$res = $dbr->select(
 				'video_page',
 				array(
@@ -463,7 +446,6 @@ Class VideoTitle extends Title{
 			}
 		}		
 	}
-
 	static function isVideoTitleIdByArchive( $pageId ){
 		global $wgMemc;
 		$key = wfMemcKey( 'isvideo', 'by pageId', $pageId );
@@ -516,26 +498,21 @@ Class VideoTitle extends Title{
 		if ( $text === null ) {
 		   return null;
 		}
-
 		try {
 		   return self::newFromTextThrow( strval( $text ), $defaultNamespace );
 		} catch ( MalformedTitleException $ex ) {
 		   return null;
 		}
 	}
-
 	public static function newFromTextThrow( $text, $defaultNamespace = NS_MAIN ) {
 		if ( is_object( $text ) ) {
 		   throw new MWException( '$text must be a string, given an object' );
 		}
-
 	   	// Convert things like &eacute; &#257; or &#x3017; into normalized (bug 14952) text
 	   	$filteredText = Sanitizer::decodeCharReferencesAndNormalize( $text );
-
 		$t = new VideoTitle();
 		$t->mDbkeyform = strtr( $filteredText, ' ', '_' );
 		$t->mDefaultNamespace = intval( $defaultNamespace );
-
 		$t->secureAndSplit();
 		if ($t->isExternal()){
 			$t->loadFromExternalDB($t->getInterwiki(), $t->mDbkeyform);
@@ -547,51 +524,40 @@ Class VideoTitle extends Title{
 	  $this->mInterwiki = '';
 	  $this->mFragment = '';
 	  $this->mNamespace = $this->mDefaultNamespace; # Usually NS_MAIN
-
 	  $dbkey = $this->mDbkeyform;
-
 	  // @note: splitTitleString() is a temporary hack to allow MediaWikiTitleCodec to share
 	  //        the parsing code with Title, while avoiding massive refactoring.
 	  // @todo: get rid of secureAndSplit, refactor parsing code.
 	  $titleParser = self::getMediaWikiTitleCodec();
 	  // MalformedTitleException can be thrown here
 	  $parts = $titleParser->splitTitleString( $dbkey, $this->getDefaultNamespace() );
-
 	  # Fill fields
 	  $this->setFragment( '#' . $parts['fragment'] );
 	  $this->mInterwiki = $parts['interwiki'];
 	  $this->mLocalInterwiki = $parts['local_interwiki'];
 	  $this->mNamespace = $parts['namespace'];
 	  $this->mUserCaseDBKey = $parts['user_case_dbkey'];
-
 	  $this->mDbkeyform = $parts['dbkey'];
 	  $this->mUrlform = wfUrlencode( $this->mDbkeyform );
 	  $this->mTextform = strtr( $this->mDbkeyform, '_', ' ' );
-
 	  # We already know that some pages won't be in the database!
 	  if ( $this->isExternal() || $this->mNamespace == NS_SPECIAL ) {
 	      $this->mArticleID = 0;
 	  }
-
 	  return true;
 	}
-
 	private static function getMediaWikiTitleCodec() {
 	   global $wgContLang, $wgLocalInterwikis;
-
 	   static $titleCodec = null;
 	   static $titleCodecFingerprint = null;
-
 	   // $wgContLang and $wgLocalInterwikis may change (especially while testing),
 	   // make sure we are using the right one. To detect changes over the course
 	   // of a request, we remember a fingerprint of the config used to create the
 	   // codec singleton, and re-create it if the fingerprint doesn't match.
 	   $fingerprint = spl_object_hash( $wgContLang ) . '|' . join( '+', $wgLocalInterwikis );
-
 	   if ( $fingerprint !== $titleCodecFingerprint ) {
 	       $titleCodec = null;
 	   }
-
 	   if ( !$titleCodec ) {
 	       $titleCodec = new MediaWikiTitleCodec(
 	           $wgContLang,
@@ -600,10 +566,8 @@ Class VideoTitle extends Title{
 	       );
 	       $titleCodecFingerprint = $fingerprint;
 	   }
-
 	   return $titleCodec;
 	}
-
 	private static function getTitleFormatter() {
 	   // NOTE: we know that getMediaWikiTitleCodec() returns a MediaWikiTitleCodec,
 	   //      which implements TitleFormatter.
@@ -642,7 +606,6 @@ Class VideoTitle extends Title{
 		$this->mVideoRevisionId = !is_null( $video_info['rev_id'] ) ? $video_info['rev_id'] : '';
 		parent::loadFromRow( $row );
 	}
-
 	/**
 	 * new from id
 	 */
@@ -661,8 +624,6 @@ Class VideoTitle extends Title{
        }
        return $title;
     }
-
-
    /**
     * make videtitle
     */
@@ -678,7 +639,6 @@ Class VideoTitle extends Title{
        $t->mContentModel = false; # initialized lazily in getContentModel()
        return $t;
    }
-
 	/**
 	 * Getters
 	 */
@@ -715,7 +675,6 @@ Class VideoTitle extends Title{
 	public function getVideoRevisionId(){
 		return $this->mVideoRevisionId;
 	}
-
 	public function getVideoLink(){
 		if ( $this->getVideoSource() == 'youku') {
 			return self::YOUKULINK.$this->getExternalId();
@@ -815,9 +774,7 @@ Class VideoTitle extends Title{
 			return $videoInfo;
 			
 		}
-
 	}
-
 	static function getVideoInfoByPageId( $pageId ){
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select(
