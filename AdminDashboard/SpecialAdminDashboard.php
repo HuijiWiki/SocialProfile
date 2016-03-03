@@ -73,6 +73,9 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		$replaceText = SpecialPage::getTitleFor( '替换文本' )->getFullURL();
 		$siteRankPage = SpecialPage::getTitleFor( 'SiteRank' )->getFullURL();
 		$allSpecial = SpecialPage::getTitleFor( '特殊页面' )->getFullURL();
+		$addEmote = Message::newFromKey('comments-add-emoji-emote')->getTitle()->getFullURL();
+		$changePageTitle = Message::newFromKey('Pagetitle')->getTitle()->getFullURL();
+		$changeMainpageTitle = Message::newFromKey('MediaWiki:Pagetitle-view-mainpage')->getTitle()->getFullURL();
 		$siteAvatar = (new wSiteAvatar($wgHuijiPrefix, 'l'))->getAvatarHtml();
 		$token = $user->getEditToken();
 		if(is_null($newFollow)){
@@ -100,6 +103,9 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				        'siteRankPage' =>$siteRankPage,
 				        'allSpecial' =>$allSpecial,
 				        'siteAvatar' =>$siteAvatar,
+				        'addEmote' => $addEmote,
+				        'changePageTitle' => $changePageTitle,
+				        'changeMainpageTitle' => $changeMainpageTitle,
 				        'token' => $token,
 				    )
 				);
