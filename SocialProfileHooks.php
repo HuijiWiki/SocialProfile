@@ -184,14 +184,16 @@ class SocialProfileHooks {
 			$out->addJsConfigVars('wgVideoSource', $source);
 			$out->setSubtitle( $str );
 			$out->addModules('ext.socialprofile.videopage.js');
+
 		}
 	}
 
 	public static function onImagePageAfterImageLinks($imagePage, &$html){
-		// if ( VideoTitle::isVideoTitle($imagePage->getTitle() ) ){
-		// 	$html = '<p>this is a test</p>';
+		if ( VideoTitle::isVideoTitle($imagePage->getTitle() ) ){
+			$vt = VideoTitle::newFromId($imagePage->getTitle()->getArticleId());
+			$html .= '<p>标签：'.$vt->getTags()."</p>";
 
-		// }
+		}
 	}
 
 }

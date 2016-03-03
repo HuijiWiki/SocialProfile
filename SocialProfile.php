@@ -105,6 +105,7 @@ $wgAutoloadClasses['QueryInterface'] = __DIR__ . '/QueryInterface.php';
 $wgAutoloadClasses['TemplateFork'] = __DIR__ . '/TemplateFork/TemplateForkClass.php';
 $wgAutoloadClasses['UploadVideos'] = __DIR__ . '/Videos/UploadVideosClass.php';
 $wgAutoloadClasses['VideoTitle'] = __DIR__ . '/Videos/UploadVideosClass.php';
+$wgAutoloadClasses['VideoRevision'] = __DIR__ . '/Videos/UploadVideosClass.php';
 
 // New special pages
 // $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
@@ -291,7 +292,7 @@ require_once( "$IP/extensions/SocialProfile/UserGifts/Gifts.php" ); // UserGifts
 require_once( "$IP/extensions/SocialProfile/SystemGifts/SystemGifts.php" ); // SystemGifts (awards functionality) loader file
 require_once( "$IP/extensions/SocialProfile/UserBoard/UserBoard.php" ); // UserBoard loader file
 require_once( "$IP/extensions/SocialProfile/UserActivity/UserActivity.php" ); // UserActivity - recent social changes
-require_once( "$IP/extensions/SocialProfile/userEditRecord.php"); // Edit Record collected to mongoDB.
+require_once( "$IP/extensions/SocialProfile/UserEditRecord/userEditRecord.php"); // Edit Record collected to mongoDB.
 require_once( "$IP/extensions/SocialProfile/updateESContent.php"); // Update Page Content in ES.
 
 
@@ -390,7 +391,10 @@ $wgResourceModules['ext.socialprofile.videos.css'] = array(
 
 $wgResourceModules['ext.socialprofile.videos.js'] = array(
 	'scripts' => 'videos.js',
-	'dependencies' => 'mediawiki.notification',
+	'dependencies' => array(
+		'mediawiki.notification',
+		'skins.bootstrapmediawiki.videohandler'
+	),
 	'localBasePath' => __DIR__ . '/Videos',
 	'remoteExtPath' => 'SocialProfile/Videos',
 	'position' => 'bottom'

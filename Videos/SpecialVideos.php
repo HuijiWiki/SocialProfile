@@ -19,7 +19,11 @@ class SpecialVideos extends SpecialPage{
     $out = $this->getOutput();
     $output = '';
     $out->addModuleStyles('ext.socialprofile.videos.css');
-    $out->addModules( 'ext.socialprofile.videos.js' );
+    $out->addModules( array(
+        'skins.bootstrapmediawiki.videohandler',
+        'ext.socialprofile.videos.js'
+        ) 
+    );
     /**
      * Redirect Non-logged in users to Login Page
      * $login = SpecialPage::getTitleFor( 'Userlogin' );

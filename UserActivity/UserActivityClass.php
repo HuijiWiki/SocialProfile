@@ -1911,12 +1911,15 @@ class UserActivity {
 	 * @return String: "fixed" comment
 	 */
 	function fixPageTitle( $page_title, $page_data ) {
-		global $isProduction, $wgFlowDefaultWikiDb;
+		global $isProduction, $wgFlowDefaultWikiDb, $wgHuijiPrefix;
 		if ($page_title instanceOf Title){
 			if ($page_title->inNamespace( NS_FILE )){
 				if (VideoTitle::isVideoTitle($page_title)){
 					$vt = VideoTitle::makeTitle(NS_FILE, $page_title->getText(), '', $page_data['prefix'][0] );
 					$vt->loadFromExternalDB($page_data['prefix'][0], $page_title->getDbKey());
+					if ($page_data['prefix'][0] == $wgHuijiPrefix){
+						return $vt->getThumbnail(200, 100);
+					}
 					return $vt->getThumbnail(200, 100, $this->streamlineForeignDBRepo($page_data['prefix'][0]));
 				}
 				$repo = new ForeignDBRepo($this->streamlineForeignDBRepo($page_data['prefix'][0]));

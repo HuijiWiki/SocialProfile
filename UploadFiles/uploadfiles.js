@@ -85,6 +85,7 @@ var uploadfiles = {
             contentType: false,
             type: 'POST',
             success: function (data) {
+                if(data.upload)
                 selector.removeClass('default').find('img').attr('data-filekey',data.upload.filekey);
                 if (data.upload && data.upload.result == "Warning") {
                     if (data.upload.warnings.exists) {
@@ -99,12 +100,11 @@ var uploadfiles = {
                         selector.addClass('suggest');
                     }
                 }else if(data.error){
-                    console.log(data);
                     selector.addClass('warning');
                     if(data.error.code=="file-too-large"){
                         selector.find('.prompt').text('图片过大,请压缩后上传');
                     }else{
-                        selector.find('.prompt').text(data.error.code);
+                        selector.find('.prompt').text('文件不可用');
 
                     }
                 }

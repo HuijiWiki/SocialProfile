@@ -336,6 +336,28 @@ class UploadVideos{
 			return $result;
 		}
 	}
+
+	static function urlfetch($url) {
+		$ip = $_SERVER['REMOTE_ADDR'];
+		$ua = $_SERVER['HTTP_USER_AGENT'];
+		$req_headers = [
+			'Accept-Encoding: gzip',
+			'Client-IP: '.$ip,
+			'X-Forwarded-For: '.$ip,
+		];
+		$ch = curl_init() ;
+		curl_setopt( $ch , CURLOPT_URL , $url ) ;
+		curl_setopt( $ch , CURLOPT_REFERER, "http://www.bilibili.com/" );
+		curl_setopt( $ch , CURLOPT_HTTPHEADER, $req_headers );
+		curl_setopt( $ch , CURLOPT_USERAGENT, $ua); 
+		curl_setopt( $ch , CURLOPT_TIMEOUT, 60 );
+		curl_setopt( $ch , CURLOPT_RETURNTRANSFER, true );
+		curl_setopt( $ch , CURLOPT_ENCODING, 'gzip' );
+		$http_data = curl_exec( $ch ) ;
+		curl_close($ch);
+		//var_dump($http_data);die();
+		return $http_data;
+	}
 }
 /**
  * A mock up title class that tries to manipulate external videos
@@ -352,6 +374,7 @@ Class VideoTitle extends Title{
 	protected /* int */$mVideoRevisionId;
 	protected /* string */$mVideoLink;
 	const /* string */YOUKULINK = 'http://v.youku.com/v_show/id_';
+	const /* string */BILIBILI = 'http://www.bilibili.com/video/av';
 	function __construct(){
 		parent::__construct();
 	}
@@ -678,6 +701,13 @@ Class VideoTitle extends Title{
 	public function getVideoLink(){
 		if ( $this->getVideoSource() == 'youku') {
 			return self::YOUKULINK.$this->getExternalId();
+		}elseif ( $this->getVideoSource() == 'bilibili' ) {
+			$res = explode('-',$this->mExternalId);
+			if ( count($res) > 1 ) {
+				return self::BILIBILI.$res[0].'/index_'.$res[1].'.html';
+			}else{
+				return self::BILIBILI.$this->getExternalId();
+			}
 		}
 	}
 	/**
@@ -832,3 +862,92 @@ Class VideoTitle extends Title{
 		}
 	}
 }
+
+/**
+ * viedo revision
+ */
+// class VideoRevision{
+// 	private $mExists = false;
+// 	protected /* timestamp */$mDuration;
+// 	protected /* string */$mTags;
+// 	protected /* string, such as 'youku' */$mVideoSource;
+// 	protected /* string */$mExternalId;
+// 	protected /* url */$mPlayerUrl;
+// 	protected /* userid */$mAddedByUser;
+// 	protected /* date */$mAddedOnDate;
+// 	protected /* int */$mVideoRevisionId;
+// 	protected /* string */$mVideoLink;
+// 	const /* string */YOUKULINK = 'http://v.youku.com/v_show/id_';
+// 	const /* string */BILIBILI = 'http://www.bilibili.com/video/av';
+// 	static function newFromSha1( $sha1 ){
+
+// 	}
+// 	function exists(){
+// 		return $mExists;
+// 	}
+// 	/**
+// 	 * Getters
+// 	 */
+// 	public function getDuration($formatted = true){
+// 		if ($formatted == true) {
+// 			return gmstrftime( '%H:%M:%S',$this->mDuration );
+// 		}
+// 		return $this->mDuration;
+// 	}
+// 	public function getTags(){
+// 		return $this->mTags;
+		
+// 	}
+// 	public function getVideoSource(){
+// 		return $this->mVideoSource;
+		
+// 	}
+// 	public function getExternalId(){
+// 		return $this->mExternalId;
+		
+// 	}
+// 	public function getPlayerUrl(){
+// 		return $this->mPlayerUrl;
+		
+// 	}
+// 	public function getAddedByUser(){
+// 		return $this->mAddedByUser;
+		
+// 	}
+// 	public function getAddedOnDate(){
+// 		return $this->mAddedOnDate;
+		
+// 	}
+// 	public function getVideoRevisionId(){
+// 		return $this->mVideoRevisionId;
+// 	}
+// 	public function getVideoLink(){
+// 		if ( $this->getVideoSource() == 'youku') {
+// 			return self::YOUKULINK.$this->getExternalId();
+// 		}elseif ( $this->getVideoSource() == 'bilibili' ) {
+// 			$res = explode('-',$this->mExternalId);
+// 			if ( count($res) > 1 ) {
+// 				return self::BILIBILI.$res[0].'/index_'.$res[1].'.html';
+// 			}else{
+// 				return self::BILIBILI.$this->getExternalId();
+// 			}
+// 		}
+// 	}
+// 	/**
+// 	 * Generate HTML ready thumbnails.
+// 	 */
+// 	public function getThumbnail($w = 200, $h = 100, $repoArray = null, $asyn = true){
+// 		global $wgLocalFileRepo;
+// 		if ($repoArray == null){
+// 			$repo = new LocalRepo($wgLocalFileRepo);
+// 			$file = LocalFile::newFromTitle($this, $repo);
+// 		} else {
+// 			$repo = new ForeignDBRepo($repoArray);
+// 			$file = ForeignDBFile::newFromTitle($this, $repo);
+// 		}
+// 		$class= $asyn?"video-player video-player-asyn":"video-player";
+//         $output ='
+//         <a href="#" class="video video-thumbnail image"><img class="'.$class.'" src="'.htmlspecialchars( $file->createThumb($w, $h) ).'" alt="'.$this->getText().'" data-video-title="'.$this->getText().'" data-video="'.$this->getPlayerUrl().'" data-video-from="'.$this->getVideoSource().'" data-video-link="'.$this->getVideoLink().'" data-video-duration="'.$this->getDuration().'" /></a>';
+// 		return $output;
+// 	}
+// }

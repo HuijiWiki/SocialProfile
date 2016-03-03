@@ -136,6 +136,7 @@ span.gray{
     position: absolute;
     top: 20px;
     color: crimson;
+    padding: 5px;
 }
 .suggest{
     border: 1px solid blanchedalmond;

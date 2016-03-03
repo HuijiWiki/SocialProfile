@@ -5,6 +5,8 @@
 $wgAjaxExportList[] = 'wfinsertVideoInfo';
 $wgAjaxExportList[] = 'wfcheckVideoExist';
 $wgAjaxExportList[] = 'wfUploadNewRevision';
+$wgAjaxExportList[] = 'wfGetBiliVideoInfo';
+
 function wfinsertVideoInfo( $video_from, $title_str, $video_id, $video_title, $video_player_url, $video_tags, $video_duration ) {
 	global $wgUser;
 	$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_UNKNOWN);
@@ -104,4 +106,19 @@ function wfUploadNewRevision( $video_from, $video_id, $video_title, $video_playe
 	}
 	return $out;
 
+}
+
+function wfGetBiliVideoInfo( $video_id, $page_id){
+	$app_sec =  '2ad42749773c441109bdc0191257a664';
+	$params = array(
+		'type' => 'json',
+		'id' => $video_id,
+		'page' => $page_id,
+		'appkey' => '85eb6835b0a1034e',
+	);
+	ksort($params);
+	$data = http_build_query($params);
+	$res = $data.'&sign='.md5($data.$app_sec);
+	$resp_cid = UploadVideos::urlfetch('http://api.bilibili.com/view?'.$res);
+	return $resp_cid;
 }
