@@ -183,7 +183,7 @@ function curl_post_json($type,$data_string)
         curl_close($ch);
 
         return $out;
-        }
+}
 
 
 
