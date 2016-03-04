@@ -6,7 +6,7 @@ var setVideoStatus =  (function(){
         }
         videoSubmitted = isSubmitted;
         $('#upload-video-btn').prop('disabled', videoSubmitted);
-        if (videoSubmitted){
+        if (isSubmitted){
             $('#upload-video-btn').html('<i class="fa fa-spinner fa-spin"></i>添加');
         } else {
             $('#upload-video-btn').html('添加');

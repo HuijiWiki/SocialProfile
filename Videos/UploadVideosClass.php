@@ -373,11 +373,20 @@ Class VideoTitle extends Title{
 	protected /* date */$mAddedOnDate;
 	protected /* int */$mVideoRevisionId;
 	protected /* string */$mVideoLink;
+	const CACHE_MAX = 1000;
+	static private $titleCache = null;
 	const /* string */YOUKULINK = 'http://v.youku.com/v_show/id_';
 	const /* string */BILIBILI = 'http://www.bilibili.com/video/av';
 	function __construct(){
 		parent::__construct();
 	}
+	private static function getTitleCache() {
+        if ( self::$titleCache == null ) {
+            self::$titleCache = new HashBagOStuff( [ 'maxKeys' => self::CACHE_MAX ] );
+		}
+		return self::$titleCache;
+	}
+
 	/**
 	 * determine whether the given title is a video title.
 	 * @param Title $title: a title object in mediawiki.
@@ -507,6 +516,8 @@ Class VideoTitle extends Title{
     public static function newFromRow( $row ) {
        $t = self::makeTitle( $row->page_namespace, $row->page_title );
        $t->loadFromRow( $row );
+       $titleCache = self::getTitleCache();
+       $titleCache->set($t->getArticleID(), $t);
        return $t;
    }
 	public static function newFromText( $text, $defaultNamespace = NS_MAIN ) {
@@ -539,6 +550,9 @@ Class VideoTitle extends Title{
 		$t->secureAndSplit();
 		if ($t->isExternal()){
 			$t->loadFromExternalDB($t->getInterwiki(), $t->mDbkeyform);
+		} else {
+	       $titleCache = self::getTitleCache();
+	       $titleCache->set($t->getArticleID, $t);
 		}
 	 	return $t;
 	}
@@ -601,14 +615,14 @@ Class VideoTitle extends Title{
 	 */
 	public function loadFromExternalDB( $prefix, $text ) {
 		$video_info = self::getVideoInfoByPrefixAndText( $prefix, $text );
-		$this->mDuration = !is_null( $video_info['rev_video_duration'] ) ? $video_info['rev_video_duration'] : '';
-		$this->mTags = !is_null( $video_info['rev_video_tags'] ) ? $video_info['rev_video_tags'] : '';
-		$this->mVideoSource = !is_null( $video_info['rev_video_from'] ) ? $video_info['rev_video_from'] : '';
-		$this->mExternalId = !is_null( $video_info['rev_video_id'] ) ? $video_info['rev_video_id'] : '';
-		$this->mPlayerUrl = !is_null( $video_info['rev_video_player_url'] ) ? $video_info['rev_video_player_url'] : '';
-		$this->mAddedByUser = !is_null( $video_info['rev_upload_user'] ) ? $video_info['rev_upload_user'] : '';
-		$this->mAddedOnDate = !is_null( $video_info['rev_upload_date'] ) ? $video_info['rev_upload_date'] : '';
-		$this->mVideoRevisionId = !is_null( $video_info['rev_id'] ) ? $video_info['rev_id'] : '';
+		$this->mDuration = array_key_exists('rev_video_duration',$video_info) ? $video_info['rev_video_duration'] : '';
+		$this->mTags = array_key_exists( 'rev_video_tags', $video_info ) ? $video_info['rev_video_tags'] : '';
+		$this->mVideoSource = array_key_exists('rev_video_from',$video_info ) ? $video_info['rev_video_from'] : '';
+		$this->mExternalId = array_key_exists( 'rev_video_id', $video_info  ) ? $video_info['rev_video_id'] : '';
+		$this->mPlayerUrl = array_key_exists( 'rev_video_player_url', $video_info ) ? $video_info['rev_video_player_url'] : '';
+		$this->mAddedByUser = array_key_exists('rev_upload_user', $video_info) ? $video_info['rev_upload_user'] : '';
+		$this->mAddedOnDate = array_key_exists( 'rev_upload_date', $video_info ) ? $video_info['rev_upload_date'] : '';
+		$this->mVideoRevisionId = array_key_exists( 'rev_id', $video_info ) ? $video_info['rev_id'] : '';
 	}
 	/**
 	 *
@@ -619,20 +633,25 @@ Class VideoTitle extends Title{
 		 */
 		$pageId = $row->page_id;
 		$video_info = self::getVideoInfoByPageId( $pageId );
-		$this->mDuration = !is_null( $video_info['rev_video_duration'] ) ? $video_info['rev_video_duration'] : '';
-		$this->mTags = !is_null( $video_info['rev_video_tags'] ) ? $video_info['rev_video_tags'] : '';
-		$this->mVideoSource = !is_null( $video_info['rev_video_from'] ) ? $video_info['rev_video_from'] : '';
-		$this->mExternalId = !is_null( $video_info['rev_video_id'] ) ? $video_info['rev_video_id'] : '';
-		$this->mPlayerUrl = !is_null( $video_info['rev_video_player_url'] ) ? $video_info['rev_video_player_url'] : '';
-		$this->mAddedByUser = !is_null( $video_info['rev_upload_user'] ) ? $video_info['rev_upload_user'] : '';
-		$this->mAddedOnDate = !is_null( $video_info['rev_upload_date'] ) ? $video_info['rev_upload_date'] : '';
-		$this->mVideoRevisionId = !is_null( $video_info['rev_id'] ) ? $video_info['rev_id'] : '';
+		$this->mDuration = array_key_exists('rev_video_duration',$video_info) ? $video_info['rev_video_duration'] : '';
+		$this->mTags = array_key_exists( 'rev_video_tags', $video_info ) ? $video_info['rev_video_tags'] : '';
+		$this->mVideoSource = array_key_exists('rev_video_from',$video_info ) ? $video_info['rev_video_from'] : '';
+		$this->mExternalId = array_key_exists( 'rev_video_id', $video_info  ) ? $video_info['rev_video_id'] : '';
+		$this->mPlayerUrl = array_key_exists( 'rev_video_player_url', $video_info ) ? $video_info['rev_video_player_url'] : '';
+		$this->mAddedByUser = array_key_exists('rev_upload_user', $video_info) ? $video_info['rev_upload_user'] : '';
+		$this->mAddedOnDate = array_key_exists( 'rev_upload_date', $video_info ) ? $video_info['rev_upload_date'] : '';
+		$this->mVideoRevisionId = array_key_exists( 'rev_id', $video_info ) ? $video_info['rev_id'] : '';
 		parent::loadFromRow( $row );
 	}
 	/**
 	 * new from id
 	 */
 	 public static function newFromID( $id, $flags = 0 ) {
+	 	$titleCache = self::getTitleCache();
+        $title = $titleCache->get($id);
+        if ($title){
+        	return $title;
+        }
         $db = ( $flags & self::GAID_FOR_UPDATE ) ? wfGetDB( DB_MASTER ) : wfGetDB( DB_SLAVE );
         $row = $db->selectRow(
            'page',
@@ -866,88 +885,167 @@ Class VideoTitle extends Title{
 /**
  * viedo revision
  */
-// class VideoRevision{
-// 	private $mExists = false;
-// 	protected /* timestamp */$mDuration;
-// 	protected /* string */$mTags;
-// 	protected /* string, such as 'youku' */$mVideoSource;
-// 	protected /* string */$mExternalId;
-// 	protected /* url */$mPlayerUrl;
-// 	protected /* userid */$mAddedByUser;
-// 	protected /* date */$mAddedOnDate;
-// 	protected /* int */$mVideoRevisionId;
-// 	protected /* string */$mVideoLink;
-// 	const /* string */YOUKULINK = 'http://v.youku.com/v_show/id_';
-// 	const /* string */BILIBILI = 'http://www.bilibili.com/video/av';
-// 	static function newFromSha1( $sha1 ){
+class VideoRevision{
+	protected /* timestamp */$mDuration;
+	protected /* string */$mTags;
+	protected /* string, such as 'youku' */$mVideoSource;
+	protected /* string */$mExternalId;
+	protected /* url */$mPlayerUrl;
+	protected /* userid */$mAddedByUser;
+	protected /* date */$mAddedOnDate;
+	protected /* int */$mVideoRevisionId;
+	protected /* string */$mVideoLink;
+	protected /* string */$mVideoTitle;
+	const CACHE_MAX = 1000;
+	static private $titleCache = null;
+	const /* string */YOUKULINK = 'http://v.youku.com/v_show/id_';
+	const /* string */BILIBILI = 'http://www.bilibili.com/video/av';
+	private static function getTitleCache() {
+        if ( self::$titleCache == null ) {
+            self::$titleCache = new HashBagOStuff( [ 'maxKeys' => self::CACHE_MAX ] );
+		}
+		return self::$titleCache;
+	}
+	static function newFromSha1( $sha1 ){
+		$titleCache = self::getTitleCache();
+		$result = $titleCache->get($sha1);
+		if ($result){
+			return $result;
+		}
+		$dbr = wfGetDB( DB_SLAVE );
+		$res = $dbr->select(
+			'revision_binder',
+			array(
+				'video_revision'
+			),
+			array(
+				'thum_sha1' => $sha1
+			),
+			__METHOD__
+		);
+		if ( $res ) {
+			$rev_id = null;
+			foreach ($res as $key => $value) {
+				$rev_id = $value->video_revision;
+			}
+			if ( is_null($rev_id) ){
+				$titleCache->set($sha1, null);
+				return null;
+			}
+			$result = self::newFromID( $rev_id );
+			$titleCache->set($sha1, $result);
+			return $result;
+		}
+		$titleCache->set($sha1, null);
+		return null;
+	}
 
-// 	}
-// 	function exists(){
-// 		return $mExists;
-// 	}
-// 	/**
-// 	 * Getters
-// 	 */
-// 	public function getDuration($formatted = true){
-// 		if ($formatted == true) {
-// 			return gmstrftime( '%H:%M:%S',$this->mDuration );
-// 		}
-// 		return $this->mDuration;
-// 	}
-// 	public function getTags(){
-// 		return $this->mTags;
+	static function newFromID( $rev_id ){
+		$dbr = wfGetDB( DB_SLAVE );
+		$res = $dbr->select(
+			'video_revision',
+			array(
+				'rev_page_id',
+				'rev_video_id',
+				'rev_video_title',
+				'rev_video_from',
+				'rev_video_player_url',
+				'rev_video_tags',
+				'rev_video_duration',
+				'rev_upload_user',
+				'rev_upload_date'
+			),
+			array(
+				'rev_id' => $rev_id
+			),
+			__METHOD__
+		);
+		if ( $res ) {
+			$video_info = array();
+			foreach ($res as $key => $value) {
+				$video_info = array(
+								'rev_page_id' => $value->rev_page_id,
+								'rev_video_id' => $value->rev_video_id,
+								'rev_video_title' => $value->rev_video_title,
+								'rev_video_from' => $value->rev_video_from,
+								'rev_video_player_url' => $value->rev_video_player_url,
+								'rev_video_tags' => $value->rev_video_tags,
+								'rev_video_duration' => $value->rev_video_duration,
+								'rev_upload_user' => $value->rev_upload_user,
+								'rev_upload_date' => $value->rev_upload_date
+							);
+			}
+
+			$obj = new VideoRevision();
+			$obj->mDuration = array_key_exists('rev_video_duration',$video_info) ? $video_info['rev_video_duration'] : '';
+			$obj->mTags = array_key_exists( 'rev_video_tags', $video_info ) ? $video_info['rev_video_tags'] : '';
+			$obj->mVideoSource = array_key_exists('rev_video_from',$video_info ) ? $video_info['rev_video_from'] : '';
+			$obj->mExternalId = array_key_exists( 'rev_video_id', $video_info  ) ? $video_info['rev_video_id'] : '';
+			$obj->mPlayerUrl = array_key_exists( 'rev_video_player_url', $video_info ) ? $video_info['rev_video_player_url'] : '';
+			$obj->mAddedByUser = array_key_exists('rev_upload_user', $video_info) ? $video_info['rev_upload_user'] : '';
+			$obj->mAddedOnDate = array_key_exists( 'rev_upload_date', $video_info ) ? $video_info['rev_upload_date'] : '';
+			$obj->mVideoRevisionId = !is_null( $rev_id ) ? $rev_id : '';
+			$obj->mVideoTitle = array_key_exists( 'rev_video_title', $video_info ) ? $video_info['rev_video_title'] : '';
+
+			return $obj;
+		}
+		return null;
+
+	}
+	public function exists(){
+		return ($this->mVideoTitle != '');
+	}
+
+	/**
+	 * Getters
+	 */
+	public function getDuration($formatted = true){
+		if ($formatted == true) {
+			return gmstrftime( '%H:%M:%S',$this->mDuration );
+		}
+		return $this->mDuration;
+	}
+	public function getTags(){
+		return $this->mTags;
 		
-// 	}
-// 	public function getVideoSource(){
-// 		return $this->mVideoSource;
+	}
+	public function getVideoTitle(){
+		return $this->mVideoTitle;
 		
-// 	}
-// 	public function getExternalId(){
-// 		return $this->mExternalId;
+	}
+	public function getVideoSource(){
+		return $this->mVideoSource;
 		
-// 	}
-// 	public function getPlayerUrl(){
-// 		return $this->mPlayerUrl;
+	}
+	public function getExternalId(){
+		return $this->mExternalId;
 		
-// 	}
-// 	public function getAddedByUser(){
-// 		return $this->mAddedByUser;
+	}
+	public function getPlayerUrl(){
+		return $this->mPlayerUrl;
 		
-// 	}
-// 	public function getAddedOnDate(){
-// 		return $this->mAddedOnDate;
+	}
+	public function getAddedByUser(){
+		return $this->mAddedByUser;
 		
-// 	}
-// 	public function getVideoRevisionId(){
-// 		return $this->mVideoRevisionId;
-// 	}
-// 	public function getVideoLink(){
-// 		if ( $this->getVideoSource() == 'youku') {
-// 			return self::YOUKULINK.$this->getExternalId();
-// 		}elseif ( $this->getVideoSource() == 'bilibili' ) {
-// 			$res = explode('-',$this->mExternalId);
-// 			if ( count($res) > 1 ) {
-// 				return self::BILIBILI.$res[0].'/index_'.$res[1].'.html';
-// 			}else{
-// 				return self::BILIBILI.$this->getExternalId();
-// 			}
-// 		}
-// 	}
-// 	/**
-// 	 * Generate HTML ready thumbnails.
-// 	 */
-// 	public function getThumbnail($w = 200, $h = 100, $repoArray = null, $asyn = true){
-// 		global $wgLocalFileRepo;
-// 		if ($repoArray == null){
-// 			$repo = new LocalRepo($wgLocalFileRepo);
-// 			$file = LocalFile::newFromTitle($this, $repo);
-// 		} else {
-// 			$repo = new ForeignDBRepo($repoArray);
-// 			$file = ForeignDBFile::newFromTitle($this, $repo);
-// 		}
-// 		$class= $asyn?"video-player video-player-asyn":"video-player";
-//         $output ='
-//         <a href="#" class="video video-thumbnail image"><img class="'.$class.'" src="'.htmlspecialchars( $file->createThumb($w, $h) ).'" alt="'.$this->getText().'" data-video-title="'.$this->getText().'" data-video="'.$this->getPlayerUrl().'" data-video-from="'.$this->getVideoSource().'" data-video-link="'.$this->getVideoLink().'" data-video-duration="'.$this->getDuration().'" /></a>';
-// 		return $output;
-// 	}
-// }
+	}
+	public function getAddedOnDate(){
+		return $this->mAddedOnDate;
+		
+	}
+	public function getVideoRevisionId(){
+		return $this->mVideoRevisionId;
+	}
+	public function getVideoLink(){
+		if ( $this->getVideoSource() == 'youku') {
+			return self::YOUKULINK.$this->getExternalId();
+		}elseif ( $this->getVideoSource() == 'bilibili' ) {
+			$res = explode('-',$this->mExternalId);
+			if ( count($res) > 1 ) {
+				return self::BILIBILI.$res[0].'/index_'.$res[1].'.html';
+			}else{
+				return self::BILIBILI.$this->getExternalId();
+			}
+		}
+	}
+}
