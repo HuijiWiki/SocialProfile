@@ -742,8 +742,7 @@ Class VideoTitle extends Title{
 			$file = ForeignDBFile::newFromTitle($this, $repo);
 		}
 		$class= $asyn?"video-player video-player-asyn":"video-player";
-        $output ='
-        <a href="#" class="video video-thumbnail image"><img class="'.$class.'" src="'.htmlspecialchars( $file->createThumb($w, $h) ).'" alt="'.$this->getText().'" data-video-title="'.$this->getText().'" data-video="'.$this->getPlayerUrl().'" data-video-from="'.$this->getVideoSource().'" data-video-link="'.$this->getVideoLink().'" data-video-duration="'.$this->getDuration().'" /></a>';
+        $output ='<a href="#" class="video video-thumbnail image"><img class="'.$class.'" src="'.htmlspecialchars( $file->createThumb($w, $h) ).'" alt="'.$this->getText().'" data-video-title="'.$this->getText().'" data-video="'.$this->getPlayerUrl().'" data-video-from="'.$this->getVideoSource().'" data-video-link="'.$this->getVideoLink().'" data-video-duration="'.$this->getDuration().'" /></a>';
 		return $output;
 	}
 	static function getVideoInfoByPrefixAndText( $prefix, $text ){

@@ -109,12 +109,14 @@ function wfUploadNewRevision( $video_from, $video_id, $video_title, $video_playe
 }
 
 function wfGetBiliVideoInfo( $video_id, $page_id){
-	$app_sec =  '2ad42749773c441109bdc0191257a664';
+	require_once('/var/www/html/Confidential.php');
+	$app_sec = Confidential::$bilibili_secret_key; 
+	$app_key = Confidential::$bilibili_app_key; 
 	$params = array(
 		'type' => 'json',
 		'id' => $video_id,
 		'page' => $page_id,
-		'appkey' => '85eb6835b0a1034e',
+		'appkey' => $app_key,
 	);
 	ksort($params);
 	$data = http_build_query($params);

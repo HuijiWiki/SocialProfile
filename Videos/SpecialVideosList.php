@@ -41,27 +41,31 @@
     $star = $per_page*($page-1);
     $res_arr = array_slice($allVideo, $star, $per_page);
   	$output .= "<div class='gray'>".$line."</div>";
-  	$output .= "视频列表";
-    $output .= '<div class="clear"><ul class="video-list">';
-    foreach ($res_arr as $key => $value) {
-        $vt = VideoTitle::newFromID($value['rev_page_id']);
-        // print_r($vt);die();
-        $userPage = Title::makeTitle( NS_USER, $vt->getAddedByUser() );
-        $userPageURL = htmlspecialchars( $userPage->getFullURL() );
-        $file = LocalFile::newFromTitle($vt, new LocalRepo($wgLocalFileRepo));
-        $output .='<li>'.$vt->getThumbnail().'
-        <div class="info">
-         <a href="'.htmlspecialchars( $file->getDescriptionUrl() ).'">'.$vt->getText().'</a><br>
-          用户:<a href="'.$userPageURL.'" >'.$vt->getAddedByUser().'</a><br>
-          <span class="upload-date">上传时间:'.$vt->getAddedOnDate().'</span>
-        </div>
-            </li>';
+    $output .= '<div class="clear">';
+    if ( empty( $allVideo ) ) {
+        $target = SpecialPage::getTitleFor( 'Videos' );
+        $output .= '<b class="gray">暂时还没有视频，去'.Linker::LinkKnown($target, '上传</a>', array(), array()).'</b>';
+    }else{
+        $output .= '<ul class="video-list">';
+        foreach ($res_arr as $key => $value) {
+            $vt = VideoTitle::newFromID($value['rev_page_id']);
+            $userPage = Title::makeTitle( NS_USER, $vt->getAddedByUser() );
+            $userPageURL = htmlspecialchars( $userPage->getFullURL() );
+            $file = LocalFile::newFromTitle($vt, new LocalRepo($wgLocalFileRepo));
+            $output .='<li>'.$vt->getThumbnail().'
+            <div class="info">
+             <a href="'.htmlspecialchars( $file->getDescriptionUrl() ).'">'.$vt->getText().'</a><br>
+              用户:<a href="'.$userPageURL.'" >'.$vt->getAddedByUser().'</a><br>
+              <span class="upload-date">上传时间:'.$vt->getAddedOnDate().'</span>
+            </div>
+                </li>';
+        }
+        $output .= '</ul>';
     }
-    $output .= '</ul></div>';
+    $output .= '</div>';
     /**
      * Build next/prev nav
      */
-    // $pcount = $rel->getGiftCountByUsername( $user_name );
     $pcount = count($allVideo);
     $numofpages = $pcount / $per_page;
 
@@ -76,8 +80,6 @@
           '<span aria-hidden="true">&laquo;</span>',
           array(),
           array(
-            // 'user' => $user_name,
-            // 'rel_type' => $rel_type,
             'page' => ( $page - 1 )
           )
         ) . '</li>';
@@ -102,7 +104,6 @@
             $i,
             array(),
             array(
-              // 'user' => $user_name,
               'page' => $i
             )
           ).'</li>';
@@ -116,8 +117,6 @@
             '<span aria-hidden="true">&raquo;</span>',
             array(),
             array(
-              // 'user' => $user_name,
-              // 'rel_type' => $rel_type,
               'page' => ( $page + 1 )
             )
           ).'</li>';  
