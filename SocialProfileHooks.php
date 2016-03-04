@@ -150,21 +150,32 @@ class SocialProfileHooks {
 	}
 	public static function onThumbnailBeforeProduceHTML( $handler, &$attribs, &$linkAttribs ){
 		$file = $handler->getFile();
-		// print_r($file);die();
-		$title = $file->title;
-		// echo $file_name;die();
-		//判断 是不是 video
-		$isVideoTitle = VideoTitle::isVideoTitle( $title );
-		// print_r($video_info);die();
-		if ( $isVideoTitle ){
-			$vt = VideoTitle::newFromId( $title->getArticleId() );
-			$attribs['data-video'] = $vt->getPlayerUrl();
+		$sha1 = $handler->getFile()->getSha1();
+		$vv = VideoRevision::newFromSha1( $sha1 );
+		if (!is_null($vv) && $vv->exists()){
+			$attribs['data-video'] = $vv->getPlayerUrl();
 			$attribs['class'] = 'video-player video-player-asyn';
-			$attribs['data-video-link'] = $vt->getVideoLink();
-			$attribs['data-video-from'] = $vt->getVideoSource();
-			$attribs['data-video-title'] = $vt->getText();
-			$attribs['data-video-duration'] = $vt->getDuration();
+			$attribs['data-video-link'] = $vv->getVideoLink();
+			$attribs['data-video-from'] = $vv->getVideoSource();
+			$attribs['data-video-title'] = $vv->getVideoTitle();
+			$attribs['data-video-duration'] = $vv->getDuration();			
 		}
+
+		// // print_r($file);die();
+		// $title = $file->title;
+		// // echo $file_name;die();
+		// //判断 是不是 video
+		// $isVideoTitle = VideoTitle::isVideoTitle( $title );
+		// // print_r($video_info);die();
+		// if ( $isVideoTitle ){
+		// 	$vt = VideoRevision::newFromId( $title->getArticleId() );
+		// 	$attribs['data-video'] = $vt->getPlayerUrl();
+		// 	$attribs['class'] = 'video-player video-player-asyn';
+		// 	$attribs['data-video-link'] = $vt->getVideoLink();
+		// 	$attribs['data-video-from'] = $vt->getVideoSource();
+		// 	$attribs['data-video-title'] = $vt->getText();
+		// 	$attribs['data-video-duration'] = $vt->getDuration();
+		// }
 	}
 	public static function onUploadComplete(&$uploadBase){
 		// $video_info = UploadVideos::checkFile( $uploadBase->getLocalFile()->getTitle() );
@@ -184,16 +195,14 @@ class SocialProfileHooks {
 			$out->addJsConfigVars('wgVideoSource', $source);
 			$out->setSubtitle( $str );
 			$out->addModules('ext.socialprofile.videopage.js');
-
 		}
 	}
 
 	public static function onImagePageAfterImageLinks($imagePage, &$html){
-		if ( VideoTitle::isVideoTitle($imagePage->getTitle() ) ){
-			$vt = VideoTitle::newFromId($imagePage->getTitle()->getArticleId());
-			$html .= '<p>标签：'.$vt->getTags()."</p>";
+		// if ( VideoTitle::isVideoTitle($imagePage->getTitle() ) ){
+		// 	$html = '<p>this is a test</p>';
 
-		}
+		// }
 	}
 
 }
