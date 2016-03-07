@@ -10,8 +10,6 @@ class QqSdk{
 
 	function __construct() { 
 	    require_once('/var/www/html/Confidential.php');
-	    global $wgCentralServer;
-	    $redirect = $wgCentralServer.'/wiki/special:callbackqq';
 	    $app_id = Confidential::$qq_app_id; 
 		$app_secret = Confidential::$qq_app_secret; 
 		
@@ -22,9 +20,11 @@ class QqSdk{
 	 
 	 
 	function get_access_token($code,$appid,$appsecret) { 
+	    global $wgCentralServer;
+	    $redirect = $wgCentralServer.'/wiki/special:callbackqq';
 		//获取access_token
 		$token_url = 'https://graph.qq.com/oauth2.0/token?grant_type=authorization_code&'
-		. 'client_id=' . $appid . '&redirect_uri=' . urlencode($this->redirect)//回调地址
+		. 'client_id=' . $appid . '&redirect_uri=' . urlencode($redirect)//回调地址
 		. '&client_secret=' . $appsecret . '&code=' . $code; 
 		$token = array();		//expires_in 为access_token 有效时间增量 
 		parse_str($this->_curl_get_content($token_url), $token); 

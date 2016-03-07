@@ -35,6 +35,7 @@ class SpecialCallbackQQ extends SpecialPage {
 		$code = $request->getVal( 'code' );
 		$qq_sdk = new QqSdk();
 	    $token = $qq_sdk->get_access_token($code,Confidential::$qq_app_id,Confidential::$qq_app_secret);
+	    // print_r($token);die();
 	    $open_id = $qq_sdk->get_open_id($token['access_token']);
 	    $checkRes = $qq_sdk->checkOauth( $open_id['openid'], 'qq' );
 	    if( $checkRes == null ){
