@@ -100,6 +100,7 @@ $wgAutoloadClasses['SpecialVideos'] = __DIR__ . '/Videos/SpecialVideos.php';
 $wgAutoloadClasses['SpecialVideosList'] = __DIR__ . '/Videos/SpecialVideosList.php';
 $wgAutoloadClasses['SpecialAddUserEditCounts'] = __DIR__ . '/UserStats/SpecialAddUserEditCounts.php';
 $wgAutoloadClasses['SpecialAddFestivalGift'] = __DIR__ . '/SystemGifts/SpecialAddFestivalGift.php';
+$wgAutoloadClasses['SpecialSendHiddenGift'] = __DIR__ . '/SystemGifts/SpecialSendHiddenGift.php';
 // $wgAutoloadClasses['SpecialFamilyTree'] = __DIR__ . '/FamilyTree/SpecialFamilyTree.php';
 $wgAutoloadClasses['QueryInterface'] = __DIR__ . '/QueryInterface.php';
 $wgAutoloadClasses['TemplateFork'] = __DIR__ . '/TemplateFork/TemplateForkClass.php';
@@ -142,6 +143,7 @@ $wgSpecialPages['Videos'] = 'SpecialVideos';
 $wgSpecialPages['VideosList'] = 'SpecialVideosList';
 $wgSpecialPages['AddUserEditCounts'] = 'SpecialAddUserEditCounts';
 $wgSpecialPages['AddFestivalGift'] = 'SpecialAddFestivalGift';
+$wgSpecialPages['SendHiddenGift'] = 'SpecialSendHiddenGift';
 // $wgSpecialPages['FamilyTree'] = 'SpecialFamilyTree';
 
 
@@ -319,7 +321,6 @@ $wgHooks['ImagePageAfterImageLinks'][] = 'SocialProfileHooks::onImagePageAfterIm
 
 // ResourceLoader module definitions for certain components which do not have
 // their own loader file
-
 // General
 $wgResourceModules['ext.socialprofile.clearfix'] = array(
 	'styles' => 'clearfix.css',

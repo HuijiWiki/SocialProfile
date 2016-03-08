@@ -14,7 +14,7 @@
  * @file
  * @ingroup Extensions
  */
-class GenerateTopUsersReport extends SpecialPage {
+class GenerateTopUsersReport extends UnlistedSpecialPage {
 
 	/**
 	 * Constructor -- set up the new special page
