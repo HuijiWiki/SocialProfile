@@ -9,7 +9,7 @@ if(!defined('MEDIAWIKI')){
 $wgHooks['NewRevisionFromEditComplete'][] = 'insertEditRecord';
 
 
-require_once("curl.php");
+//require_once("curl.php");
 function insertEditRecord($article, $rev, $baseID, $user ){
 	global $wgHuijiPrefix, $wgSitename, $wgIsProduction;
 	$url = 'http://huijidata.com:50007/insertEditRecord/';
