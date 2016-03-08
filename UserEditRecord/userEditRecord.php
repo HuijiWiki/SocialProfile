@@ -34,7 +34,7 @@ function insertEditRecord($article, $rev, $baseID, $user ){
                 'client.userAgent' => isset($_SERVER[ 'HTTP_USER_AGENT' ]) ? $_SERVER[ 'HTTP_USER_AGENT' ] : "",
 	);        
 
-MyCURL::postDataInJson('http://test.huiji.wiki:8080',json_encode($log_data),'huiji','huiji1024');  
+//MyCURL::postDataInJson('http://test.huiji.wiki:8080',json_encode($log_data),'huiji','huiji1024');  
 //        curl_post_json($log_data,"huiji","huiji1024");
 	$post_data_string = '';
 	foreach($post_data as $key => $value){
