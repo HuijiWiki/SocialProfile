@@ -320,6 +320,36 @@ $wgHooks['ImagePageAfterImageLinks'][] = 'SocialProfileHooks::onImagePageAfterIm
 // ResourceLoader module definitions for certain components which do not have
 // their own loader file
 
+// General
+$wgResourceModules['ext.socialprofile.clearfix'] = array(
+	'styles' => 'clearfix.css',
+	'position' => 'top',
+	'localBasePath' => __DIR__ . '/shared',
+	'remoteExtPath' => 'SocialProfile/shared',
+);
+$wgResourceModules['ext.socialprofile.responsive'] = array(
+	'styles' => 'responsive.less',
+	'position' => 'top',
+	'localBasePath' => __DIR__ . '/shared',
+	'remoteExtPath' => 'SocialProfile/shared',
+);
+// General/shared JS modules -- not (necessarily) directly used by SocialProfile,
+// but rather by other social tools which depend on SP
+// @see https://phabricator.wikimedia.org/T100025
+$wgResourceModules['ext.socialprofile.flash'] = array(
+	'scripts' => 'flash.js',
+	'position' => 'bottom',
+	'localBasePath' => __DIR__ . '/shared',
+	'remoteExtPath' => 'SocialProfile/shared',
+);
+$wgResourceModules['ext.socialprofile.LightBox'] = array(
+	'scripts' => 'LightBox.js',
+	'position' => 'bottom',
+	'localBasePath' => __DIR__ . '/shared',
+	'remoteExtPath' => 'SocialProfile/shared',
+);
+
+
 // UserBoard
 $wgResourceModules['ext.socialprofile.userboard.js'] = array(
 	'scripts' => 'UserBoard.js',

@@ -1,6 +1,10 @@
 <?php
+
 include("/var/www/services/log4php-2.3.0/Logger.php");
 Logger::configure("log-config.xml");
+
+$ELogger = Logger::getLogger("myLogger");
+/*
 class EditRecordLogger{
 
      private $log;
@@ -16,9 +20,12 @@ class EditRecordLogger{
      {
         $this->log->info($message);
      }
+
+   
+     
 }
-$logger = new EditRecordlogger();
-$logger->record("Logger.php");
+*/
+$haha = "111";
 
 ?>
 

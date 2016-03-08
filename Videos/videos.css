@@ -29,7 +29,18 @@
 	width: 200px;
 	list-style-type: none;
 }
+.audio-list li{
+	float: left;
+	position: relative;
+	width: 320px;
+	list-style-type: none;	
+}
 .upload-date{
 	font-size: 1px;
 	color: gray;
+}
+div.info {
+	overflow:hidden; 
+    white-space:nowrap; 
+    text-overflow: ellipsis;
 }

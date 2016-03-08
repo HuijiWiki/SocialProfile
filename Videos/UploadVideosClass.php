@@ -270,7 +270,7 @@ class UploadVideos{
 	/**
 	 * get all video info
 	 */
-	static function getAllVideoInfo(){
+	static function getAllVideoInfo( $type = 0 ){
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select(
 			'video_page',
@@ -285,12 +285,12 @@ class UploadVideos{
 			$result = array();
 			// $i = 0;
 			foreach ($res as $key => $value) {
-				$result[$value->page_id] = self::getDetailVideoInfoById( $value->revision_id );
-				// $result[$i] = array(
-				// 				'page_id' => $value->page_id,
-				// 				'revision_id' => $value->revision_id 
-				// 			);
-				// $i++;
+				$vt = VideoTitle::newFromId( $value->page_id );
+				if ( $vt->getVideoSource() != '163' && $type == 0 ) {
+					$result[$value->page_id] = self::getDetailVideoInfoById( $value->revision_id );
+				}elseif( $vt->getVideoSource() == '163' && $type == 1 ){
+					$result[$value->page_id] = self::getDetailVideoInfoById( $value->revision_id );
+				}
 			}
 			return $result;
 		}
@@ -355,8 +355,31 @@ class UploadVideos{
 		curl_setopt( $ch , CURLOPT_ENCODING, 'gzip' );
 		$http_data = curl_exec( $ch ) ;
 		curl_close($ch);
-		//var_dump($http_data);die();
 		return $http_data;
+	}
+	static function curl_get($url){
+	    $refer = "http://music.163.com/";
+	    $header[] = "Cookie: " . "appver=1.5.0.75771;";
+	    $ch = curl_init();
+	    curl_setopt($ch, CURLOPT_URL, $url);
+	    curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	    curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
+	    curl_setopt($ch, CURLOPT_REFERER, $refer);
+	    $output = curl_exec($ch);
+	    curl_close($ch);
+	    return $output;
+	}
+	//display dropdown
+	static function dropDown(){
+		$templateParser = new TemplateParser(  __DIR__  );
+		$output = $templateParser->processTemplate(
+				    'videodropdown',
+				    array(
+				    	'activeList' => '选择分类',
+				    )
+				);
+		return $output;
 	}
 }
 /**
@@ -740,6 +763,10 @@ Class VideoTitle extends Title{
 		} else {
 			$repo = new ForeignDBRepo($repoArray);
 			$file = ForeignDBFile::newFromTitle($this, $repo);
+		}
+		if ($this->getVideoSource() == '163'){
+			$w = 0;
+			$h = 0;
 		}
 		$class= $asyn?"video-player video-player-asyn":"video-player";
         $output ='<a href="#" class="video video-thumbnail image"><img class="'.$class.'" src="'.htmlspecialchars( $file->createThumb($w, $h) ).'" alt="'.$this->getText().'" data-video-title="'.$this->getText().'" data-video="'.$this->getPlayerUrl().'" data-video-from="'.$this->getVideoSource().'" data-video-link="'.$this->getVideoLink().'" data-video-duration="'.$this->getDuration().'" /></a>';

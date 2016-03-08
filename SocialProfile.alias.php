@@ -523,8 +523,8 @@ $specialPageAliases['zh-hans'] = array(
 	'AddUserEditCounts'=>array('补签'),
 	'AddFestivalGift'=>array('节日成就'),
 	'UploadFiles'=>array('文件上传'),
-	'Videos'=>array('添加视频'),
-	'VideosList'=>array('视频列表'),
+	'Videos'=>array('添加媒体文件'),
+	'VideosList'=>array('媒体文件列表'),
 	'FamilyTree'=>array('家族树'),
 );
 

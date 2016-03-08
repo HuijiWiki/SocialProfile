@@ -17,6 +17,9 @@
     // Set the page title, robot policies, etc.
     $this->setHeaders();
     $out = $this->getOutput();
+    $request = $this->getRequest();
+    $type = empty($request->getVal( 'type' ))?0:$request->getVal( 'type' );
+
     $output = '';
     $out->addModuleStyles('ext.socialprofile.videos.css');
     $out->addModules( 'ext.socialprofile.videos.js' );
@@ -26,7 +29,7 @@
       *$login->getFullURL( 'returnto=Special:SystemGiftList' )
      * It will automatically return them to the ViewSystemGifts page
      */
-    
+    $out->addHTML(UploadVideos::dropDown());
     $login = SpecialPage::getTitleFor( 'Userlogin' );
     if ( $wgUser->getID() == 0 || $wgUser->getName() == '' ) {
       $output .= '请先<a class="login-in" data-toggle="modal" data-target=".user-login">登录</a>或<a href="'.$login->getFullURL( 'type=signup' ).'">创建用户</a>。';
@@ -37,16 +40,26 @@
     $page = empty( $request->getVal('page') )?1:$request->getVal('page');
   	$per_page = 10;
     $line = wfMessage('videos-info')->parse();
-  	$allVideo = UploadVideos::getAllVideoInfo();
+  	$allVideo = UploadVideos::getAllVideoInfo( $type );
     $star = $per_page*($page-1);
     $res_arr = array_slice($allVideo, $star, $per_page);
   	$output .= "<div class='gray'>".$line."</div>";
     $output .= '<div class="clear">';
+    if ( $type == 0 ) {
+       $clas = 'video-list';
+    }elseif( $type == 1 ){
+      $clas = 'audio-list';
+    }else{
+      $target = SpecialPage::getTitleFor( 'Videoslist' );
+      $output .= '您的URL出错了，访问'.Linker::LinkKnown($target, '视频文件列表</a>', array(), array()).'or'.Linker::LinkKnown($target, '音频文件列表</a>', array(), array( 'type'=>1 )).'</div>';
+      $out->addHTML( $output );
+      return false;
+    }
     if ( empty( $allVideo ) ) {
         $target = SpecialPage::getTitleFor( 'Videos' );
-        $output .= '<b class="gray">暂时还没有视频，去'.Linker::LinkKnown($target, '上传</a>', array(), array()).'</b>';
+        $output .= '<b class="gray">暂时还没有媒体文件，去'.Linker::LinkKnown($target, '上传</a>', array(), array()).'</b>';
     }else{
-        $output .= '<ul class="video-list">';
+        $output .= '<ul class="'.$clas.'">';
         foreach ($res_arr as $key => $value) {
             $vt = VideoTitle::newFromID($value['rev_page_id']);
             $userPage = Title::makeTitle( NS_USER, $vt->getAddedByUser() );
@@ -88,9 +101,9 @@
       if ( ( $pcount % $per_page ) != 0 ) {
         $numofpages++;
       }
-      if ( $numofpages >= 9 && $page < $pcount ) {
-        $numofpages = 9 + $page;
-      }
+      // if ( $numofpages >= 9 && $page < $pcount ) {
+      //   $numofpages = 9 + $page;
+      // }
       // if ( $numofpages >= ( $total / $per_page ) ) {
       //  $numofpages = ( $total / $per_page ) + 1;
       // }

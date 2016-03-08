@@ -160,7 +160,10 @@ class SocialProfileHooks {
 			$attribs['data-video-title'] = $vv->getVideoTitle();
 			$attribs['data-video-duration'] = $vv->getDuration();			
 		}
-
+		if ( !is_null($vv) && $vv->getVideoSource() == '163' ) {
+			$attribs['height'] = '0px';			
+			$attribs['width'] = '0px';			
+		}
 		// // print_r($file);die();
 		// $title = $file->title;
 		// // echo $file_name;die();

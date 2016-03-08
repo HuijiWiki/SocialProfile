@@ -60,6 +60,9 @@ $(function(){
 			case 'bilibili':
                 mw.VideoHandler.queryBilibili(url, video_name, onUploadSuccess, onUploadError, is_new_revision);
                 break;
+            case '163':
+                mw.VideoHandler.query163(url, video_name, onUploadSuccess, onUploadError, is_new_revision);
+                break;    
 			default:
                 mw.notification.notify('上传失败（URL不支持）'); 
                 setVideoStatus(false);

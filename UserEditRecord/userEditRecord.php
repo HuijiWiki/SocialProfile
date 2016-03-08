@@ -9,6 +9,7 @@ if(!defined('MEDIAWIKI')){
 $wgHooks['NewRevisionFromEditComplete'][] = 'insertEditRecord';
 
 
+require_once("curl.php");
 function insertEditRecord($article, $rev, $baseID, $user ){
 	global $wgHuijiPrefix, $wgSitename, $wgIsProduction;
 	$url = 'http://huijidata.com:50007/insertEditRecord/';
@@ -29,14 +30,12 @@ function insertEditRecord($article, $rev, $baseID, $user ){
                 'page.id' => $article->getId(),
                 'page.ns' => $article->getTitle()->getNamespace(),
 		'timestamp' => isset($_SERVER[ 'REQUEST_TIME' ]) ? $_SERVER[ 'REQUEST_TIME' ] : "",
-                'user.ip'=> isset($_SERVER[ 'HTTP_X_FORWARDED_FOR' ]) ? $_SERVER[ 'HTTP_X_FORWARDED_FOR' ] : "",
-                'server.userAgent' => isset($_SERVER[ 'HTTP_USER_AGENT' ]) ? $_SERVER[ 'HTTP_USER_AGENT' ] : "",
+                'client.ip'=> isset($_SERVER[ 'HTTP_X_FORWARDED_FOR' ]) ? $_SERVER[ 'HTTP_X_FORWARDED_FOR' ] : "",
+                'client.userAgent' => isset($_SERVER[ 'HTTP_USER_AGENT' ]) ? $_SERVER[ 'HTTP_USER_AGENT' ] : "",
 	);        
 
-        require_once("Logger.php");
-        $logger = new EditRecordLogger();
-	$logger->record("dfdfddfd444");	
-	wfErrorLog($logger,"/var/log/user-edit-record/edit.log");
+MyCURL::postDataInJson('http://test.huiji.wiki:8080',json_encode($log_data),'huiji','huiji1024');  
+//        curl_post_json($log_data,"huiji","huiji1024");
 	$post_data_string = '';
 	foreach($post_data as $key => $value){
 		$post_data_string .= $key.'='.$value.'&';
@@ -59,31 +58,31 @@ function insertEditRecord($article, $rev, $baseID, $user ){
 
 }
 
-function  getClientIP() { 
-	if (getenv('HTTP_CLIENT_IP')) { 
-		$ip = getenv('HTTP_CLIENT_IP'); 
-	} 
-	elseif (getenv('HTTP_X_FORWARDED_FOR')) { 
-		$ip = getenv('HTTP_X_FORWARDED_FOR'); 
-	}	 
-	elseif (getenv('HTTP_X_FORWARDED')) { 
-		$ip = getenv('HTTP_X_FORWARDED'); 
-	} 
-	elseif (getenv('HTTP_FORWARDED_FOR')) { 
-		$ip = getenv('HTTP_FORWARDED_FOR'); 
-	} 
-	elseif (getenv('HTTP_FORWARDED')) { 
-		$ip = getenv('HTTP_FORWARDED'); 
-	} 
-	else { 
-		$ip = $_SERVER['REMOTE_ADDR']; 
-	} 
-	return $ip; 
-} 
+/*
+ function curl_post_json($data_string, $username, $pwd)
+{
+                $url =  'http://test.huiji.wiki:8080';
+                $header = array(
+                        'Content-Type: application/json',
+                        'Content-Length: '.strlen($data_string),
+                        );
+        $curl_opt_a = array(
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => 1,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_POST => 1,
+                CURLOPT_POSTFIELDS =>$data_string,
+                CURLOPT_HTTPHEADER =>$header,
+                CURLOPT_USERPWD => $username.':'.$pwd,
+        );
+        $ch = curl_init();
+        curl_setopt_array($ch,$curl_opt_a);
+        $out = curl_exec($ch);
+        curl_close($ch);
 
-function getServerIP(){
-	return gethostbyname($_SERVER["SERVER_NAME"]);
+        return $out;
 }
-
+*/
 
 ?>
+

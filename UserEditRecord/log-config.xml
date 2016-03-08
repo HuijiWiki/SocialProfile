@@ -3,7 +3,7 @@
         <layout class="LoggerLayoutPattern">
  	  <param name="conversionPattern" value="%msg%n" />
         </layout>
-        <param name="file" value="/var/log/user-edit-record/edit.log" />
+        <param name="file" value="/var/log/site-maintenance/huiji.log" />
         <param name="maxFileSize" value="10MB" />
         <param name="maxBackupIndex" value="5" />
     </appender>

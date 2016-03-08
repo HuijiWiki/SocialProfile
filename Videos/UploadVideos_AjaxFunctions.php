@@ -6,6 +6,7 @@ $wgAjaxExportList[] = 'wfinsertVideoInfo';
 $wgAjaxExportList[] = 'wfcheckVideoExist';
 $wgAjaxExportList[] = 'wfUploadNewRevision';
 $wgAjaxExportList[] = 'wfGetBiliVideoInfo';
+$wgAjaxExportList[] = 'wfGet163MusicInfo';
 
 function wfinsertVideoInfo( $video_from, $title_str, $video_id, $video_title, $video_player_url, $video_tags, $video_duration ) {
 	global $wgUser;
@@ -123,4 +124,24 @@ function wfGetBiliVideoInfo( $video_id, $page_id){
 	$res = $data.'&sign='.md5($data.$app_sec);
 	$resp_cid = UploadVideos::urlfetch('http://api.bilibili.com/view?'.$res);
 	return $resp_cid;
+}
+
+/**
+ * [wfGet163MusicInfo description]
+ * @param  [int] $music_id [description]
+ * @param  [int] $type     [ album-type:1 song-type:0 playlist-type:2]
+ * @return [json]           [music info]
+ */
+function wfGet163MusicInfo( $music_id, $type ){
+	if ( $type == 2 ) {
+		$url = "http://music.163.com/api/song/detail/?id=" . $music_id . "&ids=%5B" . $music_id . "%5D";
+	    return UploadVideos::curl_get($url);
+	}elseif ( $type == 1 ) {
+		$url = "http://music.163.com/api/album/" . $music_id;
+    	return UploadVideos::curl_get($url);
+	}elseif ( $type == 0 ) {
+		$url = "http://music.163.com/api/playlist/detail?id=" . $music_id;
+    	return UploadVideos::curl_get($url);
+	}
+
 }
