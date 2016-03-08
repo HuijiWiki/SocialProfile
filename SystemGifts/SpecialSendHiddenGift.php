@@ -63,9 +63,9 @@ class SpecialSendHiddenGift extends UnlistedSpecialPage {
 			$this->getOutput()->redirect( $wgCentralServer.'/wiki/U_found_me' );
 		} 
 		$usg = new UserSystemGifts( $user->getName() );
-    	if (HuijiFunctions::addLock( 'USG-72-'.$user->getId(), 1 ) ){
-			$usg->sendSystemGift( 72 );
-        	HuijiFunctions::releaseLock('USG-72-'.$user->getId());
+    	if (HuijiFunctions::addLock( 'USG-73-'.$user->getId(), 1 ) ){
+			$usg->sendSystemGift( 73 );
+        	HuijiFunctions::releaseLock('USG-73-'.$user->getId());
     	}
     	$this->getOutput()->redirect( $wgCentralServer.'/wiki/U_found_me' );
     }
