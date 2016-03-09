@@ -11,7 +11,12 @@ class AllSitesInfo{
 		if ( $data != '' && count($data) > 0 ) {
 			$result = $data;
 		} else {
-			$result = self::getAllSitesRankFromDB( $prefix, $yesterday );
+			try{
+				$result = self::getAllSitesRankFromDB( $prefix, $yesterday );
+			} catch( Exeption $e ){
+				$result = '';
+			}
+			
 		}
 		return $result;
 		
@@ -91,7 +96,7 @@ class AllSitesInfo{
 	}
 
 	static function getAllSitesRank(){
-		$allSite = HuijiPrefix::getAllPrefix();
+		$allSite = Huiji::getInstance()->getSitePrefixes();
 		$today = date('Y-m-d');
 		$yesterday = date('Y-m-d',strtotime('-1 days'));
 		$lastWeek = date('Y-m-d',strtotime('-8 days'));
@@ -239,12 +244,15 @@ class AllSitesInfo{
 	//get site count
 	static function getSiteCountNum(){
 		global $wgLang;
-		$allSite = HuijiPrefix::getAllPrefix();
+		$allSite = Huiji::getInstance()->getSitePrefixes();
 		return $wgLang->formatNum( count($allSite) );
 	}
 
 	//get user count
 	static function getUsreCountNum(){
+		return self::getUserCountNum();
+	}
+	static function getUserCountNum(){
 		global $wgLang;
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select(
@@ -258,13 +266,13 @@ class AllSitesInfo{
 				$countNum = $value->count;
 			}
 		}
-		return $wgLang->formatNum( $countNum );
+		return $wgLang->formatNum( $countNum );		
 	}
 
 	//get all site edit count
 	static function getAllSiteEditCount(){
 		global $isProduction, $wgLang;
-		$allSite = HuijiPrefix::getAllPrefix();
+		$allSite = Huiji::getInstance()->getSitePrefixes();
 		$editCount = 0;
 		foreach ($allSite as $prefix) {
 			if ( !is_null($prefix) ) {
@@ -299,7 +307,7 @@ class AllSitesInfo{
 	//get upload files count
 	static function getAllUploadFileCount(){
 		global $isProduction, $wgLang;
-		$allSite = HuijiPrefix::getAllPrefix();
+		$allSite = Huiji::getInstance()->getSitePrefixes();
 		$fileCount = 0;
 		foreach ($allSite as $prefix) {
 			if ( !is_null($prefix) ) {
@@ -332,7 +340,7 @@ class AllSitesInfo{
 	//get all page count
 	static function getAllPageCount(){
 		global $isProduction, $wgLang;
-		$allSite = HuijiPrefix::getAllPrefix();
+		$allSite = Huiji::getInstance()->getSitePrefixes();
 		$pageCount = 0;
 		foreach ($allSite as $prefix) {
 			if ( !is_null($prefix) ) {
@@ -366,13 +374,14 @@ class AllSitesInfo{
 	
 	static function getPageInfoByPrefix( $prefix ){
 		global $isProduction, $wgLang;
-		if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
-				$prefix = 'huiji_home';
-			}elseif ( $isProduction == true ) {
-				$prefix = 'huiji_sites-'.str_replace('.', '_', $prefix);
-			}else{
+		if( $isProduction == true && ( $prefix == 'www' || $prefix == 'home') ){
+			$prefix = 'huiji_home';
+		}elseif ( $isProduction == true ) {
+			$prefix = 'huiji_sites-'.str_replace('.', '_', $prefix);
+		}else{
 				$prefix = 'huiji_'.str_replace('.', '_', $prefix);
-			}
+		} 
+		try{
 			$resArr = array();
 			$dbr = wfGetDB( DB_SLAVE,$groups = array(),$wiki = $prefix );
 			$res = $dbr->select(
@@ -382,6 +391,7 @@ class AllSitesInfo{
 					'ss_good_articles',
 					'ss_total_pages',
 					'ss_users',
+					'ss_images',
 				 ),
 				array('1'),
 				__METHOD__
@@ -392,9 +402,13 @@ class AllSitesInfo{
 					$resArr['totalArticles']  = $value->ss_good_articles;
 					$resArr['totalPages']  = $value->ss_total_pages;
 					$resArr['totalUsers']  = $value->ss_users;
+					$resArr['totalImages'] = $value->ss_images;
 				}
 			}
-			return $resArr;
+		}catch(Exception $e){
+			return '';
+		}
+		return $resArr;	
 	}
 
 }
