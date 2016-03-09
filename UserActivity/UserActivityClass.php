@@ -163,20 +163,7 @@ class UserActivity {
 				$tables[] = $value->f_wiki_domain;
 			}				
 		} else {
-			$values = $dbr->select(
-				'domain',
-				'domain_prefix',
-				'domain_status = 0',
-				__METHOD__
-			);
-			// echo $values;
-			// die(1);
-			$tables = array();
-			foreach( $values as $value ){
-				if ( !is_null($value->domain_prefix) ) {
-					$tables[] = $value->domain_prefix;
-				}
-			}			
+			$tables = Huiji::getInstance()->getSitePrefixes(false);	
 		}
 		$this->cached_tables = $tables;
 		return $tables;
