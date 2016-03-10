@@ -69,7 +69,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		/* Crew members */
 		$sysopRaw = $site->getUsersFromGroup('sysop');
 		$sysop = '';
-        $nums = count($sysop);
+        $nums = count($sysopRaw);
         for ($j=0; $j < $nums; $j++) {
             $sysop .= '<a class="crew-avatar" href="'.$sysopRaw[$j]['url'].'"  title="'.$sysopRaw[$j]['user_name'].'">'.$sysopRaw[$j]['avatar'].'</a>';
         }
