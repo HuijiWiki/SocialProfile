@@ -39,17 +39,19 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		// Add js and message
 		// $out->addModules( 'skins.bootstrapmediawiki.huiji.getRecordsInterface.js' );
 		$out->addModules( 'ext.socialprofile.admindashboard.js' );
-		$out->addModules('ext.socialprofile.userprofile.js');
+		// $out->addModules('ext.socialprofile.userprofile.js');
 
 		$output = ''; // Prevent E_NOTICE
-	    	$yesterday = date("Y-m-d",strtotime("-1 day"));
+	    $yesterday = date("Y-m-d",strtotime("-1 day"));
 		$totaledit = SiteStats::edits();
 		$ueb = new UserEditBox();
 		$rankInfo = AllSitesInfo::getAllSitesRankData( $wgHuijiPrefix, $yesterday );
-		$usf = new UserSiteFollow();
-		$follows = $usf->getSiteFollowers( '',$wgHuijiPrefix );
+		$site = WikiSite::newFromPrefix($wgHuijiPrefix);
+		$stats = $site->getStats(); 	
+		$follows = $site->getFollowers();
+
 		// print_r($follows);
-		$followCount = count($follows);
+		$followCount = $stats['followers'];
 		if($followCount >= 8){
 			$follows = array_slice($follows, 0, 8);
 			$display = '';
@@ -64,6 +66,19 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 			$arr['follow_date'] = wfMessage( 'comments-time-ago', HuijiFunctions::getTimeAgo( strtotime( $value['follow_date'] ) ) )->text();
 			$newFollow[] = $arr;
 		}
+		/* Crew members */
+		$sysopRaw = $site->getUsersFromGroup('sysop');
+		$sysop = '';
+        $nums = count($sysop);
+        for ($j=0; $j < $nums; $j++) {
+            $sysop .= '<a class="crew-avatar" href="'.$sysopRaw[$j]['url'].'"  title="'.$sysopRaw[$j]['user_name'].'">'.$sysopRaw[$j]['avatar'].'</a>';
+        }
+        $bureaucratRaw = $site->getUsersFromGroup('bureaucrat');
+        $bureaucrat = '';
+        $nums = count($bureaucratRaw);
+        for ($j=0; $j < $nums; $j++) {
+            $bureaucrat .= '<a class="crew-avatar" href="'.$bureaucratRaw[$j]['url'].'"  title="'.$bureaucratRaw[$j]['user_name'].'">'.$bureaucratRaw[$j]['avatar'].'</a>';
+        }        
 		
 		$sentToAll = SpecialPage::getTitleFor( 'SendToFollowers' )->getFullURL();
 		$showMore = SpecialPage::getTitleFor( 'EditRank' )->getFullURL();
@@ -107,6 +122,8 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				        'changePageTitle' => $changePageTitle,
 				        'changeMainpageTitle' => $changeMainpageTitle,
 				        'token' => $token,
+				        'bureaucrat' => $bureaucrat,
+				        'sysop' => $sysop,
 				    )
 				);
 		$out->addHtml($output);

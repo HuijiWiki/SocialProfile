@@ -101,10 +101,8 @@ class SpecialSendToFollowers extends UnlistedSpecialPage {
 						$this->msg( 'boardlinkunselectall' )->escaped() . '</a> ';
 		$output .= '</div>
 		</div>';
-
-		$usf = new UserSiteFollow();
-
-		$res = $usf->getSiteFollowers( $user->getName(),$wgHuijiPrefix );
+		$site = WikiSite::newFromPrefix($wgHuijiPrefix);
+		$res = $site->getFollowers();
 		foreach ($res as $value) {
 			$follows[] = $value['user_name'];
 		}

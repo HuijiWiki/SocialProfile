@@ -435,12 +435,12 @@ class UserSiteFollow{
 	 * @param $user:current username; $site_name:servername
 	 * @return array
 	 */
-	public static function getSiteFollowersWithDetails( $user,$site_name ){
+	public static function getSiteFollowersWithDetails( $site_name ){
 		// return '';
 		$dbr = wfGetDB( DB_SLAVE );
 		$request = array();
 			// $follower = UserUserFollow::getFollowedByUser( $user->getName() );
-			$res = self::getSiteFollowers($user,$site_name);
+			$res = self::getSiteFollowers($site_name);
 			foreach ($res as $value) {
 				$u_name = $value['user_name'];
 				$temp['user'] = $u_name;
@@ -528,15 +528,15 @@ class UserSiteFollow{
 	 * @param $sitename:site's name
 	 * @return array list of user
 	 */	
-	public static function getSiteFollowers( $user,$sitename ) {
-		$data = self::getSiteFollowersCache( $user,$sitename );
+	public static function getSiteFollowers( $sitename ) {
+		$data = self::getSiteFollowersCache( $sitename );
 		if ( $data != '' ) {
 			return $data;
 		}else {
-			return self::getSiteFollowersDB( $user,$sitename );
+			return self::getSiteFollowersDB( $sitename );
 		}
 	}
-	public static function getSiteFollowersCache( $user,$sitename ) {
+	public static function getSiteFollowersCache( $sitename ) {
 		global $wgMemc;
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'site_followed_list', $sitename );
 		$data = $wgMemc->get( $key );
@@ -544,7 +544,7 @@ class UserSiteFollow{
 			return $data;
 		}
 	}
-	public static function getSiteFollowersDB( $user,$sitename ){
+	public static function getSiteFollowersDB( $sitename ){
 		global $wgMemc;
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'site_followed_list', $sitename );
 		$dbr = wfGetDB( DB_SLAVE );
@@ -565,6 +565,7 @@ class UserSiteFollow{
 		);
 		// return $res;	
 		if($res == true){
+			$data = array();
 			foreach ($res as $value) {
 				$ruser = User::newFromName($value->f_user_name);
 				$group = $ruser->getEffectiveGroups();

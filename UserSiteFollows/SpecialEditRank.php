@@ -73,7 +73,8 @@ class SpecialEditRank extends SpecialPage {
 		$user_id = User::idFromName( $user_name );
 		$target_user = User::newFromId( $user_id );
 		$userPage = Title::makeTitle( NS_USER, $user_name );
-		$sitefollows = UserSiteFollow::getSiteFollowersWithDetails($target_user, $wgHuijiPrefix);
+		$site = WikiSite::newFromPrefix($wgHuijiPrefix);
+		$sitefollows = $site->getFollowers(true);
 		foreach ($sitefollows as $key => $value) {
 			if( $value['count'] == 0 ){
 	            unset($sitefollows[$key]);

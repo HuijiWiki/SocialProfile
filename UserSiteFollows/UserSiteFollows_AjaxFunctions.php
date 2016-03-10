@@ -93,7 +93,8 @@ function wfUserSiteFollowsDetailsResponse( $user_name,$t_name ) {
 function wfUsersFollowingSiteResponse( $user, $site_name ) {
 	global $wgUser;
 	// if ( $wgUser->isLoggedIn() ) {
-		$sites = UserSiteFollow::getSiteFollowersWithDetails($wgUser, $site_name);
+		$site = WikiSite::newFromPrefix($site_name);
+		$sites = $site->getFollowers(true);
 		$ret = array('success'=> true, 'result'=>$sites );
 		$out = json_encode($ret);
 		return $out;  

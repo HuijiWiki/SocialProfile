@@ -24,3 +24,10 @@ body #profile-image .crop-avatar{
 body #profile-image .upload-tool{
     margin-right: 0;
 }
+.label.label-info{
+    margin-right: 5px;
+}
+.crew-avatar{
+    margin-left: 5px;
+    margin-right: 5px;
+}
