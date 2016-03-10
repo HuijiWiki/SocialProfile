@@ -142,11 +142,12 @@ function wfSiteFollowsRecommend( $username, $servername ){
 	        $recommendSite = array();
 
 	        foreach($recSite as $value){
-	            $isFollowSite = $usf->checkUserSiteFollow( $wgUser, $value['site_prefix']);
+	        	$site = WikiSite::newFromPrefix($value['site_prefix']);
+	            $isFollowSite = $site->isFollowedBy($wgUser);
 	            if($isFollowSite == false ){
-	            	$sa = new wSiteAvatar( $value['site_prefix'], 'ml' );
-	                $fsres['s_name'] = HuijiPrefix::prefixToSiteName($value['site_prefix']);
-	                $fsres['s_url'] = HuijiPrefix::prefixToUrl($value['site_prefix']);
+	            	$sa = $site->getAvatar('ml');
+	                $fsres['s_name'] = $site->getName();
+	                $fsres['s_url'] = $site->getUrl();
 	                $fsres['s_avatar'] = $sa->getAvatarURL();
 	                $recommendSite[] = $fsres;
 	            }

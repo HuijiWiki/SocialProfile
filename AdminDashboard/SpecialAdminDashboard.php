@@ -102,7 +102,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				    	'siteRank' => isset($rankInfo[0]['site_rank'])?$rankInfo[0]['site_rank']:'暂无',
 				    	'siteScore' => isset($rankInfo[0]['site_score'])?$rankInfo[0]['site_score']:'暂无',
 				        'yesterdayCount' => UserSiteFollow::getFollowerCountOneday( $wgHuijiPrefix, $yesterday ),
-				        'totalCount' => UserSiteFollow::getFollowerCount( $wgHuijiPrefix ),
+				        'totalCount' => $stats['followers'],
 				        'yesterdayEdit' => $ueb->getSiteEditCount( '', $wgHuijiPrefix, $yesterday, $yesterday ),
 				        'totalEdit' => $totaledit,
 				        'totalView' => $ueb->getSiteViewCount( -1, $wgHuijiPrefix, '', '' ),

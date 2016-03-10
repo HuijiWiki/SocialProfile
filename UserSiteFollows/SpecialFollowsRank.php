@@ -85,7 +85,8 @@ class SpecialFollowsRank extends SpecialPage {
 		$user_id = User::idFromName( $user_name );
 		$target_user = User::newFromId( $user_id );
 		$userPage = Title::makeTitle( NS_USER, $user_name );
-		$sitefollows = UserSiteFollow::getUserFollowSite($target_user, $wgHuijiPrefix);
+		$site = WikiSite::newFromPrefix($wgHuijiPrefix);
+		$sitefollows = $site->getFollowers(true);
 		// foreach ( $sitefollows as $follow ) {
 		// 	$username = $follow['user'];
 		// 	$userPageURL = $follow['userUrl'];
