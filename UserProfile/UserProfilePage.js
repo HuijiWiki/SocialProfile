@@ -139,7 +139,7 @@ jQuery( document ).ready( function() {
 
     //修改个人资料
     
-    if ( !jQuery( '.avatar-view.upload-tool' ).length ){
+    if ( jQuery( '.avatar-view.upload-tool' ).length ){
 
         mw.loader.using('skins.editable', function(){
             $.fn.editable.defaults.url = '/index.php';

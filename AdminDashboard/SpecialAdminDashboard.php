@@ -12,7 +12,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 	 * Constructor -- set up the new special page
 	 */
 	public function __construct() {
-		parent::__construct( 'AdminDashboard' );
+		parent::__construct( 'AdminDashboard', 'admindashboard' );
 	}
 
 	/**
@@ -33,13 +33,13 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		$this->setHeaders();
 
 		// Add CSS
-		$out->addModules('ext.socialprofile.userprofile.css');	
+		//$out->addModules('ext.socialprofile.userprofile.css');	
 		$out->addModules( 'ext.socialprofile.admindashboard.css' );
 		
 		// Add js and message
 		// $out->addModules( 'skins.bootstrapmediawiki.huiji.getRecordsInterface.js' );
 		$out->addModules( 'ext.socialprofile.admindashboard.js' );
-		// $out->addModules('ext.socialprofile.userprofile.js');
+		//$out->addModules('ext.socialprofile.userprofile.js');
 
 		$output = ''; // Prevent E_NOTICE
 	    $yesterday = date("Y-m-d",strtotime("-1 day"));
