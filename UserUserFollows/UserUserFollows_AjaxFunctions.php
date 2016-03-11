@@ -83,6 +83,11 @@ function wfUserUserUnfollowsResponse( $follower, $followee ) {
 }
 function wfUserFollowsInfoResponse( $username ) {
 	$user = User::newFromName( $username );
+	//No such user
+	if ( $user->getId() == 0 ){
+		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NO_SUCH_USER);
+		return $out;
+	}
 	$ust = new UserStatus( $user );
 	$sites = $ust->getUserAllInfo( );
     $ret = array('success'=> true, 'result'=>$sites );
@@ -183,6 +188,13 @@ function wfGetUserFollowing( $username ){
 		return $out;
 	}
 	$user = User::newFromName($username);
+	//No such user
+	if ( $user->getId() == 0 ){
+		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NO_SUCH_USER);
+		return $out;
+	}
+
+	
 	$uuf = new UserUserFollow();
 	$result = $uuf->getFollowList( $user, 1 );
     $ret = array('success'=> true, 'result'=>$result );

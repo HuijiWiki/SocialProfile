@@ -7,6 +7,7 @@ class ResponseGenerator{
 	const ERROR_NOT_ALLOWED = 4;
 	const ERROR_UNKNOWN = 5;
 	const ERROR_DATABASE_FAILED = 6;
+	const ERROR_NO_SUCH_USER = 7;
 
 	/**
 	 *
@@ -45,7 +46,13 @@ class ResponseGenerator{
 			case self::ERROR_DATABASE_FAILED:
 			$data = '{
 		  		"success": false,
-		  		"message": "'.wfMessage('socialprofile-database-failed')->text()
+		  		"message": "'.wfMessage('socialprofile-error-database-failed')->text()
+				.'"}';
+				return $data;
+			case self::ERROR_NO_SUCH_USER:
+			$data = '{
+		  		"success": false,
+		  		"message": "'.wfMessage('socialprofile-error-no-such-user')->text()
 				.'"}';
 				return $data;
 			default:

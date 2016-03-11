@@ -447,8 +447,9 @@ class UserBoard {
 					<div class=\"user-board-message-content\">
 						<div class=\"user-board-message-image\">
 							<a href=\"{$sender}\" title=\"{$message['user_name_from']}\">{$avatar->getAvatarURL()}</a>
-						</div>
-						<a href=\"{$sender}\" title=\"{$message['user_name_from']}\" class='mw-userlink'>{$message['user_name_from']}</a> {$message_type_label}
+						</div>".
+						Linker::link($user,$message['user_name_from'],array(),array(),array())."
+						 {$message_type_label}
 						<div class=\"user-board-message-time\">" .
                             wfMessage( 'userboard_posted_ago', $this->getTimeAgo( $message['timestamp'] ) )->parse() .
                         "</div>

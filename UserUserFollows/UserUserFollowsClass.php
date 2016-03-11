@@ -18,6 +18,9 @@ class UserUserFollow{
 		if ($follower == null || $followee == null ){
 			return false;
 		}
+		if ($followee->getId() == 0){
+			return false;
+		}
 		if ($follower == $followee){
 			return false;
 		}
