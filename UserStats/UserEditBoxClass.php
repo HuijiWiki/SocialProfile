@@ -52,7 +52,8 @@ class UserEditBox{
 						$wgMemc->set( $key, $userEditInfo );
 					}
 				}else{
-					throw new Exception("Error getUserEditInfo/getPageEditCountOnWikiSiteFromUserId Bad Request");
+					
+					//throw new Exception("Error getUserEditInfo/getPageEditCountOnWikiSiteFromUserId Bad Request");
 				}
 			}else{
 				$receive = RecordStatistics::getAllPageEditRecordsFromUserIdGroupByDay( $userId, $userEditInfo['lastSeen'], $yesterday );
