@@ -464,6 +464,9 @@ class UserSystemGifts {
 	static function getGiftCountByUsername( $user_name ) {
 		$dbr = wfGetDB( DB_SLAVE );
 		$user_id = User::idFromName( $user_name );
+		if (empty($user_id)){
+			return 0;
+		}
 		$res = $dbr->select(
 			'user_system_gift',
 			array( 'COUNT(*) AS count' ),
