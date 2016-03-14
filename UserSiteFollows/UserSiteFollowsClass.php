@@ -477,7 +477,7 @@ class UserSiteFollow{
 	/**
 	 * Get user's list of his/her following sites.
 	 *
-	 * @param $user:current username
+	 * @param $user:current object
 	 * @return array list of sites
 	 */	
 	public static function getFullFollowedSites( $user ){

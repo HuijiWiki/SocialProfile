@@ -69,7 +69,8 @@ class SpecialShowFollowedSites extends SpecialPage {
 			$out->addHTML( $this->msg( 'g-error-message-invalid-link' )->plain() );
 			return false;
 		}
-		$sites = UserSiteFollow::getFullFollowedSitesWithDetails( $user_id,$target_user_id );
+		$huijiUser = HuijiUser::newFromUser(User::newFromId($user_id));
+		$sites = $huijiUser->getFollowingSites(true,$user);
 		$total = count($sites);
 		$star_page = $per_page*($page-1);
 		$per_sites = array_slice($sites,$star_page ,$per_page );

@@ -31,3 +31,16 @@ body #profile-image .upload-tool{
     margin-left: 5px;
     margin-right: 5px;
 }
+#firstHeading{
+    display: none;
+}
+.admin-tab{
+    text-align: center;
+}
+.admin-tab li{
+    display: inline-block;
+    float: none;
+}
+.admin-tab-content{
+    padding-top: 25px;
+}

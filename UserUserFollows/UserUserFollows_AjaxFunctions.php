@@ -34,10 +34,10 @@ function wfUserUserFollowsResponse( $follower, $followee ) {
 		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NOT_ALLOWED);
 		return $out;
 	}
-
-	$uuf = new UserUserFollow();
 	if ( $follower === $wgUser->getName() && $followee !== $follower){
-		if ($uuf->addUserUserFollow($wgUser, User::newFromName($followee)) !== false){
+		$huijiUser = HuijiUser::newFromUser($wgUser);
+		$followee = User::newFromName($followee);
+		if ($huijiUser->follow($followee)){
 			$out = ResponseGenerator::getJson(ResponseGenerator::SUCCESS);
 		}
 	}
@@ -71,10 +71,11 @@ function wfUserUserUnfollowsResponse( $follower, $followee ) {
 		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NOT_ALLOWED);
 		return $out;
 	}
-
-	$uuf = new UserUserFollow();
+	
 	if ( $follower === $wgUser->getName() && $followee !== $follower){
-		if ($uuf->deleteUserUserFollow($wgUser, User::newFromName($followee))){
+		$huijiUser = HuijiUser::newFromUser($wgUser);
+		$followee = User::newFromName($followee);
+		if ($huijiUser->unfollow($followee)){
 			$out = ResponseGenerator::getJson(ResponseGenerator::SUCCESS);
 		}
 		 //TODO: use wfMessage instead of hard code
@@ -124,9 +125,11 @@ function wfUserFollowsRecommend( $follower, $followee ){
 		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NOT_ALLOWED);
 		return $out;
 	}
-	$uuf = new UserUserFollow();
+
 	if ( $follower === $wgUser->getName() && $followee !== $follower){
-		if ($uuf->addUserUserFollow($wgUser, User::newFromName($followee)) !== false){
+		$huijiUser = HuijiUser::newFromUser($wgUser);
+		$followee = User::newFromName($followee);
+		if ($huijiUser->follow($followee)){
 			$weekRank = UserStats::getUserRank(20,'week');
 			$monthRank = UserStats::getUserRank(20,'month');
 			$totalRank = UserStats::getUserRank(20,'total');
@@ -141,7 +144,7 @@ function wfUserFollowsRecommend( $follower, $followee ){
 	        $flres = array();
 	        foreach ($recommend as $value) {
 	            $tuser = User::newFromName($value['user_name']);
-	            $isFollow = $uuf->checkUserUserFollow( $wgUser, $tuser );
+	            $isFollow = $huijiUser->isFollowing($tUser);
 	            if( !$isFollow && $value['user_name'] != $wgUser->getName() ){
 	                $flres['avatar'] = $value['avatarImage'];
 	                $flres['username'] = $value['user_name'];
@@ -194,9 +197,8 @@ function wfGetUserFollowing( $username ){
 		return $out;
 	}
 
-	
-	$uuf = new UserUserFollow();
-	$result = $uuf->getFollowList( $user, 1 );
+	$huijiUser = HuijiUser::newFromUser($user);
+	$result = $huijiUser->getFollowingUsers();
     $ret = array('success'=> true, 'result'=>$result );
     $out = json_encode($ret);
 	return $out;

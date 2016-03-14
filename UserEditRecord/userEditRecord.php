@@ -9,7 +9,7 @@ if(!defined('MEDIAWIKI')){
 $wgHooks['NewRevisionFromEditComplete'][] = 'insertEditRecord';
 
 
-//require_once("curl.php");
+require_once("curl.php");
 function insertEditRecord($article, $rev, $baseID, $user ){
 	global $wgHuijiPrefix, $wgSitename, $wgIsProduction;
 	$url = 'http://huijidata.com:50007/insertEditRecord/';
@@ -22,19 +22,19 @@ function insertEditRecord($article, $rev, $baseID, $user ){
 		'titleName' => $article->getTitle()->getText()
 	);
         $log_data = array(
-		'user.name' => $user->getName(),
-                'user.id' => $user->getId(),
-                'site.prefix' => $wgHuijiPrefix,
-                'site.name' => $wgSitename,
-                'page.title' => $article->getTitle()->getText(),
-                'page.id' => $article->getId(),
-                'page.ns' => $article->getTitle()->getNamespace(),
+		'user_name' => $user->getName(),
+                'user_id' => $user->getId(),
+                'site_prefix' => $wgHuijiPrefix,
+                'site_name' => $wgSitename,
+                'page_title' => $article->getTitle()->getText(),
+                'page_id' => $article->getId(),
+                'page_ns' => $article->getTitle()->getNamespace(),
 		'timestamp' => isset($_SERVER[ 'REQUEST_TIME' ]) ? $_SERVER[ 'REQUEST_TIME' ] : "",
-                'client.ip'=> isset($_SERVER[ 'HTTP_X_FORWARDED_FOR' ]) ? $_SERVER[ 'HTTP_X_FORWARDED_FOR' ] : "",
-                'client.userAgent' => isset($_SERVER[ 'HTTP_USER_AGENT' ]) ? $_SERVER[ 'HTTP_USER_AGENT' ] : "",
+                'client_ip'=> isset($_SERVER[ 'HTTP_X_FORWARDED_FOR' ]) ? $_SERVER[ 'HTTP_X_FORWARDED_FOR' ] : "",
+                'client_userAgent' => isset($_SERVER[ 'HTTP_USER_AGENT' ]) ? $_SERVER[ 'HTTP_USER_AGENT' ] : "",
 	);        
 
-//MyCURL::postDataInJson('http://test.huiji.wiki:8080',json_encode($log_data),'huiji','huiji1024');  
+MyCURL::postDataInJson('http://localhost:8081',json_encode($log_data),'huiji','huiji1024');  
 //        curl_post_json($log_data,"huiji","huiji1024");
 	$post_data_string = '';
 	foreach($post_data as $key => $value){

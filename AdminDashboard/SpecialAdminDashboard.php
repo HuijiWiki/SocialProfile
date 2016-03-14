@@ -30,7 +30,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 			return;
 		}
 		// Set the page title, robot policies, etc.
-		$this->setHeaders();
+		//$this->setHeaders();
 
 		// Add CSS
 		//$out->addModules('ext.socialprofile.userprofile.css');	

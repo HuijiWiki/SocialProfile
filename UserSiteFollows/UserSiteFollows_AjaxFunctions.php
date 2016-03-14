@@ -39,7 +39,9 @@ function wfUserSiteFollowsResponse( $username, $servername ) {
 
 	$usf = new UserSiteFollow();
 	if ( $username === $wgUser->getName() ){//&& $servername === $wgServer
-		if ($usf->addUserSiteFollow($wgUser, $servername) >= 0){
+		$huijiUser = HuijiUser::newFromUser($wgUser);
+		$site = WikiSite::newFromPrefix($servername);
+		if ( $huijiUser->follow($site) ){
 			$out = ResponseGenerator::getJson(ResponseGenerator::SUCCESS);
 		}
 	}
@@ -75,16 +77,21 @@ function wfUserSiteUnfollowsResponse( $username, $servername ) {
 
 	$usf = new UserSiteFollow();
 	if ( $username === $wgUser->getName()){// && $servername === $wgServer
-		if ($usf->deleteUserSiteFollow($wgUser, $servername)){
+		$huijiUser = HuijiUser::newFromUser($wgUser);
+		$site = WikiSite::newFromPrefix($servername);
+		if ($huijiUser->unfollow($site)){
 			$out = ResponseGenerator::getJson(ResponseGenerator::SUCCESS);
 		}
 	}
 	return $out;
 }
 function wfUserSiteFollowsDetailsResponse( $user_name,$t_name ) {
-	$user_id = User::idFromName($user_name);
-	$t_id = User::idFromName($t_name);
-	$sites = UserSiteFollow::getFullFollowedSitesWithDetails($user_id,$t_id);
+	$huijiUser = HuijiUser::newFromName($t_name);
+	$viewPointUser = User::newFromName($user_name);
+	$sites = $huijiUser->getFollowingSites(true, $viewPointUser);
+	// $user_id = User::idFromName($user_name);
+	// $t_id = User::idFromName($t_name);
+	// $sites = UserSiteFollow::getFullFollowedSitesWithDetails($user_id,$t_id);
 	$ret = array('success'=> true, 'result'=>$sites );
 	$out = json_encode($ret);
 	return $out;

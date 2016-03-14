@@ -131,13 +131,15 @@ class UserProfilePage extends Article {
 			$count[] = $val['count'];
 		}
 		array_multisort($count, SORT_DESC, $topFollowedSites);
-		$userCount = UserSiteFollow::getFollowingCount($this->user);
+		$huijiUser = HuijiUser::newFromUser($this->user);
+		$userCount = $huijiUser->getFollowingSitesCount();
+		//$userCount = UserSiteFollow::getFollowingCount($this->user);
 
 		if ($this->isOwner()){
 			$target = SpecialPage::getTitleFor('ViewFollows');
 			$query = array('user' => $this->user_name, 'rel_type' => 1);
 			$button1 = '<li class="mw-ui-button">'.Linker::LinkKnown($target, '<i class="fa fa-users"></i>朋友', array(), $query).'</li> ';
-		} elseif ($uuf->checkUserUserFollow($wgUser, $this->user) ){
+		} elseif ($huijiUser->isFollowedBy($wgUser) ){
 			$button1 = '<li id="user-user-follow" class="unfollow mw-ui-button"><a><i class="fa fa-minus-square-o"></i>取关</a></li> ';
 		} else {
 			$button1 = '<li id="user-user-follow" class="mw-ui-button"><i class="fa fa-plus-square-o"></i></i>关注</li> ';
@@ -1234,13 +1236,14 @@ class UserProfilePage extends Article {
 		// UserLevels has been configured contributions
 		$notice = SpecialPage::getTitleFor('ViewFollows');
 		$contributions = SpecialPage::getTitleFor('Contributions');
+		$huijiUser = HuijiUser::newFromUser($this->user);
         $output .='<div>
 					    <ul class="user-follow-msg">
 					        <li><h5>编辑</h5>'.Linker::link( $contributions, $stats_data['edits'], array(), array( 'target' => $user,'contribs' => 'user' ) ).'</li>
 					        <li><h4>|</h4></li>
-					        <li><h5>关注</h5>'.Linker::link( $notice, UserUserFollow::getFollowingCount(User::newFromName($user)), array(  'id' => 'user-following-count'  ), array( 'user' => $user,'rel_type' => 1 ) ).'</li>
+					        <li><h5>关注</h5>'.Linker::link( $notice, $huijiUser->getFollowingUsersCount(), array(  'id' => 'user-following-count'  ), array( 'user' => $user,'rel_type' => 1 ) ).'</li>
 					        <li><h4>|</h4></li>
-					        <li><h5>被关注</h5>'.Linker::link( $notice, UserUserFollow::getFollowerCount(User::newFromName($user)), array( 'id' => 'user-follower-count' ), array( 'user' => $user,'rel_type' => 2 ) ).'</li>
+					        <li><h5>被关注</h5>'.Linker::link( $notice, $huijiUser->getFollowerCount(), array( 'id' => 'user-follower-count' ), array( 'user' => $user,'rel_type' => 2 ) ).'</li>
                         </ul>
                         <div class="cleared"></div>
                     </div>
