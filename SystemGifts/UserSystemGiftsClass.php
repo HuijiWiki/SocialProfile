@@ -135,17 +135,7 @@ class UserSystemGifts {
 	 * @return Boolean: true if the user has the gift, otherwise false
 	 */
 	public function doesUserHaveGift( $user_id, $gift_id ) {
-		$dbr = wfGetDB( DB_SLAVE );
-		$s = $dbr->selectRow(
-			'user_system_gift',
-			array( 'sg_status' ),
-			array( 'sg_user_id' => $user_id, 'sg_gift_id' => $gift_id ),
-			__METHOD__
-		);
-		if ( $s !== false ) {
-			return true;
-		}
-		return false;
+		return $this->doesUserHaveGiftOfTheSameGiftType( $user_id, $ug_id );
 	}
 
 	public function clearAllUserSystemGiftStatus() {
@@ -178,6 +168,9 @@ class UserSystemGifts {
 	 *					otherwise false
 	 */
 	public function doesUserOwnGift( $user_id, $sg_id ) {
+		return $this->doesUserHaveExactSameGift($user_id, $sg_id);
+	}
+	public function doesUserHaveExactSameGift($user_id, $sg_id){
 		$dbr = wfGetDB( DB_SLAVE );
 		$s = $dbr->selectRow(
 			'user_system_gift',
@@ -190,8 +183,21 @@ class UserSystemGifts {
 				return true;
 			}
 		}
-		return false;
+		return false;		
 	}
+    public function doesUserHaveGiftOfTheSameGiftType( $user_id, $ug_id ){
+		$dbr = wfGetDB( DB_SLAVE );
+		$s = $dbr->selectRow(
+			'user_system_gift',
+			array( 'sg_status' ),
+			array( 'sg_user_id' => $user_id, 'sg_gift_id' => $gift_id ),
+			__METHOD__
+		);
+		if ( $s !== false ) {
+			return true;
+		}
+		return false;    	
+    }
 
 	/**
 	 * Deletes the system gift that has the ID $ug_id.
