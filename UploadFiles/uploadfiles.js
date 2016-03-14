@@ -57,6 +57,7 @@ var uploadfiles = {
         var self = this;
         var reader = new FileReader();
         var selector = $('#wrap'+index);
+        selector.addClass('pending');
         //将文件以Data URL形式读入页面
         reader.readAsDataURL(file);
         reader.onload=function(e){
@@ -78,6 +79,7 @@ var uploadfiles = {
             selector.append(result);
 
         };
+        $('#upload-btn').attr('disabled','');
         $.ajax({
             url: self.url,
             data: formData,
@@ -85,6 +87,9 @@ var uploadfiles = {
             contentType: false,
             type: 'POST',
             success: function (data) {
+                selector.removeClass('pending');
+                if($('.pending').length==0)
+                $('#upload-btn').removeAttr('disabled');
                 if(data.upload)
                 selector.removeClass('default').find('img').attr('data-filekey',data.upload.filekey);
                 if (data.upload && data.upload.result == "Warning") {
@@ -96,16 +101,19 @@ var uploadfiles = {
                         selector.addClass('suggest');
                     } else {
                         for(var a in data.upload.warnings)
-                        selector.find('.prompt').text(data.upload.warnings[a]);
+                        selector.find('.prompt').text(a);
                         selector.addClass('suggest');
                     }
                 }else if(data.error){
                     selector.addClass('warning');
                     if(data.error.code=="file-too-large"){
                         selector.find('.prompt').text('图片过大,请压缩后上传');
-                    }else{
-                        selector.find('.prompt').text('文件不可用');
-
+                    }else if(data.error.code=="illegal-filename"){
+                        selector.find('.prompt').text('命名不合法');
+                        selector.removeClass('default').find('img').attr('data-filekey',data.error.filekey);
+                    }
+                    else{
+                        selector.find('.prompt').text('文件不可用').attr('data-error',data.error.code);
                     }
                 }
             }
@@ -161,23 +169,25 @@ var uploadfiles = {
                     type: 'POST',
                     success: function (data) {
                         if(data.upload && data.upload.result == "Success"){
-                            that.parents('.file-wrap').removeClass('warning');
+                            that.parents('.file-wrap').removeClass('suggest').removeClass('warning');
                             that.siblings('.prompt').text('');
                         }else if(data.upload && data.upload.result == "Warning"){
+                            console.log('warning');
                             if(data.upload.warnings.exists){
-                                that.parents('.file-wrap').addClass('warning');
-                                that.siblings('.warning').text('已存在相同名称，请点名称重新命名');
+                                that.parents('.file-wrap').removeClass('suggest').addClass('warning');
+                                that.siblings('.prompt').text('已存在相同名称，请点名称重新命名');
                             }else if(data.upload.warnings.duplicate){
                                 that.parents('.file-wrap').removeClass('warning').addClass('suggest');
                                 that.siblings('.prompt').text('已存在相同内容，建议删除本文件');
                             }else{
                                 for(var a in data.upload.warnings)
-                                that.siblings('.prompt').text(data.upload.warnings[a]);
+                                that.siblings('.prompt').text(a);
                                 that.parents('.file-wrap').removeClass('warning').addClass('suggest');
                             }
                         }else{
-                            selector.removeClass('suggest').addClass('warning');
-                            selector.find('.prompt').text(data.error.code);
+                            console.log('sdas');
+                            that.parents('.file-wrap').removeClass('suggest').addClass('warning');
+                            that.parents('.file-wrap').find('.prompt').text(data.error.code);
                         }
 
                     }
