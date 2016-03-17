@@ -44,3 +44,125 @@ body #profile-image .upload-tool{
 .admin-tab-content{
     padding-top: 25px;
 }
+#wiki-body .admin-tab .active a {
+    background-color: #000;
+}
+.profile-image-container{
+    width: 80px;
+    float: left;
+}
+#profile-title-container{
+    max-width: 650px;
+    margin: auto;
+    padding-top: 10px;
+    padding-bottom: 40px;
+}
+.avatar-view{
+    float: left;
+}
+.admin-header-edit{
+    margin-left: 90px;
+}
+.admin-header-name{
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.admin-header-form{
+    display: none;
+}
+#page-wrapper .btn{
+    padding: 6px 12px;
+    outline: none;
+}
+/*member*/
+.admin-member-wrapper{
+    max-width: 850px;
+    margin: auto;
+    position: relative;
+}
+.admin-member-search{
+    max-width: 250px;
+    margin-left: 20px;
+    display: inline-block;
+}
+.admin-member-header-right{
+    float: right;
+    line-height: 34px;
+}
+.admin-member-header-right span{
+    display: block;
+    padding: .46em .6em;
+    float: left;
+    margin-top: 6px;
+    margin-right: 5px;
+}
+.label-fix{
+    position: absolute;
+    right: -30px;
+    top: -200px;
+}
+.label-fix .admin-member-right-wrapper{
+    position: fixed;
+}
+.label-fix span{
+    float: none;
+}
+.admin-member-header-right .label{
+    cursor: -webkit-grab;
+}
+hr {
+    background: #d6dadc;
+    border: 0;
+    color: #d6dadc;
+    height: 1px;
+    margin: 9pt 0;
+    width: 100%;
+}
+.admin-member-list{
+    list-style-type: none;
+    padding-left: 0;
+
+}
+.admin-member-list>li{
+    clear: both;
+    border-bottom: 1px solid #d6dadc;
+    min-height: 39px;
+    position: relative;
+    padding: 20px 0;
+}
+.admin-member-list li{
+    margin-bottom: 0!important;
+}
+.a-msg{
+    float: left;
+}
+.a-avatar{
+    float: left;
+    margin-right: 10px;
+}
+.a-avatar img{
+    width: 30px;
+    border-radius: 5px;
+}
+.a-user{
+    float: left;
+}
+.a-options{
+    float: right;
+}
+.a-tag .label {
+    margin-right: 5px;
+}
+.btn-group label{
+    display: block;
+    cursor: pointer;
+}
+.a-delete a{
+    color: #333!important;
+    text-decoration: none!important;
+}
+.a-delete.btn-danger a{
+    color: #fff!important;
+    text-decoration: none!important;
+}

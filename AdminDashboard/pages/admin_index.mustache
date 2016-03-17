@@ -3,15 +3,256 @@
     <div class="admin-tab-page">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs admin-tab" role="tablist">
-            <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">board</a></li>
-            <li role="presentation"><a href="#admin-member" aria-controls="profile" role="tab" data-toggle="tab">member</a></li>
+            <li role="presentation"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">board</a></li>
+            <li role="presentation" class="active"><a href="#admin-member" aria-controls="profile" role="tab" data-toggle="tab">member</a></li>
             <li role="presentation"><a href="#admin-setting" aria-controls="messages" role="tab" data-toggle="tab">setting</a></li>
         </ul>
-
+<!--<div></div>-->
         <!-- Tab panes -->
         <div class="tab-content admin-tab-content">
-            <div role="tabpanel" class="tab-pane active" id="home">{{> admin_board}}</div>
-            <div role="tabpanel" class="tab-pane" id="admin-member">{{> admin_member}}</div>
+            <div role="tabpanel" class="tab-pane" id="home">{{> admin_board}}</div>
+            <div role="tabpanel" class="tab-pane active" id="admin-member">{{> admin_member}}
+
+                <div class="admin-member-wrapper">
+                    <div class="admin-member-header">
+                        <input type="text" class="form-control admin-member-search" placeholder="Search for...">
+                        <div class="admin-member-header-right">
+                            <div class="admin-member-right-wrapper">
+                                <!--<span class="label label-default">机器人</span>-->
+                                <span class="label label-primary admin-label-boot draggable" draggable="true">机器人</span>
+                                <span class="label label-success admin-label-officer draggable" draggable="true">行政员</span>
+                                <span class="label label-info admin-label-admin draggable" draggable="true">管理员</span>
+                                <span class="label label-warning admin-label-back draggable" draggable="true">回退员</span>
+                                <!--<span class="label label-danger">Danger</span>-->
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div></div>
+                    <ul class="admin-member-list">
+                        <li class="clear">
+                            <div class="a-msg">
+                                <div class="a-avatar">
+                                    <img src="/uploads/avatars/my_wiki_15_ml.png?r=1451038429" alt="avatar" border="0" class="headimg" data-name="Volvo">
+                                </div>
+                                <div class="a-user">
+                                    <a href="/wiki/%E7%94%A8%E6%88%B7:Volvo" title="用户:Volvo" class="mw-userlink">Volvo</a>
+                                    <span class="a-user-level"><span class="icon-lv4"></span></span>
+                                </div>
+                            </div>
+
+                            <div class="a-options">
+                                <span class="a-tag"></span>
+                                <div class="btn-group">
+                                    <button type="button" class="a-change-role btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        管理 <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a><label><input type="checkbox"  value="option1" checked>回退员</label></a></li>
+                                        <li><a><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                        <li><a><label><input type="checkbox"  value="option1" checked>回退员</label></a></li>
+                                        <li><a><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                    </ul>
+                                </div>
+                                <button class="a-delete btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove"></span><a href="http://hearthstone.huiji.wiki/wiki/%E7%89%B9%E6%AE%8A:%E5%B0%81%E7%A6%81/Volvo">封禁</a></button>
+                            </div>
+                        </li>
+                        <li class="clear">
+                            <div class="a-msg">
+                                <div class="a-avatar">
+                                    <img src="/uploads/avatars/my_wiki_15_ml.png?r=1451038429" alt="avatar" border="0" class="headimg" data-name="Volvo">
+                                </div>
+                                <div class="a-user">
+                                    <a href="/wiki/%E7%94%A8%E6%88%B7:Volvo" title="用户:Volvo" class="mw-userlink">Volvo</a>
+                                    <span class="a-user-level"><span class="icon-lv4"></span></span>
+                                </div>
+                            </div>
+
+                            <div class="a-options">
+                                <span class="a-tag"></span>
+                                <div class="btn-group">
+                                    <button type="button" class="a-change-role btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        管理 <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                    </ul>
+                                </div>
+                                <button class="a-delete btn  btn-sm"><span class="glyphicon glyphicon-remove"></span><a href="http://hearthstone.huiji.wiki/wiki/%E7%89%B9%E6%AE%8A:解除封禁/Volvo">解封</a></button>
+                            </div>
+                        </li>
+                        <li class="clear">
+                            <div class="a-msg">
+                                <div class="a-avatar">
+                                    <img src="/uploads/avatars/my_wiki_15_ml.png?r=1451038429" alt="avatar" border="0" class="headimg" data-name="Volvo">
+                                </div>
+                                <div class="a-user">
+                                    <a href="/wiki/%E7%94%A8%E6%88%B7:Volvo" title="用户:Volvo" class="mw-userlink">Volvo</a>
+                                    <span class="a-user-level"><span class="icon-lv4"></span></span>
+                                </div>
+                            </div>
+
+                            <div class="a-options">
+                                <span class="a-tag"></span>
+                                <div class="btn-group">
+                                    <button type="button" class="a-change-role btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        管理 <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                    </ul>
+                                </div>
+                                <button class="a-delete btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove"></span>删除</button>
+                            </div>
+                        </li>
+                        <li class="clear">
+                            <div class="a-msg">
+                                <div class="a-avatar">
+                                    <img src="/uploads/avatars/my_wiki_15_ml.png?r=1451038429" alt="avatar" border="0" class="headimg" data-name="Volvo">
+                                </div>
+                                <div class="a-user">
+                                    <a href="/wiki/%E7%94%A8%E6%88%B7:Volvo" title="用户:Volvo" class="mw-userlink">Volvo</a>
+                                    <span class="a-user-level"><span class="icon-lv4"></span></span>
+                                </div>
+                            </div>
+
+                            <div class="a-options">
+                                <span class="a-tag"></span>
+                                <div class="btn-group">
+                                    <button type="button" class="a-change-role btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        管理 <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                    </ul>
+                                </div>
+                                <button class="a-delete btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove"></span>删除</button>
+                            </div>
+                        </li>
+                        <li class="clear">
+                            <div class="a-msg">
+                                <div class="a-avatar">
+                                    <img src="/uploads/avatars/my_wiki_15_ml.png?r=1451038429" alt="avatar" border="0" class="headimg" data-name="Volvo">
+                                </div>
+                                <div class="a-user">
+                                    <a href="/wiki/%E7%94%A8%E6%88%B7:Volvo" title="用户:Volvo" class="mw-userlink">Volvo</a>
+                                    <span class="a-user-level"><span class="icon-lv4"></span></span>
+                                </div>
+                            </div>
+
+                            <div class="a-options">
+                                <span class="a-tag"></span>
+                                <div class="btn-group">
+                                    <button type="button" class="a-change-role btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        管理 <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                    </ul>
+                                </div>
+                                <button class="a-delete btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove"></span>删除</button>
+                            </div>
+                        </li>
+                        <li class="clear">
+                            <div class="a-msg">
+                                <div class="a-avatar">
+                                    <img src="/uploads/avatars/my_wiki_15_ml.png?r=1451038429" alt="avatar" border="0" class="headimg" data-name="Volvo">
+                                </div>
+                                <div class="a-user">
+                                    <a href="/wiki/%E7%94%A8%E6%88%B7:Volvo" title="用户:Volvo" class="mw-userlink">Volvo</a>
+                                    <span class="a-user-level"><span class="icon-lv4"></span></span>
+                                </div>
+                            </div>
+
+                            <div class="a-options">
+                                <span class="a-tag"></span>
+                                <div class="btn-group">
+                                    <button type="button" class="a-change-role btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        管理 <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                    </ul>
+                                </div>
+                                <button class="a-delete btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove"></span>删除</button>
+                            </div>
+                        </li>
+                        <li class="clear">
+                            <div class="a-msg">
+                                <div class="a-avatar">
+                                    <img src="/uploads/avatars/my_wiki_15_ml.png?r=1451038429" alt="avatar" border="0" class="headimg" data-name="Volvo">
+                                </div>
+                                <div class="a-user">
+                                    <a href="/wiki/%E7%94%A8%E6%88%B7:Volvo" title="用户:Volvo" class="mw-userlink">Volvo</a>
+                                    <span class="a-user-level"><span class="icon-lv4"></span></span>
+                                </div>
+                            </div>
+
+                            <div class="a-options">
+                                <span class="a-tag"></span>
+                                <div class="btn-group">
+                                    <button type="button" class="a-change-role btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        管理 <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                    </ul>
+                                </div>
+                                <button class="a-delete btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove"></span>删除</button>
+                            </div>
+                        </li>
+                        <li class="clear">
+                            <div class="a-msg">
+                                <div class="a-avatar">
+                                    <img src="/uploads/avatars/my_wiki_15_ml.png?r=1451038429" alt="avatar" border="0" class="headimg" data-name="Volvo">
+                                </div>
+                                <div class="a-user">
+                                    <a href="/wiki/%E7%94%A8%E6%88%B7:Volvo" title="用户:Volvo" class="mw-userlink">Volvo</a>
+                                    <span class="a-user-level"><span class="icon-lv4"></span></span>
+                                </div>
+                            </div>
+
+                            <div class="a-options">
+                                <span class="a-tag"></span>
+                                <div class="btn-group">
+                                    <button type="button" class="a-change-role btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        管理 <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                        <li><a href="#"><label><input type="checkbox"  value="option1">回退员</label></a></li>
+                                    </ul>
+                                </div>
+                                <button class="a-delete btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove"></span>删除</button>
+                            </div>
+                        </li>
+
+                    </ul>
+                <button class="btn addmore">more</button>
+
+                </div>
+
+            </div>
             <div role="tabpanel" class="tab-pane" id="admin-setting">{{> admin_setting}}</div>
         </div>
     </div>

@@ -1,7 +1,5 @@
 <?php
 
-
-
 if(!defined('MEDIAWIKI')){
 	die("This is not a valid entry point.\n");
 }
@@ -35,6 +33,7 @@ function insertEditRecord($article, $rev, $baseID, $user ){
 	);        
 
 MyCURL::postDataInJson('http://localhost:8081',json_encode($log_data),'huiji','huiji1024');  
+wfErrorLog(json_encode($log_data),"/var/log/mediawiki/SocialProfile.log");
 //        curl_post_json($log_data,"huiji","huiji1024");
 	$post_data_string = '';
 	foreach($post_data as $key => $value){
@@ -85,4 +84,3 @@ MyCURL::postDataInJson('http://localhost:8081',json_encode($log_data),'huiji','h
 */
 
 ?>
-
