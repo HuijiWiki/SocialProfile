@@ -148,6 +148,8 @@
 	"user-recent-activity-follow":"关注了",
 	"user-recent-system-gift":"收到了一份奖励",
 	"user-recent-activity-domain-creation":"创建了",
+	"user-recent-activity-vote":"评价了",
+	"user-recent-activity-poll":"参与了投票",
 	"site-avatar-log-entry":"上传了站点logo",
 	"user-profile-picture-log-delete-entry": "删除了$1的站点logo",
 	"avatarlogentry": "",

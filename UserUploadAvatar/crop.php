@@ -64,10 +64,15 @@ class CropAvatar {
       $nameM = $avatarKey . '_' . $uid . '_m';
       $nameS = $avatarKey . '_' . $uid . '_s';
       $imageInfo = getimagesize( $tempName );
-      if ( $this->isUserAvatar && strpos( $avatar->getAvatarImage(), 'default_' ) !== false ) {
-        $stats = new UserStatsTrack( $uid, $wgUser->getName() );
-        $stats->incStatField( 'user_image' );
+      // upload first avatar should be awarded, atomically
+      if (HuijiFunctions::addLock('first-avatar-'.$uid)){
+        if ( $this->isUserAvatar && strpos( $avatar->getAvatarImage(), 'default_' ) !== false ) {
+          $stats = new UserStatsTrack( $uid, $wgUser->getName() );
+          $stats->incStatField( 'user_image' );
+        }        
+        HuijiFunctions::releaseLock('first-avatar-'.$uid);
       }
+
       $this->createThumbnail( $tempName , $imageInfo, $nameL, 200 );
       $this->createThumbnail( $tempName , $imageInfo, $nameML, 50 );
       $this->createThumbnail( $tempName , $imageInfo, $nameM, 30 );

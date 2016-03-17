@@ -276,13 +276,7 @@ class AllSitesInfo{
 		$editCount = 0;
 		foreach ($allSite as $prefix) {
 			if ( !is_null($prefix) ) {
-				if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
-					$prefix = 'huiji_home';
-				}elseif ( $isProduction == true ) {
-					$prefix = 'huiji_sites-'.str_replace('.', '_', $prefix);
-				}else{
-					$prefix = 'huiji_'.str_replace('.', '_', $prefix);
-				}
+				$prefix = WikiSite::DbIdFromPrefix($prefix);
 			}else{
 				die( "error: empty $prefix;function:getAllSiteEditCount.\n" );
 			}
@@ -311,13 +305,14 @@ class AllSitesInfo{
 		$fileCount = 0;
 		foreach ($allSite as $prefix) {
 			if ( !is_null($prefix) ) {
-				if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
-					$prefix = 'huiji_home';
-				}elseif ( $isProduction == true ) {
-					$prefix = 'huiji_sites-'.str_replace('.', '_', $prefix);
-				}else{
-					$prefix = 'huiji_'.str_replace('.', '_', $prefix);
-				}
+				// if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
+				// 	$prefix = 'huiji_home';
+				// }elseif ( $isProduction == true ) {
+				// 	$prefix = 'huiji_sites-'.str_replace('.', '_', $prefix);
+				// }else{
+				// 	$prefix = 'huiji_'.str_replace('.', '_', $prefix);
+				// }
+				$prefix = WikiSite::DbIdFromPrefix($prefix);
 			}else{
 				die( "error: empty $prefix;function:getAllUploadFileCount.\n" );
 			}
@@ -344,13 +339,7 @@ class AllSitesInfo{
 		$pageCount = 0;
 		foreach ($allSite as $prefix) {
 			if ( !is_null($prefix) ) {
-				if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
-					$prefix = 'huiji_home';
-				}elseif ( $isProduction == true ) {
-					$prefix = 'huiji_sites-'.str_replace('.', '_', $prefix);
-				}else{
-					$prefix = 'huiji_'.str_replace('.', '_', $prefix);
-				}
+				$prefix = WikiSite::DbIdFromPrefix($prefix);
 			}else{
 				die( "error: empty $prefix;function:getAllPageCount.\n" );
 			}
@@ -374,13 +363,7 @@ class AllSitesInfo{
 	
 	static function getPageInfoByPrefix( $prefix ){
 		global $isProduction, $wgLang;
-		if( $isProduction == true && ( $prefix == 'www' || $prefix == 'home') ){
-			$prefix = 'huiji_home';
-		}elseif ( $isProduction == true ) {
-			$prefix = 'huiji_sites-'.str_replace('.', '_', $prefix);
-		}else{
-				$prefix = 'huiji_'.str_replace('.', '_', $prefix);
-		} 
+		$prefix = WikiSite::DbIdFromPrefix($prefix);
 		try{
 			$resArr = array();
 			$dbr = wfGetDB( DB_SLAVE,$groups = array(),$wiki = $prefix );

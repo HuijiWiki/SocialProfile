@@ -36,13 +36,7 @@ function wfAddForkInfo( $page_id, $ns_num, $page_title, $fork_from, $prefix ){
 	$c_prefix = $prefix;
 	$fork_user = $wgUser->getName();
 	if ($prefix != null) {
-		if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
-			$prefix = 'huiji_home';
-		}elseif ( $isProduction == true ) {
-			$prefix = 'huiji_sites-'.str_replace('.', '_', $prefix);
-		}else{
-			$prefix = 'huiji_'.str_replace('.', '_', $prefix);
-		}
+		$prefix = WikiSite::DbIdFromPrefix($prefix);
 	}
 	$page_title = substr(strrchr($page_title, ":"), 1);
 	$dbw = wfGetDB(DB_MASTER, array(), $prefix);

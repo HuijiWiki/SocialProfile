@@ -24,6 +24,8 @@ var uploadfiles = {
     funGetFiles: function(e){
         e.stopPropagation();
         e.preventDefault();
+        console.log(e.target);
+        console.log(e.target.files)
         //文件列表为选中或者拖拽
         var files = e.target.files||e.dataTransfer.files;
         var num = files.length;

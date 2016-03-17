@@ -1,8 +1,8 @@
-  <?php   
-  /**
-  * uploadfiles
-  */
-  class SpecialVideosList extends SpecialPage{
+<?php   
+/**
+* uploadfiles
+*/
+class SpecialVideosList extends SpecialPage{
 
   function __construct(){
   	parent::__construct( 'VideosList' );

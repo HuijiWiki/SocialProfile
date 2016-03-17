@@ -159,6 +159,7 @@ require_once( "$IP/extensions/SocialProfile/TemplateFork/TemplateFork_AjaxFuncti
 require_once( "$IP/extensions/SocialProfile/UserProfile/OauthLogin_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/UserGifts/UserGift_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/Videos/UploadVideos_AjaxFunctions.php" );
+require_once( "$IP/extensions/SocialProfile/AdminDashboard/AdminDashboard_AjaxFunctions.php" );
 // What to display on social profile pages by default?
 $wgUserProfileDisplay['board'] = true;
 $wgUserProfileDisplay['foes'] = false;
@@ -357,6 +358,7 @@ $wgResourceModules['ext.socialprofile.userboard.js'] = array(
 	'messages' => array( 'userboard_confirmdelete' ),
 	'localBasePath' => __DIR__ . '/UserBoard',
 	'remoteExtPath' => 'SocialProfile/UserBoard',
+	'position' => 'bottom',
 );
 
 $wgResourceModules['ext.socialprofile.userboard.css'] = array(
@@ -395,6 +397,7 @@ $wgResourceModules['ext.socialprofile.userboard.boardblast.js'] = array(
 	),
 	'localBasePath' => __DIR__ . '/UserBoard',
 	'remoteExtPath' => 'SocialProfile/UserBoard',
+	'position' => 'bottom',
 );
 
 //uploadfiles
@@ -402,6 +405,7 @@ $wgResourceModules['ext.socialprofile.uploadfiles.css'] = array(
 	'styles' => 'uploadfiles.css',
 	'localBasePath' => __DIR__ . '/UploadFiles',
 	'remoteExtPath' => 'SocialProfile/UploadFiles',
+	'position' => 'top',
 );
 
 $wgResourceModules['ext.socialprofile.uploadfiles.js'] = array(
@@ -409,6 +413,7 @@ $wgResourceModules['ext.socialprofile.uploadfiles.js'] = array(
 	'dependencies' => 'mediawiki.notification',
 	'localBasePath' => __DIR__ . '/UploadFiles',
 	'remoteExtPath' => 'SocialProfile/UploadFiles',
+	'position' => 'top',
 );
 
 //specialVideos
@@ -453,6 +458,7 @@ $wgResourceModules['ext.socialprofile.familytree.js'] = array(
 	'dependencies' => 'mediawiki.notification',
 	'localBasePath' => __DIR__ . '/FamilyTree',
 	'remoteExtPath' => 'SocialProfile/FamilyTree',
+	'position' => 'bottom',
 );
 
 // UserRelationship
@@ -467,6 +473,7 @@ $wgResourceModules['ext.socialprofile.userrelationship.js'] = array(
 	'scripts' => 'UserRelationship.js',
 	'localBasePath' => __DIR__ . '/UserRelationship',
 	'remoteExtPath' => 'SocialProfile/UserRelationship',
+	'position' => 'bottom',
 );
 
 // UserStats
@@ -482,6 +489,7 @@ $wgResourceModules['ext.socialprofile.usersitefollows.js'] = array(
 	'scripts' => 'UserSiteFollows.js',
 	'localBasePath' => __DIR__ . '/UserSiteFollows',
 	'remoteExtPath' => 'SocialProfile/UserSiteFollows',
+	'position' => 'bottom',
 );
 
 // UserUserFollows
@@ -489,6 +497,7 @@ $wgResourceModules['ext.socialprofile.useruserfollows.js'] = array(
 	'scripts' => 'UserUserFollows.js',
 	'localBasePath' => __DIR__ . '/UserUserFollows',
 	'remoteExtPath' => 'SocialProfile/UserUserFollows',
+	'position' => 'bottom',
 );
 // UserUserFollows
 $wgResourceModules['ext.socialprofile.useruserfollows.css'] = array(
@@ -532,9 +541,11 @@ $wgResourceModules['ext.socialprofile.admindashboard.js'] = array(
 					'sb-admin-2.js',
 					'../../UserUploadAvatar/cropper.min.js',
         			'../../UserUploadAvatar/main.js',
+        			'admin.js'
 				),
 	'localBasePath' => __DIR__ . '/AdminDashboard/js',
 	'remoteExtPath' => 'SocialProfile/AdminDashboard/js',
+	'position' => 'bottom',
 );
 // UserAcitvity
 $wgResourceModules['ext.socialprofile.useractivity.js'] = array(
@@ -544,6 +555,7 @@ $wgResourceModules['ext.socialprofile.useractivity.js'] = array(
 	'dependencies' => 'skins.bootstrapmediawiki.bottom',
 	'localBasePath' => __DIR__ . '/UserActivity',
 	'remoteExtPath' => 'SocialProfile/UserActivity',
+	'position' => 'bottom',
 );
 $wgResourceModules['ext.guidedTour.tour.newuser'] = array(
 	'scripts' => 'tours/newuser.js',
@@ -579,6 +591,7 @@ $wgResourceModules['ext.guidedTour.tour.newuser'] = array(
         // localBasePath and remoteExtPath should match what your extension normally uses.
 	'localBasePath' => __DIR__ . '/resources',
 	'remoteExtPath' => 'SocialProfile/resources',
+	'position' => 'bottom',
 );
 // End ResourceLoader stuff
 

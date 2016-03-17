@@ -1424,7 +1424,8 @@ class UserProfilePage extends Article {
 
 		$limit = 8;
 		$rel = new UserActivity( $user_name, 'USER', $limit );
-		$rel->setActivityToggle( 'show_votes', 0 );
+		$rel->setActivityToggle( 'show_votes', 1 );
+		$rel->setActivityToggle( 'show_polls', 1 );
 		$rel->setActivityToggle( 'show_gifts_sent', 1 );
 		$rel->setActivityToggle( 'show_edits', 0 );
 		$rel->setActivityToggle( 'show_comments', 0 );
@@ -1466,6 +1467,9 @@ class UserProfilePage extends Article {
 				if ( $user_title_2 ) {
 					$user_link_2 = '<a href="' . htmlspecialchars( $user_title_2->getFullURL() ) .
 						'" rel="nofollow">' . $item['comment'] . '</a>';
+				}
+				if (is_numeric($item['comment']) ){
+					$value = $item['comment'].'星';
 				}
 
 				$comment_url = '';
@@ -1521,7 +1525,13 @@ class UserProfilePage extends Article {
 						$item_html .= '</div>';
 						break;
 					case 'vote':
-						$item_html .= wfMessage( 'user-recent-activity-vote' )->escaped() . " {$page_link} {$item_time}";
+						$item_html .= wfMessage( 'user-recent-activity-vote' )->escaped() . " {$page_link} {$item_time} 							
+						<div class=\"item\">
+							\"{$value}\"
+						</div>";
+						break;
+					case 'poll':
+						$item_html .= wfMessage( 'user-recent-activity-poll' )->escaped() . "{$page_link} {$item_time}";							
 						break;
 					case 'comment':
 						$item_html .= wfMessage( 'user-recent-activity-comment' )->escaped() . " {$page_link} {$item_time}

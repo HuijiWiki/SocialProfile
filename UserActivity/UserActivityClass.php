@@ -33,7 +33,7 @@ class UserActivity {
 	private $show_this_site = false;
 
 	private $show_edits = 1;
-	private $show_votes = 0;
+	private $show_votes = 1;
 	private $show_comments = 1;
 	private $show_relationships = 1;
 	private $show_gifts_sent = 0;
@@ -47,6 +47,7 @@ class UserActivity {
 	private $show_user_update_status = 1;
 	private $show_domain_creations = 1;
 	private $show_image_uploads = 1;
+	private $show_polls = 1;
 	private $hide_bot = 0;
 
 	private $cached_where;
@@ -110,6 +111,7 @@ class UserActivity {
 			$this->show_user_site_follows = 0;
 			$this->show_user_update_status = 0;
 			$this->show_domain_creations = 0;
+			$this->show_polls = 0;
 			$this->hide_bot = 1;
 		}
 		if ( strtoupper( $filter ) == 'THIS_SITE' ) {
@@ -124,7 +126,8 @@ class UserActivity {
 			$this->show_user_user_follows = 0;
 			$this->show_user_site_follows = 0;
 			$this->show_user_update_status = 0;
-			$this->show_domain_creations = 0;	
+			$this->show_domain_creations = 0;
+			$this->show_polls = 0;	
 			$this->hide_bot = 1;		
 		}
 	}
@@ -236,7 +239,7 @@ class UserActivity {
 				}
 		
 			}
-			if ( !empty( $hide_bot ) ){
+			if ( !empty( $this->hide_bot ) ){
 				for ( $i = 0; $i < count($userArray); $i++ ){
 					if (User::newFromId($userArray[$i])->isAllowed('bot')){
 						unset($userArray[$i]);
@@ -282,7 +285,7 @@ class UserActivity {
 				continue;
 			} else {
 				$dbr->selectDB('huiji_sites');
-				$DBprefix = str_replace('.', '_', $table);
+				$DBprefix = WikiSite::tableNameFromPrefix($table);
 			}
 
 			$tableName = '`'.$DBprefix.'recentchanges'.'`';
@@ -492,6 +495,7 @@ class UserActivity {
 	 * set them in the appropriate class member variables.
 	 */
 	private function setVotes() {
+		global $wgDBprefix, $wgDBname, $isProduction, $wgHuijiPrefix;
 		$dbr = wfGetDB( DB_SLAVE );
 
 		# Bail out if Vote table doesn't exist
@@ -499,35 +503,279 @@ class UserActivity {
 			return false;
 		}
 		$where = $this->where('vote_user_id');
-		$where[] = 'vote_page_id = page_id';
+		//$where[] = 'vote_page_id = page_id';
 		$option = $this->option('vote_date');
-		$res = $dbr->select(
-			array( 'Vote', 'page' ),
-			array(
-				'UNIX_TIMESTAMP(vote_date) AS item_date', 'username',
-				'page_title', 'vote_count', 'comment_count', 'vote_ip',
-				'vote_user_id'
-			),
-			$where,
-			__METHOD__,
-			$option
-		);
 
-		foreach ( $res as $row ) {
-			$username = $row->username;
-			$this->items[] = array(
-				'id' => 0,
-				'type' => 'vote',
-				'timestamp' => $row->item_date,
-				'pagetitle' => $row->page_title,
-				'namespace' => $row->page_namespace,
-				'username' => $username,
-				'userid' => $row->vote_user_id,
-				'comment' => '-',
-				'new' => '0',
-				'minor' => 0
-			);
+		$tables = $this->getTables();
+		$oldDBprefix = $wgDBprefix;
+		$oldDB = $wgDBname;
+		$dbr->tablePrefix('');
+		$sqls = array();
+
+		foreach ($tables as $table){
+			if ( !$isProduction ){
+				$dbr->selectDB('huiji_'.str_replace('.', '_', $table));
+				$DBprefix = '';
+				//break;
+			} elseif ( $table == 'www'){
+				// $dbr->selectDB('huiji_home');
+				// $DBprefix = '';
+				continue;
+			} else {
+				$dbr->selectDB('huiji_sites');
+				$DBprefix = WikiSite::tableNameFromPrefix($table);
+			}		
+			$tableName = '`'.$DBprefix.'Vote'.'`';
+			# Bail out if Vote table doesn't exist
+			if ( !$dbr->tableExists( $tableName ) ) {
+				return false;
+			}
+			$joinTableName =  '`'.$DBprefix.'page'.'`';
+			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
+				array(
+					'UNIX_TIMESTAMP(vote_date) AS item_date',
+					'username', 'vote_page_id', 'vote_value','vote_id', 
+					'vote_user_id','page_title', 'page_namespace', $dbr->addQuotes($table).' AS prefix',
+					)
+				)
+			);	
+			if (count($where) > 0){
+				$conds = "WHERE ".$dbr->makeList( $where, LIST_AND );
+			} else {
+				$conds = '';
+			}
+			if ($this->earlierThan != null){
+				$having = "HAVING `item_date` < {$this->earlierThan}";
+			} else {
+				$having = "";
+			}
+			$sql = "SELECT $fieldName FROM $tableName INNER JOIN $joinTableName ON vote_page_id = page_id $conds $having";
+			$sqls[] = $sql;
 		}
+		if (count($sqls) > 0){
+			$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
+
+			foreach ( $res as $row ) {
+
+				if ($row->prefix != $wgHuijiPrefix){
+					$title = Title::makeTitle( $row->page_namespace, $row->page_title, $row->prefix );
+				} else {
+					$title = Title::makeTitle( $row->page_namespace, $row->page_title );
+				}
+				$this->items_grouped['vote'][$title->getPrefixedText()]['users'][$row->username][] = array(
+					'id' => $row->vote_id,
+					'type' => 'vote',
+					'timestamp' => $row->item_date,
+					'pagetitle' => $row->page_title,
+					'namespace' => $row->page_namespace,
+					'username' => $row->username,
+					'userid' => $row->vote_user_id,
+					'comment' => $row->vote_value,
+					'minor' => 0,
+					'new' => 0,
+					'prefix' => $row->prefix
+				);
+
+				// set last timestamp
+				if (!isset($this->items_grouped['vote'][$title->getPrefixedText()]['timestamp'])){
+					$this->items_grouped['vote'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
+				}
+
+				$username = $row->username;
+				$this->items[] = array(
+					'id' => $row->vote_id,
+					'type' => 'vote',
+					'timestamp' => $row->item_date,
+					'pagetitle' => $row->page_title,
+					'namespace' => $row->page_namespace,
+					'username' => $row->username,
+					'userid' => $row->vote_user_id,
+					'comment' => $row->vote_value,
+					'minor' => 0,
+					'new' => 0,
+					'prefix' => $row->prefix
+				);
+				// set prefix
+				$this->items_grouped['vote'][$title->getPrefixedText()]['prefix'][] = $row->prefix;
+			}
+		}
+
+		$dbr->tablePrefix($oldDBprefix);
+		$dbr->selectDB($oldDB);
+		// }
+
+
+		// $res = $dbr->select(
+		// 	array( 'Vote', 'page' ),
+		// 	array(
+		// 		'UNIX_TIMESTAMP(vote_date) AS item_date', 'username',
+		// 		'page_title', 'vote_count', 'comment_count', 'vote_ip',
+		// 		'vote_user_id',$dbr->addQuotes($table).' AS prefix'
+		// 	),
+		// 	$where,
+		// 	__METHOD__,
+		// 	$option
+		// );
+
+		// foreach ( $res as $row ) {
+		// 	$username = $row->username;
+		// 	$this->items[] = array(
+		// 		'id' => 0,
+		// 		'type' => 'vote',
+		// 		'timestamp' => $row->item_date,
+		// 		'pagetitle' => $row->page_title,
+		// 		'namespace' => $row->page_namespace,
+		// 		'username' => $username,
+		// 		'userid' => $row->vote_user_id,
+		// 		'comment' => '-',
+		// 		'prefix' => 
+		// 		'new' => '0',
+		// 		'minor' => 0
+		// 	);
+		// }
+	}
+	/**
+	 * Get recent polls from the Poll table (provided by PollNY extension) and
+	 * set them in the appropriate class member variables.
+	 */
+	private function setPolls() {
+		global $wgDBprefix, $wgDBname, $isProduction, $wgHuijiPrefix;
+		$dbr = wfGetDB( DB_SLAVE );
+
+
+		$where = $this->where('pv_user_id');
+		//$where[] = 'vote_page_id = page_id';
+		$option = $this->option('pv_date');
+
+		$tables = $this->getTables();
+		$oldDBprefix = $wgDBprefix;
+		$oldDB = $wgDBname;
+		$dbr->tablePrefix('');
+		$sqls = array();
+
+		foreach ($tables as $table){
+			if ( !$isProduction ){
+				$dbr->selectDB('huiji_'.str_replace('.', '_', $table));
+				$DBprefix = '';
+				//break;
+			} elseif ( $table == 'www'){
+				// $dbr->selectDB('huiji_home');
+				// $DBprefix = '';
+				continue;
+			} else {
+				$dbr->selectDB('huiji_sites');
+				$DBprefix = WikiSite::tableNameFromPrefix($table);
+			}		
+
+			$tableName = '`'.$DBprefix.'poll_user_vote'.'`';
+			# Bail out if Vote table doesn't exist
+			if ( !$dbr->tableExists( $tableName ) ) {
+				return false;
+			}
+			$joinTableName =  '`'.$DBprefix.'poll_question'.'`';
+			$joinTableName2 =  '`'.$DBprefix.'page'.'`';
+			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
+				array(
+					'UNIX_TIMESTAMP(pv_date) AS item_date',
+					'pv_user_name', 'pv_user_id', 'pv_id', 'poll_text', 'poll_page_id',
+					'page_title', 'page_namespace', $dbr->addQuotes($table).' AS prefix',
+					)
+				)
+			);	
+			if (count($where) > 0){
+				$conds = "WHERE ".$dbr->makeList( $where, LIST_AND );
+			} else {
+				$conds = '';
+			}
+			if ($this->earlierThan != null){
+				$having = "HAVING `item_date` < {$this->earlierThan}";
+			} else {
+				$having = "";
+			}
+			$sql = "SELECT $fieldName FROM $tableName INNER JOIN $joinTableName ON pv_poll_id = poll_id INNER JOIN $joinTableName2 ON poll_page_id = page_id $conds $having";
+			$sqls[] = $sql;
+		}
+		if (count($sqls) > 0){
+			$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
+
+			foreach ( $res as $row ) {
+
+				if ($row->prefix != $wgHuijiPrefix){
+					$title = Title::makeTitle( $row->page_namespace, $row->page_title, $row->prefix );
+				} else {
+					$title = Title::makeTitle( $row->page_namespace, $row->page_title );
+				}
+				$this->items_grouped['poll'][$title->getPrefixedText()]['users'][$row->pv_user_name][] = array(
+					'id' => $row->pv_id,
+					'type' => 'poll',
+					'timestamp' => $row->item_date,
+					'pagetitle' => $row->page_title,
+					'namespace' => $row->page_namespace,
+					'username' => $row->pv_user_name,
+					'userid' => $row->pv_user_id,
+					'comment' => $row->poll_text,
+					'minor' => 0,
+					'new' => 0,
+					'prefix' => $row->prefix
+				);
+
+				// set last timestamp
+				if (!isset($this->items_grouped['poll'][$title->getPrefixedText()]['timestamp'])){
+					$this->items_grouped['poll'][$title->getPrefixedText()]['timestamp'] = $row->item_date;
+				}
+
+				$username = $row->pv_user_name;
+				$this->items[] = array(
+					'id' => $row->pv_id,
+					'type' => 'poll',
+					'timestamp' => $row->item_date,
+					'pagetitle' => $row->page_title,
+					'namespace' => $row->page_namespace,
+					'username' => $row->pv_user_name,
+					'userid' => $row->pv_user_id,
+					'comment' => $row->poll_text,
+					'minor' => 0,
+					'new' => 0,
+					'prefix' => $row->prefix
+				);
+				// set prefix
+				$this->items_grouped['poll'][$title->getPrefixedText()]['prefix'][] = $row->prefix;
+			}
+		}
+
+		$dbr->tablePrefix($oldDBprefix);
+		$dbr->selectDB($oldDB);
+		// }
+
+
+		// $res = $dbr->select(
+		// 	array( 'Vote', 'page' ),
+		// 	array(
+		// 		'UNIX_TIMESTAMP(vote_date) AS item_date', 'username',
+		// 		'page_title', 'vote_count', 'comment_count', 'vote_ip',
+		// 		'vote_user_id',$dbr->addQuotes($table).' AS prefix'
+		// 	),
+		// 	$where,
+		// 	__METHOD__,
+		// 	$option
+		// );
+
+		// foreach ( $res as $row ) {
+		// 	$username = $row->username;
+		// 	$this->items[] = array(
+		// 		'id' => 0,
+		// 		'type' => 'vote',
+		// 		'timestamp' => $row->item_date,
+		// 		'pagetitle' => $row->page_title,
+		// 		'namespace' => $row->page_namespace,
+		// 		'username' => $username,
+		// 		'userid' => $row->vote_user_id,
+		// 		'comment' => '-',
+		// 		'prefix' => 
+		// 		'new' => '0',
+		// 		'minor' => 0
+		// 	);
+		// }
 	}
 	/**
 	 * Get recent uploads from the image table (provided by the Comments
@@ -557,7 +805,7 @@ class UserActivity {
 				continue;
 			} else {
 				$dbr->selectDB('huiji_sites');
-				$DBprefix = str_replace('.', '_', $table);
+				$DBprefix = WikiSite::tableNameFromPrefix($table);
 			}
 			$tableName = '`'.$DBprefix.'image'.'`';
 			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
@@ -676,7 +924,7 @@ class UserActivity {
 				continue;
 			} else {
 				$dbr->selectDB('huiji_sites');
-				$DBprefix = str_replace('.', '_', $table);
+				$DBprefix = WikiSite::tableNameFromPrefix($table);
 			}
 			$tableName = '`'.$DBprefix.'Comments'.'`';
 			$joinTableName =  '`'.$DBprefix.'page'.'`';
@@ -1448,6 +1696,9 @@ class UserActivity {
 		if ( $this->show_votes ) {
 			$this->setVotes();
 		}
+		if ( $this->show_polls ) {
+			$this->setPolls();
+		}
 		if ( $this->show_comments ) {
 			$this->setComments();
 		}
@@ -1495,6 +1746,12 @@ class UserActivity {
 
 		if ( $this->show_edits ) {
 			$this->simplifyPageActivity( 'edit' );
+		}
+		if ( $this->show_votes ) {
+			$this->simplifyPageActivity( 'vote' );
+		}
+		if ( $this->show_polls ) {
+			$this->simplifyPageActivity( 'poll' );
 		}
 		if ( $this->show_comments ) {
 			$this->simplifyPageActivity( 'comment' );
@@ -1752,6 +2009,7 @@ class UserActivity {
 			case 'edit':
 				return '<i class="fa fa-pencil"></i>';
 			case 'vote':
+			case 'poll':
 				return '<i class="fa fa-bar-chart"></i>';
 			case 'comment':
 				return '<i class="fa fa-comment"></i>';
@@ -1791,76 +2049,52 @@ class UserActivity {
 	 */
 	private function streamlineForeignDBRepo( $prefix ){
 		global $wgDBtype, $wgDBserver, $wgDBuser, $wgDBpassword, $isProduction, $wgSharedThumbnailScriptPath, $wgGenerateThumbnailOnParse, $wgHuijiSuffix, $wgCdnScriptPath;
-		$lowDashPrefix = str_replace('.', '_', $prefix);
+		$lowDashPrefix = WikiSite::tableNameFromPrefix($prefix);
 		$dotPrefix = str_replace('_', '.', $prefix);
-		if ($isProduction){
-			if ($prefix != 'www'){
-				return array(
-				    'class' => 'ForeignDBRepo',
-				    'name' => $dotPrefix,
-				    'url' => "http://cdn.huijiwiki.com/{$dotPrefix}/uploads",
-				    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
-				    'hashLevels' => 2, // This must be the same for the other family member
-				    'thumbScriptUrl' => "http://cdn.huijiwiki.com/{$dotPrefix}/thumb.php",
-				    'transformVia404' => !$wgGenerateThumbnailOnParse,
-				    'dbType' => $wgDBtype,
-				    'dbServer' => $wgDBserver,
-				    'dbUser' => $wgDBuser,
-				    'dbPassword' => $wgDBpassword,
-				    'dbFlags' => DBO_DEFAULT,
-				    'dbName' => "huiji_sites",
-				    'tablePrefix' => $lowDashPrefix,
-				    'hasSharedCache' => false,
-				    'descBaseUrl' => "http://{$dotPrefix}{$wgHuijiSuffix}/wiki/File:",
-				    'fetchDescription' => false,
-				    'backend' => 'local-backend'				
-				);
-			} else {
-				return array(
-				    'class' => 'ForeignDBRepo',
-				    'name' => $dotPrefix,
-				    'url' => "http://cdn.huijiwiki.com/{$dotPrefix}/uploads",
-				    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
-				    'hashLevels' => 2, // This must be the same for the other family member
-				    'thumbScriptUrl' => "http://cdn.huijiwiki.com/{$dotPrefix}/thumb.php",
-				    'transformVia404' => !$wgGenerateThumbnailOnParse,
-				    'dbType' => $wgDBtype,
-				    'dbServer' => $wgDBserver,
-				    'dbUser' => $wgDBuser,
-				    'dbPassword' => $wgDBpassword,
-				    'dbFlags' => DBO_DEFAULT,
-				    'dbName' => "huiji_home",
-				    'tablePrefix' => '',
-				    'hasSharedCache' => false,
-				    'descBaseUrl' => "http://{$dotPrefix}{$wgHuijiSuffix}/wiki/File:",
-				    'fetchDescription' => false,
-				    'backend' => 'local-backend'				
-				);
-			}
-
+		
+		if ($prefix != 'www'){
+			return array(
+			    'class' => 'ForeignDBRepo',
+			    'name' => $dotPrefix,
+			    'url' => "http://cdn.huijiwiki.com/{$dotPrefix}/uploads",
+			    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
+			    'hashLevels' => 2, // This must be the same for the other family member
+			    'thumbScriptUrl' => "http://cdn.huijiwiki.com/{$dotPrefix}/thumb.php",
+			    'transformVia404' => !$wgGenerateThumbnailOnParse,
+			    'dbType' => $wgDBtype,
+			    'dbServer' => $wgDBserver,
+			    'dbUser' => $wgDBuser,
+			    'dbPassword' => $wgDBpassword,
+			    'dbFlags' => DBO_DEFAULT,
+			    'dbName' => "huiji_sites",
+			    'tablePrefix' => $lowDashPrefix,
+			    'hasSharedCache' => false,
+			    'descBaseUrl' => "http://{$dotPrefix}{$wgHuijiSuffix}/wiki/File:",
+			    'fetchDescription' => false,
+			    'backend' => 'local-backend'				
+			);
+		} else {
+			return array(
+			    'class' => 'ForeignDBRepo',
+			    'name' => $dotPrefix,
+			    'url' => "http://cdn.huijiwiki.com/{$dotPrefix}/uploads",
+			    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
+			    'hashLevels' => 2, // This must be the same for the other family member
+			    'thumbScriptUrl' => "http://cdn.huijiwiki.com/{$dotPrefix}/thumb.php",
+			    'transformVia404' => !$wgGenerateThumbnailOnParse,
+			    'dbType' => $wgDBtype,
+			    'dbServer' => $wgDBserver,
+			    'dbUser' => $wgDBuser,
+			    'dbPassword' => $wgDBpassword,
+			    'dbFlags' => DBO_DEFAULT,
+			    'dbName' => "huiji_home",
+			    'tablePrefix' => '',
+			    'hasSharedCache' => false,
+			    'descBaseUrl' => "http://{$dotPrefix}{$wgHuijiSuffix}/wiki/File:",
+			    'fetchDescription' => false,
+			    'backend' => 'local-backend'				
+			);
 		}
-		$dbname = 'huiji_'.$lowDashPrefix;
-		return array(
-		    'class' => 'ForeignDBRepo',
-		    'name' => $dotPrefix,
-		    'url' => "http://{$dotPrefix}{$wgHuijiSuffix}/uploads",
-		    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
-		    'hashLevels' => 0, // This must be the same for the other family member
-		    'thumbScriptUrl' => "http://cdn.huijiwiki.com/{$dotPrefix}/thumb.php",
-		    'transformVia404' => !$wgGenerateThumbnailOnParse,
-		    'dbType' => $wgDBtype,
-		    'dbServer' => $wgDBserver,
-		    'dbUser' => $wgDBuser,
-		    'dbPassword' => $wgDBpassword,
-		    'dbFlags' => DBO_DEFAULT,
-		    'dbName' => $dbname,
-		    'tablePrefix' => '',
-		    'hasSharedCache' => false,
-		    'descBaseUrl' => "http://{$dotPrefix}{$wgHuijiSuffix}/wiki/File:",
-		    'fetchDescription' => false,
-		    'backend' => 'local-backend'
-		);
-
 	}
 	private function updateTime($html, $timeago){
 		$startPoint = '<p class="time-ago"><strong>';
