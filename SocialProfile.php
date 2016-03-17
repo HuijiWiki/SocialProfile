@@ -159,7 +159,7 @@ require_once( "$IP/extensions/SocialProfile/TemplateFork/TemplateFork_AjaxFuncti
 require_once( "$IP/extensions/SocialProfile/UserProfile/OauthLogin_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/UserGifts/UserGift_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/Videos/UploadVideos_AjaxFunctions.php" );
-// require_once( "$IP/extensions/SocialProfile/AdminDashboard/AdminDashboard_AjaxFunctions.php" );
+require_once( "$IP/extensions/SocialProfile/AdminDashboard/AdminDashboard_AjaxFunctions.php" );
 // What to display on social profile pages by default?
 $wgUserProfileDisplay['board'] = true;
 $wgUserProfileDisplay['foes'] = false;
