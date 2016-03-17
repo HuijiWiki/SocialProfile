@@ -6,7 +6,7 @@ if(!defined('MEDIAWIKI')){
 
 $wgHooks['NewRevisionFromEditComplete'][] = 'insertEditRecord';
 
-
+if (!$wgIsProduction)
 require_once("curl.php");
 function insertEditRecord($article, $rev, $baseID, $user ){
 	global $wgHuijiPrefix, $wgSitename, $wgIsProduction;
@@ -31,9 +31,11 @@ function insertEditRecord($article, $rev, $baseID, $user ){
                 'client_ip'=> isset($_SERVER[ 'HTTP_X_FORWARDED_FOR' ]) ? $_SERVER[ 'HTTP_X_FORWARDED_FOR' ] : "",
                 'client_userAgent' => isset($_SERVER[ 'HTTP_USER_AGENT' ]) ? $_SERVER[ 'HTTP_USER_AGENT' ] : "",
 	);        
-
+if (!$wgIsProduction){
 MyCURL::postDataInJson('http://localhost:8081',json_encode($log_data),'huiji','huiji1024');  
+
 wfErrorLog(json_encode($log_data),"/var/log/mediawiki/SocialProfile.log");
+}
 //        curl_post_json($log_data,"huiji","huiji1024");
 	$post_data_string = '';
 	foreach($post_data as $key => $value){
