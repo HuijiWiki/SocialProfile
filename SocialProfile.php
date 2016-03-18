@@ -540,8 +540,7 @@ $wgResourceModules['ext.socialprofile.admindashboard.js'] = array(
 					'morris-data.js',
 					'sb-admin-2.js',
 					'../../UserUploadAvatar/cropper.min.js',
-        			'../../UserUploadAvatar/main.js',
-        			'admin.js'
+        				'../../UserUploadAvatar/main.js'
 				),
 	'localBasePath' => __DIR__ . '/AdminDashboard/js',
 	'remoteExtPath' => 'SocialProfile/AdminDashboard/js',
