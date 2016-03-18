@@ -37,16 +37,7 @@ class SpecialVideos extends SpecialPage{
             $out->addHTML( $output );
             return false;
         }
-$HuijiSite = WikiSite::newFromPrefix('lotr');        
-$resUserArr = $HuijiSite->getFollowers();
-$result = array();
-foreach ($resUserArr as $key => $value) {
-    $userObj = HuijiUser::newFromName( $value['user_name'] );
-    $userStats = $userObj->getStats( 'lotr' );
-    $result[$value['user_name']] = (int)str_replace(',', '', $userStats['edits']);
-}
-arsort($result);
-print_r($result);die();
+
         $request = $this->getRequest();
         $reupload = empty($request->getVal('reupload'))?null:$request->getVal('reupload');
         $filename = empty($request->getVal('filename'))?null:$request->getVal('filename');
