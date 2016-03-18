@@ -21,7 +21,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 	 * @param $par Mixed: parameter passed to the page or null
 	 */
 	public function execute( $par ) {
-		global $wgUploadPath, $wgUser, $wgHuijiPrefix;
+		global $wgUploadPath, $wgUser, $wgHuijiPrefix, $wgSiteSettings;
 		$templateParser = new TemplateParser(  __DIR__ . '/pages' );
 		$out = $this->getOutput();
 		$user = $this->getUser();
@@ -96,6 +96,83 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		if(is_null($newFollow)){
 			$newFollow = false;
 		}
+
+		// Settings Panel
+		$rating = $site->getRating();
+		$settings = $wgSiteSettings;
+		$settings = array();
+		$settings['enable-pollny'] = array(
+					'title' => wfMessage('enable-pollny')->escaped(),
+					'description' => wfMessage('enable-pollny-description')->escaped(),
+					'value' => wfMessage('enable-disabled')->text(), 
+					'level' => 'C',
+				);
+		$settings['enble-voteny'] = array(
+					'title' => wfMessage('enable-voteny')->escaped(),
+					'description' => wfMessage('enable-voteny-description')->escaped(),
+					'value' => wfMessage('enable-disabled')->text(),
+					'level' => 'B',
+				);
+
+		//$out->enableOOUI();
+// 		$btn = new OOUI\ButtonWidget( array(
+//     'label' => 'Click me!'
+// ) );
+// 	echo $btn->toString();
+		// $widget = new OOUI\DeferredWidget( array (
+  // 			'type' => 'toggleswitch',
+  // 			'class' => 'ToggleSwitchWidget',
+		// ) );
+		// array_key_exists(key, search)
+		// echo $widget->toString();
+		switch ($rating) {
+			case 'A':
+				foreach( $settings as $key => $value){
+					if ( $value['level'] == 'A'){
+						$enable = $site->getProperty($key);
+						$settings[$key]['value'] = wfMessage("admin-switch-$enable");
+					}
+				}					
+			case 'B':
+				foreach( $settings as $key => $value){
+					if ($value['level'] == 'B'){
+						$enable = $site->getProperty($key);
+						$settings[$key]['value'] = wfMessage("admin-switch-$enable");
+					}
+				}
+			case 'C':
+				foreach( $settings as $key => $value){
+					if ($value['level'] == 'C'){
+						$enable = $site->getProperty($key);
+						$settings[$key]['value'] = wfMessage("admin-switch-$enable");
+					}
+				}
+
+			case 'D':
+				foreach( $settings as $key => $value){
+					if ($value['level'] == 'D'){
+						$enable = $site->getProperty($key);
+						$settings[$key]['value'] = wfMessage("admin-switch-$enable");
+					}
+				}
+			case 'E':
+				foreach( $settings as $key => $value){
+					if ($value['level'] == 'E'){
+						$enable = $site->getProperty($key);
+						$settings[$key]['value'] = wfMessage("admin-switch-$enable");
+					}
+				}
+			default:
+				foreach( $settings as $key => $value){
+					if ($value['level'] == 'NA'){
+						$enable = $site->getProperty($key);
+						$settings[$key]['value'] = wfMessage("admin-switch-$enable");
+					}
+				}
+				# code...
+				break;
+		}
+
 		$output .= $templateParser->processTemplate(
 				    'admin_index',
 				    array(

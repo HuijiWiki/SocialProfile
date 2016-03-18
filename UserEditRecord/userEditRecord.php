@@ -6,8 +6,6 @@ if(!defined('MEDIAWIKI')){
 
 $wgHooks['NewRevisionFromEditComplete'][] = 'insertEditRecord';
 
-if (!$wgIsProduction)
-require_once("curl.php");
 function insertEditRecord($article, $rev, $baseID, $user ){
 	global $wgHuijiPrefix, $wgSitename, $wgIsProduction;
 	$url = 'http://huijidata.com:50007/insertEditRecord/';
@@ -30,12 +28,13 @@ function insertEditRecord($article, $rev, $baseID, $user ){
 		'timestamp' => isset($_SERVER[ 'REQUEST_TIME' ]) ? $_SERVER[ 'REQUEST_TIME' ] : "",
                 'client_ip'=> isset($_SERVER[ 'HTTP_X_FORWARDED_FOR' ]) ? $_SERVER[ 'HTTP_X_FORWARDED_FOR' ] : "",
                 'client_userAgent' => isset($_SERVER[ 'HTTP_USER_AGENT' ]) ? $_SERVER[ 'HTTP_USER_AGENT' ] : "",
-	);        
-if (!$wgIsProduction){
-MyCURL::postDataInJson('http://localhost:8081',json_encode($log_data),'huiji','huiji1024');  
-
-wfErrorLog(json_encode($log_data),"/var/log/mediawiki/SocialProfile.log");
-}
+	); 
+       
+	if (!$wgIsProduction){
+	   include("curl.php");
+           $out =MyCURL::postDataInJson('http://121.42.144.9:8080/statisticQuery/webapi/edit/insertOnePageEditRecord',json_encode($log_data));
+           wfErrorLog(json_encode($out),"/var/log/mediawiki/SocialProfile.log");
+	}
 //        curl_post_json($log_data,"huiji","huiji1024");
 	$post_data_string = '';
 	foreach($post_data as $key => $value){

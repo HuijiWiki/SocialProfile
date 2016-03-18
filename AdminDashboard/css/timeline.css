@@ -143,17 +143,35 @@ hr {
 }
 .a-avatar img{
     width: 30px;
-    border-radius: 5px;
 }
 .a-user{
     float: left;
+}
+.a-user-level{
+    margin-left: 5px;
+}
+.a-user-editcount{
+    margin-left: 15px;
 }
 .a-options{
     float: right;
 }
 .a-tag .label {
     margin-right: 5px;
+    position: relative;
+    cursor: default;
 }
+.a-tag .icon-close{
+    position: absolute;
+    right: -5px;
+    top: -5px;
+    color: red;
+    display: none;
+}
+.a-tag .label:hover .icon-close{
+    display: block;
+}
+
 .btn-group label{
     display: block;
     cursor: pointer;

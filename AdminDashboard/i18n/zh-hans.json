@@ -4,5 +4,10 @@
 			"reasno"
 		]
 	},
-	"admindashboard": "管理面板"
+	"admindashboard": "管理面板",
+	"enable-pollny": "投票组件",
+	"enable-voteny": "评分组件",
+	"enable-pollny-description": "创建可以插入到页面中的投票框",
+	"enable-voteny-description": "在内容页面下方加入评分功能",
+	"enable-disabled":"暂不可选"
 }
