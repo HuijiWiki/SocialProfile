@@ -19,16 +19,6 @@
 * html .clearfix { height: 1%; }
 /* End hide from IE-mac */
 
-.firstHeading {
-	border-bottom: none;
-	margin: 0px !important;
-	display: none;
-}
-
-.pagetitle {
-	display: inline !important;
-}
-
 #main {
 	padding: 0px 0px 0px 0px !important;
 }
@@ -698,9 +688,6 @@
 @media screen and (min-width: 769px) {
     .profile-page .jumbotron {
         padding:30px 50px!important;
-    }
-    .profile-page{
-        padding-top:50px;
     }
 }
 .user-follow-msg{
