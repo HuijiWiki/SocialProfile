@@ -8,6 +8,7 @@ $wgHooks['NewRevisionFromEditComplete'][] = 'insertEditRecord';
 
 function insertEditRecord($article, $rev, $baseID, $user ){
 	global $wgHuijiPrefix, $wgSitename, $wgIsProduction;
+	/*
 	$url = 'http://huijidata.com:50007/insertEditRecord/';
 	$post_data = array(
 		'userName' => $user->getName(),
@@ -17,25 +18,6 @@ function insertEditRecord($article, $rev, $baseID, $user ){
 		'articleId' => $article->getId(),
 		'titleName' => $article->getTitle()->getText()
 	);
-        $log_data = array(
-		'user_name' => $user->getName(),
-                'user_id' => $user->getId(),
-                'site_prefix' => $wgHuijiPrefix,
-                'site_name' => $wgSitename,
-                'page_title' => $article->getTitle()->getText(),
-                'page_id' => $article->getId(),
-                'page_ns' => $article->getTitle()->getNamespace(),
-		'timestamp' => isset($_SERVER[ 'REQUEST_TIME' ]) ? $_SERVER[ 'REQUEST_TIME' ] : "",
-                'client_ip'=> isset($_SERVER[ 'HTTP_X_FORWARDED_FOR' ]) ? $_SERVER[ 'HTTP_X_FORWARDED_FOR' ] : "",
-                'client_userAgent' => isset($_SERVER[ 'HTTP_USER_AGENT' ]) ? $_SERVER[ 'HTTP_USER_AGENT' ] : "",
-	); 
-       
-	if (!$wgIsProduction){
-	   include("curl.php");
-           $out =MyCURL::postDataInJson('http://121.42.144.9:8080/statisticQuery/webapi/edit/insertOnePageEditRecord',json_encode($log_data));
-           wfErrorLog(json_encode($out),"/var/log/mediawiki/SocialProfile.log");
-	}
-//        curl_post_json($log_data,"huiji","huiji1024");
 	$post_data_string = '';
 	foreach($post_data as $key => $value){
 		$post_data_string .= $key.'='.$value.'&';
@@ -55,6 +37,24 @@ function insertEditRecord($article, $rev, $baseID, $user ){
 	curl_setopt_array($ch,$curl_opt);
 	curl_exec($ch);
 	curl_close($ch);
+        */
+
+        $log_data = array(
+		'user_name' => $user->getName(),
+                'user_id' => $user->getId(),
+                'site_prefix' => $wgHuijiPrefix,
+                'site_name' => $wgSitename,
+                'page_title' => $article->getTitle()->getText(),
+                'page_id' => $article->getId(),
+                'page_ns' => $article->getTitle()->getNamespace(),
+		'timestamp' => isset($_SERVER[ 'REQUEST_TIME' ]) ? $_SERVER[ 'REQUEST_TIME' ] : "",
+                'client_ip'=> isset($_SERVER[ 'HTTP_X_FORWARDED_FOR' ]) ? $_SERVER[ 'HTTP_X_FORWARDED_FOR' ] : "",
+                'client_userAgent' => isset($_SERVER[ 'HTTP_USER_AGENT' ]) ? $_SERVER[ 'HTTP_USER_AGENT' ] : "",
+	); 
+	if($wgIsProduction == false) return;       
+	include("curl.php");
+        $out =MyCURL::postDataInJson('http://huijidata.com:8080/statisticQuery/webapi/edit/insertOnePageEditRecord',json_encode($log_data));
+
 
 }
 
