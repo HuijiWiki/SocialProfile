@@ -199,6 +199,11 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 									'group' => 'rollback',
 									'groupName' => '回退员',
 									'groupClass' => 'label label-warning admin-label-back draggable'
+								),
+							'staff' => array(
+									'group' => 'staff',
+									'groupName' => '职员',
+									'groupClass' => 'label label-default admin-label-staff draggable'
 								)
 						);
 		foreach ($changeGroup['add'] as $key => $value) {

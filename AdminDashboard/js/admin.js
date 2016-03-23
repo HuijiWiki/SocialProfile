@@ -8,7 +8,7 @@ var admin = {
     cont:1,
     val:'',
     token:'',
-    addlimit: 'bot,bureaucrat,sysop,rollback',
+    addlimit: 'bot,bureaucrat,sysop,rollback,staff',
     getPos: function(){
         this.pos = this.getSubClient($('.admin-tab-content').get(0)).top-100;
     },
@@ -275,6 +275,9 @@ var admin = {
             }else if(item == 'rollback'){
                 obj[item].name = '回退员';
                 obj[item].color = 'warning';
+            }else if(item == 'staff'){
+                obj[item].name = '职员';
+                obj[item].color = 'default';
             }
             for(var i=0;i<rights.length;i++){
                 if(item==rights[i]){
@@ -296,6 +299,8 @@ var admin = {
                 obj.rollback = ['label label-warning',item,'回退员']
             }else if(item=='bot'){
                 obj.bot = ['label label-primary',item,'机器人']
+            }else if(item=='staff'){
+                obj.staff = ['label label-default',item,'职员' ]
             }
         });
         return obj;
