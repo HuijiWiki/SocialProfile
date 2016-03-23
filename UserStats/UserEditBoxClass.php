@@ -26,9 +26,9 @@ class UserEditBox{
 		$yesterday = date("Y-m-d",strtotime("-1 day"));
 		$userEditInfo = self::getUserEditInfoCache( $userId );
 		if($userEditInfo == ''){
-			$receive = RecordStatistics::getAllPageEditRecordsFromUserIdGroupByDay( $userId, $oneYearAgo, $yesterday );
+			$receive = RecordStatistics2::getAllPageEditRecordsFromUserIdGroupByDay( $userId, $oneYearAgo, $today );
 			if($receive->status == 'success'){
-				$userEditInfo = $receive->result;
+				$userEditInfo = (array)$receive->result;
 				$userEditInfo['lastSeen'] = $today;
 				$wgMemc->set( $key, $userEditInfo );
 			}else{
@@ -40,14 +40,11 @@ class UserEditBox{
 			}
 			$Delres = array();
 			if($userEditInfo['lastSeen'] == $yesterday){
-				$receive = RecordStatistics::getAllPageEditRecordsFromUserIdGroupByDay( $userId, $yesterday, $yesterday);
+				$receive = RecordStatistics2::getAllPageEditRecordsFromUserIdGroupByDay( $userId, $yesterday, $yesterday);
 				if($receive->status == 'success'){
 					if ( $receive->result != '' ) {
-						$Beres = $receive->result;
-						$Delres['_id'] = $yesterday;
-						$Delres['value'] = $Beres[0]->value;
-						$resData[] = (object)$Delres;
-						$userEditInfo = array_merge($userEditInfo, $resData);
+						$Beres = (array)$receive->result;
+						$userEditInfo = array_merge($userEditInfo, $Beres);
 						$userEditInfo['lastSeen'] = $today;
 						$wgMemc->set( $key, $userEditInfo );
 					}
@@ -56,9 +53,9 @@ class UserEditBox{
 					//throw new Exception("Error getUserEditInfo/getPageEditCountOnWikiSiteFromUserId Bad Request");
 				}
 			}else{
-				$receive = RecordStatistics::getAllPageEditRecordsFromUserIdGroupByDay( $userId, $userEditInfo['lastSeen'], $yesterday );
+				$receive = RecordStatistics2::getAllPageEditRecordsFromUserIdGroupByDay( $userId, $userEditInfo['lastSeen'], $yesterday );
 				if($receive->status == 'success'){
-					$EditSinceLastSeen = $receive->result;
+					$EditSinceLastSeen = (array)$receive->result;
 					$userEditInfo = array_merge($userEditInfo, $EditSinceLastSeen);
 					$userEditInfo['lastSeen'] = $today;
 					$wgMemc->set( $key, $userEditInfo );		
@@ -71,7 +68,8 @@ class UserEditBox{
 		return $userEditInfo;
 	}
 	static function getTodayEdit($userId){
-		$receive = RecordStatistics::getRecentPageEditCountOnWikiSiteFromUserId($userId,'','day');
+		$today = date("Y-m-d");
+		$receive = RecordStatistics2::getPageEditCountOnWikiSiteFromUserId($userId,'', $today, $today);
 		if($receive->status == 'success'){
 			$editNum = $receive->result;
 		}else{
@@ -95,7 +93,7 @@ class UserEditBox{
 	}
 	//pe
 	public function getSiteEditCount( $userId,$wikiSite,$fromTime,$toTime ){
-		$receive = RecordStatistics::getPageEditCountOnWikiSiteFromUserId(-1,$wikiSite,$fromTime, $toTime);
+		$receive = RecordStatistics2::getPageEditCountOnWikiSiteFromUserId(-1,$wikiSite,$fromTime, $toTime);
 		if ($receive->status == 'success') {
 			return $receive->result;
 		}else{
@@ -105,7 +103,7 @@ class UserEditBox{
 	}
 	//pv
 	public function getSiteViewCount( $userId, $wikiSite, $fromTime, $toTime ){
-		$receive = RecordStatistics::getPageViewCountOnWikiSiteFromUserId(-1,$wikiSite,$fromTime, $toTime);
+		$receive = RecordStatistics2::getPageViewCountOnWikiSiteFromUserId(-1,$wikiSite,$fromTime, $toTime);
 		if ($receive->status == 'success') {
 			return $receive->result;
 		}else{
@@ -115,11 +113,9 @@ class UserEditBox{
 	}
 	//page edit user
 	public function getSiteEditUserCount( $fromTime, $toTime ){
-		$receive = RecordStatistics::getEditorCountGroupByWikiSite( $fromTime, $toTime);
+		$receive = RecordStatistics2::getPageEditorRecordsGroupByWikiSite( $fromTime, $toTime);
 		if ($receive->status == 'success') {
-			foreach ($receive->result as $value) {
-				$resdata[$value->_id] = $value->value;
-			}
+			$resdata = (array)$receive->result;
 			return $resdata;
 		}else{
 			throw new Exception("Error getSiteEditUserCount/getEditorCountGroupByWikiSite Bad Request");

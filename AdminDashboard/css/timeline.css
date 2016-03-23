@@ -38,8 +38,8 @@ body #profile-image .upload-tool{
     text-align: center;
 }
 .admin-tab li{
-    display: inline-block;
-    float: none;
+    display: inline-block!important;
+    float: none!important;
 }
 .admin-tab-content{
     padding-top: 25px;
@@ -84,7 +84,7 @@ body #profile-image .upload-tool{
 .admin-member-search{
     max-width: 250px;
     margin-left: 20px;
-    display: inline-block;
+    display: inline-block!important;
 }
 .admin-member-header-right{
     float: right;
@@ -110,6 +110,7 @@ body #profile-image .upload-tool{
 }
 .admin-member-header-right .label{
     cursor: -webkit-grab;
+    cursor: -moz-grab;
 }
 hr {
     background: #d6dadc;
@@ -183,4 +184,67 @@ hr {
 .a-delete.btn-danger a{
     color: #fff!important;
     text-decoration: none!important;
+}
+[draggable=true] {
+    -khtml-user-drag: element;
+}
+
+/*setting*/
+.admin-setting-level{
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    color: #999;
+}
+.admin-setting-wrap{
+    position: relative;
+    max-width: 500px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 10px 20px;
+    border-radius: 3px;
+}
+.admin-setting-li{
+    border-bottom: 1px solid #e0e0e0;
+    padding: 10px 0;
+    position: relative;
+}
+.setting-title{
+    padding: 0;
+    font-size: 18px;
+    color: #347bff;
+    display: block;
+}
+.setting-des{
+    margin-right: 80px;
+}
+.setting-need-level{
+    color: #999;
+}
+.setting-toggle{
+    position: absolute;
+    right: 10px;
+    top: 40px;
+}
+@media screen and (max-width: 768px){
+    .admin-member-header-right {
+        float: right;
+        line-height: 34px;
+        margin-bottom: 15px;
+        display: none;
+    }
+    .a-options{
+        float: none;
+    }
+    .a-tag{
+        display: block;
+        margin-bottom: 10px;
+        clear: both;
+    }
+    #page-wrapper .a-options button{
+        padding: 2px 4px;
+    }
+    .a-delete{
+        margin-left: 5px;
+    }
 }

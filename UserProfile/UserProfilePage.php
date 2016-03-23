@@ -280,20 +280,16 @@ class UserProfilePage extends Article {
        
         $ueb = new UserEditBox();
         $editBox = $editData = array();
-        $userEditInfo = $ueb->getUserEditInfo($this->user_id);
+        $editBox = $ueb->getUserEditInfo($this->user_id);
         $maxlen = $currentMaxlen = 0; //init variables.
-        if ($userEditInfo != false) {
+        if ($editBox != false) {
         	$wgOut->addHTML('<div id="user-page-center" class="col-md-12 hidden-xs">
         	<div class="panel panel-default"><div class="user-section-heading panel-heading">
  			<div class="user-section-title">贡献</div>
  			<div class="action-right"></div>
 			<div class="cleared"></div></div><div class="user-gift-container panel-body check-body">');
-	        foreach ($userEditInfo as $value) {
-	        	if (is_object($value) && !empty($value->_id) && $value->value > 0) {
-		        	$editBox[$value->_id] = $value->value;
-		        	$editData[] = $value->_id;
-	        	}
-	            
+	        foreach ($editBox as $key=>$value) {
+		        $editData[] = $key;
 	        }
 	        $today = date("Y-m-d");
 	        $yesterday = date("Y-m-d",strtotime("-1 day"));

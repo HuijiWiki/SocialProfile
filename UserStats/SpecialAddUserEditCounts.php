@@ -52,7 +52,7 @@ class SpecialAddUserEditCounts extends UnlistedSpecialPage{
 		if( $userName != null && $num != null && $date != null ){
 			$user = User::newFromName( $userName );
 			if( !empty($user->getId()) && is_numeric($num) ){
-				$resJson = RecordStatistics::upsertFakedPageEditRecord( $user->getId(), $num, $date );
+				$resJson = RecordStatistics2::insertOneFakedPageEditRecord( $user->getId(), $num, $date );
 				$resObj = json_decode($resJson);
 				if ( $resObj->status !== 'fail' ) {
 					$output .= "<h1>success</h1>";

@@ -88,6 +88,7 @@ $wgAutoloadClasses['SpecialAdminDashboard'] = __DIR__ . '/AdminDashboard/Special
 $wgAutoloadClasses['SpecialSiteRank'] = __DIR__ . '/SiteStatus/SpecialSiteRank.php';
 $wgAutoloadClasses['AllSitesInfo'] = __DIR__ . '/SiteStatus/AllSitesInfoClass.php';
 $wgAutoloadClasses['RecordStatistics'] = __DIR__ . '/HuijiStatistics/interface.php';
+$wgAutoloadClasses['RecordStatistics2'] = __DIR__ . '/HuijiStatistics/interface_v2.php';
 $wgAutoloadClasses['SpecialCompleteUserInfo'] = __DIR__ . '/CompleteUserInfo/SpecialCompleteUserInfo.php';
 $wgAutoloadClasses['QqSdk'] = __DIR__ . '/UserProfile/QqSdkClass.php';
 $wgAutoloadClasses['SaeTOAuthV2'] = __DIR__ . '/UserProfile/weiboSdkClass.php';
@@ -527,6 +528,9 @@ $wgResourceModules['ext.socialprofile.admindashboard.css'] = array(
         			'../../UserUploadAvatar/cropper.min.css',
 	    			'../../UserUploadAvatar/main.css'
 				),
+	'dependencies' => array(
+	                'skins.bootstrapmediawiki.top'
+	                ),
 	'localBasePath' => __DIR__ . '/AdminDashboard/css',
 	'remoteExtPath' => 'SocialProfile/AdminDashboard/css',
 	'position' => 'top' // just in case
@@ -616,3 +620,11 @@ $wgAutoloadClasses['ApiAvatarSubmit'] = __DIR__ . '/UserProfile/api/AvatarSubmit
 $wgAPIModules['avatarsubmit'] = 'ApiAvatarSubmit';
 $wgAutoloadClasses['ApiAvatarShow'] = __DIR__ . '/UserProfile/api/AvatarShow.api.php';
 $wgAPIModules['avatarshow'] = 'ApiAvatarShow';
+
+//Log
+global $wgLogTypes, $wgLogNames, $wgLogHeaders, $wgLogActions;
+$wgLogTypes[]                    = 'AdminDashboard';
+$wgLogNames['AdminDashboard']           = 'admindashboardpage';
+$wgLogHeaders['AdminDashboard']         = 'admindashboardpagetext';
+$wgLogActions['AdminDashboard/addDescription'] = 'admindashboardlogentry';
+$wgLogActions['AdminDashboard/setSiteProperty'] = 'admindashboardlogentry';

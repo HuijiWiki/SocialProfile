@@ -24,7 +24,7 @@ class CropAvatar {
       $this->file = $file;
       if (!empty($data)){
         $this -> setData($data);
-        $this -> crop($file->getTempName(), $this->file->getTempName(), $this -> data);
+        $this -> crop($file->getTempName(), $this->file->getTempName(), $this->data);
       }
       $this -> setFile($this->file);   
       
@@ -41,7 +41,7 @@ class CropAvatar {
     global $wgUser, $wgHuijiPrefix, $wgAvatarKey, $wgSiteAvatarKey, $wgUploadDirectory;
     $file = file_get_contents($src);
     if ( empty($file) ){
-        $this -> msg = "无法读取图片文件（错误代码：10）";
+        $this->msg = "无法读取图片文件（错误代码：10）";
         return;
     }
     if (! $this->isUserAvatar ){
@@ -53,12 +53,12 @@ class CropAvatar {
       $avatarKey = $wgAvatarKey;
       $avatar = new wAvatar( $uid, 'l' );
     }
-    $tempName = "/tmp/checkpoint_{$uid}.tmp";
+    $tempName = tempnam("/tmp", "php");
     file_put_contents( $tempName, $file);
     $type = exif_imagetype( $tempName );
     
     if ($type == IMAGETYPE_GIF || $type == IMAGETYPE_JPEG || $type == IMAGETYPE_PNG) {
-      $this -> avatarUploadDirectory = $wgUploadDirectory . '/avatars';
+      $this->avatarUploadDirectory = $wgUploadDirectory . '/avatars';
       $nameL = $avatarKey . '_' . $uid . '_l';
       $nameML = $avatarKey . '_' . $uid . '_ml';
       $nameM = $avatarKey . '_' . $uid . '_m';
@@ -66,27 +66,37 @@ class CropAvatar {
       $imageInfo = getimagesize( $tempName );
       // upload first avatar should be awarded, atomically
       if (HuijiFunctions::addLock('first-avatar-'.$uid)){
+
         if ( $this->isUserAvatar && strpos( $avatar->getAvatarImage(), 'default_' ) !== false ) {
-          $stats = new UserStatsTrack( $uid, $wgUser->getName() );
-          $stats->incStatField( 'user_image' );
-        }        
+            $stats = new UserStatsTrack( $uid, $wgUser->getName() );
+            $stats->incStatField( 'user_image' );
+          }  
+          $this->createThumbnail( $tempName , $imageInfo, $nameL, 200 );
+          $this->createThumbnail( $tempName , $imageInfo, $nameML, 50 );
+          $this->createThumbnail( $tempName , $imageInfo, $nameM, 30 );
+          $this->createThumbnail( $tempName , $imageInfo, $nameS, 16 );
+          switch ( $imageInfo[2] ) {
+            case 1:
+              $ext = 'gif';
+              break;
+            case 2:
+              $ext = 'jpg';
+              break;
+            case 3:
+              $ext = 'png';
+              break;
+            default:
+              return $this->msg = '请上传如下类型的图片: JPG, PNG, GIF（错误代码：14）';
+          }
+          unlink( $tempName );
+          $this->cleanUp( $ext, $avatarKey, $uid );
+              
         HuijiFunctions::releaseLock('first-avatar-'.$uid);
       }
-
-      $this->createThumbnail( $tempName , $imageInfo, $nameL, 200 );
-      $this->createThumbnail( $tempName , $imageInfo, $nameML, 50 );
-      $this->createThumbnail( $tempName , $imageInfo, $nameM, 30 );
-      $this->createThumbnail( $tempName , $imageInfo, $nameS, 16 );
-
-      //$this->msg=$result;
-      unlink( $tempName );
-      $this->cleanUp(image_type_to_extension($type), $avatarKey, $uid);
     } else {
-      $this -> msg = '请上传如下类型的图片: JPG, PNG, GIF（错误代码：12）';
+      $this->msg = '请上传如下类型的图片: JPG, PNG, GIF（错误代码：12）';
       unlink( $tempName );
     }
-    
-    
     
   }
 
@@ -105,7 +115,7 @@ class CropAvatar {
 
   private function setData($data) {
     if (!empty($data)) {
-      $this -> data = json_decode(stripslashes($data));
+      $this->data = json_decode(stripslashes($data));
     }
   }
 
@@ -139,28 +149,35 @@ class CropAvatar {
           // If this is the user's first custom avatar, update statistics (in
           // case if we want to give out some points to the user for uploading
           // their first avatar)
-          if ( $this->isUserAvatar && strpos( $avatar->getAvatarImage(), 'default_' ) !== false ) {
-            $stats = new UserStatsTrack( $uid, $wgUser->getName() );
-            $stats->incStatField( 'user_image' );
+          // 
+          if (HuijiFunctions::addLock('first-avatar-'.$uid)){
+              if ( $this->isUserAvatar && strpos( $avatar->getAvatarImage(), 'default_' ) !== false ) {
+                $stats = new UserStatsTrack( $uid, $wgUser->getName() );
+                $stats->incStatField( 'user_image' );
+              }
+                $this->createThumbnail( $file->getTempName() , $imageInfo, $avatarKey . '_' . $uid . '_l', 200 );
+                $this->createThumbnail( $file->getTempName() , $imageInfo, $avatarKey . '_' . $uid . '_ml', 50 );
+                $this->createThumbnail( $file->getTempName() , $imageInfo, $avatarKey . '_' . $uid . '_m', 30 );
+                $this->createThumbnail( $file->getTempName() , $imageInfo, $avatarKey . '_' . $uid . '_s', 16 );
+                switch ( $imageInfo[2] ) {
+                  case 1:
+                    $ext = 'gif';
+                    break;
+                  case 2:
+                    $ext = 'jpg';
+                    break;
+                  case 3:
+                    $ext = 'png';
+                    break;
+                  default:
+                    return $this->msg = '请上传如下类型的图片: JPG, PNG, GIF（错误代码：14）';
+                }
+                $this->cleanUp($ext, $avatarKey, $uid);
+
+              HuijiFunctions::releaseLock('first-avatar-'.$uid);
           }
-          $this->createThumbnail( $file->getTempName() , $imageInfo, $avatarKey . '_' . $uid . '_l', 200 );
-          $this->createThumbnail( $file->getTempName() , $imageInfo, $avatarKey . '_' . $uid . '_ml', 50 );
-          $this->createThumbnail( $file->getTempName() , $imageInfo, $avatarKey . '_' . $uid . '_m', 30 );
-          $this->createThumbnail( $file->getTempName() , $imageInfo, $avatarKey . '_' . $uid . '_s', 16 );
-          switch ( $imageInfo[2] ) {
-            case 1:
-              $ext = 'gif';
-              break;
-            case 2:
-              $ext = 'jpg';
-              break;
-            case 3:
-              $ext = 'png';
-              break;
-            default:
-              return $this -> msg = '请上传如下类型的图片: JPG, PNG, GIF（错误代码：14）';
-          }
-          $this->cleanUp($ext, $avatarKey, $uid);
+
+
 
           
           /* add log entry */
@@ -186,17 +203,17 @@ class CropAvatar {
         		);      		  
       		}
           
-          $this -> src = $src;
-          $this -> type = $type;
-          $this -> extension = $extension;
+          $this->src = $src;
+          $this->type = $type;
+          $this->extension = $extension;
         } else {
-          $this -> msg = '请上传如下类型的图片: JPG, PNG, GIF（错误代码：12）';
+          $this->msg = '请上传如下类型的图片: JPG, PNG, GIF（错误代码：12）';
         }
       } else {
-        $this -> msg = '请上传一个图片文件（错误代码：11）';
+        $this->msg = '请上传一个图片文件（错误代码：11）';
       }
     } else {
-      $this -> msg = $this -> codeToMessage($errorCode);
+      $this->msg = $this -> codeToMessage($errorCode);
     }
   }
   private function cleanUp ($ext, $avatarKey, $uid){
@@ -272,7 +289,7 @@ class CropAvatar {
   }
   private function crop($src, $dst, $data) {
     if (!empty($src) && !empty($dst) && !empty($data)) {
-      switch ($this -> type) {
+      switch ($this->type) {
         case IMAGETYPE_GIF:
           $src_img = imagecreatefromgif($src);
           break;
@@ -287,7 +304,7 @@ class CropAvatar {
       }
 
       if (!$src_img) {
-        $this -> msg = "无法读取图片文件（错误代码：10）";
+        $this->msg = "无法读取图片文件（错误代码：10）";
         return;
       }
 
@@ -298,7 +315,7 @@ class CropAvatar {
       $src_img_w = $size_w;
       $src_img_h = $size_h;
 
-      $degrees = $data -> rotate;
+      $degrees = $data->rotate;
 
       // Rotate the source image
       if (is_numeric($degrees) && $degrees != 0) {
@@ -319,13 +336,13 @@ class CropAvatar {
         $src_img_h -= 1;
       }
 
-      $tmp_img_w = $data -> width;
-      $tmp_img_h = $data -> height;
+      $tmp_img_w = $data->width;
+      $tmp_img_h = $data->height;
       $dst_img_w = 220;
       $dst_img_h = 220;
 
-      $src_x = $data -> x;
-      $src_y = $data -> y;
+      $src_x = $data ->x;
+      $src_y = $data ->y;
 
       if ($src_x <= -$tmp_img_w || $src_x > $src_img_w) {
         $src_x = $src_w = $dst_x = $dst_w = 0;
@@ -366,10 +383,10 @@ class CropAvatar {
 
       if ($result) {
         if (!imagepng($dst_img, $dst)) {
-          $this -> msg = "无法保存裁剪后的文件（错误代码：9）";
+          $this->msg = "无法保存裁剪后的文件（错误代码：9）";
         }
       } else {
-        $this -> msg = "裁剪文件失败（错误代码：8）";
+        $this->msg = "裁剪文件失败（错误代码：8）";
       }
 
       imagedestroy($src_img);
@@ -407,7 +424,7 @@ class CropAvatar {
   }
 
   public function getMsg() {
-    return $this -> msg;
+    return $this->msg;
   }
   public function createThumbnail( $imageSrc, $imageInfo, $imgDest, $thumbWidth ) {
     global $wgUseImageMagick, $wgImageMagickConvertCommand;

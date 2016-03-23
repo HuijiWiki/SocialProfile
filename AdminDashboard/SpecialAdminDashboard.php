@@ -30,16 +30,19 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 			return;
 		}
 		// Set the page title, robot policies, etc.
-		//$this->setHeaders();
+		$this->setHeaders();
 
 		// Add CSS
 		//$out->addModules('ext.socialprofile.userprofile.css');	
-		$out->addModules( 'ext.socialprofile.admindashboard.css' );
+		$out->addModuleStyles( 'ext.socialprofile.admindashboard.css' );
 		
 		// Add js and message
 		// $out->addModules( 'skins.bootstrapmediawiki.huiji.getRecordsInterface.js' );
 		$out->addModules( 'ext.socialprofile.admindashboard.js' );
 		//$out->addModules('ext.socialprofile.userprofile.js');
+		//Enable OOUI
+		$out->enableOOUI();
+
 
 		$output = ''; // Prevent E_NOTICE
 	    $yesterday = date("Y-m-d",strtotime("-1 day"));
@@ -50,7 +53,6 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		$stats = $site->getStats(); 	
 		$follows = $site->getFollowers();
 
-		// print_r($follows);
 		$followCount = $stats['followers'];
 		if($followCount >= 8){
 			$follows = array_slice($follows, 0, 8);
@@ -100,20 +102,12 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		// Settings Panel
 		$rating = $site->getRating();
 		$settings = $wgSiteSettings;
-		$settings = array();
-		$settings['enable-pollny'] = array(
-					'title' => wfMessage('enable-pollny')->escaped(),
-					'description' => wfMessage('enable-pollny-description')->escaped(),
-					'value' => wfMessage('enable-disabled')->text(), 
-					'level' => 'C',
-				);
-		$settings['enble-voteny'] = array(
-					'title' => wfMessage('enable-voteny')->escaped(),
-					'description' => wfMessage('enable-voteny-description')->escaped(),
-					'value' => wfMessage('enable-disabled')->text(),
-					'level' => 'B',
-				);
-
+		$settings['enable-pollny']['title'] = wfMessage('enable-pollny')->escaped();
+		$settings['enable-pollny']['description'] = wfMessage('enable-pollny-description')->escaped();
+		$settings['enable-pollny']['value'] = wfMessage('enable-disabled')->text();
+		$settings['enable-voteny']['title'] = wfMessage('enable-voteny')->escaped();
+		$settings['enable-voteny']['description'] = wfMessage('enable-voteny-description')->escaped();
+		$settings['enable-voteny']['value'] = wfMessage('enable-disabled')->text();
 		//$out->enableOOUI();
 // 		$btn = new OOUI\ButtonWidget( array(
 //     'label' => 'Click me!'
@@ -173,6 +167,45 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				break;
 		}
 
+		$settingRes = array();
+		foreach ($settings as $key => $value) {
+			$settingRes[]=array(
+				'funName' => $key,
+				'title' => $value['title'],
+				'description' => $value['description'],
+				'value' => $value['value'],
+				'level' => $value['level'],
+			);
+		}
+		$changeRes = array();
+		$changeGroup = $wgUser->changeableGroups();
+		$valueableGroup = array(
+							'bot' => array(
+									'group' => 'bot',
+									'groupName' => '机器人',
+									'groupClass' => 'label label-primary admin-label-bot draggable'
+								),
+							'sysop' => array(
+									'group' => 'sysop',
+									'groupName' => '管理员',
+									'groupClass' => 'label label-info admin-label-admin draggable'
+								), 
+							'bureaucrat' => array(
+									'group' => 'bureaucrat',
+									'groupName' => '行政员',
+									'groupClass' => 'label label-success admin-label-officer draggable'
+								),
+							'rollback' => array(
+									'group' => 'rollback',
+									'groupName' => '回退员',
+									'groupClass' => 'label label-warning admin-label-back draggable'
+								)
+						);
+		foreach ($changeGroup['add'] as $key => $value) {
+			if ( array_key_exists( $value, $valueableGroup ) ) {
+				$changeRes[] = $valueableGroup[$value];
+			}
+		}
 		$output .= $templateParser->processTemplate(
 				    'admin_index',
 				    array(
@@ -201,6 +234,12 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				        'token' => $token,
 				        'bureaucrat' => $bureaucrat,
 				        'sysop' => $sysop,
+				        'siteName' => $site->getName(),
+				        'siteDescription' => $site->getDescription(),
+				        'settingRes' => $settingRes,
+				        'siteLevel' => $site->getRating(),
+				        'changeRes' => $changeRes,
+
 				    )
 				);
 		$out->addHtml($output);

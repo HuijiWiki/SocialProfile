@@ -1,0 +1,14 @@
+<div class="admin-setting-wrap">
+    <span class="admin-setting-level">当前等级:{{siteLevel}}</span>
+    {{#settingRes}}
+    <div class="admin-setting-li">
+        <div class="setting-title">{{title}}</div>
+        <p class="setting-des">{{description}}</p>
+        <span class="setting-need-level">需要等级:{{level}}</span>
+        <div class="setting-toggle">
+        {{&value}}
+        <input class="setting-options" type="hidden" value="{{funName}}">
+        </div>
+    </div>
+    {{/settingRes}}
+</div>

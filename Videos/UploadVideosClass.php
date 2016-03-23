@@ -416,11 +416,7 @@ Class VideoTitle extends Title{
 	 */
 	static function isVideoTitle(Title $title){
 		if ($title->isExternal()){
-			if ($title->getInterwiki() == 'www'){
-				$DB = 'huiji_home';
-			} else {
-				$DB = 'huiji_sites-'.str_replace('.', '_', $title->getInterwiki());
-			}
+			$DB = WikiSite::DbIdFromPrefix($title->getInterwiki());
 			wfErrorLog($title->getDbKey().$title->getInterwiki(), '/var/log/mediawiki/SocialProfile.log');
 			$dbr = wfGetDB( DB_SLAVE, '', $DB );
 			$res = $dbr->select(

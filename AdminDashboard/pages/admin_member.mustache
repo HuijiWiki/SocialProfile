@@ -1,0 +1,19 @@
+
+<div class="admin-member-wrapper">
+    <div class="admin-member-header">
+        <input type="text" class="form-control admin-member-search" placeholder="搜索用户…" >
+        <div class="admin-member-header-right">
+            <div class="admin-member-right-wrapper">
+                {{#changeRes}}
+                <span class="{{groupClass}}" rights="{{group}}" draggable="true">{{groupName}}</span>
+                {{/changeRes}}
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div></div>
+    <ul class="admin-member-list">
+    </ul>
+    <button class="btn addmore">更多</button>
+
+</div>
