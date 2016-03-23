@@ -1,5 +1,5 @@
 <?php
-class MyCURL{
+class MySPCURL{
  
    
    public static function postDataInJson($url, $data_string)

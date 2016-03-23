@@ -14,7 +14,7 @@ $wgHooks['TitleMoveComplete'][] = 'movePage';
 
 function movePage($oldTitle, $newTitle, $user, $oldId, $newId, $reason,$rev){
 	global $wgHuijiPrefix, $wgSitename, $wgIsProduction;
-	if($wgIsProduction == false) return;	
+//	if($wgIsProduction == false) return;	
 	$new_ns = $newTitle->getNamespace();
 	$old_ns = $oldTitle->getNamespace();
 	
@@ -37,7 +37,7 @@ function movePage($oldTitle, $newTitle, $user, $oldId, $newId, $reason,$rev){
 			'newId' => $newId,
 		);
 		$post_data_string = json_encode($post_data);
-//		wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile.log");
+		wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile.log");
 		curl_post_json('move',$post_data_string);
 	}else{
 		return;

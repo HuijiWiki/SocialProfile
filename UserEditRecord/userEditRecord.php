@@ -53,7 +53,7 @@ function insertEditRecord($article, $rev, $baseID, $user ){
 	); 
 	if($wgIsProduction == false) return;       
 	include("curl.php");
-        $out =MyCURL::postDataInJson('http://huijidata.com:8080/statisticQuery/webapi/edit/insertOnePageEditRecord',json_encode($log_data));
+        $out =MySPCURL::postDataInJson('http://huijidata.com:8080/statisticQuery/webapi/edit/insertOnePageEditRecord',json_encode($log_data));
 
 
 }
