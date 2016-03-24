@@ -71,6 +71,9 @@ body #profile-image .upload-tool{
 .admin-header-form{
     display: none;
 }
+.admin-header-form-cancel{
+    margin-left: 5px;
+}
 #page-wrapper .btn{
     padding: 6px 12px;
     outline: none;
@@ -97,9 +100,19 @@ body #profile-image .upload-tool{
     margin-top: 6px;
     margin-right: 5px;
 }
+.admin-member-right-wrapper{
+    border: 1px dashed #999;
+    padding-bottom: 5px;
+    padding-left: 5px;
+}
+.drag-introduce{
+    color: #999;
+    font-size: 12px;
+    float: right;
+}
 .label-fix{
     position: absolute;
-    right: -30px;
+    right: -180px;
     top: -200px;
 }
 .label-fix .admin-member-right-wrapper{
@@ -162,6 +175,32 @@ hr {
     position: relative;
     cursor: default;
 }
+
+/*btn color*/
+#admin-member .label-default{
+    background: #365897;
+}
+#admin-member .label-success{
+    background: #347bff;
+}
+#admin-member .label-info{
+    background: #2F9DA8;
+}
+#admin-member .label-warning{
+    background: #449987;
+}
+#admin-member .label-primary{
+    background: #C45252;
+}
+.a-options>button{
+    margin-left: 5px;
+    background: #365897;
+    color: #fff!important;
+}
+.a-options>button a{
+    color: #fff!important;
+}
+
 .a-tag .icon-close{
     position: absolute;
     right: -5px;

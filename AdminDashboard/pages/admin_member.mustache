@@ -3,11 +3,12 @@
     <div class="admin-member-header">
         <input type="text" class="form-control admin-member-search" placeholder="搜索用户…" >
         <div class="admin-member-header-right">
-            <div class="admin-member-right-wrapper">
+            <div class="admin-member-right-wrapper clear">
                 {{#changeRes}}
                 <span class="{{groupClass}}" rights="{{group}}" draggable="true">{{groupName}}</span>
                 {{/changeRes}}
             </div>
+            <p class="drag-introduce">拖拽至用户列表进行权限分配</p>
         </div>
     </div>
     <hr>

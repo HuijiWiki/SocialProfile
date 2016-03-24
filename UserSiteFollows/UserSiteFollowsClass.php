@@ -569,11 +569,9 @@ class UserSiteFollow{
 			foreach ($res as $value) {
 				$ruser = User::newFromName($value->f_user_name);
 				$group = $ruser->getEffectiveGroups();
-				if(!in_array( 'bot', $group) && !in_array('bot-global', $group)){
-					$req['user_name'] = $value->f_user_name;
-					$req['follow_date'] = $value->f_date;
-					$data[] = $req;
-				}
+				$req['user_name'] = $value->f_user_name;
+				$req['follow_date'] = $value->f_date;
+				$data[] = $req;
 			}
 			$wgMemc->set( $key, $data );
 			return $data;

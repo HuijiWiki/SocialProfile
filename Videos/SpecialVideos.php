@@ -37,7 +37,6 @@ class SpecialVideos extends SpecialPage{
             $out->addHTML( $output );
             return false;
         }
-
         $request = $this->getRequest();
         $reupload = empty($request->getVal('reupload'))?null:$request->getVal('reupload');
         $filename = empty($request->getVal('filename'))?null:$request->getVal('filename');

@@ -264,6 +264,7 @@ jQuery( document ).ready( function() {
                     var site = mw.config.get('wgHuijiPrefix');
                     huiji.getPreviousViewRecords(site,30,updateData);
                     function updateData(data){
+                        console.log(data);
                          if (data.status == 'success'){
                             option.xAxis[0].data=data.result.date_array;
                             option.series[0].data=data.result.number_array;
@@ -345,6 +346,7 @@ jQuery( document ).ready( function() {
                     //all pe
                     huiji.getPreviousEditRecords(site,30,updateDatape);
                     function updateDatape(data){
+                        console.log(data);
                          if (data.status == 'success'){
                             var res = data.result;
                             option.xAxis[0].data=data.result.date_array;

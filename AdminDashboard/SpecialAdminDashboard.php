@@ -206,10 +206,21 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 									'groupClass' => 'label label-default admin-label-staff draggable'
 								)
 						);
-		foreach ($changeGroup['add'] as $key => $value) {
-			if ( array_key_exists( $value, $valueableGroup ) ) {
-				$changeRes[] = $valueableGroup[$value];
-			}
+		$userRight = $changeGroup['add'];
+		if (in_array('staff', $userRight)) {
+		    $changeRes[] = $valueableGroup['staff'];
+		}
+		if (in_array('bureaucrat', $userRight)) {
+		    $changeRes[] = $valueableGroup['bureaucrat'];
+		}
+		if (in_array('sysop', $userRight)) {
+		    $changeRes[] = $valueableGroup['sysop'];
+		}
+		if (in_array('rollback', $userRight)) {
+		    $changeRes[] = $valueableGroup['rollback'];
+		}
+		if (in_array('bot', $userRight)) {
+		    $changeRes[] = $valueableGroup['bot'];
 		}
 		$output .= $templateParser->processTemplate(
 				    'admin_index',

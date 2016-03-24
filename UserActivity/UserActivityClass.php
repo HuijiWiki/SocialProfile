@@ -558,7 +558,7 @@ class UserActivity {
 			foreach ( $res as $row ) {
 
 				if ($row->prefix != $wgHuijiPrefix){
-					$title = Title::makeTitle( $row->page_namespace, $row->page_title, $row->prefix );
+					$title = Title::makeTitle( $row->page_namespace, $row->page_title,'', $row->prefix );
 				} else {
 					$title = Title::makeTitle( $row->page_namespace, $row->page_title );
 				}
@@ -701,7 +701,7 @@ class UserActivity {
 			foreach ( $res as $row ) {
 
 				if ($row->prefix != $wgHuijiPrefix){
-					$title = Title::makeTitle( $row->page_namespace, $row->page_title, $row->prefix );
+					$title = Title::makeTitle( $row->page_namespace, $row->page_title, '', $row->prefix );
 				} else {
 					$title = Title::makeTitle( $row->page_namespace, $row->page_title );
 				}
@@ -1810,8 +1810,8 @@ class UserActivity {
 			} elseif ($type == 'user_site_follow'){
 				$page_title = Title::newFromText( $page_name.':' );
 			} elseif ($type == 'image_upload'){
-					$safe_page_name = mb_substr($page_name, mb_strpos($page_name, ':')+1);
-					$page_title = Title::makeTitle( NS_FILE, $safe_page_name, '', $page_data['prefix'][0] );
+				$safe_page_name = mb_substr($page_name, mb_strpos($page_name, ':')+1);
+				$page_title = Title::makeTitle( NS_FILE, $safe_page_name, '', $page_data['prefix'][0] );
 			} else {
 				$page_title = Title::newFromText( $page_name );
 			} 

@@ -42,6 +42,11 @@ var admin = {
                 }
             })
         })
+        $('.admin-header-form-cancel').click(function(e) {
+            e.preventDefault();
+            $('.admin-header-msg').show();
+            $('.admin-header-form').hide();
+        });
     },
     getSubClient: function(p){
         var l = 0, t = 0, w, h;
@@ -236,9 +241,9 @@ var admin = {
                     check +='<li><a class="checkbox"><label><input type="checkbox"  value="option1" '+checklist[b].check+' data-name="'+b+'" data-color="'+checklist[b].color+'">'+checklist[b].name+'</label></a></li>'
                 }
                 if(users[i].status){
-                    lock = '<button class="a-delete btn btn-sm"><span class="glyphicon glyphicon-remove"></span><a href="/wiki/special:解除封禁/'+users[i].name+'" target="_blank">解封</a></button>'
+                    lock = '<button class="a-delete btn btn-sm unlock"><span class="fa fa-unlock"></span><a href="/wiki/special:解除封禁/'+users[i].name+'" target="_blank"> 解封</a></button>'
                 }else{
-                    lock = '<button class="a-delete btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove"></span><a href="/wiki/special:封禁/'+users[i].name+'" target="_blank">封禁</a></button>'
+                    lock = '<button class="a-delete btn btn-sm"><span class="fa fa-ban"></span><a href="/wiki/special:封禁/'+users[i].name+'" target="_blank"> 封禁</a></button>'
                 }
                 content+='<li class="clear">' +
                     '<div class="a-msg"><div class="a-avatar">'+users[i].img+'</div><div class="a-user"><a href="/wiki/%E7%94%A8%E6%88%B7:'+users[i].name+
@@ -372,14 +377,12 @@ var admin = {
             var name,value;
             $('.setting-toggle .toggle').each(function(){
                     var toggle = new  OO.ui.ToggleSwitchWidget( { value: $(this).data('value') , disabled: $(this).data('state')} );
-                console.log(toggle)
 
                     toggle.on('change',function(e){
                         e = window.event || e;
                         name = $(e.target).parents('.setting-toggle .toggle').siblings('.setting-options').val();
                         value = $(e.target).attr('aria-checked')==='false'?1:0;    //点击时取的是变前的值，相反
                         base.sendSetting(name,value);
-                        console.log(value);
                     })
                 $(this).append(toggle.$element)
                 });
@@ -395,6 +398,7 @@ var admin = {
                 rsargs:[name,value]
             },
             success: function(data){
+                mw.notification.notify('设置成功');
             }
         })
     },

@@ -30,13 +30,30 @@ function wfGetUserStatusInfo( $str, $limit, $continue=0 ){
 			$resPage = array_slice($result, $continue, $limit);
 			foreach ( $resPage as $key => $value ) {
 				$user = HuijiUser::newFromName( $key );
+				$userRight = $user->getEffectiveGroups();
+				$result = array();
+				if (in_array('staff', $userRight)) {
+				    $result[] = 'staff';
+				}
+				if (in_array('bureaucrat', $userRight)) {
+				    $result[] = 'bureaucrat';
+				}
+				if (in_array('sysop', $userRight)) {
+				    $result[] = 'sysop';
+				}
+				if (in_array('rollback', $userRight)) {
+				    $result[] = 'rollback';
+				}
+				if (in_array('bot', $userRight)) {
+				    $result[] = 'bot';
+				}
 				$userInfo['userid'] = $user->getId();
 				$userInfo['name'] = $key;
 				$userInfo['img'] = $user->getAvatar()->getAvatarURL();
 				$userInfo['editcount'] = $value;
 				$userInfo['level'] = $user->getLevel()->getLevelName();
 				$userInfo['status'] = $user->isBlocked();
-				$userInfo['rights'] = $user->getEffectiveGroups();
+				$userInfo['rights'] = $result;
 				$userAllInfo[] = $userInfo;
 
 			}
@@ -61,15 +78,32 @@ function wfGetUserStatusInfo( $str, $limit, $continue=0 ){
 		$userIdRes = $adminGroup = $userAllInfo = array();
 		if ( $res ) {
 			foreach ($res as $key => $value) {
-				$userIdRes['userid'] = $value->user_id;
 				$user = HuijiUser::newFromId( $value->user_id );
+				$userRight = $user->getEffectiveGroups();
+				$result = array();
+				if (in_array('staff', $userRight)) {
+				    $result[] = 'staff';
+				}
+				if (in_array('bureaucrat', $userRight)) {
+				    $result[] = 'bureaucrat';
+				}
+				if (in_array('sysop', $userRight)) {
+				    $result[] = 'sysop';
+				}
+				if (in_array('rollback', $userRight)) {
+				    $result[] = 'rollback';
+				}
+				if (in_array('bot', $userRight)) {
+				    $result[] = 'bot';
+				}
+				$userIdRes['userid'] = $value->user_id;
 				$userIdRes['name'] = $user->getName();
 				$userIdRes['img'] = $user->getAvatar()->getAvatarURL();
 				$userStats = $user->getStats();
 				$userIdRes['editcount'] = $userStats['edits'];
 				$userIdRes['level'] = $user->getLevel()->getLevelName();
 				$userIdRes['status'] = $user->isBlocked();
-				$userIdRes['rights'] = $user->getEffectiveGroups();
+				$userIdRes['rights'] = $result;
 				$userAllInfo[] = $userIdRes;
 			}
 			$user_count = count($userAllInfo);
