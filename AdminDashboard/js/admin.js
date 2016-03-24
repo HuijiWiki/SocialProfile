@@ -418,7 +418,7 @@ var admin = {
         this.loadMore();
         this.checkRights();
         this.closeEvent();
-        this.sendSetting();
+        //this.sendSetting();
     },
     init: function(){
         this.domReady();
