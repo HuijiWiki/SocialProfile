@@ -13,7 +13,7 @@ function wfGetUserStatusInfo( $str, $limit, $continue=0 ){
 	    $out = json_encode($ret);
 		return $out;
 	}
-
+	$str = trim($str);
     $salts = ApiQueryTokens::getTokenTypeSalts();
 	$token = $wgUser->getEditToken( $salts['userrights'] , $wgRequest );
 	if ( $str === '' ) {
