@@ -63,13 +63,13 @@ var admin = {
         var base = this;
         $('.admin-member-header-right .label').each(function () {
             this.ondragstart = function(e){
-                e.dataTransfer.setData("Text","aaa");
+                e.dataTransfer.setData("Text","灰机wiki为何这么叼");
                 base.dragcontent = e.target;
             }
         })
     },
     dragOver:function(){
-        $('.admin-member-list').get(0).ondragover = function(e){
+        $('body').get(0).ondragover = function(e){
             e.preventDefault();
         }
     },
@@ -398,7 +398,7 @@ var admin = {
                 rsargs:[name,value]
             },
             success: function(data){
-                mw.notification.notify('设置成功');
+                mw.notification.notify('设置成功',{tag:'toggle'});
             }
         })
     },
