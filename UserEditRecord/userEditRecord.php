@@ -52,7 +52,7 @@ function insertEditRecord($article, $rev, $baseID, $user ){
                 'client_userAgent' => isset($_SERVER[ 'HTTP_USER_AGENT' ]) ? $_SERVER[ 'HTTP_USER_AGENT' ] : "",
 	); 
 	if($wgIsProduction == false) return;       
-	include("curl.php");
+	require_once("curl.php");
         $out =MySPCURL::postDataInJson('http://huijidata.com:8080/statisticQuery/webapi/edit/insertOnePageEditRecord',json_encode($log_data));
 
 
