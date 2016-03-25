@@ -144,7 +144,7 @@ function wfUserFollowsRecommend( $follower, $followee ){
 	        $flres = array();
 	        foreach ($recommend as $value) {
 	            $tuser = User::newFromName($value['user_name']);
-	            $isFollow = $huijiUser->isFollowing($tUser);
+	            $isFollow = $huijiUser->isFollowing($tuser);
 	            if( !$isFollow && $value['user_name'] != $wgUser->getName() ){
 	                $flres['avatar'] = $value['avatarImage'];
 	                $flres['username'] = $value['user_name'];
