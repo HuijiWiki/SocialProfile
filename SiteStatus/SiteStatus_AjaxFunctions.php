@@ -85,7 +85,13 @@ function wfGetRecommendContent(){
     foreach ($randKey as $value) {
     	$resRand[] = $recContent[$value];
     }
-    $ret = array('success'=> true, 'result'=>$resRand );
+    $keys = array_keys($resRand);   
+	shuffle($keys);   
+	$random = array();   
+	foreach ($keys as $key)  {
+		$random[] = $resRand[$key];   
+	} 
+    $ret = array('success'=> true, 'result'=>$random );
 	$out = json_encode($ret);
 	return $out;
 }
