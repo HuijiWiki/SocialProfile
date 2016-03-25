@@ -113,8 +113,38 @@ class SocialProfileHooks {
 		//todo add tours.
 		global $wgMemc, $wgHuijiPrefix;
 		$huijiUser =  HuijiUser::newFromUser($user);
-		$site = WikiSite::newFromPrefix($wgHuijiPrefix);
-		$huijiUser->follow($site);
+		$HuijiSite = WikiSite::newFromPrefix($wgHuijiPrefix);        
+		$huijiUser->follow($HuijiSite);
+		//follow user
+		$resUserArr = $HuijiSite->getFollowers(true);
+		if( count($resUserArr) > 0 ){
+			$num = (count($resUserArr)>=5) ? 5 : (count($resUserArr));
+			for ($i=0; $i < $num; $i++) { 
+			    $user = User::newFromName( $resUserArr[$i]['user'] );
+			    $huijiUser->follow($user);
+			}
+		}
+		
+		//follow site
+		$type = $HuijiSite->getType();
+		$allPrefix = Huiji::getInstance()->getSitePrefixes();
+		$res = $resArr = array();
+		if ( count($allPrefix) > 0 ) {
+			foreach ($allPrefix as $value) {
+			    $site = WikiSite::newFromPrefix($value);
+			    if( $site->getType() == $type ){
+			        $res[$value] = $site->getBestRank();
+			    }
+			}
+			$siteNum = (count($res)>=5) ? 5 : (count($res));
+			asort($res);
+			$resArr = array_slice($res,0,$siteNum);
+			foreach ($resArr as $key => $value) {
+				$siteObj = WikiSite::newFromPrefix($key);
+				$huijiUser->follow($siteObj);
+			}
+		}
+		
 		$value = '{"version":1,"tours":{"newuser":{"step":"intro"}}}';
 		setcookie("huiji-mw-tour", $value, time()+3600*24*90, "/", ".huiji.wiki" );  /* expire in 90 days */
 		$key = wfForeignMemcKey( 'huiji', '', 'user', 'get_all_user' );
