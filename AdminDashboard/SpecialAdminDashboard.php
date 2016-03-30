@@ -92,7 +92,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		$allSpecial = SpecialPage::getTitleFor( '特殊页面' )->getFullURL();
 		$addEmote = Message::newFromKey('comments-add-emoji-emote')->getTitle()->getFullURL();
 		$changePageTitle = Message::newFromKey('Pagetitle')->getTitle()->getFullURL();
-		$changeMainpageTitle = Message::newFromKey('MediaWiki:Pagetitle-view-mainpage')->getTitle()->getFullURL();
+		$changeMainpageTitle = Message::newFromKey('Pagetitle-view-mainpage')->getTitle()->getFullURL();
 		$siteAvatar = (new wSiteAvatar($wgHuijiPrefix, 'l'))->getAvatarHtml();
 		$token = $user->getEditToken();
 		if(is_null($newFollow)){
