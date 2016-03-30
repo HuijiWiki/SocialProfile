@@ -108,7 +108,7 @@ $wgAutoloadClasses['TemplateFork'] = __DIR__ . '/TemplateFork/TemplateForkClass.
 $wgAutoloadClasses['UploadVideos'] = __DIR__ . '/Videos/UploadVideosClass.php';
 $wgAutoloadClasses['VideoTitle'] = __DIR__ . '/Videos/UploadVideosClass.php';
 $wgAutoloadClasses['VideoRevision'] = __DIR__ . '/Videos/UploadVideosClass.php';
-$wgAutoloadClasses['SpecialInviteUser'] = __DIR__ . '/AdminDashboard/SpecialInviteUser.php';
+//$wgAutoloadClasses['SpecialInviteUser'] = __DIR__ . '/AdminDashboard/SpecialInviteUser.php';
 
 // New special pages
 // $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
@@ -146,7 +146,7 @@ $wgSpecialPages['VideosList'] = 'SpecialVideosList';
 $wgSpecialPages['AddUserEditCounts'] = 'SpecialAddUserEditCounts';
 $wgSpecialPages['AddFestivalGift'] = 'SpecialAddFestivalGift';
 $wgSpecialPages['SendHiddenGift'] = 'SpecialSendHiddenGift';
-$wgSpecialPages['InviteUser'] = 'SpecialInviteUser';
+//$wgSpecialPages['InviteUser'] = 'SpecialInviteUser';
 // $wgSpecialPages['FamilyTree'] = 'SpecialFamilyTree';
 
 
