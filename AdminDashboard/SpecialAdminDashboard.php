@@ -92,7 +92,10 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		$allSpecial = SpecialPage::getTitleFor( '特殊页面' )->getFullURL();
 		$addEmote = Message::newFromKey('comments-add-emoji-emote')->getTitle()->getFullURL();
 		$changePageTitle = Message::newFromKey('Pagetitle')->getTitle()->getFullURL();
-		$changeMainpageTitle = Message::newFromKey('MediaWiki:Pagetitle-view-mainpage')->getTitle()->getFullURL();
+		$changeMainpageTitle = Message::newFromKey('Pagetitle-view-mainpage')->getTitle()->getFullURL();
+		$noarticletext = Message::newFromKey('noarticletext')->getTitle()->getFullURL();
+		$quickInsert = Message::newFromKey('Edittools')->getTitle()->getFullURL();
+		$preload = Message::newFromKey('Preloads')->getTitle()->getFullURL();
 		$siteAvatar = (new wSiteAvatar($wgHuijiPrefix, 'l'))->getAvatarHtml();
 		$token = $user->getEditToken();
 		if(is_null($newFollow)){
@@ -119,6 +122,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		// ) );
 		// array_key_exists(key, search)
 		// echo $widget->toString();
+		$protip = $gtA = $gtB = $gtC = $gtD = false;
 		switch ($rating) {
 			case 'A':
 				foreach( $settings as $key => $value){
@@ -126,7 +130,11 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 						$enable = $site->getProperty($key);
 						$settings[$key]['value'] = wfMessage("admin-switch-$enable");
 					}
-				}					
+				}
+				$gtA = true;	
+				if ($protip == ''){
+					$protip = wfMessage('protip-rating-a')->escaped();
+				}				
 			case 'B':
 				foreach( $settings as $key => $value){
 					if ($value['level'] == 'B'){
@@ -134,6 +142,10 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 						$settings[$key]['value'] = wfMessage("admin-switch-$enable");
 					}
 				}
+				$gtB = true;
+				if ($protip == ''){
+					$protip = wfMessage('protip-rating-b')->escaped();
+				}			
 			case 'C':
 				foreach( $settings as $key => $value){
 					if ($value['level'] == 'C'){
@@ -141,7 +153,10 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 						$settings[$key]['value'] = wfMessage("admin-switch-$enable");
 					}
 				}
-
+				$gtC = true;
+				if ($protip == ''){
+					$protip = wfMessage('protip-rating-c')->escaped();
+				}			
 			case 'D':
 				foreach( $settings as $key => $value){
 					if ($value['level'] == 'D'){
@@ -149,6 +164,10 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 						$settings[$key]['value'] = wfMessage("admin-switch-$enable");
 					}
 				}
+				$gtD = true;
+				if ($protip == ''){
+					$protip = wfMessage('protip-rating-d')->escaped();
+				}			
 			case 'E':
 				foreach( $settings as $key => $value){
 					if ($value['level'] == 'E'){
@@ -156,6 +175,9 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 						$settings[$key]['value'] = wfMessage("admin-switch-$enable");
 					}
 				}
+				if ($protip == ''){
+					$protip = wfMessage('protip-rating-e')->escaped();
+				}			
 			default:
 				foreach( $settings as $key => $value){
 					if ($value['level'] == 'NA'){
@@ -163,7 +185,9 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 						$settings[$key]['value'] = wfMessage("admin-switch-$enable");
 					}
 				}
-				# code...
+				if ($protip == ''){
+					$protip = wfMessage('protip-rating-na')->escaped();
+				}			
 				break;
 		}
 
@@ -238,8 +262,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				        'showMore' => $showMore,
 				        'display' => $display,
 				        'rightsManage' =>$rightsManage,
-				        'blockUsers' =>$blockUsers,
-				        'freezeUsers' =>$freezeUsers,
+				        'noarticletext' =>$noarticletext,
 				        'replaceText' =>$replaceText,
 				        'siteRankPage' =>$siteRankPage,
 				        'allSpecial' =>$allSpecial,
@@ -247,6 +270,8 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				        'addEmote' => $addEmote,
 				        'changePageTitle' => $changePageTitle,
 				        'changeMainpageTitle' => $changeMainpageTitle,
+				        'quickInsert' => $quickInsert,
+				        'preload' => $preload,
 				        'token' => $token,
 				        'bureaucrat' => $bureaucrat,
 				        'sysop' => $sysop,
@@ -255,7 +280,11 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				        'settingRes' => $settingRes,
 				        'siteLevel' => $site->getRating(),
 				        'changeRes' => $changeRes,
-
+				        'gtA' => $gtA,
+				        'gtB' => $gtB,
+				        'gtC' => $gtC,
+				        'gtD' => $gtD,
+				        'protip' => $protip
 				    )
 				);
 		$out->addHtml($output);

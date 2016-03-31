@@ -290,3 +290,7 @@ hr {
 .des-help{
     padding:0px 15px;
 }
+.protip{
+    color:gray;
+    margin-top: 15px;
+}

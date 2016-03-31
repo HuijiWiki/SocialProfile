@@ -155,21 +155,53 @@
     <div class="col-lg-4">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="glyphicon glyphicon-align-justify"></i> 常用页面
+                <i class="glyphicon glyphicon-align-justify"></i> 进阶修正
             </div>
             <!-- /.panel-heading -->
             <div class="panel-body">
                 <!-- /.list-group -->
-                <a href="{{sendToAll}}" class="btn btn-default btn-block">群发消息</a>
-                <a href="{{rightsManage}}" class="btn btn-default btn-block">用户权限管理</a>
-                <a href="{{blockUsers}}" class="btn btn-default btn-block">封禁用户</a>
-                <a href="{{freezeUsers}}" class="btn btn-default btn-block">解封用户</a>
-                <a href="{{replaceText}}" class="btn btn-default btn-block">替换文字</a>
-                <a href="{{siteRankPage}}" class="btn btn-default btn-block">站点排行</a>
-                <a href="{{addEmote}}" class="btn btn-default btn-block">添加吐槽模板</a>
-                <a href="{{changeMainpageTitle}}" class="btn btn-default btn-block">修改站点HTML标题</a>
-                <a href="{{changePageTitle}}" class="btn btn-default btn-block">修改页面HTML标题</a>
-                <a href="{{allSpecial}}" class="btn btn-default btn-block">全部特殊页面</a>
+                <div class="list-group">
+                    <a href="{{sendToAll}}" class="list-group-item">
+                        <h4 class="list-group-item-heading">群发消息</h4>
+                        <p class="list-group-item-text">向关注本站点的全部用户群发消息，迅速的将最新消息传播给本站的关注者。</p>
+                    </a>
+                {{#gtD}}
+                    <a href="{{replaceText}}" class="list-group-item">
+                        <h4 class="list-group-item-heading">替换文字</h4>
+                        <p class="list-group-item-text">批量将某个错误词汇替换为正确的词汇，支持正则表达式（需要机器人权限）。</p>
+                    </a>
+                    <a href="{{noarticletext}}" class="list-group-item">
+                        <h4 class="list-group-item-heading">修改404页面</h4>
+                        <p class="list-group-item-text">自定义本站404页面（即“词条不存在”的提示页）的内容，请使用wikitext编写。</p>
+                    </a>
+                {{/gtD}}
+                {{#gtC}}
+                    <a href="{{quickInsert}}" class="list-group-item">
+                        <h4 class="list-group-item-heading">修改快速插入项</h4>
+                        <p class="list-group-item-text">修改源代码编辑器上方快速插入一栏的标签备选项。（利用&lt;charinsert&gt;标签)</p>
+                    </a>
+                    <a href="{{preload}}" class="list-group-item">
+                        <h4 class="list-group-item-heading">修改预设模板</h4>
+                        <p class="list-group-item-text">修改左侧边栏创建按钮下拉菜单中提供的预设模板。</p>
+                    </a>  
+                {{/gtC}}                 
+                {{#gtB}}
+                    <a href="{{changePageTitle}}" class="list-group-item">
+                        <h4 class="list-group-item-heading">修改主页标题</h4>
+                        <p class="list-group-item-text">修改浏览器标题栏显示的主页标题，以利于搜索引擎优化。</p>
+                    </a>  
+                    <a href="{{changeMainpageTitle}}" class="list-group-item">
+                        <h4 class="list-group-item-heading">修改页面标题</h4>
+                        <p class="list-group-item-text">修改浏览器标题栏显示的页面标题，以利于搜索引擎优化。（使用$1代表文章真实标题）。</p>
+                    </a>  
+                {{/gtB}}
+                {{#gtA}}
+                    <a href="addEmote" class="list-group-item">
+                        <h4 class="list-group-item-heading">自定义评论表情</h4>
+                        <p class="list-group-item-text">利用模板制作图片表情或颜文字，供用户在吐槽中插入。（利用&lt;charinsert&gt;标签，方法同修改插入项）</p>
+                    </a>
+                {{/gtA}}
+                </div>
             </div>
             <!-- /.panel-body -->
         </div>
