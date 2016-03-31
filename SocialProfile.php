@@ -563,6 +563,15 @@ $wgResourceModules['ext.socialprofile.useractivity.js'] = array(
 	'remoteExtPath' => 'SocialProfile/UserActivity',
 	'position' => 'bottom',
 );
+// qq&weibo Login
+$wgResourceModules['ext.socialprofile.qqLogin.js'] = array(
+	'scripts' => array(
+					'qqLogin.js',
+				),
+	'localBasePath' => __DIR__ . '/CompleteUserInfo',
+	'remoteExtPath' => 'SocialProfile/CompleteUserInfo',
+	'position' => 'bottom',
+);
 $wgResourceModules['ext.guidedTour.tour.newuser'] = array(
 	'scripts' => 'tours/newuser.js',
 	// Note that you should have an explicit dependency on the GuidedTour library.
