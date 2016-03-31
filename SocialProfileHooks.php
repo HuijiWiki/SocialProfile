@@ -136,11 +136,11 @@ class SocialProfileHooks {
 			foreach ($allPrefix as $value) {
 			    $site = WikiSite::newFromPrefix($value);
 			    if( $site->getType() == $type ){
-			        $res[$value] = $site->getBestRank();
+			        $res[$value] = $site->getScore();
 			    }
 			}
 			$siteNum = (count($res)>=5) ? 5 : (count($res));
-			asort($res);
+			arsort($res);
 			$resArr = array_slice($res,0,$siteNum);
 			foreach ($resArr as $key => $value) {
 				$siteObj = WikiSite::newFromPrefix($key);
