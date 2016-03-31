@@ -29,8 +29,15 @@ function wfCheckOauth( $openid, $type ){
 }
 
 //insert into oauth
-function wfAddInfoToOauth( $otype, $openid, $userid ){
+function wfAddInfoToOauth( $otype, $openid, $userid, $inviteuser ){
 	$dbw = wfGetDB( DB_MASTER );
+	if ( $inviteuser == 1 ) {
+		$u = User::newFromId( $userid );
+		$u->setCookies(null,null,true );
+		$result = array('success'=> true, 'result'=>'1' );
+		$out = json_encode($result);
+		return $out;
+	}
 	$res = $dbw->insert(
 		'oauth',
 		array(

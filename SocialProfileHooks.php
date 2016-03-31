@@ -14,6 +14,9 @@ class SocialProfileHooks {
 	public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) { 
 		// Add required CSS & JS via ResourceLoader
 		$out->addModules( array('ext.socialprofile.usersitefollows.js','ext.socialprofile.useruserfollows.js', 'ext.socialprofile.useruserfollows.css' ));
+		if( $out->getTitle()->isMainPage() ){
+			$out->addModules( 'ext.socialprofile.qqLogin.js' );
+		}
 	}
 	/**
 	 * Register the canonical names for our custom namespaces and their talkspaces.

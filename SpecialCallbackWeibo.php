@@ -30,8 +30,8 @@ class SpecialCallbackWeibo extends UnlistedSpecialPage {
 	 * @param $params Mixed: parameter(s) passed to the page or null
 	 */
 	public function execute( $params ) {
-		global $wgUser, $wgCentralServer;
-		// echo "wb";die;
+		global $wgUser, $wgCentralServer,$wgHuijiPrefix,$wgHuijiSuffix;
+		$redirect_url = isset($_COOKIE['huijiredirect_url']) ? $_COOKIE['huijiredirect_url'] : '';
 		$request = $this->getRequest();
 		$code = $request->getVal( 'code' );
 		$o = new SaeTOAuthV2(  Confidential::$weibo_app_id , Confidential::$weibo_app_secret  );
@@ -48,7 +48,6 @@ class SpecialCallbackWeibo extends UnlistedSpecialPage {
 		$c = new SaeTClientV2( Confidential::$weibo_app_id , Confidential::$weibo_app_secret , $token['access_token'] );
 		$uid_get = $c->get_uid();
 		$uid = $uid_get['uid'];
-		// print_r($uid);die;
 		// $user_message = $c->show_user_by_id( $uid);//æ ¹æ®IDèŽ·å–ç”¨æˆ·ç­‰åŸºæœ¬ä¿¡æer->touch();
 
 		$qq_sdk = new QqSdk();
@@ -57,16 +56,22 @@ class SpecialCallbackWeibo extends UnlistedSpecialPage {
 	        header('Location: '.$wgCentralServer.'/wiki/special:completeuserinfo?type=weibo&code='.$token['access_token']);
 	        exit;
 	    }else{
-	        // success login redirect to index
-	        $user = User::newFromId($checkRes);
+        // success login redirect to index
+        $user = User::newFromId($checkRes);
 		$user->touch();
 		$wgUser = $user;
 		wfResetSessionID();
 		$request->setSessionData( 'wsLoginToken', null );
 		$this->getContext()->setUser( $user );
-	        $user->setCookies(null, null, true);
-	        header('Location: '.$wgCentralServer);
-	        exit;
+	    $user->setCookies(null, null, true);
+	    if ( $redirect_url != null ) {
+	    	setcookie("huijiredirect_url", null, time()+600, "/", ".huiji.wiki" );
+	    	header('Location: http://'.$redirect_url.$wgHuijiSuffix);
+	    	exit;
+	    }else{
+	    	header('Location: '.$wgCentralServer);
+	    	exit;
+	    }
 	    }
 	}
 }

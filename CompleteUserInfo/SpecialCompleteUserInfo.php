@@ -34,6 +34,7 @@ class SpecialCompleteUserInfo extends UnlistedSpecialPage {
 		$request = $this->getRequest();
 		$access_token = empty($request->getVal( 'code' ))?null:$request->getVal( 'code' );
 		$type = empty($request->getVal( 'type' ))?null:$request->getVal( 'type' );
+		$redirect = empty($request->getVal( 'redirect' ))?null:$request->getVal( 'redirect' );
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
 		if(empty($_GET['code'])) {
@@ -41,6 +42,7 @@ class SpecialCompleteUserInfo extends UnlistedSpecialPage {
 			return false;
 		}
 		$out->addModuleStyles('mediawiki.special.userlogin.signup.styles');
+		$out->addModuleScripts('ext.socialprofile.qqLogin.js');
 		$out->addModuleStyles('ext.socialprofile.userinfo.css');
 		if( $type == 'qq' ){
 			$qq_sdk = new QqSdk();
@@ -81,7 +83,8 @@ class SpecialCompleteUserInfo extends UnlistedSpecialPage {
 			<input id='userGender' type='hidden' value='".$gender."' >
 			<input id='userAvatar' type='hidden' value='".$avatar."' >
 			<input id='userType' type='hidden' value='".$type."' >
-			<input id='userType' type='hidden' value='".$type."' >
+			<input id='redirect_url' type='hidden' value='".$redirect."' >
+			<input id='inviteuser' type='hidden' value=0 >
             <div class='mw-ui-button  mw-ui-block mw-ui-constructive btn' data-loading-text='提交中...' id='qqConfirm'>提交</div></form>";
 
 		$output .=	'<div class="mw-createacct-benefits-container unite-container">'.
