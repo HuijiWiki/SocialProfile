@@ -28,7 +28,7 @@
 	"doctor-articles-too-few":"我们社区已经很活跃了，不过美中不足的是我们还缺少更多条目。如果我们没有足够多的优秀条目，又如何展现维基的魅力呢？让我们一起来新建一批条目吧！",
 	"doctor-edits-too-few":"我们社区各方面指标都比较良好，然而词条的质量还需要继续提高，继续为现有内容添加出处、修正错误，一定能让维基更上一层楼。",
 	"doctor-link-advice":"最新的维护报告出来了，也许您有时间处理一下本站[[Special:$1|$1]]的问题？",
-	"doctor-category-advice":"我整理出了$2个[[Special:$1|$1]]，请管理员大人过目。",
+	"doctor-category-advice":"我整理出了$2个[[Category:$1|$1]]，请管理员大人过目。",
 	"inviteuser":"基友招募",
 	"doctor-hide-bots":"隐藏议会机器人",
 	"doctor-hide-bots-description":"在您掌握了维基的基本维护操作之后，可以在这里解散秘密议会中喋喋不休的机器人。(需要等待1-2天缓存失效）"
