@@ -72,7 +72,7 @@ class SystemGifts {
 		);
 		$x = 0;
 		foreach ( $res as $row ) {
-			if ( $row->gift_category && !in_array( $row->gift_category, $this->repeatableGifts ) && isset($stats->stats_fields[$this->categories[$row->gift_category]]) ) {
+			if ( $row->gift_category && !in_array( $row->gift_category, $this->repeatableGifts ) && !empty($stats->stats_fields[$this->categories[$row->gift_category]]) ) {
 				$res2 = $dbw->select(
 					'user_stats',
 					array( 'stats_user_id', 'stats_user_name' ),
