@@ -1,0 +1,89 @@
+<header class="intro-header" style="background-image: url('/extensions/SocialProfile/AdminDashboard/img/post-bg.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>一封来自神秘星球的邀请信</h1>
+                        <h2 class="subheading">这是一个需要朋友的世界。据说只有最值得依赖的人才会收到它。</h2>
+                        <span class="meta">发自{{siteName}}的<a href="#">{{userName}}</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+<article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+                    <p>我是{{siteName}}的{{duty}}{{userName}}。至今我已经在{{siteName}}编辑了{{numberOfEditsByMe}}次。</p>
+
+                    <p>今天，我诚挚的邀请您加入{{siteName}}的编辑组。</p>
+
+                    <h2 class="section-heading">关于{{siteName}}</h2>
+
+                    <p>{{siteDescription}}</p>
+
+                    <p>自创立以来，已经有{{numberOfPages}}个页面，{{numberOfEdits}}次编辑和{{numberOfFollowers}}个编辑者。</p>
+                    <span class="caption text-muted"><p class="copyright text-muted"></p></span>
+                    
+                        <div class="col-md-2 col-sm-3 col-xs-6">
+                            <i class="fa fa-book" style="font-size:64px;"></i><br><big>百科全书</big><br><small>话题百科全书</small>
+                        </div>
+                        <div class="col-md-2 col-sm-4 col-xs-6"><i class="fa fa-database" style="font-size:64px;"></i><br><big>数据库</big><br><small>数据型的资料库</small></div>
+                        <div class="col-md-2 col-sm-4 col-xs-6"><i class="fa fa-comments" style="font-size:64px;"></i><br><big>兴趣论坛</big><br><small>形式多样的社区</small></div>
+                        <div class="col-md-2 col-sm-4 col-xs-6"><i class="fa fa-pencil-square-o" style="font-size:64px;"></i><br><big>Fansite</big><br><small>分享同人创作</small></div>
+                        <div class="col-md-2 col-sm-4 col-xs-6"><i class="fa fa-users" style="font-size:64px;"></i><br><big>民间团体</big><br><small>字幕组/团体主页</small></div>
+                        <div class="col-md-2 col-sm-4 col-xs-6"><i class="fa fa-spinner" style="font-size:32px;"></i><br><big>更多</big><br><small>藉由开源插件库与huiji的开发，会有更多形式的内容出现</small></div>
+                                            
+                    <span class="caption text-muted"><p class="copyright text-muted">纯粹兴趣分享，无任何经济回报</p></span>
+
+                    <h2>在这里，您可以</h2>
+
+                    <ul>
+                    <li>汇聚星星之火，让更多人发现和了解{{siteName}}</li>
+                    <li>驾驭强大的维基系统，构建你的专属世界</li>
+                    <li>获得专属标识，邂逅与你频率相同的“机”友</li>
+                    <li>无需前置审核，不受束缚的热情创造</li>
+                    <li>把爱分享给世界，世界也将用爱回报。</li>
+                    </ul>
+                   
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </article>
+    <hr>
+    <footer>
+        <div class="container jumbotron">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
+                    <h2>快速注册</h2>
+                    <form  class='complete-user-info' role="form">
+                        <div class="form-group">
+                            <label for="qqloginusername">用户名：</label>
+                            <input type="text" id="qqloginusername" placeholder="请输入用户名"" name="qqloginname">
+                        </div>
+                        <div class="form-group">
+                            <label for="qqloginpassword">密码：</label>
+                            <input type='password' id='qqloginpassword'  placeholder="请输入密码" name='qqloginpass'>
+                        </div>
+                        <div class="form-group">
+                            <label for="qqloginemail">邮箱：</label>
+                            <input type='email' id='qqloginemail' placeholder="请输入邮箱" name='qqloginemail'>
+                        </div>
+                        <input id='redirect_url' type='hidden' value='{{redirect}}' >
+                        <input id='inviter' type='hidden' value='{{userName}}' >
+                        <input id='inviteuser' type='hidden' value=1 >
+                        {{&submitButton}}
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-md-offset-6 bdsharebuttonbox pull-right" data-tag="share_1"><a href="#" class="icon-weixin-share hidden-xs hidden-sm" data-tag="share_1" data-cmd="weixin" title="分享到微信"></a><a href="#" class="icon-weibo-share" data-tag="share_1" data-cmd="tsina" title="分享到新浪微博"></a></div>
+        </div>
+        <p class="text-muted pull-right">Photographs by <a href="https://www.flickr.com/photos/nasacommons/">NASA on The Commons</a>.</p>
+    </footer>
+
