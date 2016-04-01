@@ -84,8 +84,8 @@ class WikiDoctor{
 			}			
 		}
 		$stats = $this->mSite->getStats();
-		$stats['followers'] *= 60;
-		$stats['articles'] *= 40;
+		$stats['followers'] *= 50;
+		$stats['articles'] *= 10;
 		$bottom = min ( $stats['followers'], $stats['edits'] , $stats['articles'] );
 		$bottomKey = min(array_keys($stats, $bottom));
 		return $bottomKey;
