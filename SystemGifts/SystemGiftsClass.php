@@ -34,7 +34,7 @@ class SystemGifts {
 		'节日' => 23,
 	);
 
-	private $repeatableGifts = array( 12, 13, 15, 16, 17, 18, 19, 23 );
+	private $repeatableGifts = array( 7, 12, 13, 15, 16, 17, 18, 19, 23 );
 
 	/**
 	 * Accessor for the private $categories variable; used by
@@ -72,7 +72,7 @@ class SystemGifts {
 		);
 		$x = 0;
 		foreach ( $res as $row ) {
-			if ( $row->gift_category && !in_array( $row->gift_category, $this->repeatableGifts ) ) {
+			if ( $row->gift_category && !in_array( $row->gift_category, $this->repeatableGifts ) && isset($stats->stats_fields[$this->categories[$row->gift_category]]) ) {
 				$res2 = $dbw->select(
 					'user_stats',
 					array( 'stats_user_id', 'stats_user_name' ),

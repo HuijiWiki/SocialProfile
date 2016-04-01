@@ -5,15 +5,16 @@
         <ul class="nav nav-tabs admin-tab" role="tablist">
             <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-table"></i> 站点总览</a></li>
             <li role="presentation"><a href="#admin-member" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-users"></i> 成员管理</a></li>
+            <li role="presentation"><a href="#admin-concile" aria-controls="concile" role="tab" data-toggle="tab"><i class="fa fa-commenting"></i> 秘密议会</a></li>
             <li role="presentation"><a href="#admin-setting" aria-controls="messages" role="tab" data-toggle="tab"><i class="fa fa-toggle-off"></i> 功能选项</a></li>
         </ul>
 <!--             -->
         <!-- Tab panes -->
         <div class="tab-content admin-tab-content">
             <div role="tabpanel" class="tab-pane active" id="home">{{> admin_board}}</div>
-            <div role="tabpanel" class="tab-pane" id="admin-member">{{> admin_member}}
-            </div>
-            <div role="tabpanel" class="tab-pane" id="admin-setting">{{> admin_setting}}</div  
+            <div role="tabpanel" class="tab-pane" id="admin-member">{{> admin_member}}</div>
+            <div role="tabpanel" class="tab-pane" id="admin-concile">{{> admin_concile}}</div>
+            <div role="tabpanel" class="tab-pane" id="admin-setting">{{> admin_setting}}</div> 
         </div>
     </div>
 </div>

@@ -21,7 +21,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 	 * @param $par Mixed: parameter passed to the page or null
 	 */
 	public function execute( $par ) {
-		global $wgUploadPath, $wgUser, $wgHuijiPrefix, $wgSiteSettings;
+		global $wgUploadPath, $wgUser, $wgHuijiPrefix, $wgSiteSettings, $wgParser,$wgCommentsSortDescending;
 		$templateParser = new TemplateParser(  __DIR__ . '/pages' );
 		$out = $this->getOutput();
 		$user = $this->getUser();
@@ -34,11 +34,21 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 
 		// Add CSS
 		//$out->addModules('ext.socialprofile.userprofile.css');	
-		$out->addModuleStyles( 'ext.socialprofile.admindashboard.css' );
-		
-		// Add js and message
-		// $out->addModules( 'skins.bootstrapmediawiki.huiji.getRecordsInterface.js' );
-		$out->addModules( 'ext.socialprofile.admindashboard.js' );
+		$out->addModuleStyles(
+    		array(
+    			'ext.socialprofile.admindashboard.css',
+    			'ext.comments.css',
+    		)
+    	);
+		$out->addModules( 
+			array(
+				'ext.socialprofile.admindashboard.js',
+				'ext.comments.js',
+				'skins.bootstrapmediawiki.emoji'
+			) 
+		);
+		$out->addJsConfigVars( array( 'wgCommentsSortDescending' => $wgCommentsSortDescending ) );
+
 		//$out->addModules('ext.socialprofile.userprofile.js');
 		//Enable OOUI
 		$out->enableOOUI();
@@ -105,6 +115,10 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		// Settings Panel
 		$rating = $site->getRating();
 		$settings = $wgSiteSettings;
+		$settings['hide-bots-in-concile']['title'] = wfMessage('doctor-hide-bots')->escaped();
+		$settings['hide-bots-in-concile']['description'] = wfMessage('doctor-hide-bots-description')->escaped();
+		$settings['hide-bots-in-concile']['value'] = wfMessage('enable-disabled')->text();
+		$settings['hide-bots-in-concile']['level'] = 'NA';
 		$settings['enable-pollny']['title'] = wfMessage('enable-pollny')->escaped();
 		$settings['enable-pollny']['description'] = wfMessage('enable-pollny-description')->escaped();
 		$settings['enable-pollny']['value'] = wfMessage('enable-disabled')->text();
@@ -246,6 +260,44 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		if (in_array('bot', $userRight)) {
 		    $changeRes[] = $valueableGroup['bot'];
 		}
+		if ($site->getProperty('hide-bots-in-concile') == 1){
+			$showBots = false;
+		} else {
+			$showBots = true;
+		}
+
+
+		$doctor = new WikiDoctor();
+		$advice = '';
+		switch($doctor->engagementCheck()){
+			case 'score':
+				$advice = wfMessage('doctor-score-too-low')->escaped();
+				break;
+			case 'followers':
+				$advice = wfMessage('doctor-followers-too-few')->escaped();
+				break;
+			case 'articles':
+				$advice = wfMessage('doctor-articles-too-few')->escaped();
+				break;
+			case 'edits':
+				$advice = wfMessage('doctor-edits-too-few')->escaped();
+				break;
+		};
+		list($problem, $num) = $doctor->categoryCheck();
+		if ($num == ''){
+			$hasCategoryAdvice = false;
+		} else {
+			$hasCategoryAdvice = true;
+		}
+		$linkAdvice = wfMessage('doctor-link-advice', $doctor->linkCheck())->parse();
+		$categoryAdvice = wfMessage('doctor-category-advice', $problem, $num)->parse();
+		$commentHtml = '<div class="clearfix"></div>';
+        $wgParser->setTitle(Title::newFromId(1));
+        $commentHtml .= CommentsHooks::displayComments( '', array(), $wgParser); 
+
+        $inviteLink = SpecialPage::getTitleFor('InviteUser')->getFullURL(array('user' => $user->getName(), 'prefix' => $wgHuijiPrefix));
+
+
 		$output .= $templateParser->processTemplate(
 				    'admin_index',
 				    array(
@@ -284,7 +336,16 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				        'gtB' => $gtB,
 				        'gtC' => $gtC,
 				        'gtD' => $gtD,
-				        'protip' => $protip
+				        'protip' => $protip,
+				        'advice' => $advice,
+				        'hasCategoryAdvice' =>$hasCategoryAdvice,
+				        'categoryAdvice' => $categoryAdvice,
+				        'linkAdvice' => $linkAdvice,
+				        'comments' => $commentHtml,
+				        'showBots' => $showBots,
+				        'inviteLink' => $inviteLink,
+
+
 				    )
 				);
 		$out->addHtml($output);

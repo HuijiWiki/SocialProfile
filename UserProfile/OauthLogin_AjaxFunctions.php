@@ -29,10 +29,16 @@ function wfCheckOauth( $openid, $type ){
 }
 
 //insert into oauth
-function wfAddInfoToOauth( $otype, $openid, $userid, $inviteuser ){
+function wfAddInfoToOauth( $otype, $openid, $userid, $inviteuser, $inviter ){
+	global $wgUser;
 	$dbw = wfGetDB( DB_MASTER );
 	if ( $inviteuser == 1 ) {
+		$inviteUser = HuijiUser::newFromName( $inviter );
+		$stats = new UserStatsTrack( $inviteUser->getId() );
+		$stats->incStatField('referral_complete');
 		$u = User::newFromId( $userid );
+		$usg = new UserSystemGifts( $u->getName() );
+		$usg->sendSystemGift(78);
 		$u->setCookies(null,null,true );
 		$result = array('success'=> true, 'result'=>'1' );
 		$out = json_encode($result);

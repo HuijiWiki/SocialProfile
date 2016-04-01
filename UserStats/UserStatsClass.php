@@ -37,7 +37,7 @@ $wgUserStatsPointValues['quiz_created'] = 0;
 $wgNamespacesForEditPoints = array( 0 );
 
 class UserStatsTrack {
-
+	private $statsUser;
 	// for referencing purposes
 	// key: statistic name in wgUserStatsPointValues -> database column name
 	public $stats_fields = array(
@@ -91,6 +91,7 @@ class UserStatsTrack {
 		global $wgUserStatsPointValues;
 
 		$this->user_id = $user_id;
+		$this->statsUser = User::newFromId( $user_id );
 		if ( !$user_name ) {
 			$user = User::newFromId( $this->user_id );
 			$user->loadFromDatabase();
@@ -154,9 +155,9 @@ class UserStatsTrack {
 	 * @param $val Integer: increase $field by this amount, defaults to 1
 	 */
 	function incStatField( $field, $val = 1 ) {
-		global $wgUser, $wgMemc, $wgSystemGifts, $wgUserStatsTrackWeekly, $wgUserStatsTrackMonthly;
-		if ( HuijiFunctions::addLock('incStatField-'.$wgUser->getId(), 1) ){
-			if ( !$wgUser->isAllowed( 'bot' ) && !$wgUser->isAnon() && $this->stats_fields[$field] ) {
+		global $wgMemc, $wgSystemGifts, $wgUserStatsTrackWeekly, $wgUserStatsTrackMonthly;
+		if ( HuijiFunctions::addLock('incStatField-'.$this->statsUser->getId(), 1) ){
+			if ( !$this->statsUser->isAllowed( 'bot' ) && !$this->statsUser->isAnon() && $this->stats_fields[$field] ) {
 				$dbw = wfGetDB( DB_MASTER );
 				$dbw->update(
 					'user_stats',
@@ -209,7 +210,7 @@ class UserStatsTrack {
 					}
 				}
 			}
-			HuijiFunctions::releaseLock('incStatField-'.$wgUser->getId());
+			HuijiFunctions::releaseLock('incStatField-'.$this->statsUser->getId());
 		}
 	}
 

@@ -109,6 +109,7 @@ $wgAutoloadClasses['UploadVideos'] = __DIR__ . '/Videos/UploadVideosClass.php';
 $wgAutoloadClasses['VideoTitle'] = __DIR__ . '/Videos/UploadVideosClass.php';
 $wgAutoloadClasses['VideoRevision'] = __DIR__ . '/Videos/UploadVideosClass.php';
 $wgAutoloadClasses['SpecialInviteUser'] = __DIR__ . '/AdminDashboard/SpecialInviteUser.php';
+$wgAutoloadClasses['WikiDoctor'] = __DIR__ . '/AdminDashboard/WikiDoctor.php';
 
 // New special pages
 // $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
@@ -568,10 +569,26 @@ $wgResourceModules['ext.socialprofile.qqLogin.js'] = array(
 	'scripts' => array(
 					'qqLogin.js',
 				),
-	'dependencies' => 'mediawiki.cookie',
+	'dependencies' => array('mediawiki.cookie','mediawiki.api.options','mediawiki.notification'),
 	'localBasePath' => __DIR__ . '/CompleteUserInfo',
 	'remoteExtPath' => 'SocialProfile/CompleteUserInfo',
 	'position' => 'bottom',
+);
+$wgResourceModules['ext.socialprofile.inviteuser.js'] = array(
+	'scripts' => array(
+					'js/clean-blog.min.js',
+				),
+	'localBasePath' => __DIR__ . '/AdminDashboard',
+	'remoteExtPath' => 'SocialProfile/AdminDashboard',
+	'position' => 'bottom',
+);
+$wgResourceModules['ext.socialprofile.inviteuser.css'] = array(
+	'styles' => array(
+					'css/clean-blog.min.css',
+				),
+	'localBasePath' => __DIR__ . '/AdminDashboard',
+	'remoteExtPath' => 'SocialProfile/AdminDashboard',
+	'position' => 'top',
 );
 $wgResourceModules['ext.guidedTour.tour.newuser'] = array(
 	'scripts' => 'tours/newuser.js',

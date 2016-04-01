@@ -37,16 +37,17 @@ $(document).ready(function(){
 		var userGender = $('#userGender').val();
 		var userAvatar = $('#userAvatar').val();
         var userType = $('#userType').val();
+        var inviter = $('#inviter').val();
 		inviteuser = $('#inviteuser').val();
         redirect_url = $('#redirect_url').val();
 		mw.cookie.set( 'user_gender', userGender );
 		mw.cookie.set( 'user_avatar', userAvatar );
         $('#qqConfirm').button('loading');
-		wiki_signup(userType,username,email,pass,qqOpenId,inviteuser,redirect_url);
+		wiki_signup(userType,username,email,pass,qqOpenId,inviteuser,redirect_url,inviter);
 	})
 
 	var loginerror = $('.login-error');
-    function wiki_signup(type,login,email,pass,outhId,inviteuser,redirect_url){
+    function wiki_signup(type,login,email,pass,outhId,inviteuser,redirect_url,inviter){
         $.post('/api.php?action=createaccount&name='+login+'&email='+email+'&password='+pass+ '&format=json',function(data){
             if(login==''){
                 $('#qqConfirm').button('reset');
@@ -65,7 +66,7 @@ $(document).ready(function(){
                             // if ( inviteuser == 1 ) {
                             //     location.href = 'http://www'+mw.config.get('wgHuijiSuffix');
                             // }else{
-                                addOauth(type,outhId,data.createaccount.userid,inviteuser,redirect_url);
+                                addOauth(type,outhId,data.createaccount.userid,inviteuser,redirect_url,inviter);
                             // }
                         }
                         else{
@@ -111,13 +112,13 @@ $(document).ready(function(){
         });
     }
 
-    function addOauth(type,openid,userid,inviteuser,redirect_url){
+    function addOauth(type,openid,userid,inviteuser,redirect_url,inviter){
 
         $.post(
             mw.util.wikiScript(), {
                 action: 'ajax',
                 rs: 'wfAddInfoToOauth',
-                rsargs: [type, openid, userid, inviteuser]
+                rsargs: [type, openid, userid, inviteuser, inviter]
             },
             function (data) {
                 var res = $.parseJSON(data);
