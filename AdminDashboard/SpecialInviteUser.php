@@ -81,6 +81,12 @@ class SpecialInviteUser extends UnlistedSpecialPage{
             $out->addHTML( $output );
             return false;
         }
+        $customInvitationMessage = wfMessage('custom-invitation-message')->parsed();
+        if ($customInvitationMessage != ''){
+            $hasCustomInvitationMessage = true;
+        } else {
+            $hasCustomInvitationMessage = false;
+        }
         $templateParser = new TemplateParser(  __DIR__ . '/pages' );
         $output = $templateParser->processTemplate(
             'invites',
@@ -95,9 +101,9 @@ class SpecialInviteUser extends UnlistedSpecialPage{
                 'numberOfEdits' => $siteStats['edits'],
                 'numberOfFollowers' => $siteStats['followers'],
                 'redirect' => $redirect,
-                'submitButton' => $submitButton
-
-
+                'submitButton' => $submitButton,
+                'customInvitationMessage' => $customInvitationMessage,
+                'hasCustomInvitationMessage' => $hasCustomInvitationMessage,
             )
         );
         $out->addModuleStyles(array('ext.socialprofile.inviteuser.css', 'ext.socialprofile.userinfo.css', 'mediawiki.special.userlogin.signup.styles'));
