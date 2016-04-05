@@ -174,7 +174,14 @@ jQuery( document ).ready( function() {
                     return data;
                 },
                 display: function(value){
-                    var age = new Date().getFullYear()-JSON.stringify(value).substring(1).split('-')[0]+'岁';
+                    var year = new Date().getFullYear() - value.getFullYear();
+                    var month = new Date().getMonth() - value.getMonth();
+                    var day = new Date().getDate() - value.getDate();
+                    var age;
+                    if(day<0) month--;
+                    if(month<0) year--;
+                    if(day == 0&&month == 0) alert('今天是您的生日，生日快乐');
+                    age = year + '岁';
                     $(this).text(age);
                     if(value == null){
                         $(this).text('设置生日');
