@@ -298,12 +298,12 @@ class UserProfilePage extends Article {
 	        	$editData[] = $today;
 	        }
 	        sort($editData);
-	        $totalEdit = count($editData);
+	        $totalEdit = count($editData) == 1 ? 0 : count($editData);
 	        if ($totalEdit > 0){
 		        $resArr[] = strtotime($editData[0]);
-		        $maxlen = 1;	        	
+		        $maxlen = 1;
+				$totalEdit--;
 	        }
-
 	        for($k=1;$k<count($editData);$k++){
 	        	if(in_array(strtotime($editData[$k])-86400, $resArr)){
 	        		$resArr[] = strtotime($editData[$k]);

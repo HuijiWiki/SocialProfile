@@ -242,4 +242,14 @@ class SocialProfileHooks {
 		// }
 	}
 
+	/**
+	 * onUserGroupsChanged
+	 * when user's sysop right have been remove, delete cache
+	 */
+	public static function onUserGroupsChanged(){
+		global $wgMemc, $wgHuijiPrefix;
+        $key = wfForeignMemcKey('huiji','', 'user_group', 'sitemanager', $wgHuijiPrefix,'sysop' );
+        $wgMemc->delete( $key );
+	}
+
 }

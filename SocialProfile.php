@@ -323,6 +323,7 @@ $wgHooks['ResourceLoaderGetConfigVars'][] = 'SocialProfileHooks::onResourceLoade
 
 $wgHooks['ImageOpenShowImageInlineBefore'][] = 'SocialProfileHooks::onImageOpenShowImageInlineBefore';
 $wgHooks['ImagePageAfterImageLinks'][] = 'SocialProfileHooks::onImagePageAfterImageLinks';
+$wgHooks['UserGroupsChanged'][] = 'SocialProfileHooks::onUserGroupsChanged';
 
 // ResourceLoader module definitions for certain components which do not have
 // their own loader file
