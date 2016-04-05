@@ -48,8 +48,8 @@ function incEditCount( $article, $revision, $baseRevId ) {
 	foreach ($giftList as $value) {
         if ( $today >= $value['startTime'] && $today <= $value['endTime'] ) {
             if (HuijiFunctions::addLock( 'USG-'.$value['giftId'].'-'.$wgUser->getId() , 1 )){				
-				$resCount = RecordStatistics2::getAllPageEditCountFromUserId( $wgUser->getId(), $value['startTime'], $value['endTime'] );
-				if ($resCount->status == 'success' && $resCount->result == $value['editNum'] ) {
+				$resCount = RecordStatistics2::getAllPageEditCountFromUserId( $wgUser->getId(), substr($value['startTime'],0,10), substr($value['endTime'],0,10) );
+				if ( $resCount->status == 'success' && $resCount->result == $value['editNum'] ) {
 					$usg->sendSystemGift( $value['giftId'] );
 				}					
                 HuijiFunctions::releaseLock( 'USG-'.$value['giftId'].'-'.$wgUser->getId() );
@@ -60,40 +60,36 @@ function incEditCount( $article, $revision, $baseRevId ) {
 	//Consecutive edit days 连续编辑天数
 	$ueb = new UserEditBox();
     $editBox = $editData = array();
-    $userEditInfo = $ueb->getUserEditInfo($wgUser->getId());
+    $editBox = $ueb->getUserEditInfo($wgUser->getId());
     if (HuijiFunctions::addLock( 'USG-maxlen-'.$wgUser->getID() )){
 	    $maxlen = 0; //init variables.
-	    if ($userEditInfo != false) {
-	        foreach ($userEditInfo as $value) {
-	        	if (is_object($value) && !empty($value->_id) && $value->value > 0) {
-		        	$editBox[$value->_id] = $value->value;
-		        	$editData[] = $value->_id;
-	        	}
-	            
-	        }
-	        $today = date("Y-m-d");
-	        $editBox[$today] = UserEditBox::getTodayEdit($wgUser->getId());
-	        if (!empty($editBox[$today])) {
-	        	$editData[] = $today;
-	        }
-	        sort($editData);
-	        $totalEdit = count($editData);
-	        if ($totalEdit > 0){
-		        $resArr[] = strtotime($editData[0]);
-		        $maxlen = 1;	        	
-	        }
-
-	        for($k=1;$k<count($editData);$k++){
-	        	if(in_array(strtotime($editData[$k])-86400, $resArr)){
-	        		$resArr[] = strtotime($editData[$k]);
-	        		if(count($resArr) > $maxlen){
-	        			$maxlen = count($resArr);
-	        		}
-	        	}else{
-	        		$resArr = array();
-	        		$resArr[] = strtotime($editData[$k]);
-	        	}
-	        }
+	    if ($editBox != false) {
+	        foreach ($editBox as $key=>$value) {
+			    $editData[] = $key;
+			}
+			$today = date("Y-m-d");
+			$yesterday = date("Y-m-d",strtotime("-1 day"));
+			$editBox[$today] = UserEditBox::getTodayEdit($wgUser->getId());
+			if (!empty($editBox[$today])) {
+			    $editData[] = $today;
+			}
+			sort($editData);
+			$totalEdit = count($editData);
+			if ($totalEdit > 0){
+			    $resArr[] = strtotime($editData[0]);
+			    $maxlen = 1;                
+			}
+			for($k=1;$k<count($editData);$k++){
+			    if(in_array(strtotime($editData[$k])-86400, $resArr)){
+			        $resArr[] = strtotime($editData[$k]);
+			        if(count($resArr) > $maxlen){
+			            $maxlen = count($resArr);
+			        }
+			    }else{
+			        $resArr = array();
+			        $resArr[] = strtotime($editData[$k]);
+			    }
+			}
 		
 	        if ($maxlen == 2) {
 				$usg->sendSystemGift( 33 );
