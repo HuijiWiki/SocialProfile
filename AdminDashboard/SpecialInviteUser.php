@@ -81,7 +81,7 @@ class SpecialInviteUser extends UnlistedSpecialPage{
             $out->addHTML( $output );
             return false;
         }
-        $customInvitationMessage = wfMessage('custom-invitation-message')->parsed();
+        $customInvitationMessage = wfMessage('custom-invitation-message')->parse();
         if ($customInvitationMessage != ''){
             $hasCustomInvitationMessage = true;
         } else {
