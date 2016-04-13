@@ -280,6 +280,9 @@ var admin = {
             }else if(item == 'rollback'){
                 obj[item].name = '回退员';
                 obj[item].color = 'warning';
+            }else if(item == 'member'){
+                obj[item].name = '翻译组成员';
+                obj[item].color = 'warning';
             }else if(item == 'staff'){
                 obj[item].name = '职员';
                 obj[item].color = 'default';
