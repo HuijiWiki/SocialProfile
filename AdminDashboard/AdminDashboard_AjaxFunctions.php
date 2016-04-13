@@ -47,6 +47,9 @@ function wfGetUserStatusInfo( $str, $limit, $continue=0 ){
 				if (in_array('bot', $userRight)) {
 				    $result[] = 'bot';
 				}
+				if (in_array('member', $userRight)) {
+				    $result[] = 'member';
+				}
 				$userInfo['userid'] = $user->getId();
 				$userInfo['name'] = $key;
 				$userInfo['img'] = $user->getAvatar()->getAvatarURL();
@@ -95,6 +98,9 @@ function wfGetUserStatusInfo( $str, $limit, $continue=0 ){
 				}
 				if (in_array('bot', $userRight)) {
 				    $result[] = 'bot';
+				}
+				if (in_array('member', $userRight)) {
+				    $result[] = 'member';
 				}
 				$userIdRes['userid'] = $value->user_id;
 				$userIdRes['name'] = $user->getName();

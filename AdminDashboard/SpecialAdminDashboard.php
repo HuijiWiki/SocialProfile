@@ -221,27 +221,32 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 							'bot' => array(
 									'group' => 'bot',
 									'groupName' => '机器人',
-									'groupClass' => 'label label-primary admin-label-bot draggable'
+									'groupClass' => 'label admin-label-bot draggable'
 								),
 							'sysop' => array(
 									'group' => 'sysop',
 									'groupName' => '管理员',
-									'groupClass' => 'label label-info admin-label-admin draggable'
+									'groupClass' => 'label admin-label-sysop draggable'
 								), 
 							'bureaucrat' => array(
 									'group' => 'bureaucrat',
 									'groupName' => '行政员',
-									'groupClass' => 'label label-success admin-label-officer draggable'
+									'groupClass' => 'label admin-label-bureaucrat draggable'
 								),
 							'rollback' => array(
 									'group' => 'rollback',
 									'groupName' => '回退员',
-									'groupClass' => 'label label-warning admin-label-back draggable'
+									'groupClass' => 'label admin-label-rollback draggable'
 								),
 							'staff' => array(
 									'group' => 'staff',
 									'groupName' => '职员',
-									'groupClass' => 'label label-default admin-label-staff draggable'
+									'groupClass' => 'label admin-label-staff draggable'
+								),
+							'member' => array(
+									'group' => 'member',
+									'groupName' => '成员',
+									'groupClass' => 'label admin-label-member draggable'
 								)
 						);
 		$userRight = $changeGroup['add'];
@@ -259,6 +264,9 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		}
 		if (in_array('bot', $userRight)) {
 		    $changeRes[] = $valueableGroup['bot'];
+		}
+		if (in_array('member', $userRight)) {
+		    $changeRes[] = $valueableGroup['member'];
 		}
 		if ($site->getProperty('hide-bots-in-concile') == 1){
 			$showBots = false;

@@ -177,20 +177,23 @@ hr {
 }
 
 /*btn color*/
-#admin-member .label-default{
+#admin-member .admin-label-staff{
     background: #365897;
 }
-#admin-member .label-success{
+#admin-member .admin-label-bureaucrat{
     background: #347bff;
 }
-#admin-member .label-info{
+#admin-member .admin-label-sysop{
     background: #2F9DA8;
 }
-#admin-member .label-warning{
+#admin-member .admin-label-rollback{
     background: #449987;
 }
-#admin-member .label-primary{
+#admin-member .admin-label-bot{
     background: #C45252;
+}
+#admin-member .admin-label-member{
+    background: #09c;
 }
 .a-options>button{
     margin-left: 5px;

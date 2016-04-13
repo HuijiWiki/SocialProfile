@@ -8,7 +8,7 @@ var admin = {
     cont:1,
     val:'',
     token:'',
-    addlimit: 'bot,bureaucrat,sysop,rollback,staff',
+    addlimit: 'bot,bureaucrat,sysop,rollback,staff,member',
     getPos: function(){
         this.pos = this.getSubClient($('.admin-tab-content').get(0)).top-100;
     },
@@ -270,20 +270,18 @@ var admin = {
             obj[item].check  = '';
             if(item == 'bot'){
                 obj[item].name = '机器人';
-                obj[item].color = 'primary';
             }else if(item == 'sysop'){
                 obj[item].name = '管理员';
-                obj[item].color = 'info';
             }else if(item == 'bureaucrat'){
                 obj[item].name = '行政员';
-                obj[item].color = 'success';
             }else if(item == 'rollback'){
                 obj[item].name = '回退员';
-                obj[item].color = 'warning';
             }else if(item == 'staff'){
                 obj[item].name = '职员';
-                obj[item].color = 'default';
+            }else if(item == 'member'){
+                obj[item].name = '成员';
             }
+            obj[item].color = item;
             for(var i=0;i<rights.length;i++){
                 if(item==rights[i]){
                     obj[item].check = 'checked';
@@ -297,15 +295,17 @@ var admin = {
         var obj = new Object();
         rights.forEach(function(item){
             if(item=='bureaucrat'){
-                obj.bureaucrat = ['label label-success',item,'行政员']
+                obj.bureaucrat = ['label admin-label-bureaucrat',item,'行政员']
             }else if(item=='sysop'){
-                obj.sysop = ['label label-info',item,'管理员']
+                obj.sysop = ['label admin-label-sysop',item,'管理员']
             }else if(item=='rollback'){
-                obj.rollback = ['label label-warning',item,'回退员']
+                obj.rollback = ['label admin-label-rollback',item,'回退员']
             }else if(item=='bot'){
-                obj.bot = ['label label-primary',item,'机器人']
+                obj.bot = ['label admin-label-bot',item,'机器人']
             }else if(item=='staff'){
-                obj.staff = ['label label-default',item,'职员' ]
+                obj.staff = ['label admin-label-staff',item,'职员' ]
+            }else if(item=='member'){
+                obj.staff = ['label admin-label-member',item,'成员' ]
             }
         });
         return obj;
@@ -365,7 +365,7 @@ var admin = {
                 var input = $(this).find('input');
                 var li = $(this).parents('.admin-member-list>li');
                 var name = input.attr('data-name');
-                var classname = 'label label-'+input.attr('data-color');
+                var classname = 'label admin-label-'+input.attr('data-color');
                 var text = $(this).text();
                 base.changeRights(li,name,classname,text);
             }
@@ -373,21 +373,21 @@ var admin = {
     },
     addToggleBtn: function(){
         var base = this;
-        mw.loader.using( 'oojs-ui' ).done( function () {
-            var name,value;
-            $('.setting-toggle .toggle').each(function(){
-                    var toggle = new  OO.ui.ToggleSwitchWidget( { value: $(this).data('value') , disabled: $(this).data('state')} );
-
-                    toggle.on('change',function(e){
-                        e = window.event || e;
-                        name = $(e.target).parents('.setting-toggle .toggle').siblings('.setting-options').val();
-                        value = $(e.target).attr('aria-checked')==='false'?1:0;    //点击时取的是变前的值，相反
-                        base.sendSetting(name,value);
-                    })
-                $(this).append(toggle.$element)
-                });
-
-        });
+//        mw.loader.using( 'oojs-ui' ).done( function () {
+//            var name,value;
+//            $('.setting-toggle .toggle').each(function(){
+//                    var toggle = new  OO.ui.ToggleSwitchWidget( { value: $(this).data('value') , disabled: $(this).data('state')} );
+//
+//                    toggle.on('change',function(e){
+//                        e = window.event || e;
+//                        name = $(e.target).parents('.setting-toggle .toggle').siblings('.setting-options').val();
+//                        value = $(e.target).attr('aria-checked')==='false'?1:0;    //点击时取的是变前的值，相反
+//                        base.sendSetting(name,value);
+//                    })
+//                $(this).append(toggle.$element)
+//                });
+//
+//        });
     },
     sendSetting: function(name,value){
         $.ajax({

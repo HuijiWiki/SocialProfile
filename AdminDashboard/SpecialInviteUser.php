@@ -1,6 +1,6 @@
 <?php   
 /**
-* uploadfiles
+* invite user
 */
 class SpecialInviteUser extends UnlistedSpecialPage{
     
@@ -18,13 +18,6 @@ class SpecialInviteUser extends UnlistedSpecialPage{
         $userName = $request->getVal('user');
         $redirect = $wgHuijiPrefix;
         $output = '';
-        // $out->addModuleScripts('ext.socialprofile.qqLogin.js');
-        // $out->addModuleStyles('ext.socialprofile.videos.css');
-        // $out->addModules( array(
-        //     'skins.bootstrapmediawiki.videohandler',
-        //     'ext.socialprofile.videos.js'
-        //     ) 
-        // );
         if ( $prefix == null || $userName == null ) {
             $output .= '<div class="alert alert-danger">您输入的参数不正确。请返回首页。</div>';
             $out->addHTML( $output );
@@ -44,8 +37,6 @@ class SpecialInviteUser extends UnlistedSpecialPage{
                 }else{
                     $group = '编辑者';
                 }
-                // print_r($huijiUser->getEffectiveGroups());die();
-                // print_r(SpecialPage::getTitleFor('InviteUser'));die();
                 $output .= "<div><span class=\"invite-title\">各位大神和水友：</span>
                             <p>我是<b>".$site->getName()."</b>的".$group.":".$userName."，目前已经在".$site->getName()."编辑了".$userStats['edits']."次。</p>
                             <p>诚挚的邀请您加入".$site->getName()."的编辑组。</p>
