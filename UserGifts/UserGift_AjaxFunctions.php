@@ -3,6 +3,8 @@
  * AJAX functions used by usergift.
  */
 $wgAjaxExportList[] = 'wfCheckUserIsHaveGift';
+$wgAjaxExportList[] = 'wfChangeGiftTitleStatus';
+$wgAjaxExportList[] = 'wfChangeGiftTitleStatusOff';
 function wfCheckUserIsHaveGift( $user_id, $gift_id ) {
 	// global $wgUser;
 	// if ( $wgUser->isBlocked() || wfReadOnly() ) {
@@ -17,3 +19,40 @@ function wfCheckUserIsHaveGift( $user_id, $gift_id ) {
 		return 'failed';
 	}
 }
+
+function wfChangeGiftTitleStatus( $userTitleId, $status, $from ){
+	global $wgUser;
+	if ( $status == 2 ) {
+		UserGifts::cleraAllGiftTitle( $from, $wgUser->getId() );
+	}
+	$dbw = wfGetDB( DB_MASTER );
+	$dbw -> update(
+			'user_title',
+			array(
+				'is_open' => $status
+			),
+			array(
+				'ut_id' => $userTitleId,
+			),
+			__METHOD__
+		);
+	return 'success';
+}
+
+function wfChangeGiftTitleStatusOff( $gift_id, $user_to_id, $title_from ){
+	$dbw = wfGetDB( DB_MASTER );
+	$dbw -> update(
+			'user_title',
+			array(
+				'is_open' => 1
+			),
+			array(
+				'gift_id' => $gift_id,
+				'user_to_id' => $user_to_id,
+				'title_from' => $title_from
+			),
+			__METHOD__
+		);
+	return 'success';
+}
+

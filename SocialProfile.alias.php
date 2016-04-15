@@ -525,7 +525,9 @@ $specialPageAliases['zh-hans'] = array(
 	'UploadFiles'=>array('文件上传'),
 	'Videos'=>array('添加媒体文件'),
 	'VideosList'=>array('媒体文件列表'),
-	'FamilyTree'=>array('家族树'),
+	'InviteUser'=>array('邀请信'),
+	'Designation'=>array('称号管理'),
+	'GiveSystemGift'=>array('系统成就')
 );
 
 /** Traditional Chinese (中文（繁體）‎) */

@@ -90,5 +90,7 @@
 	"giftmanager-bureaucrat": "行政员",
 	"giftmanager-sysop": "管理员",
 	"giftmanager-commonUser": "普通用户",
-	"g-error-message-no-gift": "暂时还没有礼物可以赠送哦~"
+	"g-error-message-no-gift": "暂时还没有礼物可以赠送哦~",
+	"giftmanager-type": "礼物类型",
+	"designation": "称号管理"
 }

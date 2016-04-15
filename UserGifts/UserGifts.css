@@ -245,7 +245,7 @@
 	padding: 5px;
 	margin-bottom: 5px;
 }
-.g-had-got{
+.g-had-got,.g-level-low{
 	opacity: .5
 }
 .gift-warning {
@@ -264,6 +264,10 @@
 	opacity: 1;
 	top: 20px;
 }
+.g-level-low:hover .gift-warning{
+	opacity: 1;
+	top: 20px;
+}
 .gift-count-num{
   position: absolute;
   right: 6px;
@@ -273,4 +277,40 @@
   text-align: right;
   font-size: 22px;
   font-family: fantasy;
+}
+
+/*designation*/
+#firstHeading{
+    text-align: center;
+}
+.list-wrap{
+    border: 1px solid #e9e9e9;
+    background: #fff;
+    padding-bottom: 20px;
+    margin-bottom: 50px;
+}
+.admin-setting-li {
+    display: inline-block;
+    padding: 10px 20px;
+    width: 150px;
+    border: 1px solid #e0e0e0;
+    margin: 10px;
+    border-radius: 3px;
+}
+.admin-setting-li img{
+    width: 100%;
+}
+.setting-title,.setting-des{
+    max-width: 108px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.list-title{
+    margin: 0;
+    padding: 10px;
+    border-bottom: 1px solid #e9e9e9;
+    font-weight: 100;
+    font-size: 18px;
+    color: #999;
 }

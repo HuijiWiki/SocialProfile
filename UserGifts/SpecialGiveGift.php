@@ -81,13 +81,23 @@ class GiveGift extends SpecialPage {
 			
 				if ( $request->wasPosted() && $_SESSION['alreadysubmitted'] == false ) {
 					$_SESSION['alreadysubmitted'] = true;
+
 					if ( HuijiFunctions::addLock('UG-'.$request->getInt( 'gift_id' ).$this->user_id_to)){
+
 						$ug_gift_id = $gift->sendGift(
 							$this->user_name_to,
 							$request->getInt( 'gift_id' ),
 							0,
 							$request->getVal( 'message' )
 						);
+						//invitationcode
+						if ( $giftInfo['gift_type'] == 3 && $ug_gift_id != null ) {
+							$gift->addUserGiftInviteInfo( $ug_gift_id );
+						}
+						//user title
+						if ( $giftInfo['designation'] != null && $this->user_name_to != null ) {
+							$gift->addUserGiftTitleInfo( $giftInfo['gift_id'], $this->user_id_to, $giftInfo['designation'], 'gift' );
+						}
 			
 						// clear the cache for the user profile gifts for this user
 						$wgMemc->delete( wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'gifts', $this->user_id_to ) );
@@ -361,20 +371,28 @@ class GiveGift extends SpecialPage {
 			<form action="" method="post" enctype="multipart/form-data" name="gift">';
 
 			$x = 1;
+			// var_dump($gifts);die();
 			foreach ( $gifts as $gift ) {
-				$toUser = User::newFromID($this->user_id_to);
+				$toUser = HuijiUser::newFromID($this->user_id_to);
 				$ug = new UserGifts( $toUser->getName() );
 				$res = $ug->doesUserOwnGift( $this->user_id_to, $gift['id'] );
+				$fromUser = HuijiUser::newFromID( $wgUser->getID() );
+				$level = $fromUser->getLevel();
 				$gift_image = "<img id=\"gift_image_{$gift['id']}\" src=\"{$wgUploadPath}/awards/" .
 					Gifts::getGiftImage( $gift['id'], 'l' ) .
 					'" border="0" alt="" />';
-				if ($res == true && $gift['repeat'] == 2 ) {
+				if ($res == true && $gift['repeat'] == 2) {
 					$gclass = 'g-give-all g-had-got';
+					$warning = '不可重复获得';
+				}else if( $level->getLevelNumber() < 5 && $gift['gift_type'] == 3 ){
+					$gclass = 'g-give-all g-level-low';
+					$warning = '至少达到5级';
 				}else{
 					$gclass = 'g-give-all';
+					$warning = '';
 				}
 				$output .= "<div id=\"give_gift_{$gift['id']}\" class='".$gclass."'>
-					<div class=\"gift-warning\">不可重复获得</div>
+					<div class=\"gift-warning\">".$warning."</div>
 					{$gift_image}
 					<div class=\"g-title g-blue\">{$gift['gift_name']}</div>";
 

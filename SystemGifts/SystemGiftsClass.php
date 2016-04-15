@@ -98,6 +98,10 @@ class SystemGifts {
 							__METHOD__
 						);
 
+						//add into user designation table
+						$gift = new UserGifts( $row2->stats_user_name );
+						$gift->addUserGiftTitleInfo( $row->gift_id, $row2->stats_user_id, $row->gift_name, 'system_gift' );
+						
 						$sg_key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'system_gifts', "{$row2->stats_user_id}" );
 						$wgMemc->delete( $sg_key );
 
@@ -151,7 +155,7 @@ class SystemGifts {
 	 * @param $threshold Integer: threshold number (i.e. 50 or 100 or whatever)
 	 * @return Integer: the inserted gift's ID number
 	 */
-	public function addGift( $name, $description, $category, $threshold ) {
+	public function addGift( $name, $description, $category, $threshold, $designation ) {
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->insert(
 			'system_gift',
@@ -161,6 +165,7 @@ class SystemGifts {
 				'gift_category' => $category,
 				'gift_threshold' => $threshold,
 				'gift_createdate' => date( 'Y-m-d H:i:s' ),
+				'designation' => $designation
 			),
 			__METHOD__
 		);
@@ -176,7 +181,7 @@ class SystemGifts {
 	 * @param $category
 	 * @param $threshold
 	 */
-	public function updateGift( $id, $name, $description, $category, $threshold ) {
+	public function updateGift( $id, $name, $description, $category, $threshold, $designation ) {
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->update(
 			'system_gift',
@@ -185,6 +190,7 @@ class SystemGifts {
 				'gift_description' => $description,
 				'gift_category' => $category,
 				'gift_threshold' => $threshold,
+				'designation' => $designation
 			),
 			/* WHERE */array( 'gift_id' => $id ),
 			__METHOD__
@@ -243,7 +249,7 @@ class SystemGifts {
 			'system_gift',
 			array(
 				'gift_id', 'gift_name', 'gift_description', 'gift_category',
-				'gift_threshold', 'gift_given_count'
+				'gift_threshold', 'gift_given_count','designation'
 			),
 			array( 'gift_id' => $id ),
 			__METHOD__,
@@ -257,6 +263,7 @@ class SystemGifts {
 			$gift['gift_category'] = $row->gift_category;
 			$gift['gift_threshold'] = $row->gift_threshold;
 			$gift['gift_given_count'] = $row->gift_given_count;
+			$gift['designation'] = $row->designation;
 		}
 		return $gift;
 	}

@@ -24,7 +24,7 @@ class ViewGift extends UnlistedSpecialPage {
 	 * @param $par Mixed: parameter passed to the page or null
 	 */
 	public function execute( $par ) {
-		global $wgUploadPath;
+		global $wgUploadPath, $wgUser;
 
 		$out = $this->getOutput();
 		$user = $this->getUser();
@@ -119,12 +119,22 @@ class ViewGift extends UnlistedSpecialPage {
 					'" border="0" alt="" />';
 
 				$message = $out->parse( trim( $gift['message'] ), false );
-
+				$inviteCode = UserGifts::checkIsInviteGift($gift['id']);
+				$userTitle = UserGifts::checkIsTitleGift($gift['gift_id'], $gift['user_id_to']);
+				if ( $userTitle != null ) {
+					$title_name = '称号：';
+				}else{
+					$title_name = '';
+				}
+				// print_r($gift);die();
 				$output .= '<div class="g-description-container">';
 				$output .= '<div class="g-description">' .
 						$giftImage .
-						'<div class="g-name">' . $gift['name'] . '</div>
-						<div class="g-timestamp">(' . $gift['timestamp'] . ')</div>
+						'<div class="g-name">' . $gift['name'] . '</div>';
+				if ( $userTitle != null && $wgUser->getID() == $gift['user_id_to'] ) {
+					$output .= '<span>'.$title_name.$gift['designation'].'<br>开关</span>';
+				}
+				$output .= '<div class="g-timestamp">(' . $gift['timestamp'] . ')</div>
 						<div class="g-from">' . $this->msg(
 							'g-from',
 							htmlspecialchars( $sender->getFullURL() ),
@@ -134,8 +144,11 @@ class ViewGift extends UnlistedSpecialPage {
 					$output .= '<div class="g-user-message">' . $message . '</div>';
 				}
 				$output .= '<div class="cleared"></div>
-						<div class="g-describe">' . $gift['description'] . '</div>
-						<div class="g-actions">';
+						<div class="g-describe">' . $gift['description'] . '</div>';
+						if( $inviteCode != null && $wgUser->getID() == $gift['user_id_to'] ){
+							$output .= '<div class="invite-code well well-sm">邀请码：'.$inviteCode.'    <small>(仅自己可见)</small></div>';
+						}
+				$output .= '<div class="g-actions">';
 				if ( $gift['user_name_to'] == $user->getName() ) {
 					// $output .= $this->msg( 'pipe-separator' )->escaped();
 					$output .= '<a href="' . htmlspecialchars( $removeGiftLink->getFullURL( 'gift_id=' . $gift['id'] ) ) . '">' .

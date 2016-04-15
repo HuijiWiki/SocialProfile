@@ -17,7 +17,7 @@ class Gifts {
 	 * @param $gift_description Mixed: a short description about the gift, as supplied by the user
 	 * @param $gift_access Integer: 0 by default
 	 */
-	static function addGift( $gift_name, $gift_description, $gift_group = 1, $repeat, $gift_prefix ) {
+	static function addGift( $gift_name, $gift_description, $gift_group = 1, $repeat, $gift_prefix, $gift_type, $designation ) {
 		global $wgUser;
 
 		$dbw = wfGetDB( DB_MASTER );
@@ -33,6 +33,8 @@ class Gifts {
 				'gift_group' => $gift_group,
 				'isrepeat' => $repeat,
 				'gift_prefix' => $gift_prefix,
+				'gift_type' => $gift_type,
+				'designation' => $designation
 			), __METHOD__
 		);
 		return $dbw->insertId();
@@ -45,7 +47,7 @@ class Gifts {
 	 * @param $gift_description Mixed: a short description about the gift, as supplied by the user
 	 * @param $gift_access Integer: 0 by default
 	 */
-	public function updateGift( $id, $gift_name, $gift_description, $gift_group = 1, $repeat, $gift_prefix ) {
+	public static function updateGift( $id, $gift_name, $gift_description, $gift_group = 1, $repeat, $gift_prefix, $gift_type, $designation ) {
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->update( 'gift',
 			/* SET */array(
@@ -54,6 +56,8 @@ class Gifts {
 				'gift_group' => $gift_group,
 				'isrepeat' => $repeat,
 				'gift_prefix' => $gift_prefix,
+				'gift_type' => $gift_type,
+				'designation' => $designation
 			),
 			/* WHERE */array( 'gift_id' => $id ),
 			__METHOD__
@@ -74,7 +78,7 @@ class Gifts {
 			'gift',
 			array(
 				'gift_id', 'gift_name', 'gift_description',
-				'gift_creator_user_id', 'gift_creator_user_name', 'gift_group', 'isrepeat','gift_prefix'
+				'gift_creator_user_id', 'gift_creator_user_name', 'gift_group', 'isrepeat','gift_prefix','gift_type','designation'
 			),
 			array( "gift_id = {$id}" ),
 			__METHOD__,
@@ -91,6 +95,8 @@ class Gifts {
 			$gift['group'] = $row->gift_group;
 			$gift['repeat'] = $row->isrepeat;
 			$gift['gift_prefix'] = $row->gift_prefix;
+			$gift['gift_type'] = $row->gift_type;
+			$gift['designation'] = $row->designation;
 		}
 		return $gift;
 	}
@@ -109,7 +115,16 @@ class Gifts {
 	
 	static function isAllowedToSendGift($user_id, $gift_id){
 		global $wgHuijiPrefix;
-		$user = User::newFromId($user_id);
+		$user = HuijiUser::newFromId($user_id);
+		//邀请码 invitation code
+		if ( $gift_id == 7 ) {
+			$level = $user->getLevel();
+			if ( $level->getLevelNumber() >= 5 ) {
+				return true;
+			}else{
+				return false;
+			}
+		}
 		$dbr = wfGetDB( DB_SLAVE );
 		$params = array();
 		$result = $gift = array();
@@ -165,7 +180,7 @@ class Gifts {
 			'gift',
 			array(
 				'gift_id', 'gift_createdate', 'gift_name', 'gift_description',
-				'gift_given_count', 'isrepeat', 'gift_prefix'
+				'gift_given_count', 'isrepeat', 'gift_prefix','gift_type','designation'
 			),
 			array( "gift_group >= {$group} AND ( gift_prefix = '$gift_prefix' OR gift_prefix = 'www' ) " ),
 			__METHOD__,
@@ -182,6 +197,8 @@ class Gifts {
 				'gift_given_count' => $row->gift_given_count,
 				'repeat' => $row->isrepeat,
 				'gift_prefix' => $row->gift_prefix,
+				'gift_type' => $row->gift_type,
+				'designation' => $row->designation
 			);
 		}
 		return $gifts;
@@ -210,7 +227,7 @@ class Gifts {
 			array(
 				'gift_id', 'gift_createdate', 'gift_name', 'gift_description',
 				'gift_given_count', 'gift_group', 'gift_creator_user_id',
-				'gift_creator_user_name', 'isrepeat', 'gift_prefix',
+				'gift_creator_user_name', 'isrepeat', 'gift_prefix','gift_type','designation'
 			),
 			$where,
 			__METHOD__,
@@ -227,6 +244,8 @@ class Gifts {
 				'gift_given_count' => $row->gift_given_count,
 				'repeat' => $row->isrepeat,
 				'gift_prefix' => $row->gift_prefix,
+				'gift_type' => $row->gift_type,
+				'designation' => $row->designation,
 			);
 		}
 		return $gifts;

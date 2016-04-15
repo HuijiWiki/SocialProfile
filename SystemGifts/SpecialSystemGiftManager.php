@@ -63,7 +63,8 @@ class SystemGiftManager extends SpecialPage {
 					$request->getVal( 'gift_name' ),
 					$request->getVal( 'gift_description' ),
 					$request->getVal( 'gift_category' ),
-					$request->getInt( 'gift_threshold' )
+					$request->getInt( 'gift_threshold' ),
+					$request->getVal( 'designation' )
 				);
 				$out->addHTML(
 					'<span class="view-status">' .
@@ -77,7 +78,8 @@ class SystemGiftManager extends SpecialPage {
 					$request->getVal( 'gift_name' ),
 					$request->getVal( 'gift_description' ),
 					$request->getVal( 'gift_category' ),
-					$request->getInt( 'gift_threshold' )
+					$request->getInt( 'gift_threshold' ),
+					$request->getVal( 'designation' )
 				);
 				$out->addHTML(
 					'<span class="view-status">' .
@@ -247,6 +249,11 @@ class SystemGiftManager extends SpecialPage {
 			<td width="200" class="view-form">' . $this->msg( 'ga-threshold' )->plain() . '</td>
 			<td width="695"><input type="text" size="25" class="createbox" name="gift_threshold" value="' .
 				( isset( $gift['gift_threshold'] ) ? $gift['gift_threshold'] : '' ) . '"/></td>
+		</tr>
+		<tr>
+			<td width="200" class="view-form">称号</td>
+			<td width="695"><input type="text" size="25" class="createbox" name="designation" value="' .
+				( !empty( $gift['designation'] ) ? $gift['designation'] : '' ) . '"/></td>
 		</tr>';
 
 		if ( $gift_id ) {

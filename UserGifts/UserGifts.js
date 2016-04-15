@@ -8,7 +8,7 @@ var UserGifts = {
 		}
 
 		// Select new gift
-		if(jQuery( '#give_gift_' + id ).hasClass('g-had-got')==false){
+		if( jQuery( '#give_gift_' + id ).hasClass('g-had-got')==false && jQuery( '#give_gift_' + id ).hasClass('g-level-low')==false ){
 			jQuery( '#give_gift_' + id ).addClass( 'g-give-all-selected' );
 			UserGifts.selected_gift = id;
 		}

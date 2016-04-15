@@ -44,7 +44,7 @@ class UserGifts {
 			), __METHOD__
 		);
 
-		// $ug_gift_id = $dbw->insertId();
+		$ug_gift_id = $dbw->insertId();
 		$this->incGiftGivenCount( $gift_id );
 		$this->sendGiftNotificationEmail( $user_id_to, $this->user_name, $gift_id, $type );
 
@@ -199,7 +199,7 @@ class UserGifts {
 				'ug_id', 'ug_user_id_from', 'ug_user_name_from',
 				'ug_user_id_to', 'ug_user_name_to', 'ug_message', 'gift_id',
 				'ug_date', 'ug_status', 'gift_name', 'gift_description',
-				'gift_given_count'
+				'gift_given_count','designation'
 			),
 			array( "ug_gift_id = {$id} AND ug_user_name_to='$user_name'" ),
 			__METHOD__,
@@ -220,6 +220,7 @@ class UserGifts {
 				$gift['name'] = $value->gift_name;
 				$gift['description'] = $value->gift_description;
 				$gift['status'] = $value->ug_status;
+				$gift['designation'] = $value->designation;
 				$result[] = $gift;
 			}
 			if( $result ){
@@ -536,6 +537,127 @@ class UserGifts {
 	 			break;
 	 	}
 	 	return true;
+	}
+
+	/**
+	 * addUserGiftInviteInfo when user send invitation gift to someone ,insert into ug_invite
+	 * @param int $user_gift_id    usergift_id
+	 */
+	public function addUserGiftInviteInfo( $user_gift_id ){
+		require_once ('/var/www/html/Invitation.php');
+        require_once ('/var/www/html/InvitationDB.php');
+        Invitation::generateInvCode(1);
+        //code = $invite[0]
+        $invite = InvitationDB::getInv(1);
+        $invite_code = empty($invite[0]) ? '' : $invite[0];
+		$dbw = wfGetDB( DB_MASTER );
+        $dbw->insert(
+        	'ug_invite',
+        	array(
+        		'ug_id' => $user_gift_id,
+        		'invitation_code' => $invite_code
+        	),
+        	__METHOD__
+        );
+        if ( $dbw->insertId() ) {
+        	return $dbw->insertId();
+        }else{
+        	return 0;
+        }
+
+	}
+
+	/**
+	 * check user_gift_id is in ug_invite
+	 * @param $ug_id int user_gift_id
+	 * @return string invitationCode
+ 	 */
+	public static function checkIsInviteGift( $user_gift_id ){
+		$dbr = wfGetDB( DB_SLAVE );
+		$res = $dbr->select(
+				'ug_invite',
+				array(
+					'invitation_code'
+				),
+				array(
+					'ug_id' => $user_gift_id
+				),
+				__METHOD__
+			);
+		$invite_code = '';
+		if ($res) {
+			foreach ($res as $key => $value) {
+				$invite_code = $value->invitation_code;
+			}
+		}
+		return $invite_code;
+	}
+
+	/**
+	 * add Gift Title Info
+	 * @param int $gift_id    gift_id from tatble gift
+	 * @param int $user_to_id user get the gift
+	 */
+	public function addUserGiftTitleInfo( $gift_id, $user_to_id, $title_content, $title_from ){
+		$dbw = wfGetDB( DB_MASTER );
+        $dbw->insert(
+        	'user_title',
+        	array(
+        		'gift_id' => $gift_id,
+        		'title_content' => $title_content,
+        		'user_to_id' => $user_to_id,
+        		'is_open' => 1,
+        		'title_from' => $title_from,
+        	),
+        	__METHOD__
+        );
+        return $dbw->insertId();
+	}
+
+	/**
+	 * check the gift is title gift
+	 * @param  int $gift_id    gift id from gift table
+	 * @param  int $user_to_id user who get the gift
+	 * @return [type]             [description]
+	 */
+	static function checkIsTitleGift( $gift_id, $user_to_id ){
+		$dbr = wfGetDB( DB_SLAVE );
+		$res = $dbr->select(
+				'user_title',
+				array(
+					'title_content'
+				),
+				array(
+					'gift_id' => $gift_id,
+					'user_to_id' => $user_to_id,
+				),
+				__METHOD__
+			);
+		$user_title = '';
+		if ($res) {
+			foreach ($res as $key => $value) {
+				$user_title = $value->title_content;
+			}
+		}
+		return $user_title;
+	}
+
+	/**
+	 * cleraAllGiftTitle
+	 * @param  string $title_from  giftTitle or systemGiftTitle
+	 * @return boolen 
+	 */
+	static function cleraAllGiftTitle( $title_from, $user_to_id ){
+		$dbw = wfGetDB( DB_MASTER );
+		$dbw->update(
+			'user_title',
+			array( 'is_open=1' ),
+			array( 
+				'title_from' => $title_from,
+				'user_to_id' => $user_to_id
+			),
+			__METHOD__
+		);
 	}
 
 }

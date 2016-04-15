@@ -124,10 +124,14 @@ class ViewSystemGift extends UnlistedSpecialPage {
 				$giftImage = "<img src=\"{$wgUploadPath}/awards/" .
 					SystemGifts::getGiftImage( $value['gift_id'], 'l' ) .
 					'" border="0" alt=""/>';
-
+				if ( !empty($value['designation']) ) {
+					$title_name = '称号：';
+				}else{
+					$title_name = '';
+				}
 				$output .= "<div class=\"ga-description\">
 						{$giftImage}
-						<div class=\"ga-name\">{$value['name']}</div>
+						<div class=\"ga-name\">{$value['name']}<br>{$title_name}"."{$value['designation']}</div>
 						<div class=\"ga-timestamp\">({$value['timestamp']})</div>
 						<div class=\"ga-description-message\">{$message}</div>";
 				$output .= '<div class="cleared"></div>

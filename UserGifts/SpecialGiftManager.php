@@ -51,7 +51,6 @@ class GiftManager extends SpecialPage {
 
 		// Add CSS
 		$out->addModuleStyles( 'ext.socialprofile.usergifts.css' );
-
 		if ( $request->wasPosted() ) {
 			if ( !$request->getInt( 'id' ) ) {
 				$giftId = Gifts::addGift(
@@ -59,7 +58,9 @@ class GiftManager extends SpecialPage {
 					$request->getVal( 'gift_description' ),
 					$request->getInt( 'group' ),
 					$request->getInt( 'repeat' ),
-					$request->getVal( 'gift_prefix' )
+					$request->getVal( 'gift_prefix' ),
+					$request->getVal( 'gift_type' ),
+					$request->getVal( 'designation' )
 				);
 				$out->addHTML(
 					'<span class="view-status">' .
@@ -74,7 +75,9 @@ class GiftManager extends SpecialPage {
 					$request->getVal( 'gift_description' ),
 					$request->getInt( 'group' ),
 					$request->getInt( 'repeat' ),
-					$request->getVal( 'gift_prefix' )
+					$request->getVal( 'gift_prefix' ),
+					$request->getVal( 'gift_type' ),
+					$request->getVal( 'designation' )
 				);
 				$out->addHTML(
 					'<span class="view-status">' .
@@ -235,6 +238,10 @@ class GiftManager extends SpecialPage {
 
 		if ( $gift_id ) {
 			$gift = Gifts::getGift( $gift_id );
+			if ( !isset( $gift['creator_user_id'] ) ) {
+				$form .= '<div class="alert alert-danger">该礼物不存在~</div>';
+				return $form;
+			}
 			if (
 				$user->getID() != $gift['creator_user_id'] &&
 				(
@@ -263,6 +270,12 @@ class GiftManager extends SpecialPage {
 		<td width="200" class="view-form" valign="top">' . $this->msg('giftmanager-prefix')->plain() . '</td>
 		<td width="695"><input type="text" size="45" class="createbox" name="gift_prefix" value="' .
 			( isset( $gift['gift_prefix'] ) ? $gift['gift_prefix'] : '' ) . '"/></td>
+		</tr>
+		</tr>
+		<tr>
+		<td width="200" class="view-form" valign="top">称号</td>
+		<td width="695"><input type="text" size="45" class="createbox" name="designation" value="' .
+			( !empty( $gift['designation'] ) ? $gift['designation'] : '' ) . '"/></td>
 		</tr>
 		</tr>';
 		if ( $gift_id ) {
@@ -295,6 +308,7 @@ class GiftManager extends SpecialPage {
 			if ( isset( $gift['group'] ) && $gift['group'] == 4 ) {
 				$commonUser = ' selected="selected"';
 			}
+			//is repeat
 			$repeat = $unrepeat = '';
 			if ( isset( $gift['repeat'] ) && $gift['repeat'] == 1 ) {
 				$repeat = ' selected="selected"';
@@ -302,6 +316,14 @@ class GiftManager extends SpecialPage {
 			if ( isset( $gift['repeat'] ) && $gift['repeat'] == 2 ) {
 				$unrepeat = ' selected="selected"';
 			}
+			//gift type
+			$usual = $user_title = $invite_code = '';
+			if ( isset( $gift['gift_type'] ) && $gift['gift_type'] == 1 ) {
+				$usual = ' selected="selected"';
+			}elseif ( isset( $gift['gift_type'] ) && $gift['gift_type'] == 3 ) {
+				$invite_code = ' selected="selected"';
+			}
+
 			$form .= '<tr>
 						<td class="view-form">' . $this->msg( 'giftmanager-group' )->plain() . '</td>
 						<td>
@@ -328,6 +350,17 @@ class GiftManager extends SpecialPage {
 							<option value="1"' . $repeat . '>是
 							</option>
 							<option value="2"' . $unrepeat . '>否
+							</option>
+						</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="view-form">'. $this->msg( 'giftmanager-type' )->plain() .'</td>
+						<td>
+						<select name="gift_type">
+							<option value="1"' . $usual . '>普通礼物
+							</option>
+							<option value="3"' . $invite_code . '>邀请码
 							</option>
 						</select>
 						</td>

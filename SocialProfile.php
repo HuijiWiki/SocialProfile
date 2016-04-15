@@ -110,6 +110,8 @@ $wgAutoloadClasses['VideoTitle'] = __DIR__ . '/Videos/UploadVideosClass.php';
 $wgAutoloadClasses['VideoRevision'] = __DIR__ . '/Videos/UploadVideosClass.php';
 $wgAutoloadClasses['SpecialInviteUser'] = __DIR__ . '/AdminDashboard/SpecialInviteUser.php';
 $wgAutoloadClasses['WikiDoctor'] = __DIR__ . '/AdminDashboard/WikiDoctor.php';
+$wgAutoloadClasses['SpecialDesignation'] = __DIR__ . '/UserGifts/SpecialDesignation.php';
+$wgAutoloadClasses['SpecialGiveSystemGift'] = __DIR__ . '/SystemGifts/SpecialGiveSystemGift.php';
 
 // New special pages
 // $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
@@ -148,7 +150,9 @@ $wgSpecialPages['AddUserEditCounts'] = 'SpecialAddUserEditCounts';
 $wgSpecialPages['AddFestivalGift'] = 'SpecialAddFestivalGift';
 $wgSpecialPages['SendHiddenGift'] = 'SpecialSendHiddenGift';
 $wgSpecialPages['InviteUser'] = 'SpecialInviteUser';
+$wgSpecialPages['Designation'] = 'SpecialDesignation';
 // $wgSpecialPages['FamilyTree'] = 'SpecialFamilyTree';
+$wgSpecialPages['GiveSystemGift'] = 'SpecialGiveSystemGift';
 
 
 // Necessary AJAX functions

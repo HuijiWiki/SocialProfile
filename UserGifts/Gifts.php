@@ -61,6 +61,13 @@ $wgResourceModules['ext.socialprofile.usergifts.js'] = array(
 	'remoteExtPath' => 'SocialProfile/UserGifts',
 );
 
+// designation
+$wgResourceModules['ext.socialprofile.designation.js'] = array(
+	'scripts' => 'designation.js',
+	'localBasePath' => __DIR__,
+	'remoteExtPath' => 'SocialProfile/UserGifts',
+);
+
 // Credits
 $wgExtensionCredits['specialpage'][] = array(
 	'name' => 'GiftManager',

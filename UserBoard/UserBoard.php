@@ -16,5 +16,7 @@ $wgAvailableRights[] = 'AddUserEditCounts';
 $wgGroupPermissions['staff']['AddUserEditCounts'] = true;
 $wgAvailableRights[] = 'AddFestivalGift';
 $wgGroupPermissions['staff']['AddFestivalGift'] = true;
+$wgAvailableRights[] = 'GiveSystemGift';
+$wgGroupPermissions['staff']['GiveSystemGift'] = true;
 
 $wgJobClasses['boardBlastJobs'] = 'BoardBlastJobs';

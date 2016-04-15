@@ -34,6 +34,7 @@ class UserSystemGifts {
 		}else{
 			$gift_category = '';
 		}
+
 		if(!in_array( $gift_category,$repeatableGift )){
 			if ( $this->doesUserHaveGift( $this->user_id, $gift_id ) ) {
 				return '';
@@ -43,21 +44,23 @@ class UserSystemGifts {
 		$user = User::newFromId( $this->user_id );
         	$user_group = $user->getEffectiveGroups();
         	if ( !in_array('bot', $user_group) && !in_array('bot-global',$user_group) && isset($this->user_id) ) {
-			$dbw = wfGetDB( DB_MASTER );
-			$dbw->insert(
-				'user_system_gift',
-				array(
-					'sg_gift_id' => $gift_id,
-					'sg_user_id' => $this->user_id,
-					'sg_user_name' => $this->user_name,
-					'sg_status' => 1,
-					'sg_date' => date( 'Y-m-d H:i:s' ),
-				),
-				__METHOD__
+				$dbw = wfGetDB( DB_MASTER );
+				$dbw->insert(
+					'user_system_gift',
+					array(
+						'sg_gift_id' => $gift_id,
+						'sg_user_id' => $this->user_id,
+						'sg_user_name' => $this->user_name,
+						'sg_status' => 1,
+						'sg_date' => date( 'Y-m-d H:i:s' ),
+					),
+					__METHOD__
 			);
 			$sg_gift_id = $dbw->insertId();
 			self::incGiftGivenCount( $gift_id );
-
+			//add into user designation table
+			$gift = new UserGifts( $this->user_name );
+			$gift->addUserGiftTitleInfo( $gift_id, $this->user_id, $gift_info['designation'], 'system_gift' );
 			// Add to new gift count cache for receiving user
 			$this->incNewSystemGiftCount( $this->user_id );
 
@@ -229,7 +232,7 @@ class UserSystemGifts {
 			array( 'user_system_gift', 'system_gift' ),
 			array(
 				'sg_id', 'sg_user_id', 'sg_user_name', 'gift_id', 'sg_date',
-				'gift_name', 'gift_description', 'gift_given_count', 'sg_status'
+				'gift_name', 'gift_description', 'gift_given_count', 'sg_status','designation'
 			),
 			array( 
 				"sg_gift_id = {$id}",
@@ -253,6 +256,7 @@ class UserSystemGifts {
 				$gift['name'] = $value->gift_name;
 				$gift['description'] = $value->gift_description;
 				$gift['status'] = $value->sg_status;
+				$gift['designation'] = $value->designation;
 				$result[] = $gift;
 			}
 		}
@@ -419,7 +423,7 @@ class UserSystemGifts {
 			array(
 				'sg_id', 'sg_user_id', 'sg_user_name', 'sg_gift_id', 'sg_date',
 				'sg_status', 'gift_name', 'gift_description',
-				'gift_given_count', 'UNIX_TIMESTAMP(sg_date) AS unix_time'
+				'gift_given_count', 'UNIX_TIMESTAMP(sg_date) AS unix_time','designation'
 			),
 			array( "sg_user_id = {$this->user_id}" ),
 			__METHOD__,
@@ -439,7 +443,8 @@ class UserSystemGifts {
 				'gift_name' => $row->gift_name,
 				'gift_description' => $row->gift_description,
 				'gift_given_count' => $row->gift_given_count,
-				'unix_timestamp' => $row->unix_time
+				'unix_timestamp' => $row->unix_time,
+				'designation' => $row->designation
 			);
 		}
 		return $requests;
@@ -490,6 +495,37 @@ class UserSystemGifts {
 		}
 		return $gift_count;
 	}
+
+	/**
+	 * get Designation Gift List
+	 * @return array 
+	 */
+	static function getDesignationGiftList(){
+		$dbr = wfGetDB( DB_SLAVE );
+		$res = $dbr->select(
+				'system_gift',
+				array(
+					'gift_id', 'gift_name', 'gift_description', 'gift_category', 'gift_createdate', 'designation'
+				),
+				'designation != ""',
+				__METHOD__
+			);
+		$result = array();
+		if ($res) {
+			foreach ($res as $key => $value) {
+				$result[] = array(
+						'gift_id' => $value->gift_id,
+						'gift_name' => $value->gift_name,
+						'gift_description' => $value->gift_description,
+						'gift_category' => $value->gift_category,
+						'gift_createdate' => $value->gift_createdate,
+						'designation' => $value->designation,
+					);
+			}
+		}
+		return $result;
+	}
+
 	/**
 	* Used to pass Echo your definition for the notification category and the 
 	* notification itself (as well as any custom icons).
