@@ -501,13 +501,14 @@ class UserSystemGifts {
 	 * @return array 
 	 */
 	static function getDesignationGiftList(){
+		global $wgHuijiPrefix;	
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select(
 				'system_gift',
 				array(
 					'gift_id', 'gift_name', 'gift_description', 'gift_category', 'gift_createdate', 'designation'
 				),
-				'designation != ""',
+				'designation != "" AND gift_prefix="'.$wgHuijiPrefix.'"',
 				__METHOD__
 			);
 		$result = array();

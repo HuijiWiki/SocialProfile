@@ -155,7 +155,7 @@ class SystemGifts {
 	 * @param $threshold Integer: threshold number (i.e. 50 or 100 or whatever)
 	 * @return Integer: the inserted gift's ID number
 	 */
-	public function addGift( $name, $description, $category, $threshold, $designation ) {
+	public function addGift( $name, $description, $category, $threshold, $gift_prefix, $designation ) {
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->insert(
 			'system_gift',
@@ -165,7 +165,8 @@ class SystemGifts {
 				'gift_category' => $category,
 				'gift_threshold' => $threshold,
 				'gift_createdate' => date( 'Y-m-d H:i:s' ),
-				'designation' => $designation
+				'designation' => $designation,
+				'gift_prefix' => $gift_prefix
 			),
 			__METHOD__
 		);
@@ -181,7 +182,7 @@ class SystemGifts {
 	 * @param $category
 	 * @param $threshold
 	 */
-	public function updateGift( $id, $name, $description, $category, $threshold, $designation ) {
+	public function updateGift( $id, $name, $description, $category, $threshold, $gift_prefix, $designation ) {
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->update(
 			'system_gift',
@@ -190,7 +191,8 @@ class SystemGifts {
 				'gift_description' => $description,
 				'gift_category' => $category,
 				'gift_threshold' => $threshold,
-				'designation' => $designation
+				'designation' => $designation,
+				'gift_prefix' => $gift_prefix
 			),
 			/* WHERE */array( 'gift_id' => $id ),
 			__METHOD__
@@ -249,7 +251,7 @@ class SystemGifts {
 			'system_gift',
 			array(
 				'gift_id', 'gift_name', 'gift_description', 'gift_category',
-				'gift_threshold', 'gift_given_count','designation'
+				'gift_threshold', 'gift_given_count','designation','gift_prefix'
 			),
 			array( 'gift_id' => $id ),
 			__METHOD__,
@@ -264,6 +266,7 @@ class SystemGifts {
 			$gift['gift_threshold'] = $row->gift_threshold;
 			$gift['gift_given_count'] = $row->gift_given_count;
 			$gift['designation'] = $row->designation;
+			$gift['gift_prefix'] = $row->gift_prefix;
 		}
 		return $gift;
 	}

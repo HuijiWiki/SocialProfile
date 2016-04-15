@@ -64,6 +64,7 @@ class SystemGiftManager extends SpecialPage {
 					$request->getVal( 'gift_description' ),
 					$request->getVal( 'gift_category' ),
 					$request->getInt( 'gift_threshold' ),
+					$request->getVal( 'gift_prefix' ),
 					$request->getVal( 'designation' )
 				);
 				$out->addHTML(
@@ -79,6 +80,7 @@ class SystemGiftManager extends SpecialPage {
 					$request->getVal( 'gift_description' ),
 					$request->getVal( 'gift_category' ),
 					$request->getInt( 'gift_threshold' ),
+					$request->getVal( 'gift_prefix' ),
 					$request->getVal( 'designation' )
 				);
 				$out->addHTML(
@@ -254,6 +256,11 @@ class SystemGiftManager extends SpecialPage {
 			<td width="200" class="view-form">称号</td>
 			<td width="695"><input type="text" size="25" class="createbox" name="designation" value="' .
 				( !empty( $gift['designation'] ) ? $gift['designation'] : '' ) . '"/></td>
+		</tr>
+		<tr>
+			<td width="200" class="view-form">站点</td>
+			<td width="695"><input type="text" size="25" class="createbox" name="gift_prefix" value="' .
+				( !empty( $gift['gift_prefix'] ) ? $gift['gift_prefix'] : '' ) . '"/></td>
 		</tr>';
 
 		if ( $gift_id ) {
