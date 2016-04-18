@@ -15,18 +15,15 @@ $(function(){
             toggle.on('change',function(e) {
                 e = window.event || e;
                 id = $(e.target).parents('.setting-toggle .toggle').siblings('.gift-title-id').val();
-                val = $(e.target).attr('aria-checked') === 'false' ? 2 : 1;    //点击时取的是变前的值，相反
+                val = $(e.target).hasClass('oo-ui-toggleWidget-on') ? 1 : 2;    //点击时取的是变前的值，相反
                 from = $(e.target).parents('.setting-toggle .toggle').siblings('.gift-title-from').val();
 
-
-
-                console.log(toggle);
-                console.log(toggle.value);
                 if(val == 2) {
                     var i = toggle.index;
                     for (var j = 0; j < arr1.length; j++) {
                         if (arr1[j].index != i) {
                             arr1[j].value = false;
+                            console.log('aaa');
                         }
                     }
                     $(e.target).parents('.list-wrap .admin-setting-li').siblings().find('.oo-ui-toggleWidget-on').removeClass('oo-ui-toggleWidget-on').addClass('oo-ui-toggleWidget-off');
@@ -59,10 +56,6 @@ $(function(){
                 val = $(e.target).attr('aria-checked') === 'false' ? 2 : 1;    //点击时取的是变前的值，相反
                 from = $(e.target).parents('.setting-toggle .toggle').siblings('.gift-title-from').val();
 
-
-
-                console.log(toggle);
-                console.log(toggle.value);
                 if(val == 2) {
                     var i = toggle.index;
                     for (var j = 0; j < arr2.length; j++) {
