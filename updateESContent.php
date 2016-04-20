@@ -12,7 +12,7 @@ $wgHooks['TitleMoveComplete'][] = 'movePage';
 
 
 
-function movePage($oldTitle, $newTitle, $user, $oldId, $newId, $reason,$rev){
+function movePage($oldTitle, $newTitle, $user, $oldId, $newId, $reason,$rev=null){
 	global $wgHuijiPrefix, $wgSitename, $wgIsProduction;
 	if($wgIsProduction == false) return;	
 	$new_ns = $newTitle->getNamespace();
@@ -100,6 +100,8 @@ function upsertPage($title, $rev){
 	if($wgIsProduction == false) return;
 	if($rev == null || $title == null || $title->getNamespace() !== 0) return;
 	$old_rev = $rev->getPrevious();
+	$old_redirect = null;
+	$new_redirect = null;
 	$old_redirectId = -1;
 	$new_redirectId = -1;
 	$category = array();
