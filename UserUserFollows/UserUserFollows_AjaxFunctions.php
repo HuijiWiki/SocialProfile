@@ -85,7 +85,7 @@ function wfUserUserUnfollowsResponse( $follower, $followee ) {
 function wfUserFollowsInfoResponse( $username ) {
 	$user = User::newFromName( $username );
 	//No such user
-	if ( $user->getId() == 0 ){
+	if ( $username != null && $user->getId() == 0 ){
 		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NO_SUCH_USER);
 		return $out;
 	}

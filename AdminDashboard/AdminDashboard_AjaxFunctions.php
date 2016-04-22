@@ -67,6 +67,7 @@ function wfGetUserStatusInfo( $str, $limit, $continue=0 ){
 		
 	}else{
 		$str = ucfirst($str);
+		$str = addslashes($str);
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select(
 			'user',
@@ -118,6 +119,8 @@ function wfGetUserStatusInfo( $str, $limit, $continue=0 ){
 			}else{
 				$ret = array( 'result'=> 'false', 'users'=>'no user' );
 			}
+		}else{
+			$ret = array( 'result'=> 'false', 'users'=>'no user,db error' );
 		}
 	}
     $out = json_encode($ret);
