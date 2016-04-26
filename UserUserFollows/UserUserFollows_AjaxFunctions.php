@@ -192,15 +192,15 @@ function wfGetUserFollowing( $username ){
 	}
 	$user = User::newFromName($username);
 	//No such user
-	if ( $user->getId() == 0 ){
+	if ($user == '' || $user->getId() == 0 ){
 		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NO_SUCH_USER);
 		return $out;
 	}
 
 	$huijiUser = HuijiUser::newFromUser($user);
 	$result = $huijiUser->getFollowingUsers();
-    $ret = array('success'=> true, 'result'=>$result );
-    $out = json_encode($ret);
+    	$ret = array('success'=> true, 'result'=>$result );
+    	$out = json_encode($ret);
 	return $out;
 
 }
