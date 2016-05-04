@@ -311,7 +311,7 @@ class UserProfilePage extends Article {
 	        			$maxlen = count($resArr);
 	        		}
 	        		if( $resArr[count($resArr)-1] == strtotime($today) || $resArr[count($resArr)-1] == strtotime($yesterday) ){
-		        		$currentMaxlen = count($resArr)-1;
+		        		$currentMaxlen = count($resArr);
 		        	}else{
 		        		$currentMaxlen = 0;
 		        	}
