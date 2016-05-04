@@ -310,15 +310,16 @@ class UserProfilePage extends Article {
 	        		if(count($resArr) > $maxlen){
 	        			$maxlen = count($resArr);
 	        		}
+	        		if( $resArr[count($resArr)-1] == strtotime($today) || $resArr[count($resArr)-1] == strtotime($yesterday) ){
+		        		$currentMaxlen = count($resArr)-1;
+		        	}else{
+		        		$currentMaxlen = 0;
+		        	}
 	        	}else{
 	        		$resArr = array();
 	        		$resArr[] = strtotime($editData[$k]);
 	        	}
-	        	if( $resArr[count($resArr)-1] == strtotime($today) || $resArr[count($resArr)-1] == strtotime($yesterday) ){
-	        		$currentMaxlen = count($resArr);
-	        	}else{
-	        		$currentMaxlen = 0;
-	        	}
+	        	
 	        }
 	        $wgOut->addHTML('
 	            <div class="check-wrapper"><svg width="725" height="110" class=" ">
