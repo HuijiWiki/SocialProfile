@@ -159,7 +159,7 @@ class SystemGiftManager extends SpecialPage {
 					'<span aria-hidden="true">&laquo;</span>',
 					array(),
 					array(
-						'user' => $user_name,
+						// 'user' => $user_name,
 						// 'rel_type' => $rel_type,
 						'page' => ( $page - 1 )
 					)
