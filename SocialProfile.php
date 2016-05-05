@@ -159,8 +159,8 @@ $wgSpecialPages['InviteUser'] = 'SpecialInviteUser';
 $wgSpecialPages['Designation'] = 'SpecialDesignation';
 // $wgSpecialPages['FamilyTree'] = 'SpecialFamilyTree';
 $wgSpecialPages['GiveSystemGift'] = 'SpecialGiveSystemGift';
-$wgSpecialPages['TransModal'] = 'SpecialTransModal';
-$wgSpecialPages['CommenStyle'] = 'SpecialCommenStyle';
+// $wgSpecialPages['TransModal'] = 'SpecialTransModal';
+// $wgSpecialPages['CommenStyle'] = 'SpecialCommenStyle';
 $wgSpecialPages['ReissueSystemGift'] = 'SpecialReissueSystemGift';
 
 
@@ -177,7 +177,7 @@ require_once( "$IP/extensions/SocialProfile/UserProfile/OauthLogin_AjaxFunctions
 require_once( "$IP/extensions/SocialProfile/UserGifts/UserGift_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/Videos/UploadVideos_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/AdminDashboard/AdminDashboard_AjaxFunctions.php" );
-require_once( "$IP/extensions/SocialProfile/CommenStyle/CommenStyle_AjaxFunctions.php" );
+// require_once( "$IP/extensions/SocialProfile/CommenStyle/CommenStyle_AjaxFunctions.php" );
 // What to display on social profile pages by default?
 $wgUserProfileDisplay['board'] = true;
 $wgUserProfileDisplay['foes'] = false;
