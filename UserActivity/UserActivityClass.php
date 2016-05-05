@@ -527,9 +527,9 @@ class UserActivity {
 			}		
 			$tableName = '`'.$DBprefix.'Vote'.'`';
 			# Bail out if Vote table doesn't exist
-			if ( !$dbr->tableExists( $tableName ) ) {
-				return false;
-			}
+			// if ( !$dbr->tableExists( $tableName ) ) {
+			// 	return false;
+			// }
 			$joinTableName =  '`'.$DBprefix.'page'.'`';
 			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
 				array(
@@ -669,9 +669,9 @@ class UserActivity {
 
 			$tableName = '`'.$DBprefix.'poll_user_vote'.'`';
 			# Bail out if Vote table doesn't exist
-			if ( !$dbr->tableExists( $tableName ) ) {
-				return false;
-			}
+			// if ( !$dbr->tableExists( $tableName ) ) {
+			// 	return false;
+			// }
 			$joinTableName =  '`'.$DBprefix.'poll_question'.'`';
 			$joinTableName2 =  '`'.$DBprefix.'page'.'`';
 			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
