@@ -1,0 +1,120 @@
+.huiji-login.trans-sign .modal-dialog,.huiji-login.trans-login .modal-dialog{
+    width: 400px;
+}
+.trans-login-form{
+    padding: 20px 50px 0 50px;
+}
+.trans-sign .huiji-login-text {
+    border-color: #32a7a2!important;
+}
+.trans-sign a{
+    color: #32a7a2;
+    cursor: pointer;
+}
+.trans-sign a:hover{
+    color: #00af89;
+}
+.trans-logo{
+    height: 40px;
+    position: relative;
+    left: 5px;
+    margin-top: 20px;
+}
+.forget-pass{
+    position: absolute;
+    right: 65px;
+    top: 80px;
+    text-decoration: none!important;
+}
+.domain-float{
+    float: right;
+    color: #32a7a2;
+    width: 30%;
+}
+.btn-float{
+    width: 30%;
+    color: #fff;
+    background: #32a7a2;
+    text-align: center;
+    display: block;
+    float: right;
+    cursor: pointer;
+}
+.invite-p{
+    width: 100%;
+    text-align: center;
+    float: left;
+    margin-bottom: 0!important;
+}
+#trans-group-domain,#post-invite,#copy-invite-url{
+    width: 69%;
+    position: relative;
+    bottom:2px;
+}
+.warning-p{
+    color: #ff0000!important;
+    text-align: center;
+    margin-bottom: 0!important;
+}
+.trans-label-left{
+    width: 20%;
+    float: left;
+    color: #32a7a2;
+}
+#trans-publish-project .trans-modal-form>.trans-input-right{
+    width: 80%;
+}
+.trans-checkbox-group{
+    margin-bottom: 20px;
+}
+.trans-checkbox{
+    float: left;
+    cursor: pointer;
+}
+/*page*/
+.circle-progress {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    border-radius: 50%;
+    background: #0cc;
+}
+.pie_left, .pie_right {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    top: 0;left: 0;
+}
+.left, .right {
+    display: block;
+    width:200px;
+    height:200px;
+    background:#00aacc;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: rotate(30deg);
+}
+.pie_right, .right {
+    clip:rect(0,auto,auto,100px);
+}
+.pie_left, .left {
+    clip:rect(0,100px,auto,0);
+}
+.mask {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    left: 25px;
+    top: 25px;
+    background: #FFF;
+    position: absolute;
+    text-align: center;
+    line-height: 150px;
+    font-size: 16px;
+}
+
+#mw-debug-html{
+    display: none;
+}
