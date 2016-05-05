@@ -104,7 +104,7 @@ function incEditCount( $article, $revision, $baseRevId ) {
 	        }elseif ($maxlen == 61) {
 				$usg->sendSystemGift( 38 ); 
 	        }elseif ($maxlen == 109) {
-				$usg->sendSystemGift( 39 ); 
+				$usg->sendSystemGift( 85 ); 
 	        }elseif ($maxlen == 199) {
 				$usg->sendSystemGift( 40 ); 
 	        }elseif ($maxlen == 367) {
