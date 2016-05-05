@@ -527,7 +527,8 @@ $specialPageAliases['zh-hans'] = array(
 	'VideosList'=>array('媒体文件列表'),
 	'InviteUser'=>array('邀请信'),
 	'Designation'=>array('称号管理'),
-	'GiveSystemGift'=>array('系统成就')
+	'GiveSystemGift'=>array('系统成就'),
+	'ReissueSystemGift'=>array('补发系统礼物')
 );
 
 /** Traditional Chinese (中文（繁體）‎) */

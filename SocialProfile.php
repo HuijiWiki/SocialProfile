@@ -40,6 +40,8 @@ $wgMessagesDirs['SocialProfileUploadFiles'] = __DIR__ . '/UploadFiles/i18n';
 $wgMessagesDirs['SocialProfileVideos'] = __DIR__ . '/Videos/i18n';
 $wgExtensionMessagesFiles['SocialProfileNamespaces'] = __DIR__ . '/SocialProfile.namespaces.php';
 $wgExtensionMessagesFiles['AvatarMagic'] = __DIR__ . '/UserProfile/Avatar.magic.i18n.php';
+// $wgMessagesDirs['SocialProfileTransModal'] = __DIR__ . '/TransModal/i18n';
+// $wgMessagesDirs['SocialProfileCommenStyle'] = __DIR__ . '/CommenStyle/i18n';
 
 // Classes to be autoloaded
 $wgAutoloadClasses['GenerateTopUsersReport'] = __DIR__ . '/UserStats/GenerateTopUsersReport.php';
@@ -112,6 +114,10 @@ $wgAutoloadClasses['SpecialInviteUser'] = __DIR__ . '/AdminDashboard/SpecialInvi
 $wgAutoloadClasses['WikiDoctor'] = __DIR__ . '/AdminDashboard/WikiDoctor.php';
 $wgAutoloadClasses['SpecialDesignation'] = __DIR__ . '/UserGifts/SpecialDesignation.php';
 $wgAutoloadClasses['SpecialGiveSystemGift'] = __DIR__ . '/SystemGifts/SpecialGiveSystemGift.php';
+// $wgAutoloadClasses['SpecialTransModal'] = __DIR__ . '/TransModal/SpecialTransModal.php';
+// $wgAutoloadClasses['SpecialCommenStyle'] = __DIR__ . '/CommenStyle/SpecialCommenStyle.php';
+// $wgAutoloadClasses['CommenStyle'] = __DIR__ . '/CommenStyle/CommenStyleClass.php';
+$wgAutoloadClasses['SpecialReissueSystemGift'] = __DIR__ . '/SystemGifts/SpecialReissueSystemGift.php';
 
 // New special pages
 // $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
@@ -153,6 +159,9 @@ $wgSpecialPages['InviteUser'] = 'SpecialInviteUser';
 $wgSpecialPages['Designation'] = 'SpecialDesignation';
 // $wgSpecialPages['FamilyTree'] = 'SpecialFamilyTree';
 $wgSpecialPages['GiveSystemGift'] = 'SpecialGiveSystemGift';
+$wgSpecialPages['TransModal'] = 'SpecialTransModal';
+$wgSpecialPages['CommenStyle'] = 'SpecialCommenStyle';
+$wgSpecialPages['ReissueSystemGift'] = 'SpecialReissueSystemGift';
 
 
 // Necessary AJAX functions
@@ -168,6 +177,7 @@ require_once( "$IP/extensions/SocialProfile/UserProfile/OauthLogin_AjaxFunctions
 require_once( "$IP/extensions/SocialProfile/UserGifts/UserGift_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/Videos/UploadVideos_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/AdminDashboard/AdminDashboard_AjaxFunctions.php" );
+require_once( "$IP/extensions/SocialProfile/CommenStyle/CommenStyle_AjaxFunctions.php" );
 // What to display on social profile pages by default?
 $wgUserProfileDisplay['board'] = true;
 $wgUserProfileDisplay['foes'] = false;
@@ -422,6 +432,29 @@ $wgResourceModules['ext.socialprofile.uploadfiles.js'] = array(
 	'dependencies' => 'mediawiki.notification',
 	'localBasePath' => __DIR__ . '/UploadFiles',
 	'remoteExtPath' => 'SocialProfile/UploadFiles',
+	'position' => 'top',
+);
+
+//commenstyle
+$wgResourceModules['ext.socialprofile.commenstyle.css'] = array(
+	'styles' => 'CommenStyle.css',
+	'localBasePath' => __DIR__ . '/CommenStyle',
+	'remoteExtPath' => 'SocialProfile/CommenStyle',
+	'position' => 'top',
+);
+
+$wgResourceModules['ext.socialprofile.commenstyle.js'] = array(
+	'scripts' =>array('jscolor.min.js','CommenStyle.js'),
+	'dependencies' => 'mediawiki.notification',
+	'localBasePath' => __DIR__ . '/CommenStyle',
+	'remoteExtPath' => 'SocialProfile/CommenStyle',
+	'position' => 'bottom',
+);
+//transmodal
+$wgResourceModules['ext.socialprofile.transmodal.css'] = array(
+	'styles' => 'TransModal.css',
+	'localBasePath' => __DIR__ . '/TransModal',
+	'remoteExtPath' => 'SocialProfile/TransModal',
 	'position' => 'top',
 );
 

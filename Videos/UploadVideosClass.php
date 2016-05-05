@@ -545,7 +545,7 @@ Class VideoTitle extends Title{
 		}
 		// DWIM: Integers can be passed in here when page titles are used as array keys.
 		if ( $text !== null && !is_string( $text ) && !is_int( $text ) ) {
-		   wfDebugLog( 'T76305', wfGetAllCallers( 5 ) );
+		   // wfDebugLog( 'T76305', wfGetAllCallers( 5 ) );
 		   return null;
 		}
 		if ( $text === null ) {

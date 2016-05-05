@@ -334,7 +334,7 @@ class UserSystemGifts {
 		$key = wfForeignMemcKey( 'huiji', '', 'system_gifts', 'new_count', $user_id );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
-			wfDebug( "Got new award count of $data for id $user_id from cache\n" );
+			// wfDebug( "Got new award count of $data for id $user_id from cache\n" );
 			return $data;
 		}
 	}
@@ -370,7 +370,7 @@ class UserSystemGifts {
 	 * @return Integer: amount of new system gifts
 	 */
 	static function getNewSystemGiftCountDB( $user_id ) {
-		wfDebug( "Got new award count for id $user_id from DB\n" );
+		// wfDebug( "Got new award count for id $user_id from DB\n" );
 
 		global $wgMemc;
 		$key = wfForeignMemcKey( 'huiji', '', 'system_gifts', 'new_count', $user_id );

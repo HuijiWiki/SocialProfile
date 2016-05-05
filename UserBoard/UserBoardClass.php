@@ -178,7 +178,7 @@ class UserBoard {
 		$key = wfForeignMemcKey( 'huiji', '', 'user', 'newboardmessage', $user_id );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
-			wfDebug( "Got new message count of $data for id $user_id from cache\n" );
+			// wfDebug( "Got new message count of $data for id $user_id from cache\n" );
 			return $data;
 		}
 	}
@@ -194,7 +194,7 @@ class UserBoard {
 	static function getNewMessageCountDB( $user_id ) {
 		global $wgMemc;
 
-		wfDebug( "Got new message count for id $user_id from DB\n" );
+		// wfDebug( "Got new message count for id $user_id from DB\n" );
 
 		$key = wfForeignMemcKey( 'huiji', '', 'user', 'newboardmessage', $user_id );
 		$newCount = 0;

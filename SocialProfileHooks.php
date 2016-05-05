@@ -175,7 +175,7 @@ class SocialProfileHooks {
 	 * modift vide mime type
 	 */
 	public static function onMimeMagicGuessFromContent( $mimeMagic, &$head, &$tail, $file, &$mime ) {
-		wfDebugLog('SocialProfile', 'onMimeMagicGuessFromContent'.$file);
+		// wfDebugLog('SocialProfile', 'onMimeMagicGuessFromContent'.$file);
 		$mime = 'application/pdf';
 	}
 

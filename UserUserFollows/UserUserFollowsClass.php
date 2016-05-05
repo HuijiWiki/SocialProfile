@@ -114,7 +114,7 @@ class UserUserFollow{
 	static function getFollowerCountDB( $user ) {
 		global $wgMemc;
 
-		wfDebug( "Got user followers count (user={$user}) from DB\n" );
+		// wfDebug( "Got user followers count (user={$user}) from DB\n" );
 
 		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_follower_count', $user->getName() );
 		$dbr = wfGetDB( DB_SLAVE );
@@ -148,7 +148,7 @@ class UserUserFollow{
 		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_follower_count', $user->getName() );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
-			wfDebug( "Got user follower count of $data ( user = {$user} ) from cache\n" );
+			// wfDebug( "Got user follower count of $data ( user = {$user} ) from cache\n" );
 			return $data;
 		}
 	}	/**
@@ -180,7 +180,7 @@ class UserUserFollow{
 	static function getFollowingCountDB( $user ) {
 		global $wgMemc;
 
-		wfDebug( "Got user following count (user={$user}) from DB\n" );
+		// wfDebug( "Got user following count (user={$user}) from DB\n" );
 
 		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_following_count', $user->getName() );
 		$dbr = wfGetDB( DB_SLAVE );
@@ -214,7 +214,7 @@ class UserUserFollow{
 		$key = wfForeignMemcKey('huiji','', 'user_user_follow', 'user_following_count', $user->getName() );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
-			wfDebug( "Got user following count of $data ( user = {$user} ) from cache\n" );
+			// wfDebug( "Got user following count of $data ( user = {$user} ) from cache\n" );
 			return $data;
 		}
 	}

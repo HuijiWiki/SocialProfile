@@ -312,6 +312,7 @@ class UserProfilePage extends Article {
 	        		}
 	        		if( $resArr[count($resArr)-1] == strtotime($today) || $resArr[count($resArr)-1] == strtotime($yesterday) ){
 		        		$currentMaxlen = count($resArr)-1;
+		        		$currentMaxlen = count($resArr);
 		        	}else{
 		        		$currentMaxlen = 0;
 		        	}
@@ -319,7 +320,6 @@ class UserProfilePage extends Article {
 	        		$resArr = array();
 	        		$resArr[] = strtotime($editData[$k]);
 	        	}
-	        	
 	        }
 	        $wgOut->addHTML('
 	            <div class="check-wrapper"><svg width="725" height="110" class=" ">
@@ -429,7 +429,7 @@ class UserProfilePage extends Article {
 		$wgOut->addHTML( '<div id="user-page-left" class="col-md-6">' );
 
 		if ( !wfRunHooks( 'UserProfileBeginLeft', array( &$this ) ) ) {
-			wfDebug( __METHOD__ . ": UserProfileBeginLeft messed up profile!\n" );
+			// wfDebug( __METHOD__ . ": UserProfileBeginLeft messed up profile!\n" );
 		}
 		if ($this->user_id != $wgUser->getId()) {
 			$wgOut->addHTML( $this->getCommonInterest( $wgUser->getId(),$this->user_id) );
@@ -447,30 +447,30 @@ class UserProfilePage extends Article {
         $wgOut->addHTML( $this->getNonEditingActivity( $this->user_name ) );
 
 		if ( !wfRunHooks( 'UserProfileEndLeft', array( &$this ) ) ) {
-			wfDebug( __METHOD__ . ": UserProfileEndLeft messed up profile!\n" );
+			// wfDebug( __METHOD__ . ": UserProfileEndLeft messed up profile!\n" );
 		}
 
 		$wgOut->addHTML( '</div>' );
 
-		wfDebug( "profile start right\n" );
+		// wfDebug( "profile start right\n" );
 
 		// Right side
 		$wgOut->addHTML( '<div id="user-page-right" class="col-md-6">' );
 
 		if ( !wfRunHooks( 'UserProfileBeginRight', array( &$this ) ) ) {
-			wfDebug( __METHOD__ . ": UserProfileBeginRight messed up profile!\n" );
+			// wfDebug( __METHOD__ . ": UserProfileBeginRight messed up profile!\n" );
 		}
         $wgOut->addHTML( $this->getInterests( $this->user_name ) );
 		$wgOut->addHTML( $this->getPersonalInfo( $this->user_id, $this->user_name ) );
 		// Hook for BlogPage
 		if ( !wfRunHooks( 'UserProfileRightSideAfterActivity', array( $this ) ) ) {
-			wfDebug( __METHOD__ . ": UserProfileRightSideAfterActivity hook messed up profile!\n" );
+			// wfDebug( __METHOD__ . ": UserProfileRightSideAfterActivity hook messed up profile!\n" );
 		}
 		$wgOut->addHTML( $this->getCasualGames( $this->user_id, $this->user_name ) );
 		$wgOut->addHTML( $this->getUserBoard( $this->user_id, $this->user_name ) );
 
 		if ( !wfRunHooks( 'UserProfileEndRight', array( &$this ) ) ) {
-			wfDebug( __METHOD__ . ": UserProfileEndRight messed up profile!\n" );
+			// wfDebug( __METHOD__ . ": UserProfileEndRight messed up profile!\n" );
 		}
 
 		$wgOut->addHTML( '</div><div class="cleared"></div></div>' );
@@ -577,10 +577,10 @@ class UserProfilePage extends Article {
 		$data = $wgMemc->get( $key );
 
 		if( $data ) {
-			wfDebug( "Got profile polls for user {$this->user_id} from cache\n" );
+			// wfDebug( "Got profile polls for user {$this->user_id} from cache\n" );
 			$polls = $data;
 		} else {
-			wfDebug( "Got profile polls for user {$this->user_id} from DB\n" );
+			// wfDebug( "Got profile polls for user {$this->user_id} from DB\n" );
 			$dbr = wfGetDB( DB_SLAVE );
 			$res = $dbr->select(
 				array( 'poll_question', 'page' ),
@@ -619,10 +619,10 @@ class UserProfilePage extends Article {
 		$data = $wgMemc->get( $key );
 
 		if( $data ) {
-			wfDebug( "Got profile quizzes for user {$this->user_id} from cache\n" );
+			// wfDebug( "Got profile quizzes for user {$this->user_id} from cache\n" );
 			$quiz = $data;
 		} else {
-			wfDebug( "Got profile quizzes for user {$this->user_id} from DB\n" );
+			// wfDebug( "Got profile quizzes for user {$this->user_id} from DB\n" );
 			$dbr = wfGetDB( DB_SLAVE );
 			$res = $dbr->select(
 				'quizgame_questions',
@@ -667,10 +667,10 @@ class UserProfilePage extends Article {
 		$key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'picgame', $this->user_id );
 		$data = $wgMemc->get( $key );
 		if( $data ) {
-			wfDebug( "Got profile picgames for user {$this->user_id} from cache\n" );
+			// wfDebug( "Got profile picgames for user {$this->user_id} from cache\n" );
 			$pics = $data;
 		} else {
-			wfDebug( "Got profile picgames for user {$this->user_id} from DB\n" );
+			// wfDebug( "Got profile picgames for user {$this->user_id} from DB\n" );
 			$dbr = wfGetDB( DB_SLAVE );
 			$res = $dbr->select(
 				'picturegame_images',
@@ -1194,7 +1194,7 @@ class UserProfilePage extends Article {
 		}
 		$avatar = new wAvatar( $this->user_id, 'l' );
 
-		wfDebug( 'profile type: ' . $profile_data['user_page_type'] . "\n" );
+		// wfDebug( 'profile type: ' . $profile_data['user_page_type'] . "\n" );
 		$output = '';
 
 		//get more
@@ -1337,7 +1337,7 @@ class UserProfilePage extends Article {
 			$friends = $rel->getRelationshipList( $rel_type, $count );
 			$wgMemc->set( $key, $friends );
 		} else {
-			wfDebug( "Got profile relationship type {$rel_type} for user {$user_name} from cache\n" );
+			// wfDebug( "Got profile relationship type {$rel_type} for user {$user_name} from cache\n" );
 			$friends = $data;
 		}
 
@@ -1482,7 +1482,7 @@ class UserProfilePage extends Article {
 					} else {
 						$strid = $title->getText();
 					}
-					wfDebug('Setting $UUID = '.$strid);
+					// wfDebug('Setting $UUID = '.$strid);
 					$id = UUID::create(strtolower( $strid ));
 					$pc = PostCollection::newFromId($id);
 					$pcr = $pc->getRoot()->getLastRevision();
@@ -1715,7 +1715,7 @@ class UserProfilePage extends Article {
 					} else {
 						$strid = $title->getText();
 					}
-					wfDebug('Setting $UUID = '.$strid);
+					// wfDebug('Setting $UUID = '.$strid);
 					wfErrorLog($title->getFullURL(),'/var/log/mediawiki/SocialProfile.log');
 					$id = UUID::create(strtolower( $strid ));
 					$pc = PostCollection::newFromId($id);
@@ -1879,11 +1879,11 @@ class UserProfilePage extends Article {
 		$data = '';
 
 		if ( !$data ) {
-			wfDebug( "Got profile gifts for user {$user_name} from DB\n" );
+			// wfDebug( "Got profile gifts for user {$user_name} from DB\n" );
 			$gifts = $g->getUserGiftList( 0 );
 			$wgMemc->set( $key, $gifts, 60 * 60 * 4 );
 		} else {
-			wfDebug( "Got profile gifts for user {$user_name} from cache\n" );
+			// wfDebug( "Got profile gifts for user {$user_name} from cache\n" );
 			$gifts = $data;
 		}
 		$o_id = array();
@@ -1995,7 +1995,7 @@ class UserProfilePage extends Article {
 		$gift_count = array_count_values($gift_name);
 
 		if ( !$data ) {
-			wfDebug( "Got profile awards for user {$user_name} from DB\n" );
+			// wfDebug( "Got profile awards for user {$user_name} from DB\n" );
 			$system_gifts = $sg->getUserGiftList( 0 );
 			$repeat = array();
 			foreach ($system_gifts as $key => $value) {
@@ -2008,7 +2008,7 @@ class UserProfilePage extends Article {
 			}
 			$wgMemc->set( $sg_key, $system_gifts, 60 * 60 * 4 );
 		} else {
-			wfDebug( "Got profile awards for user {$user_name} from cache\n" );
+			// wfDebug( "Got profile awards for user {$user_name} from cache\n" );
 			$system_gifts = $data;
 		}
 

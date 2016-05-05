@@ -28,7 +28,7 @@ class AllSitesInfo{
 		$key = wfForeignMemcKey('huiji','', 'site_rank', 'all_site_rank', $prefix, $yesterday );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
-			wfDebug( "Got site rank ( site = {$prefix},data = {$yesterday} ) from cache\n" );
+			// wfDebug( "Got site rank ( site = {$prefix},data = {$yesterday} ) from cache\n" );
 			return $data;
 		}
 		
@@ -37,7 +37,7 @@ class AllSitesInfo{
 	static function getAllSitesRankFromDB( $prefix, $yesterday ){
 
 		global $wgMemc;
-		wfDebug( "Got site rank ( site = {$prefix},data = {$yesterday} ) from DB\n" );
+		// wfDebug( "Got site rank ( site = {$prefix},data = {$yesterday} ) from DB\n" );
 		$key = wfForeignMemcKey('huiji','', 'site_rank', 'all_site_rank', $prefix, $yesterday );
 		$allSiteRank = array();
 		if( $prefix == '' ){

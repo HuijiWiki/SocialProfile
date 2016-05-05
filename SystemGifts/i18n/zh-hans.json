@@ -50,5 +50,6 @@
 	"systemgiftlist": "系统礼物列表",
 	"givesystemgift": "系统成就",
 	"action-GiveSystemGift":"查看此页面",
-	"action-AddFestivalGift":"查看此页面"
+	"action-AddFestivalGift":"查看此页面",
+	"reissuesystemgift":"补发系统礼物"
 }

@@ -55,10 +55,10 @@ class TopFansRecent extends UnlistedSpecialPage {
 		$data = $wgMemc->get( $key );
 
 		if ( $data != '' ) {
-			wfDebug( "Got top users by {$period} points ({$count}) from cache\n" );
+			// wfDebug( "Got top users by {$period} points ({$count}) from cache\n" );
 			$user_list = $data;
 		} else {
-			wfDebug( "Got top users by {$period} points ({$count}) from DB\n" );
+			// wfDebug( "Got top users by {$period} points ({$count}) from DB\n" );
 
 			$params['ORDER BY'] = 'up_points DESC';
 			$params['LIMIT'] = $count;

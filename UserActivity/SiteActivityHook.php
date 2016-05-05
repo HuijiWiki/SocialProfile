@@ -33,7 +33,7 @@ function getSiteActivity( $input, $args, $parser ) {
 	$key = wfMemcKey( 'site_activity', 'THIS_SITE', $fixedLimit, $wgUser->getName() );
 	$data = $wgMemc->get( $key );
 	if ( !$data ) {
-		wfDebug( "Got site activity from DB\n" );
+		// wfDebug( "Got site activity from DB\n" );
 		$rel = new UserActivity( $wgUser->getName(), 'THIS_SITE', $fixedLimit );
 
 		$rel->setActivityToggle( 'show_votes', 0 );
@@ -41,7 +41,7 @@ function getSiteActivity( $input, $args, $parser ) {
 		$activity = $rel->getActivityListGrouped();
 		$wgMemc->set( $key, $activity, 60 * 2 );
 	} else {
-		wfDebug( "Got site activity from cache\n" );
+		// wfDebug( "Got site activity from cache\n" );
 		$activity = $data;
 	}		
 

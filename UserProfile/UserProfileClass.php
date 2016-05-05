@@ -91,10 +91,10 @@ class UserProfile {
 		$key = wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'info', $this->user_id );
 		$data = $wgMemc->get( $key );
 		if ( $data ) {
-			wfDebug( "Got user profile info for {$this->user_name} from cache\n" );
+			// wfDebug( "Got user profile info for {$this->user_name} from cache\n" );
 			$profile = $data;
 		} else {
-			wfDebug( "Got user profile info for {$this->user_name} from DB\n" );
+			// wfDebug( "Got user profile info for {$this->user_name} from DB\n" );
 			$dbr = wfGetDB( DB_SLAVE );
 			$row = $dbr->selectRow(
 				'user_profile',

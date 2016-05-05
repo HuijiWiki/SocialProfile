@@ -64,10 +64,10 @@ class TopFansByStat extends UnlistedSpecialPage {
 		$data = $wgMemc->get( $key );
 
 		if ( $data != '' ) {
-			wfDebug( "Got top users by {$statistic} ({$count}) from cache\n" );
+			// wfDebug( "Got top users by {$statistic} ({$count}) from cache\n" );
 			$user_list = $data;
 		} else {
-			wfDebug( "Got top users by {$statistic} ({$count}) from DB\n" );
+			// wfDebug( "Got top users by {$statistic} ({$count}) from DB\n" );
 
 			$params['ORDER BY'] = "{$column} DESC";
 			$params['LIMIT'] = $count;

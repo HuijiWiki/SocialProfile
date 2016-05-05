@@ -569,7 +569,7 @@ class UserRelationship {
 	static function getOpenRequestCountDB( $userId, $relType ) {
 		global $wgMemc;
 
-		wfDebug( "Got open request count (type={$relType}) for id $userId from DB\n" );
+		// wfDebug( "Got open request count (type={$relType}) for id $userId from DB\n" );
 
 		$key = wfForeignMemcKey( 'huiji', '', 'user_relationship', 'open_request', $relType, $userId );
 		$dbr = wfGetDB( DB_SLAVE );
@@ -607,7 +607,7 @@ class UserRelationship {
 		$key = wfForeignMemcKey( 'huiji', '', 'user_relationship', 'open_request', $relType, $userId );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
-			wfDebug( "Got open request count of $data (type={$relType}) for id $userId from cache\n" );
+			// wfDebug( "Got open request count of $data (type={$relType}) for id $userId from cache\n" );
 			return $data;
 		}
 	}

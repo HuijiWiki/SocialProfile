@@ -44,7 +44,7 @@ class BoardBlastJobs extends Job {
 				);
 				// $count++;
 			}
-			wfDebug('Sending Board Blast batch '.$k.'............................................');
+			// wfDebug('Sending Board Blast batch '.$k.'............................................');
 			// ob_flush();
 		 //    flush();
 		}

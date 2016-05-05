@@ -81,7 +81,7 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 		$this->mUploadCopyStatus = $request->getText( 'wpUploadCopyStatus' );
 		$this->mUploadSource = $request->getText( 'wpUploadSource' );
 		$this->mWatchthis = $request->getBool( 'wpWatchthis' );
-		wfDebug( __METHOD__ . ": watchthis is: '$this->mWatchthis'\n" );
+		// wfDebug( __METHOD__ . ": watchthis is: '$this->mWatchthis'\n" );
 
 		$this->mAction = $request->getVal( 'action' );
 		$this->mSessionKey = $request->getInt( 'wpSessionKey' );
@@ -720,7 +720,7 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 			return Status::newFatal( 'uploadvirus', htmlspecialchars( $virus ) );
 		}
 
-		wfDebug( __METHOD__ . ": all clear; passing.\n" );
+		// wfDebug( __METHOD__ . ": all clear; passing.\n" );
 		return Status::newGood();
 	}
 }

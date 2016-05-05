@@ -192,7 +192,7 @@ class UserStatsTrack {
 				$data = $wgMemc->get( $key );
 	
 				if ( $data != '' && is_int($data)  ) {
-					wfDebug( "Got system gift ID from cache\n" );
+					// wfDebug( "Got system gift ID from cache\n" );
 					$systemGiftID = $data;
 				} else {
 					$g = new SystemGifts();
@@ -736,7 +736,7 @@ class UserStats {
 		$key = wfForeignMemcKey( 'huiji', '', 'user', 'stats', $this->user_id );
 		$data = $wgMemc->get( $key );
 		if ( $data ) {
-			wfDebug( "Got user stats for {$this->user_name} from cache\n" );
+			// wfDebug( "Got user stats for {$this->user_name} from cache\n" );
 			return $data;
 		}
 	}
@@ -747,7 +747,7 @@ class UserStats {
 	public function getUserStatsDB() {
 		global $wgMemc;
 
-		wfDebug( "Got user stats for {$this->user_name} from DB\n" );
+		// wfDebug( "Got user stats for {$this->user_name} from DB\n" );
 		$dbr = wfGetDB( DB_MASTER );
 		$res = $dbr->select(
 			'user_stats',
@@ -934,7 +934,7 @@ class UserStats {
 	public static function getSiteEditsCount( $user, $prefix ){
 		$data = self::getSiteEditsCountCache( $user, $prefix );
 		if ( $data != '' ) {
-			wfDebug( "Got top followed $data ( User = {$user} ) from cache\n" );
+			// wfDebug( "Got top followed $data ( User = {$user} ) from cache\n" );
 			return $data;
 		} else {
 			return self::getSiteEditsCountDB( $user,$prefix );
@@ -978,7 +978,7 @@ class UserStats {
 	static function getAllUser(){
 		$data = self::getAllUserCache( );
 		if ( $data != '' ) {
-			wfDebug( "Get all user from cache\n" );
+			// wfDebug( "Get all user from cache\n" );
 			return $data;
 		} else {
 			return self::getAllUserDB( );

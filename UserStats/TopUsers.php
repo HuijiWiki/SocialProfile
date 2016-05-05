@@ -59,10 +59,10 @@ class TopUsersPoints extends SpecialPage {
 		$data = $wgMemc->get( $key );
 
 		if ( $data != '' ) {
-			wfDebug( "Got top users by points ({$count}) from cache\n" );
+			// wfDebug( "Got top users by points ({$count}) from cache\n" );
 			$user_list = $data;
 		} else {
-			wfDebug( "Got top users by points ({$count}) from DB\n" );
+			// wfDebug( "Got top users by points ({$count}) from DB\n" );
 
 			$params['ORDER BY'] = 'stats_total_points DESC';
 			$params['LIMIT'] = $count;

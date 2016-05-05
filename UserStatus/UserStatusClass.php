@@ -135,7 +135,7 @@ class UserStatus{
 		$key = wfForeignMemcKey('huiji','', 'user_profile', 'get_all', $this->user->getName() );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
-			wfDebug( "Got user bio and status $data ( user = {$this->user} ) from cache\n" );
+			// wfDebug( "Got user bio and status $data ( user = {$this->user} ) from cache\n" );
 			return $data;
 		}		
 	}
@@ -322,7 +322,7 @@ class UserStatus{
 	public static function getFollowingFollowsUser( $username,$current_user ){
 		$data = self::getFollowingFollowsUserCache( $username,$current_user );
 		if ( $data != '' ) {
-			wfDebug( "Got top followed $data ( User = {$username} ) from cache\n" );
+			// wfDebug( "Got top followed $data ( User = {$username} ) from cache\n" );
 			return $data;
 		} else {
 			return self::getFollowingFollowsUserDB( $username, $current_user );

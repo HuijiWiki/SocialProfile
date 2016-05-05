@@ -92,7 +92,15 @@ class GiveGift extends SpecialPage {
 						);
 						//invitationcode
 						if ( $giftInfo['gift_type'] == 3 && $ug_gift_id != null ) {
-							$gift->addUserGiftInviteInfo( $ug_gift_id );
+							//give system_gift $this->user_name_to $user->getName()
+							
+							$res = $gift->addUserGiftInviteInfo( $ug_gift_id );
+							// if ($res != 0 ) {
+								// $usg1 = new UserSystemGifts( $user->getName() );
+								// $usg1->sendSystemGift( 91 );
+								// $usg2 = new UserSystemGifts( $this->user_name_to );
+								// $usg2->sendSystemGift( 92 );
+							// }
 						}
 						//user title
 						if ( $giftInfo['designation'] != null && $this->user_name_to != null ) {

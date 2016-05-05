@@ -99,7 +99,7 @@ class UserSiteFollow{
 	static function getFollowerCountDB( $huijiPrefix ) {
 		global $wgMemc;
 
-		wfDebug( "Got site followers count (prefix={$huijiPrefix}) from DB\n" );
+		// wfDebug( "Got site followers count (prefix={$huijiPrefix}) from DB\n" );
 
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'follow_count', $huijiPrefix );
 		$dbr = wfGetDB( DB_SLAVE );
@@ -134,7 +134,7 @@ class UserSiteFollow{
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'follow_count', $huijiPrefix );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
-			wfDebug( "Got site count of $data ( prefix = {$huijiPrefix} ) from cache\n" );
+			// wfDebug( "Got site count of $data ( prefix = {$huijiPrefix} ) from cache\n" );
 			return $data;
 		}
 	}
@@ -169,7 +169,7 @@ class UserSiteFollow{
 	static function getFollowingCountDB( $user ) {
 		global $wgMemc;
 
-		wfDebug( "Got user followed sites count (prefix={$user}) from DB\n" );
+		// wfDebug( "Got user followed sites count (prefix={$user}) from DB\n" );
 
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'user_count', $user->getName() );
 		$dbr = wfGetDB( DB_SLAVE );
@@ -204,7 +204,7 @@ class UserSiteFollow{
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'user_count', $user->getName() );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
-			wfDebug( "Got user count of $data ( User = {$user} ) from cache\n" );
+			// wfDebug( "Got user count of $data ( User = {$user} ) from cache\n" );
 			return $data;
 		}
 	}
@@ -220,7 +220,7 @@ class UserSiteFollow{
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'check_follow', $user->getName(), $huijiPrefix );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
-			wfDebug( "Checkout ( User = {$user} ) from cache\n" );
+			// wfDebug( "Checkout ( User = {$user} ) from cache\n" );
 			return $data;
 		} else{
 			$dbr = wfGetDB( DB_SLAVE );
@@ -301,7 +301,7 @@ class UserSiteFollow{
 	static function getTopFollowedSitesDB( $user ) {
 		global $wgMemc;
 
-		wfDebug( "Got user followed sites count (prefix={$user}) from DB\n" );
+		// wfDebug( "Got user followed sites count (prefix={$user}) from DB\n" );
 
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'top_followed', $user->getName() );
 		$dbr = wfGetDB( DB_SLAVE );
@@ -493,7 +493,7 @@ class UserSiteFollow{
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'all_sites_user_following', $user->getName() );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
-			wfDebug( "Got top followed data ( User = {$user->getName()} ) from cache\n" );
+			// wfDebug( "Got top followed data ( User = {$user->getName()} ) from cache\n" );
 			return $data;
 		}		
 	}
@@ -603,7 +603,7 @@ class UserSiteFollow{
 	static function getFollowerCountOnedayDB( $huijiPrefix, $date ) {
 		global $wgMemc;
 
-		wfDebug( "Got site followers count (prefix={$huijiPrefix}) from DB in day:{$date}\n" );
+		// wfDebug( "Got site followers count (prefix={$huijiPrefix}) from DB in day:{$date}\n" );
 
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'follow_count', $huijiPrefix.$date );
 		$dbr = wfGetDB( DB_SLAVE );
@@ -636,7 +636,7 @@ class UserSiteFollow{
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'follow_count', $huijiPrefix.$date );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
-			wfDebug( "Got site count of ( prefix = {$huijiPrefix} ) from cache in day{$date}\n" );
+			// wfDebug( "Got site count of ( prefix = {$huijiPrefix} ) from cache in day{$date}\n" );
 			return $data;
 		}
 	}
