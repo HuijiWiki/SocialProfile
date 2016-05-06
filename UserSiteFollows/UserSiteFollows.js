@@ -184,7 +184,7 @@ jQuery( document ).ready( function() {
 		event.preventDefault();
 		var that = $(this);
 		var server = that.parent().attr('href');
-		server = server.replace('http://','').replace(mw.config.get('wgHuijiSuffix'),'');
+		server = server.split('//')[1].split('.')[0];
 		if (userSiteFollows.submitted == true){
 			return;
 		}
