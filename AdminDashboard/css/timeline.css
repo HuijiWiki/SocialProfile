@@ -195,6 +195,9 @@ hr {
 #admin-member .admin-label-member{
     background: #09c;
 }
+#admin-member .admin-label-translate-proofr{
+    background: rgb(255, 178, 0);
+}
 .a-options>button{
     margin-left: 5px;
     background: #365897;

@@ -131,9 +131,9 @@ class ViewGift extends UnlistedSpecialPage {
 				$output .= '<div class="g-description">' .
 						$giftImage .
 						'<div class="g-name">' . $gift['name'] . '</div>';
-				if ( $userTitle != null && $wgUser->getID() == $gift['user_id_to'] ) {
-					$output .= '<span>'.$title_name.$gift['designation'].'<br>开关</span>';
-				}
+				// if ( $userTitle != null && $wgUser->getID() == $gift['user_id_to'] ) {
+				// 	$output .= '<span>'.$title_name.$gift['designation'].'<br>开关</span>';
+				// }
 				$output .= '<div class="g-timestamp">(' . $gift['timestamp'] . ')</div>
 						<div class="g-from">' . $this->msg(
 							'g-from',

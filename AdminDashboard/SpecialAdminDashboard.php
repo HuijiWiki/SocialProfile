@@ -247,6 +247,11 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 									'group' => 'member',
 									'groupName' => '成员',
 									'groupClass' => 'label admin-label-member draggable'
+								),
+							'translate-proofr' => array(
+									'group' => 'translate-proofr',
+									'groupName' => '校对',
+									'groupClass' => 'label admin-label-translate-proofr draggable'
 								)
 						);
 		$userRight = $changeGroup['add'];
@@ -267,6 +272,9 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		}
 		if (in_array('member', $userRight)) {
 		    $changeRes[] = $valueableGroup['member'];
+		}
+		if (in_array('translate-proofr', $userRight)) {
+		    $changeRes[] = $valueableGroup['translate-proofr'];
 		}
 		if ($site->getProperty('hide-bots-in-concile') == 1){
 			$showBots = false;
