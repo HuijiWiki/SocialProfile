@@ -50,6 +50,9 @@ function wfGetUserStatusInfo( $str, $limit, $continue=0 ){
 				if (in_array('member', $userRight)) {
 				    $result[] = 'member';
 				}
+				if (in_array('translate-proofr', $userRight)) {
+				    $result[] = 'translate-proofr';
+				}
 				$userInfo['userid'] = $user->getId();
 				$userInfo['name'] = $key;
 				$userInfo['img'] = $user->getAvatar()->getAvatarURL();
@@ -102,6 +105,9 @@ function wfGetUserStatusInfo( $str, $limit, $continue=0 ){
 				}
 				if (in_array('member', $userRight)) {
 				    $result[] = 'member';
+				}
+				if (in_array('translate-proofr', $userRight)) {
+				    $result[] = 'translate-proofr';
 				}
 				$userIdRes['userid'] = $value->user_id;
 				$userIdRes['name'] = $user->getName();

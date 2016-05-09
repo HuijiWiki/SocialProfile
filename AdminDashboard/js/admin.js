@@ -8,7 +8,7 @@ var admin = {
     cont:1,
     val:'',
     token:'',
-    addlimit: 'bot,bureaucrat,sysop,rollback,staff,member',
+    addlimit: 'bot,bureaucrat,sysop,rollback,staff,member,translate-proofr',
     getPos: function(){
         this.pos = this.getSubClient($('.admin-tab-content').get(0)).top-100;
     },
@@ -280,6 +280,8 @@ var admin = {
                 obj[item].name = '职员';
             }else if(item == 'member'){
                 obj[item].name = '成员';
+            }else if(item == 'translate-proofr'){
+                obj[item].name = '校对';
             }
             obj[item].color = item;
             for(var i=0;i<rights.length;i++){
@@ -306,6 +308,8 @@ var admin = {
                 obj.staff = ['label admin-label-staff',item,'职员' ]
             }else if(item=='member'){
                 obj.staff = ['label admin-label-member',item,'成员' ]
+            }else if(item=='translate-proofr'){
+                obj.staff = ['label admin-label-translate-proofr',item,'校对' ]
             }
         });
         return obj;
