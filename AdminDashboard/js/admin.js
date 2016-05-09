@@ -307,9 +307,9 @@ var admin = {
             }else if(item=='staff'){
                 obj.staff = ['label admin-label-staff',item,'职员' ]
             }else if(item=='member'){
-                obj.staff = ['label admin-label-member',item,'成员' ]
+                obj.member = ['label admin-label-member',item,'成员' ]
             }else if(item=='translate-proofr'){
-                obj.staff = ['label admin-label-translate-proofr',item,'校对' ]
+                obj.translateproofr = ['label admin-label-translate-proofr',item,'校对' ]
             }
         });
         return obj;
