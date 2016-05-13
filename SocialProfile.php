@@ -41,7 +41,7 @@ $wgMessagesDirs['SocialProfileVideos'] = __DIR__ . '/Videos/i18n';
 $wgExtensionMessagesFiles['SocialProfileNamespaces'] = __DIR__ . '/SocialProfile.namespaces.php';
 $wgExtensionMessagesFiles['AvatarMagic'] = __DIR__ . '/UserProfile/Avatar.magic.i18n.php';
 // $wgMessagesDirs['SocialProfileTransModal'] = __DIR__ . '/TransModal/i18n';
-// $wgMessagesDirs['SocialProfileCommenStyle'] = __DIR__ . '/CommenStyle/i18n';
+$wgMessagesDirs['SocialProfileCommonStyle'] = __DIR__ . '/CommonStyle/i18n';
 
 // Classes to be autoloaded
 $wgAutoloadClasses['GenerateTopUsersReport'] = __DIR__ . '/UserStats/GenerateTopUsersReport.php';
@@ -115,8 +115,8 @@ $wgAutoloadClasses['WikiDoctor'] = __DIR__ . '/AdminDashboard/WikiDoctor.php';
 $wgAutoloadClasses['SpecialDesignation'] = __DIR__ . '/UserGifts/SpecialDesignation.php';
 $wgAutoloadClasses['SpecialGiveSystemGift'] = __DIR__ . '/SystemGifts/SpecialGiveSystemGift.php';
 // $wgAutoloadClasses['SpecialTransModal'] = __DIR__ . '/TransModal/SpecialTransModal.php';
-// $wgAutoloadClasses['SpecialCommenStyle'] = __DIR__ . '/CommenStyle/SpecialCommenStyle.php';
-// $wgAutoloadClasses['CommenStyle'] = __DIR__ . '/CommenStyle/CommenStyleClass.php';
+$wgAutoloadClasses['SpecialCommonStyle'] = __DIR__ . '/CommonStyle/SpecialCommonStyle.php';
+$wgAutoloadClasses['CommonStyle'] = __DIR__ . '/CommonStyle/CommonStyleClass.php';
 $wgAutoloadClasses['SpecialReissueSystemGift'] = __DIR__ . '/SystemGifts/SpecialReissueSystemGift.php';
 
 // New special pages
@@ -160,7 +160,7 @@ $wgSpecialPages['Designation'] = 'SpecialDesignation';
 // $wgSpecialPages['FamilyTree'] = 'SpecialFamilyTree';
 $wgSpecialPages['GiveSystemGift'] = 'SpecialGiveSystemGift';
 // $wgSpecialPages['TransModal'] = 'SpecialTransModal';
-// $wgSpecialPages['CommenStyle'] = 'SpecialCommenStyle';
+$wgSpecialPages['CommonStyle'] = 'SpecialCommonStyle';
 $wgSpecialPages['ReissueSystemGift'] = 'SpecialReissueSystemGift';
 
 
@@ -177,7 +177,7 @@ require_once( "$IP/extensions/SocialProfile/UserProfile/OauthLogin_AjaxFunctions
 require_once( "$IP/extensions/SocialProfile/UserGifts/UserGift_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/Videos/UploadVideos_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/AdminDashboard/AdminDashboard_AjaxFunctions.php" );
-// require_once( "$IP/extensions/SocialProfile/CommenStyle/CommenStyle_AjaxFunctions.php" );
+// require_once( "$IP/extensions/SocialProfile/CommonStyle/CommonStyle_AjaxFunctions.php" );
 // What to display on social profile pages by default?
 $wgUserProfileDisplay['board'] = true;
 $wgUserProfileDisplay['foes'] = false;
@@ -315,7 +315,7 @@ require_once( "$IP/extensions/SocialProfile/UserBoard/UserBoard.php" ); // UserB
 require_once( "$IP/extensions/SocialProfile/UserActivity/UserActivity.php" ); // UserActivity - recent social changes
 require_once( "$IP/extensions/SocialProfile/UserEditToUpsert/userEditRecord.php"); // Edit Record collected to mongoDB.
 require_once( "$IP/extensions/SocialProfile/UserEditToUpsert/updateESContent.php"); // Update Page Content in ES.
-
+require_once( "$IP/extensions/SocialProfile/UserEditToUpsert/updateEntryTran.php"); 
 
 
 $wgHooks['CanonicalNamespaces'][] = 'SocialProfileHooks::onCanonicalNamespaces';
@@ -435,19 +435,19 @@ $wgResourceModules['ext.socialprofile.uploadfiles.js'] = array(
 	'position' => 'top',
 );
 
-//commenstyle
-$wgResourceModules['ext.socialprofile.commenstyle.css'] = array(
-	'styles' => 'CommenStyle.css',
-	'localBasePath' => __DIR__ . '/CommenStyle',
-	'remoteExtPath' => 'SocialProfile/CommenStyle',
+//commonstyle
+$wgResourceModules['ext.socialprofile.commonstyle.css'] = array(
+	'styles' => 'CommonStyle.css',
+	'localBasePath' => __DIR__ . '/CommonStyle',
+	'remoteExtPath' => 'SocialProfile/CommonStyle',
 	'position' => 'top',
 );
 
-$wgResourceModules['ext.socialprofile.commenstyle.js'] = array(
-	'scripts' =>array('jscolor.min.js','CommenStyle.js'),
+$wgResourceModules['ext.socialprofile.commonstyle.js'] = array(
+	'scripts' =>array('jscolor.min.js','CommonStyle.js'),
 	'dependencies' => 'mediawiki.notification',
-	'localBasePath' => __DIR__ . '/CommenStyle',
-	'remoteExtPath' => 'SocialProfile/CommenStyle',
+	'localBasePath' => __DIR__ . '/CommonStyle',
+	'remoteExtPath' => 'SocialProfile/CommonStyle',
 	'position' => 'bottom',
 );
 //transmodal
