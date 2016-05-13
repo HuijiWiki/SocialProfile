@@ -13,13 +13,13 @@ $wgHooks['TitleMoveComplete'][] = 'moveEntryTran';
 
 function saveEntryTran($article, $user, $content, $summary, $isMinor, $isWatch, $section, $flags, $revision, $status, $baseRevId){
         if($article == null || $revision == null || $article->getTitle() == null) return;
-        upsert($article->getTitle(), $article->getTitle(), $article->getArticleID());
+        upsert($article->getTitle()->getText(), $article->getTitle()->getText(), $article->getTitle()->getArticleID());
 }
 
 
 function moveEntryTran($oldTitle, $newTitle, $user, $oldId, $newId, $reason,$rev=null){
 	if($oldTitle == null || $oldTitle->getNamespace() !== 0 || $newTitle == null || $newTitle->getNamespace() !== 0) return;
-	upsert($newTitle->getText(), $oldTitle->getText(),$newId);
+	upsert($newTitle->getText(), $oldTitle->getText(),$oldId);
 }
 
 
@@ -27,36 +27,65 @@ function moveEntryTran($oldTitle, $newTitle, $user, $oldId, $newId, $reason,$rev
 
 function unDeleteEntryTran($title, $revision, $oldPageId){
 	if($title == null || $title->getNamespace() !== 0) return;	
-	upsert($title->getText(), $title->getText(),$oldPageId);
+	$links= [];
+	try{
+		$content = $revision->getContent(Revision::RAW);
+		$parserOutput = $content->getParserOutput($title);
+		$links = $parserOutput->getLanguageLinks();
+	} catch(Exception $e){
+		wfErrorLog($e->getMessage(),"/var/log/mediawiki/SocialProfile.log");
+		exit();
+	}
+	if(count($links) >0 ){
+		insert($title->getText(),$links);
+	}
 }
 
 
 
 function deleteEntryTran($article, $user, $reason, $id){
-	if($article == null || $article->getTitle()->getNamespace() !== 0) return;
+	if($article == null || $article->getTitle() == null || $article->getTitle()->getNamespace() !== 0) return;
 	upsert('', $article->getTitle()->getText(),$id);
 }
 
 
 function upsert($newEntry, $oldEntry, $pageId){
 	global $wgHuijiPrefix, $wgSitename, $wgIsProduction;
-	if($wgIsProduction == false || $wgHuijiPrefix != "hearthstone") return;
+	if($wgIsProduction == false) return;
 	$post_data = array(
 		'sitePrefix' => $wgHuijiPrefix,
 		'siteName' => $wgSitename,
-		'oldEntry' => $oldTitle->getText(),
-		'newEntry' => $newTitle->getText(),
-		'pageId' => $oldId,
+		'oldEntry' => $oldEntry,
+		'newEntry' => $newEntry,
+		'pageId' => (String)$pageId,
 	);
+
 	$post_data_string = json_encode($post_data);
+	wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile.log");
 	curl_post_json_entrytran('upsert',$post_data_string);
 }
 
+
+function insert($entry, $trans){
+	global $wgHuijiPrefix, $wgSitename, $wgIsProduction;
+	if($wgIsProduction == false) return;
+	$post_data = array(
+		'sitePrefix' => $wgHuijiPrefix,
+		'siteName' => $wgSitename,
+		'entry' => $entry,
+		'trans' => $trans,
+	);
+
+	$post_data_string = json_encode($post_data);
+	wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile.log");
+	curl_post_json_entrytran('insert',$post_data_string);
+}
 
 function curl_post_json_entrytran($type,$data_string)
 {
 	require_once("curl.php");
         $out =MySPCURL::postDataInJson('http://huijidata.com:8080/entryTranslation/webapi/entryTran',$type, $data_string);
+	wfErrorLog($out,"/var/log/mediawiki/SocialProfile.log");
         return $out;
 }
 
