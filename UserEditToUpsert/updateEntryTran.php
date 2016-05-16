@@ -117,7 +117,8 @@ function upsert($newEntry, $oldEntry, $pageId){
 
 function insert($entry, $trans){
 	global $wgHuijiPrefix, $wgSitename, $wgIsProduction;
-	if($wgIsProduction == true || $wgHuijiPrefix != 'hearthstone') return;
+//	if($wgIsProduction == true || $wgHuijiPrefix != 'hearthstone') return;
+	if($wgIsProduction == false) return;
 	$post_data = array(
 		'sitePrefix' => $wgHuijiPrefix,
 		'siteName' => $wgSitename,
