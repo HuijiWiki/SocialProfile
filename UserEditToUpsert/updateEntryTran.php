@@ -13,7 +13,56 @@ $wgHooks['TitleMoveComplete'][] = 'moveEntryTran';
 
 function saveEntryTran($article, $user, $content, $summary, $isMinor, $isWatch, $section, $flags, $revision, $status, $baseRevId){
         if($article == null || $revision == null || $article->getTitle() == null) return;
-        upsert($article->getTitle()->getText(), $article->getTitle()->getText(), $article->getTitle()->getArticleID());
+	$links= [];
+	try{
+		 $parserOutput = $content->getParserOutput($article->getTitle());
+		 $links = $parserOutput->getLanguageLinks();
+	} catch(Exception $e){
+		wfErrorLog($e->getMessage(),"/var/log/mediawiki/SocialProfile.log");
+		exit();
+	}
+	if(count($links) == 0) return;
+
+	$preRev = $revision->getPrevious();	
+	if($preRev == null){
+		wfErrorLog("111","/var/log/mediawiki/SocialProfile.log");
+		insert($article->getTitle()->getText(),$links);
+		return;
+	}else{
+		$preLinks = [];
+		try{
+			$content = $preRev->getContent(Revision::RAW);
+			$parserOutput = $content->getParserOutput($article->getTitle());
+			$preLinks = $parserOutput->getLanguageLinks();
+		} catch(Exception $e){
+			wfErrorLog($e->getMessage(),"/var/log/mediawiki/SocialProfile.log");
+			exit();
+		}
+
+		if(count($links) != count($preLinks)){
+			wfErrorLog("222","/var/log/mediawiki/SocialProfile.log");
+			insert($article->getTitle()->getText(),$links);
+			return;
+		}
+
+		$preSet = [];
+		$set = [];
+		
+		foreach ( $preLinks as $link) {
+  	        	list( $key, $title ) = explode( ':', $link, 2 );
+               		$preSet[$key] = $title;
+		}
+
+		foreach ( $links as $link) {
+  	        	list( $key, $title ) = explode( ':', $link, 2 );
+			if($preSet[$key] == null || $preSet[$key] != $title){
+				wfErrorLog("333","/var/log/mediawiki/SocialProfile.log");
+				insert($article->getTitle()->getText(),$links);
+				return;
+			}
+		}
+
+        }   	
 }
 
 
@@ -68,7 +117,7 @@ function upsert($newEntry, $oldEntry, $pageId){
 
 function insert($entry, $trans){
 	global $wgHuijiPrefix, $wgSitename, $wgIsProduction;
-	if($wgIsProduction == false) return;
+	if($wgIsProduction == true || $wgHuijiPrefix != 'hearthstone') return;
 	$post_data = array(
 		'sitePrefix' => $wgHuijiPrefix,
 		'siteName' => $wgSitename,
