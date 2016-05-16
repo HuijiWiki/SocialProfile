@@ -18,14 +18,14 @@ function saveEntryTran($article, $user, $content, $summary, $isMinor, $isWatch, 
 		 $parserOutput = $content->getParserOutput($article->getTitle());
 		 $links = $parserOutput->getLanguageLinks();
 	} catch(Exception $e){
-		wfErrorLog($e->getMessage(),"/var/log/mediawiki/SocialProfile.log");
+		wfErrorLog($e->getMessage(),"/var/log/mediawiki/SocialProfile1.log");
 		exit();
 	}
 	if(count($links) == 0) return;
 
 	$preRev = $revision->getPrevious();	
 	if($preRev == null){
-		wfErrorLog("111","/var/log/mediawiki/SocialProfile.log");
+		wfErrorLog("111","/var/log/mediawiki/SocialProfile1.log");
 		insert($article->getTitle()->getText(),$links);
 		return;
 	}else{
@@ -35,12 +35,12 @@ function saveEntryTran($article, $user, $content, $summary, $isMinor, $isWatch, 
 			$parserOutput = $content->getParserOutput($article->getTitle());
 			$preLinks = $parserOutput->getLanguageLinks();
 		} catch(Exception $e){
-			wfErrorLog($e->getMessage(),"/var/log/mediawiki/SocialProfile.log");
+			wfErrorLog($e->getMessage(),"/var/log/mediawiki/SocialProfile1.log");
 			exit();
 		}
 
 		if(count($links) != count($preLinks)){
-			wfErrorLog("222","/var/log/mediawiki/SocialProfile.log");
+			wfErrorLog("222","/var/log/mediawiki/SocialProfile1.log");
 			insert($article->getTitle()->getText(),$links);
 			return;
 		}
@@ -56,7 +56,7 @@ function saveEntryTran($article, $user, $content, $summary, $isMinor, $isWatch, 
 		foreach ( $links as $link) {
   	        	list( $key, $title ) = explode( ':', $link, 2 );
 			if($preSet[$key] == null || $preSet[$key] != $title){
-				wfErrorLog("333","/var/log/mediawiki/SocialProfile.log");
+				wfErrorLog("333","/var/log/mediawiki/SocialProfile1.log");
 				insert($article->getTitle()->getText(),$links);
 				return;
 			}
@@ -82,7 +82,7 @@ function unDeleteEntryTran($title, $revision, $oldPageId){
 		$parserOutput = $content->getParserOutput($title);
 		$links = $parserOutput->getLanguageLinks();
 	} catch(Exception $e){
-		wfErrorLog($e->getMessage(),"/var/log/mediawiki/SocialProfile.log");
+		wfErrorLog($e->getMessage(),"/var/log/mediawiki/SocialProfile1.log");
 		exit();
 	}
 	if(count($links) >0 ){
@@ -110,7 +110,7 @@ function upsert($newEntry, $oldEntry, $pageId){
 	);
 
 	$post_data_string = json_encode($post_data);
-	wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile.log");
+	wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile1.log");
 	curl_post_json_entrytran('upsert',$post_data_string);
 }
 
@@ -127,7 +127,7 @@ function insert($entry, $trans){
 	);
 
 	$post_data_string = json_encode($post_data);
-	wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile.log");
+	wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile1.log");
 	curl_post_json_entrytran('insert',$post_data_string);
 }
 
@@ -135,7 +135,7 @@ function curl_post_json_entrytran($type,$data_string)
 {
 	require_once("curl.php");
         $out =MySPCURL::postDataInJson('http://huijidata.com:8080/entryTranslation/webapi/entryTran',$type, $data_string);
-	wfErrorLog($out,"/var/log/mediawiki/SocialProfile.log");
+	wfErrorLog($out,"/var/log/mediawiki/SocialProfile1.log");
         return $out;
 }
 
