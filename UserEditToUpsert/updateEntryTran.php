@@ -18,14 +18,13 @@ function saveEntryTran($article, $user, $content, $summary, $isMinor, $isWatch, 
 		 $parserOutput = $content->getParserOutput($article->getTitle());
 		 $links = $parserOutput->getLanguageLinks();
 	} catch(Exception $e){
-		wfErrorLog($e->getMessage(),"/var/log/mediawiki/SocialProfile1.log");
+		wfErrorLog($e->getMessage(),"/var/log/mediawiki/updateEntryTran.log");
 		exit();
 	}
 	if(count($links) == 0) return;
 
 	$preRev = $revision->getPrevious();	
 	if($preRev == null){
-		wfErrorLog("111","/var/log/mediawiki/SocialProfile1.log");
 		insert($article->getTitle()->getText(),$links);
 		return;
 	}else{
@@ -35,12 +34,11 @@ function saveEntryTran($article, $user, $content, $summary, $isMinor, $isWatch, 
 			$parserOutput = $content->getParserOutput($article->getTitle());
 			$preLinks = $parserOutput->getLanguageLinks();
 		} catch(Exception $e){
-			wfErrorLog($e->getMessage(),"/var/log/mediawiki/SocialProfile1.log");
+			wfErrorLog($e->getMessage(),"/var/log/mediawiki/updateEntryTran.log");
 			exit();
 		}
 
 		if(count($links) != count($preLinks)){
-			wfErrorLog("222","/var/log/mediawiki/SocialProfile1.log");
 			insert($article->getTitle()->getText(),$links);
 			return;
 		}
@@ -56,7 +54,6 @@ function saveEntryTran($article, $user, $content, $summary, $isMinor, $isWatch, 
 		foreach ( $links as $link) {
   	        	list( $key, $title ) = explode( ':', $link, 2 );
 			if($preSet[$key] == null || $preSet[$key] != $title){
-				wfErrorLog("333","/var/log/mediawiki/SocialProfile1.log");
 				insert($article->getTitle()->getText(),$links);
 				return;
 			}
@@ -66,7 +63,7 @@ function saveEntryTran($article, $user, $content, $summary, $isMinor, $isWatch, 
 }
 
 
-function moveEntryTran($oldTitle, $newTitle, $user, $oldId, $newId, $reason,$rev=null){
+function moveEntryTran($oldTitle, $newTitle, $user, $oldId, $newId, $reason,$rev){
 	if($oldTitle == null || $oldTitle->getNamespace() !== 0 || $newTitle == null || $newTitle->getNamespace() !== 0) return;
 	upsert($newTitle->getText(), $oldTitle->getText(),$oldId);
 }
@@ -82,7 +79,7 @@ function unDeleteEntryTran($title, $revision, $oldPageId){
 		$parserOutput = $content->getParserOutput($title);
 		$links = $parserOutput->getLanguageLinks();
 	} catch(Exception $e){
-		wfErrorLog($e->getMessage(),"/var/log/mediawiki/SocialProfile1.log");
+		wfErrorLog($e->getMessage(),"/var/log/mediawiki/updateEntryTran.log");
 		exit();
 	}
 	if(count($links) >0 ){
@@ -100,7 +97,8 @@ function deleteEntryTran($article, $user, $reason, $id){
 
 function upsert($newEntry, $oldEntry, $pageId){
 	global $wgHuijiPrefix, $wgSitename, $wgIsProduction;
-	if($wgIsProduction == false) return;
+//	if($wgIsProduction == true || $wgHuijiPrefix != 'hearthstone') return;
+	if($wgIsProduction == false || $wgHuijiPrefix == 'legion') return;
 	$post_data = array(
 		'sitePrefix' => $wgHuijiPrefix,
 		'siteName' => $wgSitename,
@@ -110,7 +108,7 @@ function upsert($newEntry, $oldEntry, $pageId){
 	);
 
 	$post_data_string = json_encode($post_data);
-	wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile1.log");
+	wfErrorLog($post_data_string,"/var/log/mediawiki/updateEntryTran.log");
 	curl_post_json_entrytran('upsert',$post_data_string);
 }
 
@@ -118,7 +116,7 @@ function upsert($newEntry, $oldEntry, $pageId){
 function insert($entry, $trans){
 	global $wgHuijiPrefix, $wgSitename, $wgIsProduction;
 //	if($wgIsProduction == true || $wgHuijiPrefix != 'hearthstone') return;
-	if($wgIsProduction == false) return;
+	if($wgIsProduction == false || $wgHuijiPrefix == 'legion') return;
 	$post_data = array(
 		'sitePrefix' => $wgHuijiPrefix,
 		'siteName' => $wgSitename,
@@ -127,7 +125,7 @@ function insert($entry, $trans){
 	);
 
 	$post_data_string = json_encode($post_data);
-	wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile1.log");
+	wfErrorLog($post_data_string,"/var/log/mediawiki/updateEntryTran.log");
 	curl_post_json_entrytran('insert',$post_data_string);
 }
 
@@ -135,7 +133,7 @@ function curl_post_json_entrytran($type,$data_string)
 {
 	require_once("curl.php");
         $out =MySPCURL::postDataInJson('http://huijidata.com:8080/entryTranslation/webapi/entryTran',$type, $data_string);
-	wfErrorLog($out,"/var/log/mediawiki/SocialProfile1.log");
+	wfErrorLog($out,"/var/log/mediawiki/updateEntryTran.log");
         return $out;
 }
 
