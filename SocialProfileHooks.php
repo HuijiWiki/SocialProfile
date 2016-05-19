@@ -69,6 +69,7 @@ class SocialProfileHooks {
 		$updater->addExtensionUpdate( array( 'addTable', 'video_archive', "$dir/Videos/video_archive$dbExt.sql", true ) );
 		$updater->addExtensionUpdate( array( 'addTable', 'video_page', "$dir/Videos/video_page$dbExt.sql", true ) );
 		$updater->addExtensionUpdate( array( 'addTable', 'video_revision', "$dir/Videos/video_revision$dbExt.sql", true ) );
+		$updater->addExtensionUpdate( array( 'addTable', 'common_css', "$dir/CommonStyle/common_css$dbExt.sql", true ) );
 		return true;
 	}
 
