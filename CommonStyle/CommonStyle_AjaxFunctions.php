@@ -1,13 +1,13 @@
 <?php
 /**
- * AJAX functions used by CommenStyle extension.
+ * AJAX functions used by CommonStyle extension.
  */
 $wgAjaxExportList[] = 'wfUpdateCssStyle';
 $wgAjaxExportList[] = 'wfOpenCssStyle';
-function wfUpdateCssStyle( $cssContent, $fileName ) {
+function wfUpdateCssStyle( $cssContent, $fileName, $cssId ) {
 	
 	global $wgUser, $wgHuijiPrefix;
-	$cssPath = "/var/www/virtual/".$wgHuijiPrefix."/skins/bootstrap-mediawiki/css";
+	$cssPath = "/var/www/virtual/".$wgHuijiPrefix."/style";
 
 	$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_UNKNOWN);
 
@@ -35,25 +35,31 @@ function wfUpdateCssStyle( $cssContent, $fileName ) {
 		return $out;
 	}
 
-	$out = $cssContent;
-        if(!is_dir($cssPath)){
-        	mkdir($cssPath, 0777);
-        }
-        // $filename = 'test.css';
-        file_put_contents($cssPath.'/'.$fileName, $cssContent); 
-	$cs = new CommenStyle();
-	$isExist = CommenStyle::checkCssFile( $fileName );
-	if (!$isExist) {
-		CommenStyle::insertSiteCss( $fileName );
-		$out = '{"success": true,"message": $cssContent}';
+    if(!is_dir($cssPath)){
+    	mkdir($cssPath, 0777);
+    }
+    if ( count($cssContent)>0 ) {
+    	$cssCon = json_encode($cssContent);
+    	$lessCon = '';
+    	foreach ($cssContent as $key => $value) {
+    				$lessCon .= $key.":".$value.";";
+    			}		
+    }
+    file_put_contents($cssPath.'/SiteColor.less', $lessCon); 
+	$res = CommonStyle::insertSiteCss( $fileName, $cssCon, $cssId );
+	if ($res) {
+		$ret = array('result'=> 'true' );
+		$out = json_encode($ret);
 	}else{
-		$out = '{"success": false,"message": "file have exist"}';
+		$ret = array('result'=> 'false' );
+		$out = json_encode($ret);
 	}
 	return $out;
 }
 
-function wfOpenCssStyle( $fileName ){
+function wfOpenCssStyle( $cssId ){
 
+	global $wgUser;
 	$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_UNKNOWN);
 
 	// This feature is only available for logged-in users.
@@ -79,8 +85,8 @@ function wfOpenCssStyle( $fileName ){
 		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NOT_ALLOWED);
 		return $out;
 	}
-	if ( $fileName != null ) {
-		$res = CommenStyle::openCssStyle($fileName);
+	if ( $cssId != null ) {
+		$res = CommonStyle::openCssStyle( $cssId );
 		if ($res) {
 			$out = '{"success": true,"message": "insert success"}';
 		}

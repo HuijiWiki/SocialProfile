@@ -4,7 +4,7 @@
     width: 250px;
     position: fixed;
     top: 100px;
-    left: 100px;
+    left:5px;
 }
 .color-picker>ul{
     padding-left: 0;
@@ -26,4 +26,31 @@
 }
 .picker-img .color-box{
     background-size: 100%;
+}
+.exa-border{
+    border: 1px solid;
+    height: 100px;
+    width: 200px;
+    padding: 20px;
+    margin-bottom: 10px;
+}
+.picker-img{
+    display: none;
+}
+@media screen and (max-width: 767px) {
+    .color-picker{
+        position: relative;
+        left: 0;
+        top: 0;
+    }
+    .preview{
+        display: none;
+    }
+    .color-box {
+        float: left;
+        margin-right: 5px;
+    }
+    .color-name{
+        margin-right: 0;
+    }
 }
