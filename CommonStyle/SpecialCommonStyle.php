@@ -68,7 +68,7 @@ class SpecialCommonStyle extends SpecialPage{
         </li>
         <li>
         <input class='color-box jscolor' style='background:#fff' data-variable='@sub-bg'  value='".$subBg."'>
-        <div class='color-name'>次级导航背景</div>a
+        <div class='color-name'>次级导航背景</div>
         </li>
         <li>
         <input class='color-box jscolor' style='background:#fff' data-variable='@sub-a'  value='".$subA."'>
@@ -88,7 +88,7 @@ class SpecialCommonStyle extends SpecialPage{
         <h4>wiki-outer-body背景</h4>
         <p>指定主体内容外部的背景颜色。</p>
         <h4>wiki-body背景</h4>
-        <p>指定主体内容的背景颜色，同时生成table和quote等的背景颜色。如果想要斑马纹的table背景颜色，请给table加上table-stripe的class名。效果如下</p>
+        <p>指定主体内容的背景颜色，同时生成nav-box,wiki-table,info-box等table的背景颜色以及quote的背景颜色。如果想要斑马纹的table背景颜色，请给table加上table-stripe的class名。效果如下</p>
         <blockquote class="quote blockquotequote" style="">“现在我才是<a href="/wiki/%E9%83%A8%E8%90%BD" title="部落">部落</a>的统治者，<a href="/wiki/%E5%8F%A4%E5%B0%94%E4%B8%B9" title="古尔丹">古尔丹</a>。
         不是你，也不是<a href="/wiki/%E6%9A%97%E5%BD%B1%E8%AE%AE%E4%BC%9A" title="暗影议会">你的那些术士</a>。只有我毁灭之锤。从今以后不会再有屈辱，不会再有背叛，也不会再有欺骗和谎言！”
         <p style="margin-bottom:0;text-align:right">—— <strong class="selflink">奥格瑞姆·毁灭之锤</strong></p></blockquote>
@@ -101,8 +101,8 @@ class SpecialCommonStyle extends SpecialPage{
         <p>指定次级导航字体颜色，同时生成反色的统计数目颜色</p>
         <h4>按钮组颜色定义</h4>
         <p>开发中......</p>
-        </div>
         <p>注：如果预览失效，请打开调试模式，链接后面加上?debug=1</p>
+        </div>
         ';
         $out->addHTML( $output );
         $out->addModuleStyles('ext.socialprofile.commonstyle.css');

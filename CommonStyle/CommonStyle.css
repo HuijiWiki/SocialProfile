@@ -2,9 +2,8 @@
     border: 1px solid #c0c0c0;
     padding: 20px;
     width: 250px;
-    position: fixed;
-    top: 100px;
-    left:5px;
+    position: relative;
+    float: right;
 }
 .color-picker>ul{
     padding-left: 0;
@@ -39,12 +38,7 @@
 }
 @media screen and (max-width: 767px) {
     .color-picker{
-        position: relative;
-        left: 0;
-        top: 0;
-    }
-    .preview{
-        display: none;
+        width: 100%;
     }
     .color-box {
         float: left;
