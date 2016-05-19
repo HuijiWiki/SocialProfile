@@ -528,7 +528,8 @@ $specialPageAliases['zh-hans'] = array(
 	'InviteUser'=>array('邀请信'),
 	'Designation'=>array('称号管理'),
 	'GiveSystemGift'=>array('系统成就'),
-	'ReissueSystemGift'=>array('补发系统礼物')
+	'ReissueSystemGift'=>array('补发系统礼物'),
+	'CommonStyle'=>array('自定义主题'),
 );
 
 /** Traditional Chinese (中文（繁體）‎) */
