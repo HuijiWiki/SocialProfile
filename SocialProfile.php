@@ -118,6 +118,9 @@ $wgAutoloadClasses['SpecialGiveSystemGift'] = __DIR__ . '/SystemGifts/SpecialGiv
 $wgAutoloadClasses['SpecialCommonStyle'] = __DIR__ . '/CommonStyle/SpecialCommonStyle.php';
 $wgAutoloadClasses['CommonStyle'] = __DIR__ . '/CommonStyle/CommonStyleClass.php';
 $wgAutoloadClasses['SpecialReissueSystemGift'] = __DIR__ . '/SystemGifts/SpecialReissueSystemGift.php';
+// $wgAutoloadClasses['SpecialAlipay'] = __DIR__ . '/Alipay/SpecialAlipay.php';
+// $wgAutoloadClasses['SpecialReturnUrl'] = __DIR__ . '/Alipay/SpecialReturnUrl.php';
+// $wgAutoloadClasses['SpecialNotifyUrl'] = __DIR__ . '/Alipay/SpecialNotifyUrl.php';
 
 // New special pages
 // $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
@@ -162,6 +165,9 @@ $wgSpecialPages['GiveSystemGift'] = 'SpecialGiveSystemGift';
 // $wgSpecialPages['TransModal'] = 'SpecialTransModal';
 $wgSpecialPages['CommonStyle'] = 'SpecialCommonStyle';
 $wgSpecialPages['ReissueSystemGift'] = 'SpecialReissueSystemGift';
+// $wgSpecialPages['Alipay'] = 'SpecialAlipay';
+// $wgSpecialPages['ReturnUrl'] = 'SpecialReturnUrl';
+// $wgSpecialPages['NotifyUrl'] = 'SpecialNotifyUrl';
 
 
 // Necessary AJAX functions
@@ -177,7 +183,7 @@ require_once( "$IP/extensions/SocialProfile/UserProfile/OauthLogin_AjaxFunctions
 require_once( "$IP/extensions/SocialProfile/UserGifts/UserGift_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/Videos/UploadVideos_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/AdminDashboard/AdminDashboard_AjaxFunctions.php" );
-// require_once( "$IP/extensions/SocialProfile/CommonStyle/CommonStyle_AjaxFunctions.php" );
+require_once( "$IP/extensions/SocialProfile/CommonStyle/CommonStyle_AjaxFunctions.php" );
 // What to display on social profile pages by default?
 $wgUserProfileDisplay['board'] = true;
 $wgUserProfileDisplay['foes'] = false;
