@@ -24,7 +24,7 @@ class SpecialCommonStyle extends SpecialPage{
         }else{
             $isNew = 1;
         }
-        if ( count($cssCon_1) == 0 ) {
+        if ( $cssCon_1['cssContent'] == null ) {
             $lessCon = array();
             $show = 'none';
         }else{
