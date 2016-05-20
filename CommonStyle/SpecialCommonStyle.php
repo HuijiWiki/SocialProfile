@@ -18,24 +18,25 @@ class SpecialCommonStyle extends SpecialPage{
             $out->permissionRequired( 'editinterface' );
             return;
         }
-//         $skinDirParts = explode( DIRECTORY_SEPARATOR, __DIR__ );
-//         var_dump($IP);die();
-// echo $skinDir = array_pop( $skinDirParts );die();
         $cssCon_1 = CommonStyle::getCurrentCssStyle(1);
-        if ( count($cssCon_1) == 0 ) {
-            $lessCon = array();
+        if ($cssCon_1 == false) {
             $isNew = 0;
         }else{
-            $lessCon = (array)json_decode( $cssCon_1['cssContent'] );
             $isNew = 1;
         }
-        $mainBase = !isset( $lessCon['@main-base'] ) ? "#fff" : $lessCon['@main-base'];
-        $bg = !isset( $lessCon['@bg'] ) ? "#000" : $lessCon['@bg'];
-        $bgInner = !isset( $lessCon['@bg-inner'] ) ? "#000" : $lessCon['@bg-inner'];
+        if ( count($cssCon_1) == 0 ) {
+            $lessCon = array();
+            $show = 'none';
+        }else{
+            $lessCon = (array)json_decode( $cssCon_1['cssContent'] );
+            $show = '';
+        }
+        $mainBase = !isset( $lessCon['@main-base'] ) ? "#333" : $lessCon['@main-base'];
+        $bg = !isset( $lessCon['@bg'] ) ? "#fff" : $lessCon['@bg'];
+        $bgInner = !isset( $lessCon['@bg-inner'] ) ? "#fff" : $lessCon['@bg-inner'];
         $a = !isset( $lessCon['@a'] ) ? "#428bca" : $lessCon['@a'];
         $subBg = !isset( $lessCon['@sub-bg'] ) ? "#f6f8f8" : $lessCon['@sub-bg'];
         $subA = !isset( $lessCon['@sub-a'] ) ? "#333" : $lessCon['@sub-a'];
-        // print_r($lessCon);die();
         $output .= "<aside class='color-picker'>
         <ul class='picker-img'>
         <li>
@@ -77,6 +78,7 @@ class SpecialCommonStyle extends SpecialPage{
         </ul>
         <input type='hidden' class='is-new' value=".$isNew.">
         <button class='btn btn-primary commonstyle-submit'>保存</button>
+        <button class='btn btn-primary commonstyle-reset' style='display:".$show."'>重置</button>
         </aside>";
         $output .='<div class="preview">
         <h2>预览说明</h2>

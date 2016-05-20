@@ -37,6 +37,32 @@ $(function(){
             $(selector).css({'background-image':'url("'+src+'")','background-size':'100%'});
         }
     });
+    $('.commonstyle-reset').click(function(){
+        var that = this;
+        $(this).attr('disabled','');
+        var reset = [];
+        $.ajax({
+            url:mw.util.wikiScript(),
+            data:{
+                action: 'ajax',
+                rs: 'wfUpdateCssStyle',
+                rsargs: ['','HuijiColor1',1]
+            },
+            type: 'post',
+            format: 'json',
+            success: function(data){
+                console.log(data);
+                $(that).removeAttr('disabled');
+
+                var res = JSON.parse(data)
+                console.log(res.result);
+                if(res.result == 'true'){
+                    mw.notification.notify('设置成功');
+                    location.reload();
+                }
+            }
+        });
+    });
     $('.commonstyle-submit').click(function(){
         var that = this;
         $(this).attr('disabled','');

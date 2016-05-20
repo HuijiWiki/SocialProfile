@@ -114,7 +114,7 @@ class CommonStyle{
 					);
 		}else{
 			$where = array(
-						'css_status' => 1
+						'css_id' => 1
 					);
 		}
 		$res = $dbr -> select(
@@ -137,6 +137,8 @@ class CommonStyle{
 				$result['cssContent'] = $value->css_content;
 				$result['updateDate'] = $value->update_date;
 			}
+		}else{
+			return false;
 		}
 		return $result;
 	}

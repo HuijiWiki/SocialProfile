@@ -38,12 +38,12 @@ function wfUpdateCssStyle( $cssContent, $fileName, $cssId ) {
     if(!is_dir($cssPath)){
     	mkdir($cssPath, 0777);
     }
-    if ( count($cssContent)>0 ) {
+    $lessCon = $cssCon = '';
+    if ( count($cssContent)>0 && !empty($cssContent) ) {
     	$cssCon = json_encode($cssContent);
-    	$lessCon = '';
     	foreach ($cssContent as $key => $value) {
-    				$lessCon .= $key.":".$value.";";
-    			}		
+			$lessCon .= $key.":".$value.";";
+    	}	
     }
     file_put_contents($cssPath.'/SiteColor.less', $lessCon); 
 	$res = CommonStyle::insertSiteCss( $fileName, $cssCon, $cssId );
