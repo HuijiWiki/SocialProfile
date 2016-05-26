@@ -253,4 +253,88 @@ class SocialProfileHooks {
         $wgMemc->delete( $key );
 	}
 
+	public static function onSkinGetPageLink($title, &$html){
+		if ($title->isSpecial('CommonStyle') ){
+            $cssCon_1 = CommonStyle::getCurrentCssStyle(1);
+            if ($cssCon_1 == false) {
+                $isNew = 0;
+            }else{
+                $isNew = 1;
+            }
+            if ( $cssCon_1['cssContent'] == null ) {
+                $lessCon = array();
+                $show = 'none';
+            }else{
+                $lessCon = (array)json_decode( $cssCon_1['cssContent'] );
+                $show = '';
+            }
+            $mainBase = !isset( $lessCon['@main-base'] ) ? "#333" : $lessCon['@main-base'];
+            $bg = !isset( $lessCon['@bg'] ) ? "#fff" : $lessCon['@bg'];
+            $bgInner = !isset( $lessCon['@bg-inner'] ) ? "#fff" : $lessCon['@bg-inner'];
+            $a = !isset( $lessCon['@a'] ) ? "#428bca" : $lessCon['@a'];
+            $subBg = !isset( $lessCon['@sub-bg'] ) ? "#f6f8f8" : $lessCon['@sub-bg'];
+            $subA = !isset( $lessCon['@sub-a'] ) ? "#333" : $lessCon['@sub-a'];
+            $modal = !isset( $lessCon['@modal'] ) ? "#222" : $lessCon['@modal'];
+			$html = '
+			<li class="dropdown open">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">自定义主题&nbsp;<span class="caret"></span></a>
+            <ul class="dropdown-menu picker-color">
+                <li>
+                <div class="color-box jcolor" data-variable="@main-base" value="'.$mainBase.'" style="color:'.$mainBase.'"></div>
+                <div class="color-name">字体主色调</div>
+                </li>
+                <li>
+                <div class="color-box jcolor" data-variable="@bg" value="'.$bg.'" style="color:'.$bg.'"></div>
+                <div class="color-name">外背景</div>
+                </li>
+                <li>
+                <div class="color-box jcolor" data-variable="@bg-inner" value="'.$bgInner.'" style="color:'.$bgInner.'"></div>
+                <div class="color-name">内背景</div>
+                </li>
+                <li>
+                <div class="color-box jcolor" data-variable="@a" value="'.$a.'" style="color:'.$a.'"></div>
+                <div class="color-name">链接颜色</div>
+                </li>
+                <li>
+                <div class="color-box jcolor" data-variable="@sub-bg" value="'.$subBg.'" style="color:'.$subBg.'"></div>
+                <div class="color-name">次级导航背景</div>
+                </li>
+                <li>
+                <div class="color-box jcolor" data-variable="@sub-a" value="'.$subA.'" style="color:'.$subA.'"></div>
+                <div class="color-name">次级导航字体色</div>
+                </li>
+                <li>
+                <div class="color-box jcolor" data-variable="@modal" value="'.$modal.'" style="color:'.$modal.'"></div>
+                <div class="color-name">模板色调</div>
+                </li>
+                <li>
+                <input type="hidden" class="is-new" value="'.$isNew.'">
+                <button class="btn btn-primary commonstyle-submit">保存</button>
+                <button class="btn btn-primary commonstyle-reset" style="display:'.$show.'">重置</button>
+                </li>
+            </ul>
+            </li>
+            <li>
+                <a href="/wiki/Mediawiki:Common.css">修改站点css&nbsp;</a>
+            </li>
+            <li>
+                <a href="/wiki/Mediawiki:Common.js">修改站点js&nbsp;</a>
+            </li>
+			';
+			return false;
+		}else if($title->isCssOrJsPage()){
+           $html='
+            <li>
+               <a href="/wiki/special:自定义主题">自定义主题&nbsp;</a>
+            </li>
+            <li>
+               <a href="/wiki/Mediawiki:Common.js">修改站点js&nbsp;</a>
+            </li>
+           ';
+		}else{
+			return true;
+		}	
+
+	}
+
 }

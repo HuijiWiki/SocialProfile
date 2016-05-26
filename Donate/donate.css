@@ -1,0 +1,69 @@
+.progress{
+    width: 250px;
+}
+/*.have-reached{
+	float: left
+}*/
+.site-avatar img{
+	width: 100%;
+}
+.site-name{
+	font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.site-desc{
+	font-size: 18px;
+	text-align: left;
+}
+.month-total, .have-reached{
+	margin-top: 10px;
+}
+#firstHeading{
+	display: none;
+}
+.title{
+	padding-top: 100px;
+	margin-bottom: 200px;
+	text-align: center;
+}
+.site-avatar {
+    width: 280px;
+    display: inline-block;
+}
+.site-avatar img{
+	width: 100px;
+}
+.site-info{
+	display: inline-block;
+	position: relative;
+    top: 20px;
+}
+.have-reached{
+	font-size: 18px;
+}
+#points-level{
+	margin-bottom: 0;
+    display: inline-block;
+    width: 200px;
+}
+
+.have-reached{
+	margin-bottom: 20px;
+}
+.einput {
+    font-size: 18px;
+}
+.num{
+	width: 80px;
+}
+.title .alisubmit {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    font-size: 18px;
+    margin: 10px;
+}
+.donate-qa{
+	margin-left:40px; 
+}

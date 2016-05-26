@@ -42,6 +42,7 @@ $wgExtensionMessagesFiles['SocialProfileNamespaces'] = __DIR__ . '/SocialProfile
 $wgExtensionMessagesFiles['AvatarMagic'] = __DIR__ . '/UserProfile/Avatar.magic.i18n.php';
 // $wgMessagesDirs['SocialProfileTransModal'] = __DIR__ . '/TransModal/i18n';
 $wgMessagesDirs['SocialProfileCommonStyle'] = __DIR__ . '/CommonStyle/i18n';
+$wgMessagesDirs['SocialProfileDonate'] = __DIR__ . '/Donate/i18n';
 
 // Classes to be autoloaded
 $wgAutoloadClasses['GenerateTopUsersReport'] = __DIR__ . '/UserStats/GenerateTopUsersReport.php';
@@ -118,9 +119,10 @@ $wgAutoloadClasses['SpecialGiveSystemGift'] = __DIR__ . '/SystemGifts/SpecialGiv
 $wgAutoloadClasses['SpecialCommonStyle'] = __DIR__ . '/CommonStyle/SpecialCommonStyle.php';
 $wgAutoloadClasses['CommonStyle'] = __DIR__ . '/CommonStyle/CommonStyleClass.php';
 $wgAutoloadClasses['SpecialReissueSystemGift'] = __DIR__ . '/SystemGifts/SpecialReissueSystemGift.php';
-// $wgAutoloadClasses['SpecialAlipay'] = __DIR__ . '/Alipay/SpecialAlipay.php';
-// $wgAutoloadClasses['SpecialReturnUrl'] = __DIR__ . '/Alipay/SpecialReturnUrl.php';
-// $wgAutoloadClasses['SpecialNotifyUrl'] = __DIR__ . '/Alipay/SpecialNotifyUrl.php';
+$wgAutoloadClasses['SpecialDonate'] = __DIR__ . '/Donate/SpecialDonate.php';
+$wgAutoloadClasses['UserDonation'] = __DIR__ . '/Donate/UserDonationClass.php';
+$wgAutoloadClasses['SpecialReturnUrl'] = __DIR__ . '/Donate/SpecialReturnUrl.php';
+$wgAutoloadClasses['SpecialNotifyUrl'] = __DIR__ . '/Donate/SpecialNotifyUrl.php';
 
 // New special pages
 // $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
@@ -165,9 +167,9 @@ $wgSpecialPages['GiveSystemGift'] = 'SpecialGiveSystemGift';
 // $wgSpecialPages['TransModal'] = 'SpecialTransModal';
 $wgSpecialPages['CommonStyle'] = 'SpecialCommonStyle';
 $wgSpecialPages['ReissueSystemGift'] = 'SpecialReissueSystemGift';
-// $wgSpecialPages['Alipay'] = 'SpecialAlipay';
-// $wgSpecialPages['ReturnUrl'] = 'SpecialReturnUrl';
-// $wgSpecialPages['NotifyUrl'] = 'SpecialNotifyUrl';
+$wgSpecialPages['Donate'] = 'SpecialDonate';
+$wgSpecialPages['ReturnUrl'] = 'SpecialReturnUrl';
+$wgSpecialPages['NotifyUrl'] = 'SpecialNotifyUrl';
 
 
 // Necessary AJAX functions
@@ -321,7 +323,7 @@ require_once( "$IP/extensions/SocialProfile/UserBoard/UserBoard.php" ); // UserB
 require_once( "$IP/extensions/SocialProfile/UserActivity/UserActivity.php" ); // UserActivity - recent social changes
 require_once( "$IP/extensions/SocialProfile/UserEditToUpsert/userEditRecord.php"); // Edit Record collected to mongoDB.
 require_once( "$IP/extensions/SocialProfile/UserEditToUpsert/updateESContent.php"); // Update Page Content in ES.
-require_once( "$IP/extensions/SocialProfile/UserEditToUpsert/updateEntryTran.php"); 
+require_once( "$IP/extensions/SocialProfile/UserEditToUpsert/updateEntryTran.php");
 
 
 $wgHooks['CanonicalNamespaces'][] = 'SocialProfileHooks::onCanonicalNamespaces';
@@ -344,6 +346,7 @@ $wgHooks['ResourceLoaderGetConfigVars'][] = 'SocialProfileHooks::onResourceLoade
 $wgHooks['ImageOpenShowImageInlineBefore'][] = 'SocialProfileHooks::onImageOpenShowImageInlineBefore';
 $wgHooks['ImagePageAfterImageLinks'][] = 'SocialProfileHooks::onImagePageAfterImageLinks';
 $wgHooks['UserGroupsChanged'][] = 'SocialProfileHooks::onUserGroupsChanged';
+$wgHooks['SkinGetPageLink'][] = 'SocialProfileHooks::onSkinGetPageLink';
 
 // ResourceLoader module definitions for certain components which do not have
 // their own loader file
@@ -442,15 +445,18 @@ $wgResourceModules['ext.socialprofile.uploadfiles.js'] = array(
 );
 
 //commonstyle
-$wgResourceModules['ext.socialprofile.commonstyle.css'] = array(
-	'styles' => 'CommonStyle.css',
+$wgResourceModules['socialprofile.commonstyle.css'] = array(
+	'styles' => array('jcolor.min.css','CommonStyle.css'),
+    'dependencies' => array(
+                    'skins.bootstrapmediawiki.top'
+                    ),
 	'localBasePath' => __DIR__ . '/CommonStyle',
 	'remoteExtPath' => 'SocialProfile/CommonStyle',
 	'position' => 'top',
 );
 
 $wgResourceModules['ext.socialprofile.commonstyle.js'] = array(
-	'scripts' =>array('jscolor.min.js','CommonStyle.js'),
+	'scripts' =>array('jcolor.min.js','CommonStyle.js'),
 	'dependencies' => 'mediawiki.notification',
 	'localBasePath' => __DIR__ . '/CommonStyle',
 	'remoteExtPath' => 'SocialProfile/CommonStyle',
@@ -669,6 +675,14 @@ $wgResourceModules['ext.guidedTour.tour.newuser'] = array(
 	'localBasePath' => __DIR__ . '/resources',
 	'remoteExtPath' => 'SocialProfile/resources',
 	'position' => 'bottom',
+);
+$wgResourceModules['ext.socialprofile.donate.css'] = array(
+	'styles' => array(
+					'donate.css',
+				),
+	'localBasePath' => __DIR__ . '/Donate',
+	'remoteExtPath' => 'SocialProfile/Donate',
+	'position' => 'top',
 );
 // End ResourceLoader stuff
 

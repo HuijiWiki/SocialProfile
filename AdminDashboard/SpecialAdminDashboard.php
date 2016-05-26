@@ -148,7 +148,8 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				$gtA = true;	
 				if ($protip == ''){
 					$protip = wfMessage('protip-rating-a')->escaped();
-				}				
+				}
+				break;		
 			case 'B':
 				foreach( $settings as $key => $value){
 					if ($value['level'] == 'B'){
@@ -159,7 +160,8 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				$gtB = true;
 				if ($protip == ''){
 					$protip = wfMessage('protip-rating-b')->escaped();
-				}			
+				}
+				break;
 			case 'C':
 				foreach( $settings as $key => $value){
 					if ($value['level'] == 'C'){
@@ -170,7 +172,8 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				$gtC = true;
 				if ($protip == ''){
 					$protip = wfMessage('protip-rating-c')->escaped();
-				}			
+				}
+				break;
 			case 'D':
 				foreach( $settings as $key => $value){
 					if ($value['level'] == 'D'){
@@ -181,7 +184,8 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				$gtD = true;
 				if ($protip == ''){
 					$protip = wfMessage('protip-rating-d')->escaped();
-				}			
+				}
+				break;
 			case 'E':
 				foreach( $settings as $key => $value){
 					if ($value['level'] == 'E'){
@@ -191,7 +195,8 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				}
 				if ($protip == ''){
 					$protip = wfMessage('protip-rating-e')->escaped();
-				}			
+				}
+				break;
 			default:
 				foreach( $settings as $key => $value){
 					if ($value['level'] == 'NA'){
@@ -201,7 +206,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				}
 				if ($protip == ''){
 					$protip = wfMessage('protip-rating-na')->escaped();
-				}			
+				}
 				break;
 		}
 

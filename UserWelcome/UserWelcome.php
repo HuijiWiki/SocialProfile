@@ -49,7 +49,7 @@ function wfWelcomeUser( &$parser ) {
 $wgMessagesDirs['UserWelcome'] = __DIR__ . '/i18n';
 
 function getWelcomeUser( $input, $args, $parser ) {
-	$parser->disableCache();
+	// $parser->disableCache();
 	$output = getWelcome();
 
 	return $output;

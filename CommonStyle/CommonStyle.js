@@ -4,22 +4,35 @@
 $(function(){
     var file;
     var obj = new Object();
-
+    $('.picker-color').click(function(e){
+//        e.preventDefault();
+        e.stopPropagation();
+    })
     $('.picker-color .color-box').each(function(){
         var variable = $(this).attr('data-variable');
-        var color =  $(this).val();
+        var color =  $(this).attr('value');
         obj[variable] = color;
     });
-    $('.color-box').change(function(){
-        var variable = $(this).attr('data-variable');
-        var type = $(this).parents('ul').attr('class');
-        var color = this.jscolor.toRGBString();
-        obj[variable] = color;
-        console.log(obj);
-        if(type == 'picker-color'){
-            less.modifyVars(obj);
-        }
+    $('.jcolor').each(function(){
+        $(this).colorpicker({
+            colorSpace: 'hsla',
+            displayColor: 'hex'
+        }).on('newcolor',function(e,colorpicker){
+            var variable = $(this).attr('data-variable');
+            var type = $(this).parents('ul').attr('class');
+            var color = colorpicker.toCssString();
+            obj[variable] = color;
+            console.log(obj);
+//            if(type == 'picker-color'){
+                less.modifyVars(obj);
+//            }
+        });
     });
+//    $('.jcolor').colorpicker({
+//        colorSpace: 'hsla',
+//        displayColor: 'css'
+//    });
+//    $('.jcolor')
 
     $('.picker-img .color-box').click(function(){
         $(this).siblings('.file-btn').trigger('click');
@@ -99,7 +112,7 @@ $(function(){
             }
         });
     });
-    var content = '<link rel="stylesheet/less" href="/skins/bootstrap-mediawiki/style.less"><script type="text/javascript">' +
+    var content = '<link rel="stylesheet/less" href="/skins/bootstrap-mediawiki/less/custom.less"><script type="text/javascript">' +
         'less = {env: "development",async: false,fileAsync: false,poll: 1000,functions: {},dumpLineNumbers: "comments", relativeUrls: false, rootpath: ":/a.com/" };</script>' +
         '<script src="http://www.leemagnum.com/js/less-1.4.2.min.js" type="text/javascript"></script>';
     $('head').append(content);
