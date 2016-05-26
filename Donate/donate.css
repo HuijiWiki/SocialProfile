@@ -28,16 +28,16 @@
 	text-align: center;
 }
 .site-avatar {
-    width: 280px;
     display: inline-block;
 }
 .site-avatar img{
 	width: 100px;
+	float: left;
 }
 .site-info{
-	display: inline-block;
-	position: relative;
-    top: 20px;
+	float: left;
+    max-width: 200px;
+    padding-top: 10px;
 }
 .have-reached{
 	font-size: 18px;
