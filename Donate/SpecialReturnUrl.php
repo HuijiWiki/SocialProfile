@@ -21,7 +21,7 @@ class SpecialReturnUrl extends SpecialPage{
     public function execute( $params ) {
 		require_once("alipay.config.php");
 		require_once("lib/alipay_notify.class.php");
-		global $wgUser, $wgHuijiPrefix, $wgServer, $wgSiteName;
+		global $wgUser, $wgHuijiPrefix, $wgServer, $wgSitename;
 		//计算得出通知验证结果
 		$request = $this->getRequest();
 		$alipayNotify = new AlipayNotify($alipay_config);
@@ -64,7 +64,7 @@ class SpecialReturnUrl extends SpecialPage{
 		      $output .= "trade_status=".$_GET['trade_status'];
 		    }
 				
-			$output .= "<div>捐赠成功成功,非常感谢您对".$wgSiteName."的支持~(3s后将跳回捐赠页面)</div>";
+			$output .= "<div>捐赠成功,非常感谢您对".$wgSitename."的支持~(3s后将跳回捐赠页面)</div>";
 			$output .= '<script>window.setTimeout(function(){window.location.href = "'.$title->getFullURL().'";}, 3000);</script>';
 
 			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
