@@ -67,3 +67,23 @@
 .donate-qa{
 	margin-left:40px; 
 }
+@media screen and (max-width: 768px){
+	.title{
+		padding-top: 10px
+	}
+	.site-avatar img{
+		float: none;
+	}
+	.site-info{
+		float: none;
+	}
+/*	.site-info{
+	max-width: 150px;
+    font-size: 12px;
+    padding-top: 40px;
+	}
+	.donate-qa{
+		text-align: left;
+	}*/
+
+}
