@@ -38,6 +38,16 @@ class SpecialReturnUrl extends SpecialPage{
 				$userName = $wgUser->getName();
 			}
 			$res = UserDonation::addUserDonationInfo( $userName, $wgHuijiPrefix, $request->getVal('total_fee') );
+			if ( $userName != null ) {
+				$log = new LogPage( 'Donate' );
+				$log->addEntry(
+						'addDescription',
+						SpecialPage::getTitleFor('Donate'),
+						wfMessage( 'user-donate-site-log-entry',array( $userName,$wgHuijiPrefix, $request->getVal('total_fee') ) )->inContentLanguage()->text(),
+						array()
+					);
+			}
+			
 
 			//商户订单号
 
