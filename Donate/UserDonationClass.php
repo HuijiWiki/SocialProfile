@@ -5,7 +5,9 @@
 class UserDonation{
 	//add info
 	static function addUserDonationInfo( $userName, $sitePrefix, $donationValue ){
+		global $wgMemc;
 		$dbw = wfGetDB( DB_MASTER );
+		$month = date('Y-m', time());
 		$dbw -> insert(
 				'user_donation',
 				array(
@@ -13,17 +15,29 @@ class UserDonation{
 					'site_prefix' => $sitePrefix,
 					'donation_value' => $donationValue,
 					'date' => date('Y-m-d H:i:s', time()),
-					'month' => date('Y-m', time()),
+					'month' => $month,
 				),
 				 __METHOD__
 			);
 		if ( $dbw->insertId() ) {
+			$key = wfForeignMemcKey('huiji','', 'one_site_user_donation_rank', $sitePrefix, $month );
+			$key2 = wfForeignMemcKey('huiji','', 'all_site_user_donation_rank', '', $month );
+			$key3 = wfForeignMemcKey( 'huiji', '' , 'all_site_donation_rank', '', $month );
+			$wgMemc->delete($key);
+			$wgMemc->delete($key2);
+			$wgMemc->delete($key3);
 			return true;
 		}
 	}
 
-	//if month is not null, get info by month and prefix 
+	/**
+	 * getDonationInfoByPrefix
+	 * @param  string $sitePrefix if null, get allsite donation info
+	 * @param  string $month      if null, get all month donation info
+	 * @return array
+	 */
 	static function getDonationInfoByPrefix( $sitePrefix, $month ){
+		global $wgMemc;
 		$where = array();
 		if ( $sitePrefix != null ) {
 			if ( $month != null ) {
@@ -74,107 +88,87 @@ class UserDonation{
 		return $result;
 	}
 
-	// static function getAllSiteMonthRank(){
-	// 	$month = date('Y-m', time());
-	// 	$rankDate = self::getDonationInfoByPrefix( '', $month );
-	// 	$rankResult = array();
-	// 	foreach ($rankDate as $key => $value) {
-	// 		if ( !isset( $rankResult[$value['userName']] ) ) {
-	// 			$rankResult[$value['userName']] = $value['donationValue'];
-	// 		}else{
-	// 			$rankResult[$value['userName']] += $value['donationValue'];
-	// 		}
-	// 	}
-	// 	arsort($rankResult);
-	// 	return $rankResult;
-	// }
-	// static function getAllSiteTotalRank(){
-	// 	$rankDate = self::getDonationInfoByPrefix( '', '' );
-	// 	$rankResult = array();
-	// 	foreach ($rankDate as $key => $value) {
-	// 		if ( !isset( $rankResult[$value['userName']] ) ) {
-	// 			$rankResult[$value['userName']] = $value['donationValue'];
-	// 		}else{
-	// 			$rankResult[$value['userName']] += $value['donationValue'];
-	// 		}
-	// 	}
-	// 	arsort($rankResult);
-	// 	return $rankResult;
-	// }
-
-	//if month(ex:'2016-05') is null, get all sites donation total rank,else get one month rank
-	static function getAllSiteDonationUserRank( $month ){
-		$rankDate = self::getDonationInfoByPrefix( '', $month );
-		$rankResult = array();
-		foreach ($rankDate as $key => $value) {
-			if ( !isset( $rankResult[$value['userName']] ) ) {
-				$rankResult[$value['userName']] = $value['donationValue'];
-			}else{
-				$rankResult[$value['userName']] += $value['donationValue'];
-			}
-		}
-		arsort($rankResult);
-		return $rankResult;
-	}
-
-	// static function getCurrentMonthRankByPrefix( $sitePrefix ){
-	// 	$month = date('Y-m', time());
-	// 	$rankDate = self::getDonationInfoByPrefix( $sitePrefix, $month );
-	// 	$rankResult = array();
-	// 	foreach ($rankDate as $key => $value) {
-	// 		if ( !isset( $rankResult[$value['userName']] ) ) {
-	// 			$rankResult[$value['userName']] = $value['donationValue'];
-	// 		}else{
-	// 			$rankResult[$value['userName']] += $value['donationValue'];
-	// 		}
-	// 	}
-	// 	arsort($rankResult);
-	// 	return $rankResult;
-
-	// }
-	// static function getTotalRankByPrefix( $sitePrefix ){
-	// 	$rankDate = self::getDonationInfoByPrefix( $sitePrefix, '' );
-	// 	$rankResult = array();
-	// 	foreach ($rankDate as $key => $value) {
-	// 		if ( !isset( $rankResult[$value['userName']] ) ) {
-	// 			$rankResult[$value['userName']] = $value['donationValue'];
-	// 		}else{
-	// 			$rankResult[$value['userName']] += $value['donationValue'];
-	// 		}
-	// 	}
-	// 	arsort($rankResult);
-	// 	return $rankResult;
-	// }
-
-	//$month = date('Y-m', time())
-	//if month is null, get one site total rank,else get one month rank
+	/**
+	 * getDonationRankByPrefix
+	 * @param  string $sitePrefix site's prefix
+	 * @param  string $month(2016-05)     if null, get all month donation info
+	 * @return array
+	 */
 	static function getDonationRankByPrefix( $sitePrefix, $month ){
-		$rankDate = self::getDonationInfoByPrefix( $sitePrefix, $month );
-		$rankResult = array();
-		foreach ($rankDate as $key => $value) {
-			if ( !isset( $rankResult[$value['userName']] ) ) {
-				$rankResult[$value['userName']] = $value['donationValue'];
-			}else{
-				$rankResult[$value['userName']] += $value['donationValue'];
+		global $wgMemc;
+		$key = wfForeignMemcKey('huiji','', 'one_site_user_donation_rank', $sitePrefix, $month );
+		$data = $wgMemc->get( $key );
+		if ( $data == null ) {
+			$rankDate = self::getDonationInfoByPrefix( $sitePrefix, $month );
+			$rankResult = array();
+			foreach ($rankDate as $key => $value) {
+				if ( !isset( $rankResult[$value['userName']] ) ) {
+					$rankResult[$value['userName']] = $value['donationValue'];
+				}else{
+					$rankResult[$value['userName']] += $value['donationValue'];
+				}
 			}
+			arsort($rankResult);
+			$wgMemc->set( $key, $rankResult );
+			return $rankResult;
+		}else{
+			return $data;
 		}
-		arsort($rankResult);
-		return $rankResult;
 	}
 
-	//if month is null, get all site rank,else  get all site rank in one month
-	static function getAllSiteDonationRank( $month ){
-		$rankDate = self::getDonationInfoByPrefix( '', $month );
-		$rankResult = array();
-		foreach ($rankDate as $key => $value) {
-			if ( !isset( $rankResult[$value['sitePrefix']] ) ) {
-				$rankResult[$value['sitePrefix']] = $value['donationValue'];
-			}else{
-				$rankResult[$value['sitePrefix']] += $value['donationValue'];
+	/**
+	 * getAllSiteDonationUserRank
+	 * @param  string $month if month(ex:'2016-05') is null, get all sites donation total rank,else get one month rank
+	 * @return array
+	 */
+	static function getAllSiteDonationUserRank( $month ){
+		global $wgMemc;
+		$key = wfForeignMemcKey( 'huiji', '', 'all_site_user_donation_rank', '', $month );
+		$data = $wgMemc->get( $key );
+		if( $data == null ){
+			$rankDate = self::getDonationInfoByPrefix( '', $month );
+			$rankResult = array();
+			foreach ($rankDate as $key => $value) {
+				if ( !isset( $rankResult[$value['userName']] ) ) {
+					$rankResult[$value['userName']] = $value['donationValue'];
+				}else{
+					$rankResult[$value['userName']] += $value['donationValue'];
+				}
 			}
+			arsort($rankResult);
+			$wgMemc->set( $key, $rankResult );
+			return $rankResult;
+		}else{
+			return $data;
 		}
-		arsort($rankResult);
-		return $rankResult;
+	}
+
+	/**
+	 * getAllSiteDonationRank
+	 * @param  string $month if month is null, get all site rank,else  get all site rank in one month
+	 * @return array
+	 */
+	static function getAllSiteDonationRank( $month ){
+		global $wgMemc;
+		$key = wfForeignMemcKey( 'huiji', '' , 'all_site_donation_rank', '', $month );
+		$data = $wgMemc->get( $key );
+		if ( $data == null ) {
+			$rankDate = self::getDonationInfoByPrefix( '', $month );
+			$rankResult = array();
+			foreach ($rankDate as $key => $value) {
+				if ( !isset( $rankResult[$value['sitePrefix']] ) ) {
+					$rankResult[$value['sitePrefix']] = $value['donationValue'];
+				}else{
+					$rankResult[$value['sitePrefix']] += $value['donationValue'];
+				}
+			}
+			arsort($rankResult);
+			$wgMemc->set( $key, $rankResult );
+			return $rankResult;
+		}else{
+			return $data;
+		}
+		
 	}
 
 }

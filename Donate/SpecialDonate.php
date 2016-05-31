@@ -100,6 +100,14 @@ class SpecialDonate extends SpecialPage{
         //tradenumber
         $tradeNum = HuijiFunctions::getTradeNo('DS');
         $siteName = $site->getName();
+
+        //month rank
+        $month = date("Y-m", time());
+        $monthRank = UserDonation::getDonationRankByPrefix( $wgHuijiPrefix, $month );
+        $monthRankTotal = UserDonation::getDonationRankByPrefix( $wgHuijiPrefix, '' );
+        // print_r($monthRank);
+        // print_r($monthRankTotal);die();
+
         $output .= $templateParser->processTemplate(
                             'donate',
                             array(

@@ -7,10 +7,10 @@ $alipay_config['partner']		= '2088221891177075';
 $alipay_config['seller_id']	= $alipay_config['partner'];
 
 //商户的私钥,此处填写原始私钥，RSA公私钥生成：https://doc.open.alipay.com/doc2/detail.htm?spm=a219a.7629140.0.0.nBDxfy&treeId=58&articleId=103242&docType=1
-$alipay_config['private_key_path']	= '/var/www/html/rsa_private_key.pem';
+$alipay_config['private_key_path']	= '/var/confidential/rsa_private_key.pem';
 
 //支付宝的公钥，查看地址：https://b.alipay.com/order/pidAndKey.htm 
-$alipay_config['ali_public_key_path']= '/var/www/html/alipay_public_key.pem';
+$alipay_config['ali_public_key_path']= '/var/confidential/alipay_public_key.pem';
 
 // 服务器异步通知页面路径  需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
 $alipay_config['notify_url'] = "http://".$wgHuijiPrefix.".huiji.wiki/wiki/special:NotifyUrl";
