@@ -30,7 +30,7 @@ class SpecialDonate extends SpecialPage{
         $total_fee = $request->getVal('WIDtotal_fee');
 
         //商品描述，可空
-
+        $body = $request->getVal('WIDbody');
         //构造要请求的参数数组，无需改动
         if ( isset($out_trade_no) && $out_trade_no != null && $subject != null && $total_fee != null) {
                 $parameter = array(
@@ -105,9 +105,6 @@ class SpecialDonate extends SpecialPage{
         $month = date("Y-m", time());
         $monthRank = UserDonation::getDonationRankByPrefix( $wgHuijiPrefix, $month );
         $monthRankTotal = UserDonation::getDonationRankByPrefix( $wgHuijiPrefix, '' );
-        // print_r($monthRank);
-        // print_r($monthRankTotal);die();
-
         $output .= $templateParser->processTemplate(
                             'donate',
                             array(

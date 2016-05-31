@@ -30,8 +30,7 @@ class SpecialReturnUrl extends SpecialPage{
 		$output = '';
 		$title = SpecialPage::getTitleFor('Donate');
 		if($verify_result) {//验证成功
-			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			//请在这里加上商户的业务逻辑程序代码
+
 			$isAnon = $request->getVal('body');
 			if ( isset($isAnon) && $isAnon == 1 ) {
 				$userName = '';
@@ -39,9 +38,6 @@ class SpecialReturnUrl extends SpecialPage{
 				$userName = $wgUser->getName();
 			}
 			$res = UserDonation::addUserDonationInfo( $userName, $wgHuijiPrefix, $request->getVal('total_fee') );
-
-			//——请根据您的业务逻辑来编写程序（以下代码仅作参考）——
-		    //获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表
 
 			//商户订单号
 
@@ -57,19 +53,16 @@ class SpecialReturnUrl extends SpecialPage{
 
 		    if($_GET['trade_status'] == 'TRADE_FINISHED' || $_GET['trade_status'] == 'TRADE_SUCCESS') {
 				//判断该笔订单是否在商户网站中已经做过处理
-					//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
-					//如果有做过处理，不执行商户的业务程序
+				// $output .= '<h1>订单已完成</h1>';
 		    }
 		    else {
 		      $output .= "trade_status=".$_GET['trade_status'];
 		    }
 				
-			$output .= "<div>捐赠成功,非常感谢您对".$wgSitename."的支持~(3s后将跳回捐赠页面)</div>";
+			$output .= "<div>加油成功,非常感谢您对".$wgSitename."的支持~(3s后将跳回加油页面)</div>";
 			$output .= '<script>window.setTimeout(function(){window.location.href = "'.$title->getFullURL().'";}, 3000);</script>';
 
-			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
-			
-			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 		}
 		else {
 		    //验证失败
