@@ -112,6 +112,7 @@ class SpecialCommonStyle extends SpecialPage{
                                 'subA' => $subA,
                                 'modal' => $modal,
                                 'styleArr' => $styleArr,
+                                'isNew' => $isNew,
                             )
                     );
         $out->addHTML( $output );
