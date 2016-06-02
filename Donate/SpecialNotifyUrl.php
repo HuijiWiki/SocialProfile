@@ -68,19 +68,19 @@ class SpecialNotifyUrl extends UnlistedSpecialPage{
 						
 				//注意：
 				//付款完成后，支付宝系统发送该交易状态通知
-				$isAnon = $_POST('body');
+				$isAnon = $_POST['body'];
 				if ( isset($isAnon) && $isAnon == 1 ) {
 					$userName = '';
 				}else{
 					$userName = $wgUser->getName();
 				}
-				$res = UserDonation::addUserDonationInfo( $userName, $wgHuijiPrefix, $_POST('total_fee') );
+				$res = UserDonation::addUserDonationInfo( $userName, $wgHuijiPrefix, $_POST['total_fee'] );
 				if ( $userName != null ) {
 					$log = new LogPage( 'Donate' );
 					$log->addEntry(
 							'addDescription',
 							SpecialPage::getTitleFor('Donate'),
-							wfMessage( 'user-donate-site-log-entry',array( $userName,$wgHuijiPrefix, $_POST('total_fee') ) )->inContentLanguage()->text(),
+							wfMessage( 'user-donate-site-log-entry',array( $userName,$wgHuijiPrefix, $_POST['total_fee'] ) )->inContentLanguage()->text(),
 							array()
 						);
 				}
