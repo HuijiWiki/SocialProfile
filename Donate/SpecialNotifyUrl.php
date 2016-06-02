@@ -92,13 +92,18 @@ class SpecialNotifyUrl extends UnlistedSpecialPage{
 
 			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
 		        
-			echo "success";die();//请不要修改或删除
-			
+		    $this->getOutput()->setArticleBodyOnly(true);
+			echo "success";//请不要修改或删除
+		    $this->getOutput()->output();
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		}
 		else {
 		    //验证失败
-		    echo "fail";die();
+		    $this->getOutput()->setArticleBodyOnly(true);
+		    echo "fail";
+		    $this->getOutput()->output();
+		    
+
 
 		    //调试用，写文本函数记录程序运行情况是否正常
 		    //logResult("这里写入想要调试的代码变量值，或其他运行的结果记录");
