@@ -1,23 +1,49 @@
-.picker-color{
+.color-picker{
+    position: fixed;
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 300px;
     border: 1px solid #c0c0c0;
-    padding: 20px;
-    width: 250px;
+    padding: 10px;
+    top: 110px;
 }
-.picker-color>ul{
+.color-picker-item{
+    border-bottom:1px solid #efefef;
+    margin-bottom: 10px;
+}
+.color-picker-item .senior,.color-picker-item .set{
+    display: none;
+}
+.set{
+    padding-bottom: 10px;
+}
+.set>div{
+    margin-bottom: 10px;
+}
+#wiki-outer-body .color-picker .color-picker-item .set>li{
+    line-height: 1.8;
+}
+.color-picker-item h5{
+    cursor: pointer;
+}
+.picker-color{
+    width: 100%;
     padding-left: 0;
     list-style-type: none;
-    border-bottom:1px solid #efefef;
+    margin-bottom: 0;
 }
-.picker-color>li{
+#wiki-outer-body .picker-color>li{
     line-height: 42px;
     margin-bottom: 10px;
 }
-.color-name{
-    margin-right: 60px;
-}
 .color-box{
-    float: right;
+    float: left;
     cursor: pointer;
+    line-height: 1;
+}
+.senior-detail {
+    background: #fafafa;
 }
 .picker-img .file-btn{
     display: none;
@@ -35,6 +61,29 @@
 .picker-img{
     display: none;
 }
+.preview{
+    margin-left: 310px;
+}
+.maximize-wrapper:after {
+    display: block;
+    content: '';
+    width: 20px;
+    height: 100%;
+    position: absolute;
+    right: -20px;
+    top: 0;
+}
+.senior .picker-color{
+    max-height: 500px!important;
+    overflow-y: auto;
+}
+.input-color {
+    line-height: 1;
+    width: 80px;
+    float: left;
+    margin: 10px;
+    border: 1px solid #e0e0e0;
+}
 @media screen and (max-width: 767px) {
     .color-picker{
         width: 100%;
@@ -45,5 +94,15 @@
     }
     .color-name{
         margin-right: 0;
+    }
+    .color-picker{
+        position: static;
+        max-height: none;
+        border: none;
+    }
+
+    .preview{
+        margin-left: 0;
+        display: none;
     }
 }

@@ -12,7 +12,7 @@
  * 可放入HTML等美化页面的代码、商户业务逻辑程序代码
  * 该页面可以使用PHP开发工具调试，也可以使用写文本函数logResult，该函数已被默认关闭，见alipay_notify_class.php中的函数verifyReturn
  */
-class SpecialReturnUrl extends SpecialPage{
+class SpecialReturnUrl extends UnlistedSpecialPage{
     
     function __construct(){
         parent::__construct( 'ReturnUrl' );
@@ -30,23 +30,23 @@ class SpecialReturnUrl extends SpecialPage{
 		$output = '';
 		$title = SpecialPage::getTitleFor('Donate');
 		if($verify_result) {//验证成功
-
-			$isAnon = $request->getVal('body');
-			if ( isset($isAnon) && $isAnon == 1 ) {
-				$userName = '';
-			}else{
-				$userName = $wgUser->getName();
-			}
-			$res = UserDonation::addUserDonationInfo( $userName, $wgHuijiPrefix, $request->getVal('total_fee') );
-			if ( $userName != null ) {
-				$log = new LogPage( 'Donate' );
-				$log->addEntry(
-						'addDescription',
-						SpecialPage::getTitleFor('Donate'),
-						wfMessage( 'user-donate-site-log-entry',array( $userName,$wgHuijiPrefix, $request->getVal('total_fee') ) )->inContentLanguage()->text(),
-						array()
-					);
-			}
+			
+			// $isAnon = $request->getVal('body');
+			// if ( isset($isAnon) && $isAnon == 1 ) {
+			// 	$userName = '';
+			// }else{
+			// 	$userName = $wgUser->getName();
+			// }
+			// $res = UserDonation::addUserDonationInfo( $userName, $wgHuijiPrefix, $request->getVal('total_fee') );
+			// if ( $userName != null ) {
+			// 	$log = new LogPage( 'Donate' );
+			// 	$log->addEntry(
+			// 			'addDescription',
+			// 			SpecialPage::getTitleFor('Donate'),
+			// 			wfMessage( 'user-donate-site-log-entry',array( $userName,$wgHuijiPrefix, $request->getVal('total_fee') ) )->inContentLanguage()->text(),
+			// 			array()
+			// 		);
+			// }
 			
 
 			//商户订单号

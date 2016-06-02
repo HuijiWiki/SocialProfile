@@ -60,7 +60,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		$ueb = new UserEditBox();
 		$rankInfo = AllSitesInfo::getAllSitesRankData( $wgHuijiPrefix, $yesterday );
 		$site = WikiSite::newFromPrefix($wgHuijiPrefix);
-		$stats = $site->getStats(); 	
+		$stats = $site->getStats(false); 	
 		$follows = $site->getFollowers();
 
 		$followCount = $stats['followers'];
@@ -149,7 +149,6 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				if ($protip == ''){
 					$protip = wfMessage('protip-rating-a')->escaped();
 				}
-				break;		
 			case 'B':
 				foreach( $settings as $key => $value){
 					if ($value['level'] == 'B'){
@@ -161,7 +160,6 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				if ($protip == ''){
 					$protip = wfMessage('protip-rating-b')->escaped();
 				}
-				break;
 			case 'C':
 				foreach( $settings as $key => $value){
 					if ($value['level'] == 'C'){
@@ -173,7 +171,6 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				if ($protip == ''){
 					$protip = wfMessage('protip-rating-c')->escaped();
 				}
-				break;
 			case 'D':
 				foreach( $settings as $key => $value){
 					if ($value['level'] == 'D'){
@@ -185,7 +182,6 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				if ($protip == ''){
 					$protip = wfMessage('protip-rating-d')->escaped();
 				}
-				break;
 			case 'E':
 				foreach( $settings as $key => $value){
 					if ($value['level'] == 'E'){
@@ -196,7 +192,6 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				if ($protip == ''){
 					$protip = wfMessage('protip-rating-e')->escaped();
 				}
-				break;
 			default:
 				foreach( $settings as $key => $value){
 					if ($value['level'] == 'NA'){

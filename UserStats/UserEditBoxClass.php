@@ -105,13 +105,27 @@ class UserEditBox{
 	}
 	//pv
 	public function getSiteViewCount( $userId, $wikiSite, $fromTime, $toTime ){
-		$receive = RecordStatistics2::getPageViewCountOnWikiSiteFromUserId(-1,$wikiSite,$fromTime, $toTime);
-		if ( $receive != null && $receive->status == 'success' ) {
-			return $receive->result;
+		global $wgMemc;
+		$key = wfForeignMemcKey( 'huiji', 'page_view_count_on_wikisite', $wikiSite, $fromTime, $toTime );
+		$data = $wgMemc->get($key);
+		if ( $data != null ) {
+			return $data;
 		}else{
-			return '暂无数据';
-			// throw new Exception("Error getSiteViewCount/getPageViewCountOnWikiSiteFromUserId Bad Request");
+			$receive = RecordStatistics2::getPageViewCountOnWikiSiteFromUserId(-1,$wikiSite,$fromTime, $toTime);
+			if ( $receive != null && $receive->status == 'success' ) {
+				$wgMemc->set( $key, $receive->result, 60*60*24 );
+				return $receive->result;
+			}else{
+				return '暂无数据';
+			}
 		}
+		// $receive = RecordStatistics2::getPageViewCountOnWikiSiteFromUserId(-1,$wikiSite,$fromTime, $toTime);
+		// if ( $receive != null && $receive->status == 'success' ) {
+		// 	return $receive->result;
+		// }else{
+		// 	return '暂无数据';
+		// 	// throw new Exception("Error getSiteViewCount/getPageViewCountOnWikiSiteFromUserId Bad Request");
+		// }
 	}
 	//page edit user
 	public function getSiteEditUserCount( $fromTime, $toTime ){

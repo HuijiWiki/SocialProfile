@@ -14,7 +14,7 @@
  * 该页面调试工具请使用写文本函数logResult，该函数已被默认关闭，见alipay_notify_class.php中的函数verifyNotify
  * 如果没有收到该页面返回的 success 信息，支付宝会在24小时内按一定的时间策略重发通知
  */
-class SpecialNotifyUrl extends SpecialPage{
+class SpecialNotifyUrl extends UnlistedSpecialPage{
     
     function __construct(){
         parent::__construct( 'NotifyUrl' );
@@ -23,7 +23,7 @@ class SpecialNotifyUrl extends SpecialPage{
     public function execute( $params ) {
 		require_once("alipay.config.php");
 		require_once("lib/alipay_notify.class.php");
-
+		global $wgUser, $wgHuijiPrefix;
 		//计算得出通知验证结果
 		$alipayNotify = new AlipayNotify($alipay_config);
 		$verify_result = $alipayNotify->verifyNotify();
@@ -48,7 +48,6 @@ class SpecialNotifyUrl extends SpecialPage{
 			//交易状态
 			$trade_status = $_POST['trade_status'];
 
-
 		    if($_POST['trade_status'] == 'TRADE_FINISHED') {
 				//判断该笔订单是否在商户网站中已经做过处理
 					//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
@@ -69,9 +68,24 @@ class SpecialNotifyUrl extends SpecialPage{
 						
 				//注意：
 				//付款完成后，支付宝系统发送该交易状态通知
-
+				$isAnon = $_POST('body');
+				if ( isset($isAnon) && $isAnon == 1 ) {
+					$userName = '';
+				}else{
+					$userName = $wgUser->getName();
+				}
+				$res = UserDonation::addUserDonationInfo( $userName, $wgHuijiPrefix, $_POST('total_fee') );
+				if ( $userName != null ) {
+					$log = new LogPage( 'Donate' );
+					$log->addEntry(
+							'addDescription',
+							SpecialPage::getTitleFor('Donate'),
+							wfMessage( 'user-donate-site-log-entry',array( $userName,$wgHuijiPrefix, $_POST('total_fee') ) )->inContentLanguage()->text(),
+							array()
+						);
+				}
+				logResult("add from NotifyUrl".$isAnon."<br>");
 		        //调试用，写文本函数记录程序运行情况是否正常
-		        //logResult("这里写入想要调试的代码变量值，或其他运行的结果记录");
 		    }
 
 			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——

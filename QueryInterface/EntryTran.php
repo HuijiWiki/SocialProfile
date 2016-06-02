@@ -31,6 +31,4 @@ class EntryTran
 	}
 
 }
-
-//var_dump(EntryTran::getSuggest("Russell Be",'entry'));
 ?>

@@ -530,6 +530,7 @@ $specialPageAliases['zh-hans'] = array(
 	'GiveSystemGift'=>array('系统成就'),
 	'ReissueSystemGift'=>array('补发系统礼物'),
 	'CommonStyle'=>array('自定义主题'),
+	'Donate'=>array('加油'),
 );
 
 /** Traditional Chinese (中文（繁體）‎) */

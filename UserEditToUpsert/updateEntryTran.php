@@ -21,11 +21,17 @@ function saveEntryTran($article, $user, $content, $summary, $isMinor, $isWatch, 
 		wfErrorLog($e->getMessage(),"/var/log/mediawiki/updateEntryTran.log");
 		exit();
 	}
-	if(count($links) == 0) return;
+	if(count($links) == 0){
+		upsert("", $article->getTitle()->getText(),"");
+	}
+ 	
+	$redirectToPage = $content->getRedirectTarget();
+        //redirectPageTitle
+        $toTitle = $redirectToPage != null ? $redirectToPage->getText():$article->getTitle()->getText();
 
 	$preRev = $revision->getPrevious();	
 	if($preRev == null){
-		insert($article->getTitle()->getText(),$links);
+		insert($toTitle, $article->getTitle()->getText(),$links);
 		return;
 	}else{
 		$preLinks = [];
@@ -39,7 +45,7 @@ function saveEntryTran($article, $user, $content, $summary, $isMinor, $isWatch, 
 		}
 
 		if(count($links) != count($preLinks)){
-			insert($article->getTitle()->getText(),$links);
+			insert($toTitle,$article->getTitle()->getText(),$links);
 			return;
 		}
 
@@ -54,7 +60,7 @@ function saveEntryTran($article, $user, $content, $summary, $isMinor, $isWatch, 
 		foreach ( $links as $link) {
   	        	list( $key, $title ) = explode( ':', $link, 2 );
 			if($preSet[$key] == null || $preSet[$key] != $title){
-				insert($article->getTitle()->getText(),$links);
+				insert($toTitle,$article->getTitle()->getText(),$links);
 				return;
 			}
 		}
@@ -76,6 +82,8 @@ function unDeleteEntryTran($title, $revision, $oldPageId){
 	$links= [];
 	try{
 		$content = $revision->getContent(Revision::RAW);
+		$redirectTitleObject = $content->getRedirectTarget(); 
+		$toTitle = $redirectTitleObject != null ? $redirectTitleObject->getText():$title->getText();
 		$parserOutput = $content->getParserOutput($title);
 		$links = $parserOutput->getLanguageLinks();
 	} catch(Exception $e){
@@ -83,7 +91,7 @@ function unDeleteEntryTran($title, $revision, $oldPageId){
 		exit();
 	}
 	if(count($links) >0 ){
-		insert($title->getText(),$links);
+		insert($toTitle,$title->getText(),$links);
 	}
 }
 
@@ -108,16 +116,17 @@ function upsert($newEntry, $oldEntry, $pageId){
 	);
 
 	$post_data_string = json_encode($post_data);
-	wfErrorLog($post_data_string,"/var/log/mediawiki/updateEntryTran.log");
+//	wfErrorLog($post_data_string,"/var/log/mediawiki/updateEntryTran.log");
 	curl_post_json_entrytran('upsert',$post_data_string);
 }
 
 
-function insert($entry, $trans){
+function insert($toTitle,$entry, $trans){
 	global $wgHuijiPrefix, $wgSitename, $wgIsProduction;
 //	if($wgIsProduction == true || $wgHuijiPrefix != 'hearthstone') return;
 	if($wgIsProduction == false || $wgHuijiPrefix == 'legion') return;
 	$post_data = array(
+		'toTitle' => $toTitle,
 		'sitePrefix' => $wgHuijiPrefix,
 		'siteName' => $wgSitename,
 		'entry' => $entry,
@@ -125,7 +134,7 @@ function insert($entry, $trans){
 	);
 
 	$post_data_string = json_encode($post_data);
-	wfErrorLog($post_data_string,"/var/log/mediawiki/updateEntryTran.log");
+//	wfErrorLog($post_data_string,"/var/log/mediawiki/updateEntryTran.log");
 	curl_post_json_entrytran('insert',$post_data_string);
 }
 
@@ -133,7 +142,7 @@ function curl_post_json_entrytran($type,$data_string)
 {
 	require_once("curl.php");
         $out =MySPCURL::postDataInJson('http://huijidata.com:8080/entryTranslation/webapi/entryTran',$type, $data_string);
-	wfErrorLog($out,"/var/log/mediawiki/updateEntryTran.log");
+//	wfErrorLog($out,"/var/log/mediawiki/updateEntryTran.log");
         return $out;
 }
 

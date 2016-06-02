@@ -30,7 +30,7 @@ function wfUpdateCssStyle( $cssContent, $fileName, $cssId ) {
 	}
 
 	// Are we even allowed to do this?
-	if ( !$wgUser->isAllowed( 'edit' ) ) {
+	if ( !$wgUser->isAllowed( 'editinterface' ) ) {
 		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NOT_ALLOWED);
 		return $out;
 	}
@@ -40,6 +40,15 @@ function wfUpdateCssStyle( $cssContent, $fileName, $cssId ) {
     }
     $lessCon = $cssCon = '';
     if ( count($cssContent)>0 && !empty($cssContent) ) {
+    	$named = array('aliceblue', 'antiquewhite', 'aqua', 'aquamarine', 'azure', 'beige', 'bisque', 'black', 'blanchedalmond', 'blue', 'blueviolet', 'brown', 'burlywood', 'cadetblue', 'chartreuse', 'chocolate', 'coral', 'cornflowerblue', 'cornsilk', 'crimson', 'cyan', 'darkblue', 'darkcyan', 'darkgoldenrod', 'darkgray', 'darkgreen', 'darkkhaki', 'darkmagenta', 'darkolivegreen', 'darkorange', 'darkorchid', 'darkred', 'darksalmon', 'darkseagreen', 'darkslateblue', 'darkslategray', 'darkturquoise', 'darkviolet', 'deeppink', 'deepskyblue', 'dimgray', 'dodgerblue', 'firebrick', 'floralwhite', 'forestgreen', 'fuchsia', 'gainsboro', 'ghostwhite', 'gold', 'goldenrod', 'gray', 'green', 'greenyellow', 'honeydew', 'hotpink', 'indianred', 'indigo', 'ivory', 'khaki', 'lavender', 'lavenderblush', 'lawngreen', 'lemonchiffon', 'lightblue', 'lightcoral', 'lightcyan', 'lightgoldenrodyellow', 'lightgreen', 'lightgrey', 'lightpink', 'lightsalmon', 'lightseagreen', 'lightskyblue', 'lightslategray', 'lightsteelblue', 'lightyellow', 'lime', 'limegreen', 'linen', 'magenta', 'maroon', 'mediumaquamarine', 'mediumblue', 'mediumorchid', 'mediumpurple', 'mediumseagreen', 'mediumslateblue', 'mediumspringgreen', 'mediumturquoise', 'mediumvioletred', 'midnightblue', 'mintcream', 'mistyrose', 'moccasin', 'navajowhite', 'navy', 'oldlace', 'olive', 'olivedrab', 'orange', 'orangered', 'orchid', 'palegoldenrod', 'palegreen', 'paleturquoise', 'palevioletred', 'papayawhip', 'peachpuff', 'peru', 'pink', 'plum', 'powderblue', 'purple', 'red', 'rosybrown', 'royalblue', 'saddlebrown', 'salmon', 'sandybrown', 'seagreen', 'seashell', 'sienna', 'silver', 'skyblue', 'slateblue', 'slategray', 'snow', 'springgreen', 'steelblue', 'tan', 'teal', 'thistle', 'tomato', 'turquoise', 'violet', 'wheat', 'white', 'whitesmoke', 'yellow', 'yellowgreen');
+    	// var_dump($cssContent);
+    	foreach ($cssContent as $key => $val) {
+    		if ( !( $val == 'false' || preg_match("/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/",$val) || preg_match("/^rgb[a]?/i",$val) || preg_match("/^hsl[a]?/i",$val) || preg_match("/^[a-zA-z]+:\/\/[\S]*[.jpg | .png | .gif | .jpeg]$/",$val) || in_array(strtolower($val), $named) ) ) {
+    			$ret = array('format'=> 'false');
+    			$out = json_encode($ret);
+				return $out;
+    		}
+    	}
     	$cssCon = json_encode($cssContent);
     	foreach ($cssContent as $key => $value) {
 			$lessCon .= $key.":".$value.";";
@@ -49,11 +58,10 @@ function wfUpdateCssStyle( $cssContent, $fileName, $cssId ) {
 	$res = CommonStyle::insertSiteCss( $fileName, $cssCon, $cssId );
 	if ($res) {
 		$ret = array('result'=> 'true' );
-		$out = json_encode($ret);
 	}else{
 		$ret = array('result'=> 'false' );
-		$out = json_encode($ret);
 	}
+	$out = json_encode($ret);
 	return $out;
 }
 
