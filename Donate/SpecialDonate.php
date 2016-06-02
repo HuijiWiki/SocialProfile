@@ -98,11 +98,8 @@ class SpecialDonate extends SpecialPage{
         }
         $percentage = 100*$currentDonate/$goalDonate;
         //tradenumber
-        $tradeNum = HuijiFunctions::getTradeNo('DS');
+        $tradeNum = HuijiFunctions::getTradeNo('DS').'-'.$wgUser->getId();
         $siteName = $site->getName();
-
-// $a = UserDonation::isAchieveGoalByMonth( $wgHuijiPrefix, $month );
-// var_dump($a);die();
         //month rank
         $month = date("Y-m", time());
         $monthRank = UserDonation::getDonationRankByPrefix( $wgHuijiPrefix, $month );

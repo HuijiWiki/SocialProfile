@@ -23,7 +23,7 @@ class SpecialNotifyUrl extends UnlistedSpecialPage{
     public function execute( $params ) {
 		require_once("alipay.config.php");
 		require_once("lib/alipay_notify.class.php");
-		global $wgUser, $wgHuijiPrefix;
+		global $wgHuijiPrefix;
 		//计算得出通知验证结果
 		$alipayNotify = new AlipayNotify($alipay_config);
 		$verify_result = $alipayNotify->verifyNotify();
@@ -72,7 +72,9 @@ class SpecialNotifyUrl extends UnlistedSpecialPage{
 				if ( isset($isAnon) && $isAnon == 1 ) {
 					$userName = '';
 				}else{
-					$userName = $wgUser->getName();
+					$userId = substr(strrchr($out_trade_no, "-"), 1);
+					$user = HuijiUser::newFromId( $userId );
+					$userName = $user->getName();
 				}
 				$res = UserDonation::addUserDonationInfo( $userName, $wgHuijiPrefix, $_POST['total_fee'] );
 				if ( $userName != null ) {
