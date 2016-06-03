@@ -71,6 +71,7 @@ class SpecialNotifyUrl extends UnlistedSpecialPage{
 				$isAnon = $_POST['body'];
 				if ( isset($isAnon) && $isAnon == 1 ) {
 					$userName = '';
+					$user = (object)array();
 				}else{
 					$userId = substr(strrchr($out_trade_no, "-"), 1);
 					$user = HuijiUser::newFromId( $userId );
@@ -83,10 +84,11 @@ class SpecialNotifyUrl extends UnlistedSpecialPage{
 							'addDescription',
 							SpecialPage::getTitleFor('Donate'),
 							wfMessage( 'user-donate-site-log-entry',array( $userName,$wgHuijiPrefix, $_POST['total_fee'] ) )->inContentLanguage()->text(),
-							array()
+							array(),
+							$user
 						);
 				}
-				logResult("add from NotifyUrl".$isAnon."<br>");
+				// logResult("add from NotifyUrl".$isAnon."<br>");
 		        //调试用，写文本函数记录程序运行情况是否正常
 		    }
 
