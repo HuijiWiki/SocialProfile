@@ -66,7 +66,6 @@ class CommonStyle{
 	//open css style
 	public static function openCssStyle( $cssId ){
 		global $wgHuijiPrefix;
-		return '111';
 		$result = false;
 		if ( $cssId != null ) {
 			$dbw = wfGetDB( DB_MASTER );

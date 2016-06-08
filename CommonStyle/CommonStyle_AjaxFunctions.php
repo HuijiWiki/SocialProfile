@@ -58,6 +58,13 @@ function wfUpdateCssStyle( $cssContent, $fileName, $cssId ) {
 	$res = CommonStyle::insertSiteCss( $fileName, $cssCon, $cssId );
 	if ($res) {
 		$ret = array('result'=> 'true' );
+		$log = new LogPage( 'CommonStyle' );
+		$log->addEntry(
+				'addDescription',
+				SpecialPage::getTitleFor('CommonStyle'),
+				wfMessage( 'user-modify-sitestyle-log-entry',array( $wgUser->getName(),$wgHuijiPrefix ) )->inContentLanguage()->text(),
+				array()
+			);
 	}else{
 		$ret = array('result'=> 'false' );
 	}

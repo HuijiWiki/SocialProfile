@@ -32,66 +32,96 @@ class SpecialCommonStyle extends SpecialPage{
             $lessCon = (array)json_decode( $cssCon_1['cssContent'] );
             $show = '';
         }
+        $hArr = array(
+                    '@detail-h1'=>'h1',
+                    '@detail-h2'=>'h2',
+                    '@detail-h3'=>'h3',
+                    '@detail-h4'=>'h4',
+                    '@detail-h5'=>'h5',
+                );
         $valueName = array(
-                        '@detail-bg' => 'wiki-outer-body背景颜色',
-                        '@detail-inner-bg' => 'wiki-body背景颜色',
-                        '@detail-color' => '字体颜色',
-                        '@detail-a' => '链接颜色',
-                        '@detail-border' => '边框颜色',
-                        '@detail-toc-a' => '目录链接颜色',
-                        '@detail-toc-hover' => '目录链接hover颜色',
-                        '@detail-sub-bg' => '次级导航背景',
-                        '@detail-sub-a' => '次级导航字体颜色',
-                        '@detail-sub-a-hover-bg' => '次级导航hover背景',
-                        '@detail-sub-site-count' => '次级导航统计数字颜色',
-                        '@detail-contentsub' => 'contentsub字体颜色',
-                        '@detail-bottom-bg' => '页面底部背景颜色',
-                        '@detail-detail-bottom-color' => '底部字体颜色',
-                        '@detail-detail-quote-bg' => 'quote背景颜色',
-                        '@detail-detail-quote-color' => 'quote字体颜色',
-                        '@detail-quote-a' => 'quote链接颜色',
-                        '@detail-quote-border' => 'quote边框颜色',
-                        '@detail-wikitable-bg' => 'wikitable背景颜色',
-                        '@detail-wikitable-color' => 'wikitable字体颜色',
-                        '@detail-wikitable-a' => 'wikitable链接颜色',
-                        '@detail-wikitable-border' => 'wikitable边框颜色',
-                        '@detail-infobox-bg' => 'infobox背景颜色',
-                        '@detail-infobox-color' => 'infobox字体颜色',
-                        '@detail-infobox-a' => 'infobox链接颜色',
-                        '@detail-infobox-border' => 'infobox边框颜色',
-                        '@detail-infobox-title-bg' => 'infobox主标题背景颜色',
-                        '@detail-infobox-title-color' => 'infobox主标题字体颜色',
-                        '@detail-infobox-item-title-bg' => 'infobox次级标题背景颜色',
-                        '@detail-infobox-item-title-color' => 'infobox次级标题字体颜色',
-                        '@detail-infobox-item-label-bg' => 'infobox label背景颜色',
-                        '@detail-infobox-item-label-color' => 'infobox label字体颜色',
-                        '@detail-infobox-item-label-a' => 'infobox label链接颜色',
-                        '@detail-infobox-item-label-border' => 'infobox label边框颜色',
-                        '@detail-infobox-item-detail-bg' => 'infobox detail背景颜色',
-                        '@detail-infobox-item-detail-color' => 'infobox detail字体颜色',
-                        '@detail-infobox-item-detail-a' => 'infobox detail链接颜色',
-                        '@detail-infobox-item-detail-border' => 'infobox detail边框颜色',
-                        '@detail-navbox-bg' => 'navbox背景颜色',
-                        '@detail-navbox-color' => 'navbox字体颜色',
-                        '@detail-navbox-a' => 'navbox链接颜色',
-                        '@detail-navbox-border' => 'navbox边框颜色',
-                        '@detail-navbox-title-bg' => 'navbox标题背景颜色',
-                        '@detail-navbox-title-color' => 'navbox标题字体颜色',
-                        '@detail-navbox-title-a' => 'navbox标题链接颜色',
-                        '@detail-navbox-group-bg' => 'navbox group背景颜色',
-                        '@detail-navbox-group-color' => 'navbox group字体颜色',
-                        '@detail-navbox-group-a' => 'navbox group链接颜色',
-                        '@detail-navbox-abovebelow-bg' => 'navbox abovebelow背景颜色',
-                        '@detail-navbox-abovebelow-color' => 'navbox abovebelow字体颜色',
-                        '@detail-navbox-abovebelow-a' => 'navbox abovebelow链接颜色',
+                        '@detail-bg' => 'wiki-outer-body背景',
+                        '@detail-inner-bg' => 'wiki-body背景',
+                        '@detail-color' => '文字',
+                        '@detail-h1'=>'h1',
+                        '@detail-h2'=>'h2',
+                        '@detail-h3'=>'h3',
+                        '@detail-h4'=>'h4',
+                        '@detail-h5'=>'h5',
+                        '@detail-contentsub' => '副标题文字',
+                        '@detail-a' => '有效链接',
+                        '@detail-new' => '无效链接',
+                        '@detail-border' => '边框',
+                        '@detail-toc-a' => '目录链接',
+                        '@detail-toc-a-hover' => '目录链接-hover',
+                        '@detail-sub-bg' => '导航背景',
+                        '@detail-sub-a' => '导航文字',
+                        '@detail-sub-a-hover-bg' => '导航悬浮背景',
+                        '@detail-sub-site-count' => '导航统计数字',
+                        '@detail-bottom-bg' => '页面底部背景',
+                        '@detail-bottom-color' => '底部文字',
+                        '@detail-quote-bg' => 'quote背景',
+                        '@detail-quote-color' => 'quote文字',
+                        '@detail-quote-a' => 'quote链接',
+                        '@detail-quote-border' => 'quote边框',
+                        '@detail-wikitable-bg' => 'wikitable背景',
+                        '@detail-wikitable-color' => 'wikitable文字',
+                        '@detail-wikitable-a' => 'wikitable链接',
+                        '@detail-wikitable-border' => 'wikitable边框',
+                        '@detail-infobox-bg' => 'infobox背景',
+                        '@detail-infobox-color' => 'infobox文字',
+                        '@detail-infobox-a' => 'infobox链接',
+                        '@detail-infobox-border' => 'infobox边框',
+                        '@detail-infobox-title-bg' => 'infobox title背景',
+                        '@detail-infobox-title-color' => 'infobox title文字',
+                        '@detail-infobox-item-title-bg' => 'infobox header背景',
+                        '@detail-infobox-item-title-color' => 'infobox header文字',
+                        '@detail-infobox-item-label-bg' => 'infobox label背景',
+                        '@detail-infobox-item-label-color' => 'infobox label文字',
+                        '@detail-infobox-item-label-a' => 'infobox label链接',
+                        '@detail-infobox-item-label-border' => 'infobox label边框',
+                        '@detail-infobox-item-detail-bg' => 'infobox data背景',
+                        '@detail-infobox-item-detail-color' => 'infobox data字体',
+                        '@detail-infobox-item-detail-a' => 'infobox data链接',
+                        '@detail-infobox-item-detail-border' => 'infobox data边框',
+                        '@detail-navbox-bg' => 'navbox背景',
+                        '@detail-navbox-color' => 'navbox文字',
+                        '@detail-navbox-a' => 'navbox链接',
+                        '@detail-navbox-title-bg' => 'navbox title背景',
+                        '@detail-navbox-title-color' => 'navbox title文字',
+                        '@detail-navbox-title-a' => 'navbox title链接',
+                        '@detail-navbox-group-bg' => 'navbox group背景',
+                        '@detail-navbox-group-color' => 'navbox group文字',
+                        '@detail-navbox-group-a' => 'navbox group链接',
+                        '@detail-navbox-list-bg' => 'navbox list背景',
+                        '@detail-navbox-list-color' => 'navbox list文字',
+                        '@detail-navbox-list-a' => 'navbox list链接',
+                        '@detail-navbox-list-new' => 'navbox list无效链接',
+                        '@detail-navbox-list-odd-bg' => 'navbox list奇数背景',
+                        '@detail-navbox-list-even-bg' => 'navbox list偶数背景',
+                        '@detail-navbox-abovebelow-bg' => 'navbox above/below背景',
+                        '@detail-navbox-abovebelow-color' => 'navbox above/below文字',
+                        '@detail-navbox-abovebelow-a' => 'navbox above/below链接',
                     );
         $styleArr = array();
         foreach ($valueName as $key => $value) {
-            $styleArr[] = array(
-                            'name' => $value,
-                            'variable' => $key,
-                            'value' => !isset( $lessCon[$key] ) ? 'false' : $lessCon[$key],
-                        ); 
+            if (is_array($value)) {
+                foreach ($value as $key1 => $value1) {
+                    $res1[] = array(
+                                'name2' => $value1,
+                                'variable2' => $key1,
+                                'value2' => !isset( $lessCon[$key] ) ? 'false' : $lessCon[$key],
+                            );
+                }
+                $styleArr['h'] = $res1;
+            }else{
+                $styleArr[] = array(
+                                'name' => $value,
+                                'variable' => $key,
+                                'value' => !isset( $lessCon[$key1] ) ? 'false' : $lessCon[$key1],
+                            ); 
+            }
+            
         }
         // print_r($styleArr);die();
         $mainBase = !isset( $lessCon['@main-base'] ) ? "#333" : $lessCon['@main-base'];
@@ -101,6 +131,12 @@ class SpecialCommonStyle extends SpecialPage{
         $subBg = !isset( $lessCon['@sub-bg'] ) ? "#f6f8f8" : $lessCon['@sub-bg'];
         $subA = !isset( $lessCon['@sub-a'] ) ? "#333" : $lessCon['@sub-a'];
         $modal = !isset( $lessCon['@modal'] ) ? "#222" : $lessCon['@modal'];
+        $default = !isset( $lessCon['@default'] ) ? "#ffffff" : $lessCon['@default'];
+        $primary = !isset( $lessCon['@primary'] ) ? "#337ab7" : $lessCon['@primary'];
+        $success = !isset( $lessCon['@success'] ) ? "#5cb85c" : $lessCon['@success'];
+        $info = !isset( $lessCon['@info'] ) ? "#5bc0de" : $lessCon['@info'];
+        $warning = !isset( $lessCon['@warning'] ) ? "#f0ad4e" : $lessCon['@warning'];
+        $danger = !isset( $lessCon['@danger'] ) ? "#d9534f" : $lessCon['@danger'];
         $output .= $templateParser->processTemplate(
                             'view',
                             array(
@@ -111,6 +147,12 @@ class SpecialCommonStyle extends SpecialPage{
                                 'subBg' => $subBg,
                                 'subA' => $subA,
                                 'modal' => $modal,
+                                'default' => $default,
+                                'primary' => $primary,
+                                'success' => $success,
+                                'info' => $info,
+                                'warning' => $warning,
+                                'danger' => $danger,
                                 'styleArr' => $styleArr,
                                 'isNew' => $isNew,
                             )

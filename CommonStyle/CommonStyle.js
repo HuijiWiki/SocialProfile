@@ -68,6 +68,9 @@ $(function(){
         obj[variable] = color;
     });
     $('.jcolor').each(function(){
+        if($(this).attr('value')=='false'){
+            $(this).css('color','#000');
+        }
         $(this).colorpicker({
             labels: true,
             displayColorSpace: 'hsla',
