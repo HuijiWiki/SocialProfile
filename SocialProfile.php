@@ -186,7 +186,6 @@ require_once( "$IP/extensions/SocialProfile/UserGifts/UserGift_AjaxFunctions.php
 require_once( "$IP/extensions/SocialProfile/Videos/UploadVideos_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/AdminDashboard/AdminDashboard_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/CommonStyle/CommonStyle_AjaxFunctions.php" );
-require_once( "$IP/extensions/SocialProfile/QueryInterface/EntryTranAjax.php");
 // What to display on social profile pages by default?
 $wgUserProfileDisplay['board'] = true;
 $wgUserProfileDisplay['foes'] = false;
@@ -325,6 +324,7 @@ require_once( "$IP/extensions/SocialProfile/UserActivity/UserActivity.php" ); //
 require_once( "$IP/extensions/SocialProfile/UserEditToUpsert/userEditRecord.php"); // Edit Record collected to mongoDB.
 require_once( "$IP/extensions/SocialProfile/UserEditToUpsert/updateESContent.php"); // Update Page Content in ES.
 require_once( "$IP/extensions/SocialProfile/UserEditToUpsert/updateEntryTran.php");
+require_once( "$IP/extensions/SocialProfile/QueryInterface/EntryTranAjax.php");
 
 $wgHooks['CanonicalNamespaces'][] = 'SocialProfileHooks::onCanonicalNamespaces';
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'SocialProfileHooks::onLoadExtensionSchemaUpdates';
@@ -346,6 +346,7 @@ $wgHooks['ResourceLoaderGetConfigVars'][] = 'SocialProfileHooks::onResourceLoade
 $wgHooks['ImageOpenShowImageInlineBefore'][] = 'SocialProfileHooks::onImageOpenShowImageInlineBefore';
 $wgHooks['ImagePageAfterImageLinks'][] = 'SocialProfileHooks::onImagePageAfterImageLinks';
 $wgHooks['UserGroupsChanged'][] = 'SocialProfileHooks::onUserGroupsChanged';
+// $wgHooks['SkinGetPageLink'][] = 'SocialProfileHooks::onSkinGetPageLink';
 
 // ResourceLoader module definitions for certain components which do not have
 // their own loader file
@@ -721,3 +722,10 @@ $wgLogNames['Donate']           = 'donatepage';
 $wgLogHeaders['Donate']         = 'donatepagetext';
 $wgLogActions['Donate/addDescription'] = 'donatelogentry';
 $wgLogActions['Donate/setSiteProperty'] = 'donatelogentry';
+
+//add_user_donate_log
+$wgLogTypes[]                    = 'CommonStyle';
+$wgLogNames['CommonStyle']           = 'commonstylepage';
+$wgLogHeaders['CommonStyle']         = 'commonstylepagetext';
+$wgLogActions['CommonStyle/addDescription'] = 'commonstylelogentry';
+$wgLogActions['CommonStyle/setSiteProperty'] = 'commonstylelogentry';
