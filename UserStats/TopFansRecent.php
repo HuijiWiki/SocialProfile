@@ -15,7 +15,7 @@ class TopFansRecent extends UnlistedSpecialPage {
 	 * @param $par Mixed: parameter passed to the page or null
 	 */
 	public function execute( $par ) {
-		global $wgMemc;
+		global $wgMemc, $wgHuijiPrefix;
 
 		$out = $this->getOutput();
 		$request = $this->getRequest();
@@ -28,125 +28,134 @@ class TopFansRecent extends UnlistedSpecialPage {
 		$out->addModuleStyles( 'ext.socialprofile.userstats.css' );
 
 		$periodFromRequest = $request->getVal( 'period' );
-		if ( $periodFromRequest == 'weekly' ) {
-			$period = 'weekly';
-		} elseif ( $periodFromRequest == 'monthly' ) {
-			$period = 'monthly';
-		}
+		$action = $request->getVal( 'action' );
+		$type = $request->getVal( 'type' );
+		$user_list = array();
+		if ( $action == 'donate' ) {
+			$month = date("Y-m", time());
+			$unit = 'top-fans-donate';
+			if ( $type == 'month' ) {
+		        $monthRank = UserDonation::getDonationRankByPrefix( $wgHuijiPrefix, $month );
+		        $firstFourRank = array_slice($monthRank, 0, 21);
+		        $i = 1;
+		        $pageTitle = 'top-fans-monthly-donate-rank';
+		        foreach ( $firstFourRank as $key => $value ) {
+		            if ( $key != null && $i <= 20 ) {
+		                $userM = HuijiUser::newFromName( $key );
+		                $user_id = $userM->getId();
+		                $user_list[] = array(
+	                                        // 'rank'=> $i,
+	                                        'user_id' => $user_id,
+	                                        'user_name' => $key,
+	                                        // 'userUrl' => $userUrlM,
+	                                        // 'userAvatar' => $userAvatarM,
+	                                        'points' => $value,//donate_number
+	                                    );
+		                $i++;
+		            }
+		        }
+			}elseif ( $type == 'total' ) {
+				$siteTotalRank = UserDonation::getDonationRankByPrefix( $wgHuijiPrefix, '' );
+		        $firstFourRankTotal = array_slice($siteTotalRank, 0, 21);
+		        $j = 1;
+		        $pageTitle = 'top-fans-totally-donate-rank';
+		        foreach ( $firstFourRankTotal as $key => $value ) {
+		            if ( $key != null && $j <= 20 ) {
+		                $userT = HuijiUser::newFromName( $key );
+		                $user_id = $userT->getId();
+		                $user_list[] = array(
+                                            // 'rank'=> $j,
+                                            'user_id' => $user_id,
+                                            'user_name' => $key,
+                                            // 'userUrl' => $userUrlT,
+                                            // 'userAvatar' => $userAvatarT,
+                                            'points' => $value//donate number
+                                        );
+		                $j++;
+		            }
+		        }
+			}elseif ( $type == 'allsite' ) {
+				$allSiteUserRank = UserDonation::getAllSiteDonationUserRank();
+		        $firstFourAllRank = array_slice($allSiteUserRank, 0, 21);
+		        $m = 1;
+		        $pageTitle = 'top-fans-totally-donate-rank-allsite';
+		        foreach ($firstFourAllRank as $key => $value) {
+		            if ( $key != null && $m <= 20 ) {
+		                $userT = HuijiUser::newFromName( $key );
+		                $user_id = $userT->getId();
+		                $user_list[] = array(
+	                                        // 'rank'=> $m,
+	                                        'user_id' => $user_id,
+	                                        'user_name' => $key,
+	                                        // 'userUrl' => $userUrlA,
+	                                        // 'userAvatar' => $userAvatarA,
+	                                        'points' => $value//donate number
+	                                    );
+		                $m++;
+		            }
+		        }
+			}
+		}else{
+			if ( $periodFromRequest == 'weekly' ) {
+				$period = 'weekly';
+			} elseif ( $periodFromRequest == 'monthly' ) {
+				$period = 'monthly';
+			}
 
-		if ( !isset( $period ) ) {
-			$period = 'weekly';
-		}
+			if ( !isset( $period ) ) {
+				$period = 'weekly';
+			}
 
-		if ( $period == 'weekly' ) {
-			$pageTitle = 'top-fans-weekly-points-link';
-		} else {
-			$pageTitle = 'top-fans-monthly-points-link';
+			if ( $period == 'weekly' ) {
+				$pageTitle = 'top-fans-weekly-points-link';
+			} else {
+				$pageTitle = 'top-fans-monthly-points-link';
+			}
+			
+			$unit = 'top-fans-points';
+			$count = 50;
+
+			// Try cache
+			$key = wfForeignMemcKey( 'huiji', '', 'user_stats', $period, 'points', $count );
+			$data = $wgMemc->get( $key );
+
+			if ( $data != '' ) {
+				// wfDebug( "Got top users by {$period} points ({$count}) from cache\n" );
+				$user_list = $data;
+			} else {
+				// wfDebug( "Got top users by {$period} points ({$count}) from DB\n" );
+
+				$params['ORDER BY'] = 'up_points DESC';
+				$params['LIMIT'] = $count;
+
+				$dbr = wfGetDB( DB_SLAVE );
+				$res = $dbr->select(
+					"user_points_{$period}",
+					array( 'up_user_id', 'up_user_name', 'up_points' ),
+					array( 'up_user_id <> 0' ),
+					__METHOD__,
+					$params
+				);
+
+				foreach ( $res as $row ) {
+					$userObj = User::newFromId( $row->up_user_id );
+	                $user_group = $userObj->getEffectiveGroups();
+					if ( !in_array('bot', $user_group) && !in_array('bot-global',$user_group)  ) {
+						$user_list[] = array(
+							'user_id' => $row->up_user_id,
+							'user_name' => $row->up_user_name,
+							'points' => $row->up_points
+						);
+					}
+				}
+
+				$wgMemc->set( $key, $user_list, 60 * 5 );
+			}
 		}
 		$out->addHtml(TopUsersPoints::getRankingDropdown( '用户'.$this->msg( $pageTitle )->plain() ));
 		$out->setPageTitle( $this->msg( $pageTitle )->plain() );
-
-		$count = 50;
-
-		$user_list = array();
-
-		// Try cache
-		$key = wfForeignMemcKey( 'huiji', '', 'user_stats', $period, 'points', $count );
-		$data = $wgMemc->get( $key );
-
-		if ( $data != '' ) {
-			// wfDebug( "Got top users by {$period} points ({$count}) from cache\n" );
-			$user_list = $data;
-		} else {
-			// wfDebug( "Got top users by {$period} points ({$count}) from DB\n" );
-
-			$params['ORDER BY'] = 'up_points DESC';
-			$params['LIMIT'] = $count;
-
-			$dbr = wfGetDB( DB_SLAVE );
-			$res = $dbr->select(
-				"user_points_{$period}",
-				array( 'up_user_id', 'up_user_name', 'up_points' ),
-				array( 'up_user_id <> 0' ),
-				__METHOD__,
-				$params
-			);
-
-			foreach ( $res as $row ) {
-				$userObj = User::newFromId( $row->up_user_id );
-                $user_group = $userObj->getEffectiveGroups();
-				if ( !in_array('bot', $user_group) && !in_array('bot-global',$user_group)  ) {
-					$user_list[] = array(
-						'user_id' => $row->up_user_id,
-						'user_name' => $row->up_user_name,
-						'points' => $row->up_points
-					);
-				}
-			}
-
-			$wgMemc->set( $key, $user_list, 60 * 5 );
-		}
-
-		// // Top nav bar
-		// $top_title = SpecialPage::getTitleFor( 'TopUsers' );
-		// $recent_title = SpecialPage::getTitleFor( 'TopUsersRecent' );
-
-		// $output = '<div class="top-fan-nav">
-		// 	<h1>' . $this->msg( 'top-fans-by-points-nav-header' )->plain() . '</h1>
-		// 	<p><a href="' . htmlspecialchars( $top_title->getFullURL() ) . '">' .
-		// 		$this->msg( 'top-fans-total-points-link' )->plain() . '</a></p>';
-
-		// if ( $period == 'weekly' ) {
-		// 	$output .= '<p><a href="' . htmlspecialchars( $recent_title->getFullURL( 'period=monthly' ) ) . '">' .
-		// 		$this->msg( 'top-fans-monthly-points-link' )->plain() . '</a><p>
-		// 	<p><b>' . $this->msg( 'top-fans-weekly-points-link' )->plain() . '</b></p>';
-		// } else {
-		// 	$output .= '<p><b>' . $this->msg( 'top-fans-monthly-points-link' )->plain() . '</b><p>
-		// 	<p><a href="' . htmlspecialchars( $recent_title->getFullURL( 'period=weekly' ) ) . '">' .
-		// 		$this->msg( 'top-fans-weekly-points-link' )->plain() . '</a></p>';
-		// }
-
-		// // Build nav of stats by category based on MediaWiki:Topfans-by-category
-		// $by_category_title = SpecialPage::getTitleFor( 'TopFansByStatistic' );
-		// $message = $this->msg( 'topfans-by-category' )->inContentLanguage();
-
-		// if ( !$message->isDisabled() ) {
-		// 	$output .= '<h1 class="top-title">' .
-		// 		$this->msg( 'top-fans-by-category-nav-header' )->plain() . '</h1>';
-
-		// 	$lines = explode( "\n", $message->text() );
-		// 	foreach ( $lines as $line ) {
-		// 		if ( strpos( $line, '*' ) !== 0 ) {
-		// 			continue;
-		// 		} else {
-		// 			$line = explode( '|', trim( $line, '* ' ), 2 );
-		// 			$stat = $line[0];
-
-		// 			$link_text = $line[1];
-		// 			// Check if the link text is actually the name of a system
-		// 			// message (refs bug #30030)
-		// 			$msgObj = $this->msg( $link_text );
-		// 			if ( !$msgObj->isDisabled() ) {
-		// 				$link_text = $msgObj->parse();
-		// 			}
-
-		// 			$output .= '<p>';
-		// 			$output .= Linker::link(
-		// 				$by_category_title,
-		// 				$link_text,
-		// 				array(),
-		// 				array( 'stat' => $stat )
-		// 			);
-		// 			$output .= '</p>';
-		// 		}
-		// 	}
-		// }
-
-		// $output .= '</div>';
-
 		$x = 1;
 		$output = '<div class="top-users">';
-
 		foreach ( $user_list as $item ) {
 			$user_title = Title::makeTitle( NS_USER, $item['user_name'] );
 			$avatar = new wAvatar( $item['user_id'], 'm' );
@@ -170,7 +179,7 @@ class TopFansRecent extends UnlistedSpecialPage {
 
 			$output .= '<span class="top-fan-points"><b>' .
 				$this->getLanguage()->formatNum( $points ) . '</b> ' .
-				$this->msg( 'top-fans-points' )->plain() . '</span>';
+				$this->msg( $unit )->plain() . '</span>';
 			$output .= '<div class="cleared"></div>';
 			$output .= '</div>';
 			$x++;

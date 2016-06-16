@@ -4,6 +4,7 @@
  */
 $wgAjaxExportList[] = 'wfUpdateCssStyle';
 $wgAjaxExportList[] = 'wfOpenCssStyle';
+$wgAjaxExportList[] = 'getLessContent';
 function wfUpdateCssStyle( $cssContent, $fileName, $cssId ) {
 	
 	global $wgUser, $wgHuijiPrefix;
@@ -107,4 +108,53 @@ function wfOpenCssStyle( $cssId ){
 		}
 	}
 	return $out;
+}
+
+function getLessContent(){
+	global $wgUser, $wgHuijiPrefix;
+	$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_UNKNOWN);
+
+	// This feature is only available for logged-in users.
+	if ( !$wgUser->isLoggedIn() ) {
+		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NOT_LOGGED_IN);
+		return $out;
+	}
+
+	// No need to allow blocked users to access this page, they could abuse it, y'know.
+	if ( $wgUser->isBlocked() ) {
+		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_BLOCKED);
+		return $out;
+	}
+
+	// Database operations require write mode
+	if ( wfReadOnly() ) {
+		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_READ_ONLY);
+		return $out;
+	}
+
+	// Are we even allowed to do this?
+	if ( !$wgUser->isAllowed( 'editinterface' ) ) {
+		$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_NOT_ALLOWED);
+		return $out;
+	}
+	$default = Huiji::getInstance()->getSiteDefaultColor();
+	$defaultRes = array();
+	foreach ($default as $key => $value) {
+		$defaultRes['@'.$key] = $value;
+	}
+	$cssContent = CommonStyle::getCurrentCssStyle(1);
+	if ( $cssContent['cssContent'] == null ) {
+        $lessCon = array();
+    }else{
+        $lessCon = (array)json_decode( $cssContent['cssContent'] );
+    }
+    $result = array_merge( $defaultRes, $lessCon );
+    $lessStr = '';
+    foreach ($result as $key => $value) {
+    	$lessStr .= $key.":".$value.";";
+    }
+    $lessPath = "/var/www/virtual/".$wgHuijiPrefix."/skins/bootstrap-mediawiki/less/custom.less";
+    $lessStr .= file_get_contents($lessPath);
+    return $lessStr;
+
 }

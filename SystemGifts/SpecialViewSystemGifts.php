@@ -142,9 +142,7 @@ class ViewSystemGifts extends SpecialPage {
 			$star = $per_page*($page-1);
 			$res_arr = array_slice($all_gifts, $star, $per_page);
 			foreach ( $res_arr as $key =>$gift ) {
-				$gift_image = "<div class='img'><img src=\"{$wgUploadPath}/awards/" .
-					SystemGifts::getGiftImage( $gift['gift_id'], 'l' ) .
-					'" border="0" alt="" /></div>';
+				$gift_image = "<div class='img'>".SystemGifts::getGiftImageTag( $gift['gift_id'], 'l' )."</div>";
 
 				$output .= "<div class=\"ga-item have\">
 					<a href=\"" .

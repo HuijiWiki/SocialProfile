@@ -370,30 +370,28 @@ class GiftManager extends SpecialPage {
 		if ( $gift_id ) {
 			global $wgUploadPath;
 			$gml = SpecialPage::getTitleFor( 'GiftManagerLogo' );
-			$gift_image = '<img src="' . $wgUploadPath . '/awards/' .
-				Gifts::getGiftImage( $gift_id, 'l' ) . '" border="0" alt="' .
-				$this->msg( 'g-gift' )->plain() . '" />';
+			$gift_image = Gifts::getGiftImageTag( $gift_id, 'l', array( "alt" => wfMessage( 'g-gift' )->plain()));
 			$form .= '<tr>
-			<td width="200" class="view-form" valign="top">' . $this->msg( 'giftmanager-giftimage' )->plain() . '</td>
+			<td width="200" class="view-form" valign="top">' . wfMessage( 'giftmanager-giftimage' )->plain() . '</td>
 			<td width="695">' . $gift_image .
 			'<p>
 			<a href="' . htmlspecialchars( $gml->getFullURL( 'gift_id=' . $gift_id ) ) . '">' .
-				$this->msg( 'giftmanager-image' )->plain() . '</a>
+				wfMessage( 'giftmanager-image' )->plain() . '</a>
 			</td>
 			</tr>';
 		}
 
 		if ( isset( $gift['gift_id'] ) ) {
-			$button = $this->msg( 'edit' )->plain();
+			$button = wfMessage( 'edit' )->plain();
 		} else {
-			$button = $this->msg( 'g-create-gift' )->plain();
+			$button = wfMessage( 'g-create-gift' )->plain();
 		}
 
 		$form .= '<tr>
 			<td colspan="2">
 				<input type="hidden" name="id" value="' . ( isset( $gift['gift_id'] ) ? $gift['gift_id'] : '' ) . '" />
 				<input type="button" class="createbox" value="' . $button . '" size="20" onclick="document.gift.submit()" />
-				<input type="button" class="createbox" value="' . $this->msg( 'cancel' )->plain() . '" size="20" onclick="history.go(-1)" />
+				<input type="button" class="createbox" value="' . wfMessage( 'cancel' )->plain() . '" size="20" onclick="history.go(-1)" />
 			</td>
 		</tr>
 		</table>

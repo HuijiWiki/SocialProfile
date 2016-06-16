@@ -265,9 +265,7 @@ class SystemGiftManager extends SpecialPage {
 
 		if ( $gift_id ) {
 			$sgml = SpecialPage::getTitleFor( 'SystemGiftManagerLogo' );
-			$gift_image = '<img src="' . $wgUploadPath . '/awards/' .
-				SystemGifts::getGiftImage( $gift_id, 'l' ) .
-				'" border="0" alt="gift" />';
+			$gift_image = SystemGifts::getGiftImageTag( $gift['gift_id'], 'l' );
 			$form .= '<tr>
 			<td width="200" class="view-form" valign="top">' . $this->msg( 'ga-giftimage' )->plain() . '</td>
 			<td width="695">' . $gift_image .

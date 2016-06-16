@@ -5,7 +5,7 @@
  * (add to/fetch/remove from database etc.)
  */
 class Gifts {
-
+	const GIFT_BUCKET = "huiji-award";
 	/**
 	 * Constructor
 	 */
@@ -102,7 +102,37 @@ class Gifts {
 	}
 
 	static function getGiftImage( $id, $size ) {
-		global $wgUploadDirectory;
+		global $wgUploadDirectory, $wgUseOss, $wgOssEndpoint;
+		if($wgUseOss){
+            $accessKeyId = Confidential::$aliyunKey;
+            $accessKeySecret = Confidential::$aliyunSecret;
+            $endpoint = $wgOssEndpoint;
+            try {
+                $ossClient = new OSS\OssClient($accessKeyId, $accessKeySecret, $endpoint);
+            } catch (OssException $e) {
+                // print $e->getMessage();
+            }
+				
+            $bucket = self::GIFT_BUCKET;
+            $avatar_filename = $id .  '_' . $size  ;
+            $jpgDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".JPG");
+            if ($jpgDoesExist){
+            	$avatar_filename .= ".JPG";
+            	return $avatar_filename;
+            }
+            $pngDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".PNG");
+            if ($pngDoesExist){
+            	$avatar_filename .= ".PNG";
+            	return $avatar_filename;
+            }
+			$gifDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".gif");  
+			if ($gifDoesExist){
+            	$avatar_filename .= ".gif";
+            	return $avatar_filename;
+			} 
+			$avatar_filename = 'default_' . $size . '.gif';
+			return $avatar_filename;
+		}
 		$files = glob( $wgUploadDirectory . '/awards/' . $id .  '_' . $size . "*" );
 
 		if ( !empty( $files[0] ) ) {
@@ -110,7 +140,27 @@ class Gifts {
 		} else {
 			$img = 'default_' . $size . '.gif';
 		}
-		return $img . '?r=' . rand();
+		return $img;
+	}
+	static function getGiftImageUrl($id, $size) {
+		global $wgUseOss, $wgUploadDirectory;
+		if ($wgUseOss){
+			return "http://aw.huijiwiki.com/".self::getGiftImage($id, $size);
+		} else {
+			return $wgUploadDirectory . '/awards/'.self::getGiftImage($id, $size);
+		}
+		
+	}
+	static function getGiftImageTag($id, $size, $attr = null) {
+		$realAttr = array();
+		$defaultAttr = array("class"=>"huiji-award", "src" => self::getGiftImageUrl($id, $size), "alt"=>"gift");
+		if ($attr !== null){
+			$realAttr = array_merge($defaultAttr, $realAttr); 
+		} else {
+			$realAttr = $defaultAttr;
+		}
+		$tag = Xml::element("img", $realAttr, null );
+		return $tag;
 	}
 	
 	static function isAllowedToSendGift($user_id, $gift_id){

@@ -279,17 +279,78 @@ class SystemGifts {
 	 * @return String: gift image filename (following the format
 	 *                 sg_ID_SIZE.ext; for example, sg_1_l.jpg)
 	 */
+	// static function getGiftImage( $id, $size ) {
+	// 	global $wgUploadDirectory;
+	// 	$files = glob( $wgUploadDirectory . '/awards/sg_' . $id . '_' . $size . '*' );
+
+	// 	if ( !empty( $files[0] ) ) {
+	// 		$img = basename( $files[0] );
+	// 	} else {
+	// 		$img = 'default_' . $size . '.gif';
+	// 	}
+
+	// 	return $img . '?r=' . rand();
+	// }
 	static function getGiftImage( $id, $size ) {
-		global $wgUploadDirectory;
-		$files = glob( $wgUploadDirectory . '/awards/sg_' . $id . '_' . $size . '*' );
+		global $wgUploadDirectory, $wgUseOss, $wgOssEndpoint;
+		if($wgUseOss){
+            $accessKeyId = Confidential::$aliyunKey;
+            $accessKeySecret = Confidential::$aliyunSecret;
+            $endpoint = $wgOssEndpoint;
+            try {
+                $ossClient = new OSS\OssClient($accessKeyId, $accessKeySecret, $endpoint);
+            } catch (OssException $e) {
+                // print $e->getMessage();
+            }
+				
+            $bucket = Gifts::GIFT_BUCKET;
+            $avatar_filename = 'sg_'.$id .  '_' . $size  ;
+            $jpgDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".jpg");
+            if ($jpgDoesExist){
+            	$avatar_filename .= ".jpg";
+            	return $avatar_filename;
+            }
+            $pngDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".png");
+            if ($pngDoesExist){
+            	$avatar_filename .= ".png";
+            	return $avatar_filename;
+            }
+			$gifDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".gif");  
+			if ($gifDoesExist){
+            	$avatar_filename .= ".gif";
+            	return $avatar_filename;
+			} 
+			$avatar_filename = 'sg_default_' . $size . '.gif';
+			return $avatar_filename;
+		}
+		$files = glob( $wgUploadDirectory . '/awards/' . $id .  '_' . $size . "*" );
 
 		if ( !empty( $files[0] ) ) {
 			$img = basename( $files[0] );
 		} else {
 			$img = 'default_' . $size . '.gif';
 		}
-
-		return $img . '?r=' . rand();
+		return $img;
+	}
+	static function getGiftImageUrl($id, $size) {
+		global $wgUseOss, $wgUploadDirectory;
+		if ($wgUseOss){
+			return "http://aw.huijiwiki.com/".self::getGiftImage($id, $size);
+		} else {
+			return $wgUploadDirectory . '/awards/'.self::getGiftImage($id, $size);
+		}
+		
+	}
+	static function getGiftImageTag($id, $size, $attr = null) {
+		$realAttr = array();
+		$defaultAttr = array("class"=>"huiji-award", "src" => self::getGiftImageUrl($id, $size), "alt"=>"gift");
+		if ($attr !== null){
+			$realAttr = array_merge($defaultAttr, $realAttr); 
+		} else {
+			$realAttr = $defaultAttr;
+		}
+		$tag = Xml::element("img", $realAttr, null );
+		return $tag;
 	}
 
 	/**

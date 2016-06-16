@@ -13,9 +13,17 @@ class TopUsersPoints extends SpecialPage {
 	 * Get a common dropdown for all ranking pages
 	 */
 	public static function getRankingDropdown($activeList){
-		global $wgUser, $wgHuijiSuffix;
+		global $wgUser, $wgHuijiSuffix, $wgHuijiPrefix;
 		$templateParser = new TemplateParser(  __DIR__  );
 		$followed = UserSiteFollow::getTopFollowedSitesWithDetails($wgUser->getId(), $wgUser->getId());
+		$countFollow = count($followed);
+		for ($i=0; $i < $countFollow; $i++) { 
+			if ( $followed[$i]['key'] == $wgHuijiPrefix ) {
+				$followed[$i]['key'] = '';
+			}else{
+				$followed[$i]['key'] .=':';
+			}
+		}
 		$output = $templateParser->processTemplate(
 				    'dropdown',
 				    array(

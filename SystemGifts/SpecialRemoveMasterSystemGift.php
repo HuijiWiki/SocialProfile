@@ -11,7 +11,18 @@ class RemoveMasterSystemGift extends UnlistedSpecialPage {
 	 * Constructor
 	 */
 	public function __construct() {
+		global $wgUseOss, $wgOssEndpoint;
 		parent::__construct( 'RemoveMasterSystemGift' );
+		if ($wgUseOss){
+            $accessKeyId = Confidential::$aliyunKey;
+            $accessKeySecret = Confidential::$aliyunSecret;
+            $endpoint = $wgOssEndpoint;
+            try {
+                $this->ossClient = new OSS\OssClient($accessKeyId, $accessKeySecret, $endpoint);
+            } catch (OssException $e) {
+                // print $e->getMessage();
+            }
+        }
 	}
 
 	/**
@@ -22,7 +33,16 @@ class RemoveMasterSystemGift extends UnlistedSpecialPage {
 	 *                      medium, ml for medium-large and l for large)
 	 */
 	function deleteImage( $id, $size ) {
-		global $wgUploadDirectory;
+		global $wgUploadDirectory, $wgUseOss;
+		if ($wgUseOss){
+			$this->ossClient->deleteObjects(Gifts::GIFT_BUCKET, array(
+                    'sg_' . $id  . '_' . $size . ".jpg",
+                    'sg_' . $id  . '_' . $size . ".png",
+                    'sg_' . $id  . '_' . $size . ".gif",
+            ));
+            return;
+
+		}
 		$files = glob( $wgUploadDirectory . '/awards/sg_' . $id . "_{$size}*" );
 		if ( $files && $files[0] ) {
 			$img = basename( $files[0] );

@@ -100,10 +100,63 @@ class SpecialDonate extends SpecialPage{
         //tradenumber
         $tradeNum = HuijiFunctions::getTradeNo('DS').'-'.$wgUser->getId();
         $siteName = $site->getName();
-        //month rank
+        //one site user month rank
         $month = date("Y-m", time());
         $monthRank = UserDonation::getDonationRankByPrefix( $wgHuijiPrefix, $month );
-        $monthRankTotal = UserDonation::getDonationRankByPrefix( $wgHuijiPrefix, '' );
+        $firstFourRank = array_slice($monthRank, 0, 6);
+        $i=1;
+        $resultMonthRank = array();
+        foreach ( $firstFourRank as $key => $value ) {
+            if ( $key != null && $i <= 5 ) {
+                $userM = HuijiUser::newFromName( $key );
+                $userPageM = Title::makeTitle( NS_USER, $key );
+                $userUrlM = htmlspecialchars( $userPageM->getFullURL() );
+                $userAvatarM = $userM->getAvatar('m')->getAvatarURL();
+                $resultMonthRank[] = array(
+                                        'rank'=> $i,
+                                        'userName' => $key,
+                                        'userUrl' => $userUrlM,
+                                        'userAvatar' => $userAvatarM,
+                                        'donateNum' => $value,
+                                    );
+                $i++;
+            }
+        }
+        
+        //one site user total rank
+        $siteTotalRank = UserDonation::getDonationRankByPrefix( $wgHuijiPrefix, '' );
+        $firstFourRankTotal = array_slice($siteTotalRank, 0, 6);
+        $j=1;
+        $resultTotalRank = array();
+        foreach ( $firstFourRankTotal as $key => $value ) {
+            if ( $key != null && $j <= 5 ) {
+                $userT = HuijiUser::newFromName( $key );
+                $userPageT = Title::makeTitle( NS_USER, $key );
+                $userUrlT = htmlspecialchars( $userPageT->getFullURL() );
+                $userAvatarT = $userT->getAvatar('m')->getAvatarURL();
+                $resultTotalRank[] = array(
+                                            'rank'=> $j,
+                                            'userName' => $key,
+                                            'userUrl' => $userUrlT,
+                                            'userAvatar' => $userAvatarT,
+                                            'donateNum' => $value
+                                        );
+                $j++;
+            }
+        }
+        $userMonthLink = $userTotalLink = '';
+        if ( count($monthRank) >= 5 ) {
+            $userMonthLink = SpecialPage::getTitleFor('TopUsersRecent')->getFullURL(array('action' => 'donate', 'type' => 'month'));
+            $hiddenMonth = false;
+        }else{
+            $hiddenMonth = true;
+        }
+        if ( count($siteTotalRank) >= 5 ) {
+            $userTotalLink = SpecialPage::getTitleFor('TopUsersRecent')->getFullURL(array('action' => 'donate', 'type' => 'total'));
+            $hiddenTotal = false;
+        }else{
+            $hiddenTotal = true;
+        }
         $output .= $templateParser->processTemplate(
                             'donate',
                             array(
@@ -116,6 +169,12 @@ class SpecialDonate extends SpecialPage{
                                 'goalDonate' => $goalDonate,
                                 'percentage' => $percentage,
                                 'currentDonate' => $currentDonate,
+                                'monthRank' => $resultMonthRank,
+                                'totalRank' => $resultTotalRank,
+                                'moreMonthLink' => $userMonthLink,
+                                'moreTotalLink' => $userTotalLink,
+                                'hiddenMonth' => $hiddenMonth,
+                                'hiddenTotal' => $hiddenTotal,
                             )
                     );
         $out->addHTML( $output );

@@ -21,5 +21,9 @@
 	"level-advanced-to": "已升至第<span style=\"font-weight:800;\">$1</span>级",
 	"top-fans-points": "公里",
 	"generatetopusersreport": "生成用户排行报告",
-	"user-stats-report-points":"$1 公里"
+	"user-stats-report-points":"$1 公里",
+	"top-fans-monthly-donate-rank":"站点月加油榜",
+	"top-fans-totally-donate-rank":"站点加油总榜",
+	"top-fans-totally-donate-rank-allsite":"用户加油总榜",
+	"top-fans-donate":"元"
 }

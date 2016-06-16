@@ -65,6 +65,9 @@
 .preview{
     margin-left: 310px;
 }
+.preview .btn{
+    margin-right: 5px;
+}
 .maximize-wrapper:after {
     display: block;
     content: '';
@@ -84,6 +87,33 @@
     float: left;
     margin: 10px;
     border: 1px solid #e0e0e0;
+}
+
+.picker-label,.picker-detail {
+    padding-left: 0;
+    list-style-type: none;
+}
+.picker-label li {
+    float: left;
+    margin-right: 10px;
+    background: #333;
+    padding: 0 10px;
+    cursor: pointer;
+}
+.picker-detail li{
+    display: none;
+}
+.picker-label li.active{
+    background: #555;
+}
+.picker-detail li.active{
+    display: block;
+}
+#wiki-outer-body .picker-detail li {
+    clear: both;
+    line-height: 42px;
+    margin-bottom: 10px;
+    padding-left: 10px;
 }
 @media screen and (max-width: 767px) {
     .color-picker{

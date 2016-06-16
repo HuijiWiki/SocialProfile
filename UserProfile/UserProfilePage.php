@@ -1537,9 +1537,7 @@ class UserProfilePage extends Article {
 							</div>";
 						break;
 					case 'gift-sent':
-						$gift_image = "<img src=\"{$wgUploadPath}/awards/" .
-							Gifts::getGiftImage( $item['namespace'], 'm' ) .
-							'" border="0" alt="" />';
+						$gift_image = Gifts::getGiftImageTag( $item['namespace'], 'm' );
 						$item_html .= wfMessage( 'user-recent-activity-gift-sent' )->escaped() . " {$user_link_2} {$item_time}
 						<div class=\"item\">
 							<a href=\"" . htmlspecialchars( $viewGift->getFullURL( "user={$item['comment']}&gift_id={$item['namespace']}" ) ) . "\" rel=\"nofollow\">
@@ -1549,9 +1547,7 @@ class UserProfilePage extends Article {
 						</div>";
 						break;
 					case 'gift-rec':
-						$gift_image = "<img src=\"{$wgUploadPath}/awards/" .
-							Gifts::getGiftImage( $item['namespace'], 'm' ) .
-							'" border="0" alt="" />';
+						$gift_image = Gifts::getGiftImageTag( $item['namespace'], 'm' );
 						$item_html .= wfMessage( 'user-recent-activity-gift-rec' )->escaped() . " {$user_link_2} {$item_time}</span>
 								<div class=\"item\">
 									<a href=\"" . htmlspecialchars( $viewGift->getFullURL( "user={$item['username']}&gift_id={$item['namespace']}" ) ) . "\" rel=\"nofollow\">
@@ -1561,9 +1557,7 @@ class UserProfilePage extends Article {
 								</div>";
 						break;
 					case 'system_gift':
-						$gift_image = "<img src=\"{$wgUploadPath}/awards/" .
-							SystemGifts::getGiftImage( $item['namespace'], 'm' ) .
-							'" border="0" alt="" />';
+						$gift_image = SystemGifts::getGiftImageTag( $item['namespace'], 'm' );
 						$viewSystemGift = SpecialPage::getTitleFor( 'ViewSystemGift' );
 						$sgift_id = $user_gift->getGiftIdByGetId( $item['id'] );
 						$item_html .= wfMessage( 'user-recent-system-gift' )->escaped() . " {$item_time}
@@ -1766,7 +1760,7 @@ class UserProfilePage extends Article {
 						break;
 					case 'gift-sent':
 						$gift_image = "<img src=\"{$wgUploadPath}/awards/" .
-							Gifts::getGiftImage( $item['namespace'], 'm' ) .
+							Gifts::getGiftImageTag( $item['namespace'], 'm' ) .
 							'" border="0" alt="" />';
 						$item_html .= wfMessage( 'user-recent-activity-gift-sent' )->escaped() . " {$user_link_2} {$item_time}
 						<div class=\"item\">
@@ -1777,9 +1771,7 @@ class UserProfilePage extends Article {
 						</div>";
 						break;
 					case 'gift-rec':
-						$gift_image = "<img src=\"{$wgUploadPath}/awards/" .
-							Gifts::getGiftImage( $item['namespace'], 'm' ) .
-							'" border="0" alt="" />';
+						$gift_image = Gifts::getGiftImageTag( $item['namespace'], 'm' );
 						$item_html .= wfMessage( 'user-recent-activity-gift-rec' )->escaped() . " {$user_link_2} {$item_time}</span>
 								<div class=\"item\">
 									<a href=\"" . htmlspecialchars( $viewGift->getFullURL( "gift_id={$item['id']}" ) ) . "\" rel=\"nofollow\">
@@ -1789,9 +1781,7 @@ class UserProfilePage extends Article {
 								</div>";
 						break;
 					case 'system_gift':
-						$gift_image = "<img src=\"{$wgUploadPath}/awards/" .
-							SystemGifts::getGiftImage( $item['namespace'], 'm' ) .
-							'" border="0" alt="" />';
+						$gift_image = SystemGifts::getGiftImageTag( $item['namespace'], 'm' );
 						$viewSystemGift = SpecialPage::getTitleFor( 'ViewSystemGift' );
 						$sgift_id = $user_gifts->getGiftIdByGetId( $item['id'] );
 						$item_html .= wfMessage( 'user-recent-system-gift' )->escaped() . " {$item_time}
@@ -1945,9 +1935,7 @@ class UserProfilePage extends Article {
 					}
 
 					$user = Title::makeTitle( NS_USER, $gift['user_name_from'] );
-					$gift_image = '<img src="' . $wgUploadPath . '/awards/' .
-						Gifts::getGiftImage( $gift['gift_id'], 'ml' ) .
-						'" border="0" alt="" />';
+					$gift_image = Gifts::getGiftImageTag( $gift['gift_id'], 'ml' );
 					$gift_link = $user = SpecialPage::getTitleFor( 'ViewGift' );
 					$class = '';
 					if ( $gift['status'] == 1 ) {
@@ -2051,9 +2039,7 @@ class UserProfilePage extends Article {
 					$sg->decNewSystemGiftCount( $wgUser->getID() );
 				}
 
-				$gift_image = '<img src="' . $wgUploadPath . '/awards/' .
-					SystemGifts::getGiftImage( $gift['gift_id'], 'ml' ) .
-					'" border="0" alt="" />';
+				$gift_image = SystemGifts::getGiftImageTag( $gift['gift_id'], 'ml' );
 				$gift_link = $user = SpecialPage::getTitleFor( 'ViewSystemGift' );
 
 				$class = '';

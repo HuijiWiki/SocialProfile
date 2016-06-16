@@ -32,93 +32,182 @@ class SpecialCommonStyle extends SpecialPage{
             $lessCon = (array)json_decode( $cssCon_1['cssContent'] );
             $show = '';
         }
-        $hArr = array(
+        $hArr1 = array(
+                'label'=>'标题',
+                'detail'=>array(
                     '@detail-h1'=>'h1',
                     '@detail-h2'=>'h2',
                     '@detail-h3'=>'h3',
                     '@detail-h4'=>'h4',
                     '@detail-h5'=>'h5',
-                );
+                )
+        );
+        $hArr2 = array(
+                'label'=>'导航',
+                'detail'=>array(
+                    '@detail-sub-bg'=>'背景',
+                    '@detail-sub-a'=>'文字',
+                    '@detail-sub-a-hover-bg'=>'悬浮',
+                    '@detail-sub-site-count'=>'统计数字',
+                )
+        );
+        $hArr3 = array(
+                'label'=>'页面底部',
+                'detail'=>array(
+                    '@detail-bottom-bg'=>'背景',
+                    '@detail-bottom-color'=>'文字',
+
+                )
+        );
+        $hArr4 = array(
+                'label'=>'quote',
+                'detail'=>array(
+                    '@detail-quote-bg'=>'背景',
+                    '@detail-quote-color'=>'文字',
+                    '@detail-quote-a'=>'链接',
+                    '@detail-quote-border'=>'边框',
+                )
+        );
+        $hArr5 = array(
+                'label'=>'wikitable',
+                'detail'=>array(
+                    '@detail-wikitable-bg'=>'背景',
+                    '@detail-wikitable-color'=>'文字',
+                    '@detail-wikitable-a'=>'链接',
+                    '@detail-wikitable-border'=>'边框',
+                )
+        );
+        $hArr6 = array(
+                'label'=>'infobox整体',
+                'detail'=>array(
+                    '@detail-infobox-bg'=>'背景',
+                    '@detail-infobox-color'=>'文字',
+                    '@detail-infobox-a'=>'链接',
+                    '@detail-infobox-border'=>'边框',
+                )
+        );
+        $hArr7 = array(
+                'label'=>'infobox title',
+                'detail'=>array(
+                    '@detail-infobox-title-bg'=>'背景',
+                    '@detail-infobox-title-color'=>'文字',
+                )
+        );
+        $hArr8 = array(
+                'label'=>'infobox header',
+                'detail'=>array(
+                    '@detail-infobox-item-title-bg'=>'背景',
+                    '@detail-infobox-item-title-color'=>'文字',
+                )
+        );
+        $hArr9 = array(
+                'label'=>'infobox label',
+                'detail'=>array(
+                    '@detail-infobox-item-label-bg'=>'背景',
+                    '@detail-infobox-item-label-color'=>'文字',
+                    '@detail-infobox-item-label-a'=>'链接',
+                    '@detail-infobox-item-label-border'=>'边框',
+                )
+        );
+        $hArr10 = array(
+                'label'=>'infobox data',
+                'detail'=>array(
+                    '@detail-infobox-item-detail-bg'=>'背景',
+                    '@detail-infobox-item-detail-color'=>'文字',
+                    '@detail-infobox-item-detail-a'=>'链接',
+                    '@detail-infobox-item-detail-border'=>'边框',
+                )
+        );
+        $hArr11 = array(
+                'label'=>'navbox 整体',
+                'detail'=>array(
+                    '@detail-navbox-bg'=>'背景',
+                    '@detail-navbox-color'=>'文字',
+                    '@detail-navbox-a'=>'链接',
+                )
+        );
+        $hArr12 = array(
+                'label'=>'navbox title',
+                'detail'=>array(
+                    '@detail-navbox-title-bg'=>'背景',
+                    '@detail-navbox-title-color'=>'文字',
+                    '@detail-navbox-title-a'=>'链接',
+                )
+        );
+        $hArr13 = array(
+                'label'=>'navbox group',
+                'detail'=>array(
+                    '@detail-navbox-group-bg'=>'背景',
+                    '@detail-navbox-group-color'=>'文字',
+                    '@detail-navbox-group-a'=>'链接',
+                )
+        );
+        $hArr14 = array(
+                'label'=>'navbox list',
+                'detail'=>array(
+                    '@detail-navbox-list-bg'=>'背景',
+                    '@detail-navbox-list-color'=>'文字',
+                    '@detail-navbox-list-a'=>'链接',
+                    '@detail-navbox-list-new'=>'无效链接',
+                    '@detail-navbox-list-odd-bg'=>'奇数背景',
+                    '@detail-navbox-list-even-bg'=>'偶数背景',
+                )
+        );
+        $hArr15 = array(
+                'label'=>'navbox abovebelow',
+                'detail'=>array(
+                    '@detail-navbox-abovebelow-bg'=>'背景',
+                    '@detail-navbox-abovebelow-color'=>'文字',
+                    '@detail-navbox-abovebelow-a'=>'链接',
+                )
+        );
         $valueName = array(
                         '@detail-bg' => 'wiki-outer-body背景',
                         '@detail-inner-bg' => 'wiki-body背景',
                         '@detail-color' => '文字',
-                        '@detail-h1'=>'h1',
-                        '@detail-h2'=>'h2',
-                        '@detail-h3'=>'h3',
-                        '@detail-h4'=>'h4',
-                        '@detail-h5'=>'h5',
                         '@detail-contentsub' => '副标题文字',
                         '@detail-a' => '有效链接',
                         '@detail-new' => '无效链接',
                         '@detail-border' => '边框',
                         '@detail-toc-a' => '目录链接',
                         '@detail-toc-a-hover' => '目录链接-hover',
-                        '@detail-sub-bg' => '导航背景',
-                        '@detail-sub-a' => '导航文字',
-                        '@detail-sub-a-hover-bg' => '导航悬浮背景',
-                        '@detail-sub-site-count' => '导航统计数字',
-                        '@detail-bottom-bg' => '页面底部背景',
-                        '@detail-bottom-color' => '底部文字',
-                        '@detail-quote-bg' => 'quote背景',
-                        '@detail-quote-color' => 'quote文字',
-                        '@detail-quote-a' => 'quote链接',
-                        '@detail-quote-border' => 'quote边框',
-                        '@detail-wikitable-bg' => 'wikitable背景',
-                        '@detail-wikitable-color' => 'wikitable文字',
-                        '@detail-wikitable-a' => 'wikitable链接',
-                        '@detail-wikitable-border' => 'wikitable边框',
-                        '@detail-infobox-bg' => 'infobox背景',
-                        '@detail-infobox-color' => 'infobox文字',
-                        '@detail-infobox-a' => 'infobox链接',
-                        '@detail-infobox-border' => 'infobox边框',
-                        '@detail-infobox-title-bg' => 'infobox title背景',
-                        '@detail-infobox-title-color' => 'infobox title文字',
-                        '@detail-infobox-item-title-bg' => 'infobox header背景',
-                        '@detail-infobox-item-title-color' => 'infobox header文字',
-                        '@detail-infobox-item-label-bg' => 'infobox label背景',
-                        '@detail-infobox-item-label-color' => 'infobox label文字',
-                        '@detail-infobox-item-label-a' => 'infobox label链接',
-                        '@detail-infobox-item-label-border' => 'infobox label边框',
-                        '@detail-infobox-item-detail-bg' => 'infobox data背景',
-                        '@detail-infobox-item-detail-color' => 'infobox data字体',
-                        '@detail-infobox-item-detail-a' => 'infobox data链接',
-                        '@detail-infobox-item-detail-border' => 'infobox data边框',
-                        '@detail-navbox-bg' => 'navbox背景',
-                        '@detail-navbox-color' => 'navbox文字',
-                        '@detail-navbox-a' => 'navbox链接',
-                        '@detail-navbox-title-bg' => 'navbox title背景',
-                        '@detail-navbox-title-color' => 'navbox title文字',
-                        '@detail-navbox-title-a' => 'navbox title链接',
-                        '@detail-navbox-group-bg' => 'navbox group背景',
-                        '@detail-navbox-group-color' => 'navbox group文字',
-                        '@detail-navbox-group-a' => 'navbox group链接',
-                        '@detail-navbox-list-bg' => 'navbox list背景',
-                        '@detail-navbox-list-color' => 'navbox list文字',
-                        '@detail-navbox-list-a' => 'navbox list链接',
-                        '@detail-navbox-list-new' => 'navbox list无效链接',
-                        '@detail-navbox-list-odd-bg' => 'navbox list奇数背景',
-                        '@detail-navbox-list-even-bg' => 'navbox list偶数背景',
-                        '@detail-navbox-abovebelow-bg' => 'navbox above/below背景',
-                        '@detail-navbox-abovebelow-color' => 'navbox above/below文字',
-                        '@detail-navbox-abovebelow-a' => 'navbox above/below链接',
+                        'h1' => $hArr1,
+                        'h2' => $hArr2,
+                        'h3' => $hArr3,
+                        'h4' => $hArr4,
+                        'h5' => $hArr5,
+                        'h6' => $hArr6,
+                        'h7' => $hArr7,
+                        'h8' => $hArr8,
+                        'h9' => $hArr9,
+                        'h10' => $hArr10,
+                        'h11' => $hArr11,
+                        'h12' => $hArr12,
+                        'h13' => $hArr13,
+                        'h14' => $hArr14,
+                        'h15' => $hArr15,
                     );
         $styleArr = array();
         foreach ($valueName as $key => $value) {
             if (is_array($value)) {
-                foreach ($value as $key1 => $value1) {
-                    $res1[] = array(
+                $res1 = array();
+                $res1['ish'] = true;
+                $res1['label'] = $value['label'];
+                foreach ($value['detail'] as $key1 => $value1) {
+                    $res1['h'][] = array(
                                 'name2' => $value1,
+
                                 'variable2' => $key1,
-                                'value2' => !isset( $lessCon[$key] ) ? 'false' : $lessCon[$key],
+                                'value2' => !isset( $lessCon[$key1] ) ? 'false' : $lessCon[$key1],
                             );
                 }
-                $styleArr['h'] = $res1;
+                $styleArr[] = $res1;
             }else{
                 $styleArr[] = array(
+                                'ish' => false,
                                 'name' => $value,
                                 'variable' => $key,
-                                'value' => !isset( $lessCon[$key1] ) ? 'false' : $lessCon[$key1],
+                                'value' => !isset( $lessCon[$key] ) ? 'false' : $lessCon[$key],
                             ); 
             }
             

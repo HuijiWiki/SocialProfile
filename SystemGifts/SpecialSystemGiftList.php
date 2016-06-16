@@ -121,9 +121,7 @@ class SystemGiftList extends SpecialPage {
 		// print_r($countRes);
 		if ( $gifts ) {
 			foreach ( $gifts as $gift ) {
-				$gift_image = "<div class='img'><img src=\"{$wgUploadPath}/awards/" .
-					SystemGifts::getGiftImage( $gift['id'], 'l' ) .
-					'" border="0" alt="" /></div>';
+				$gift_image = "<div class='img'>".SystemGifts::getGiftImageTag( $gift['gift_id'], 'l' ).'</div>';
 					$sg = new SystemGifts();
                 if ( $sg->doesUserHaveGift( $user_id, $gift['id'] ) ) {
                 				$s = 'ga-item have';

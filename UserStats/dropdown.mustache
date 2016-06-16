@@ -6,6 +6,8 @@
   <ul class="dropdown-menu" aria-labelledby="dropdownMenuRanking">
     <li class="dropdown-header">灰机wiki排行</li>
     <li><a href="/wiki/特殊:站点排行">站点排行榜</a></li>
+    <li><a href="/wiki/特殊:站点排行?method=1">站点加油排行榜</a></li>
+    <li><a href="/wiki/特殊:近期的用户排行榜?action=donate&type=allsite">用户加油排行榜</a></li>
     <li><a href="/wiki/特殊:近期的用户排行榜?period=weekly">用户周排行榜</a></li>
     <li><a href="/wiki/特殊:近期的用户排行榜?period=monthly">用户月排行榜</a></li>
     <li><a href="/wiki/特殊:用户排行榜">用户总排行榜</a></li>
@@ -14,7 +16,9 @@
     <li class="dropdown-header">我关注的站点</li>
     {{/hasFollowed}}
     {{#followed}}
-    <li><a href="/wiki/{{key}}:特殊:编辑排行">{{val}}排行榜</a></li>
+    <li><a href="/wiki/{{key}}特殊:编辑排行">{{val}}排行榜</a></li>
+    <li><a href="/wiki/{{key}}特殊:近期的用户排行榜?action=donate&type=month">{{val}}月加油排行榜</a></li>
+    <li><a href="/wiki/{{key}}特殊:近期的用户排行榜?action=donate&type=total">{{val}}总加油排行榜</a></li>
     {{/followed}}
   </ul>
 </div>

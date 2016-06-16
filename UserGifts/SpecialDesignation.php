@@ -71,7 +71,7 @@ class SpecialDesignation extends SpecialPage {
 			foreach ($giftList as $key => $value) {
 				$gifts = UserGifts::getUserGift( $wgUser->getName(), $value['gift_id'], 1 );
 				$description = empty($gifts[0]['description']) ? '<small>(暂无描述)</small>' : $gifts[0]['description'];
-				$giftImage = '<img src="' . $wgUploadPath . '/awards/' . Gifts::getGiftImage( $value['gift_id'], 'l' ) .'" border="0" alt="" />';
+				$giftImage = Gifts::getGiftImageTag( $value['gift_id'], 'l' );
 				$output .= '<div class="admin-setting-li">
 						'.$giftImage.'
 				        <div class="setting-title" title="'.$value['title_content'].'">称号：'.$value['title_content'].'</div>
@@ -98,7 +98,7 @@ class SpecialDesignation extends SpecialPage {
 			foreach ($systemGiftList as $key => $value) {
 				$gifts = UserSystemGifts::getUserGift( $value['gift_id'], $wgUser->getName() );
 				$description = empty($gifts[0]['description']) ? '<small>(暂无描述)</small>' : $gifts[0]['description'];
-				$giftImage = '<img src="' . $wgUploadPath . '/awards/' . SystemGifts::getGiftImage( $value['gift_id'], 'l' ) .'" border="0" alt="" />';
+				$giftImage = SystemGifts::getGiftImageTag( $value['gift_id'], 'l' );
 				$output .= '<div class="admin-setting-li">
 						'.$giftImage.'
 				        <div class="setting-title" title="'.$value['title_content'].'">称号：'.$value['title_content'].'</div>

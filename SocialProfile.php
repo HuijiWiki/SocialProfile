@@ -119,10 +119,12 @@ $wgAutoloadClasses['SpecialGiveSystemGift'] = __DIR__ . '/SystemGifts/SpecialGiv
 $wgAutoloadClasses['SpecialCommonStyle'] = __DIR__ . '/CommonStyle/SpecialCommonStyle.php';
 $wgAutoloadClasses['CommonStyle'] = __DIR__ . '/CommonStyle/CommonStyleClass.php';
 $wgAutoloadClasses['SpecialReissueSystemGift'] = __DIR__ . '/SystemGifts/SpecialReissueSystemGift.php';
+$wgAutoloadClasses['UploadUtil'] = __DIR__.'/UploadFiles/UploadUtil.php';
 $wgAutoloadClasses['SpecialDonate'] = __DIR__ . '/Donate/SpecialDonate.php';
 $wgAutoloadClasses['UserDonation'] = __DIR__ . '/Donate/UserDonationClass.php';
 $wgAutoloadClasses['SpecialReturnUrl'] = __DIR__ . '/Donate/SpecialReturnUrl.php';
 $wgAutoloadClasses['SpecialNotifyUrl'] = __DIR__ . '/Donate/SpecialNotifyUrl.php';
+$wgAutoloadClasses['SpecialDynamicLess'] = __DIR__ . '/CommonStyle/SpecialDynamicLess.php';
 
 // New special pages
 // $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
@@ -170,6 +172,7 @@ $wgSpecialPages['ReissueSystemGift'] = 'SpecialReissueSystemGift';
 $wgSpecialPages['Donate'] = 'SpecialDonate';
 $wgSpecialPages['ReturnUrl'] = 'SpecialReturnUrl';
 $wgSpecialPages['NotifyUrl'] = 'SpecialNotifyUrl';
+$wgSpecialPages['DynamicLess'] = 'SpecialDynamicLess';
 
 
 // Necessary AJAX functions
@@ -707,6 +710,10 @@ $wgAutoloadClasses['ApiAvatarSubmit'] = __DIR__ . '/UserProfile/api/AvatarSubmit
 $wgAPIModules['avatarsubmit'] = 'ApiAvatarSubmit';
 $wgAutoloadClasses['ApiAvatarShow'] = __DIR__ . '/UserProfile/api/AvatarShow.api.php';
 $wgAPIModules['avatarshow'] = 'ApiAvatarShow';
+$wgAutoloadClasses['UserUserFollowApi'] = __DIR__ . '/UserUserFollows/api/UserUserFollow.api.php';
+$wgAPIModules['useruserfollow'] = 'UserUserFollowApi';
+$wgAutoloadClasses['UserUserUnfollowApi'] = __DIR__ . '/UserUserFollows/api/UserUserUnfollow.api.php';
+$wgAPIModules['useruserunfollow'] = 'UserUserUnfollowApi';
 
 //Log
 global $wgLogTypes, $wgLogNames, $wgLogHeaders, $wgLogActions;

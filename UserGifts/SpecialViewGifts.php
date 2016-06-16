@@ -141,9 +141,7 @@ class ViewGifts extends SpecialPage {
 
 				$user_from = Title::makeTitle( NS_USER, $gift['user_name_from'] );
 				$gift_count_str = ($gift_count[$gift['gift_name']]>1)?'×'.$gift_count[$gift['gift_name']]:'';
-				$gift_image = "<img src=\"{$wgUploadPath}/awards/" .
-					Gifts::getGiftImage( $gift['gift_id'], 'l' ) .
-					'" border="0" alt="" />';
+				$gift_image = Gifts::getGiftImageTag( $gift['gift_id'], 'l' );
 				$output .= '<div class="g-item">
 					<a data-toggle="popover" data-trigger="hover" data-original-title='.str_replace(' ', '', $gift_name_display)."（来自".str_replace(' ', '', $gift['user_name_from'])."）".' data-content="'.$gift['gift_description'].'" href="' . htmlspecialchars( $viewGiftLink->getFullURL( 'gift_id=' . $gift['gift_id'] .'&user='.$user_name ) ) . '">' .
 						$gift_image .

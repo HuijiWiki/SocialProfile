@@ -55,8 +55,8 @@ class SpecialAddFestivalGift extends SpecialPage{
 		if ($giftList != null) {
 			foreach ($giftList as $value) {
 				if ($i<5) {
-					$giftimg = SystemGifts::getGiftImage( $value['giftId'], 'ml');
-					$output .= "<img src=/uploads/awards/".$giftimg."> 开始时间:".$value['startTime']."--结束时间:".$value['endTime']."--达到次数:".$value['editNum']."<br>";
+					$giftimg = SystemGifts::getGiftImageTag( $value['giftId'], 'ml');
+					$output .= $giftimg." 开始时间:".$value['startTime']."--结束时间:".$value['endTime']."--达到次数:".$value['editNum']."<br>";
 				}
 				$i++;
 			}

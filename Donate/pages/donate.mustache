@@ -18,7 +18,33 @@
             </div>
         </div>
     </div>
-
+    <div>
+        <span class="donate-name">站内月榜</span>
+        <div class="donate-rank">
+            {{#monthRank}}
+                <a href="{{userUrl}}" class="mw-userlink" rel="nofollow">{{{userAvatar}}}</a>
+            {{/monthRank}}
+            {{^hiddenMonth}}
+                <a href="{{moreMonthLink}}" class="more">&gt;&gt;</a>
+            {{/hiddenMonth}}
+            {{^monthRank}}
+                <li>暂无排名~</li>
+            {{/monthRank}}<br>
+        </div>
+        <span class="donate-name">站内总榜</span>
+        <div class="donate-rank">
+            {{#totalRank}}
+                <a href="{{userUrl}}" class="mw-userlink" rel="nofollow">{{{userAvatar}}}</a>
+            {{/totalRank}}
+            {{^hiddenTotal}}
+                <a href="{{moreTotalLink}}" class="more">&gt;&gt;</a>
+            {{/hiddenTotal}}
+            {{^totalRank}}
+                <li>暂无排名~</li>
+            {{/totalRank}}
+        </div>
+    </div>
+    
     <div class="content">
         <form action="/wiki/特殊:Donate" class="alipayform" method="post">
             <div class="element">
@@ -34,7 +60,7 @@
             <div class="element">
                 <button class="alisubmit mw-ui-button mw-ui-progressive" >
                     加油
-                    <img src="/resources/alipay.png" width="20">
+                    <img src="http://fs.huijiwiki.com/www/resources/assets/alipay.png" width="20">
                 </button>
             </div>
             <div class="element">

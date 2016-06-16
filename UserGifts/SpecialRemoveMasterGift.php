@@ -6,7 +6,18 @@ class RemoveMasterGift extends UnlistedSpecialPage {
 	 * Constructor
 	 */
 	public function __construct() {
+		global $wgUseOss, $wgOssEndpoint;
 		parent::__construct( 'RemoveMasterGift' );
+		if ($wgUseOss){
+            $accessKeyId = Confidential::$aliyunKey;
+            $accessKeySecret = Confidential::$aliyunSecret;
+            $endpoint = $wgOssEndpoint;
+            try {
+                $this->ossClient = new OSS\OssClient($accessKeyId, $accessKeySecret, $endpoint);
+            } catch (OssException $e) {
+                // print $e->getMessage();
+            }
+        }
 	}
 
 	/**
@@ -26,7 +37,17 @@ class RemoveMasterGift extends UnlistedSpecialPage {
 	 *                      medium, ml for medium-large and l for large)
 	 */
 	function deleteImage( $id, $size ) {
-		global $wgUploadDirectory;
+		global $wgUploadDirectory, $wgUseOss;
+		if ($wgUseOss){
+			$this->ossClient->deleteObjects(Gifts::GIFT_BUCKET, array(
+                    $id  . '_' . $size . ".jpg",
+                    $id  . '_' . $size . ".png",
+                    $id  . '_' . $size . ".gif",
+            ));
+            return;
+
+		}
+
 		$files = glob( $wgUploadDirectory . '/awards/' . $id . "_{$size}*" );
 		if ( $files && $files[0] ) {
 			$img = basename( $files[0] );
@@ -48,7 +69,7 @@ class RemoveMasterGift extends UnlistedSpecialPage {
 			return false;
 		}
 
-		if ( $user->isAllowed( 'delete' ) || in_array( 'giftadmin', $user->getGroups() ) ) {
+		if ( $user->isAllowed( 'delete' ) || $user->isAllowed( 'giftadmin' ) ) {
 			return true;
 		}
 
@@ -109,10 +130,10 @@ class RemoveMasterGift extends UnlistedSpecialPage {
 
 			$output = '<div class="back-links">
 				<a href="' . htmlspecialchars( SpecialPage::getTitleFor( 'GiftManager' )->getFullURL() ) . '">' .
-					$this->msg( 'g-viewgiftlist' )->plain() . '</a>
+					wfMessage( 'g-viewgiftlist' )->plain() . '</a>
 			</div>
 			<div class="g-container">' .
-				$this->msg( 'g-remove-success-message', $gift['gift_name'] )->parse() .
+				wfMessage( 'g-remove-success-message', $gift['gift_name'] )->parse() .
 				'<div class="cleared"></div>
 			</div>';
 
@@ -133,9 +154,8 @@ class RemoveMasterGift extends UnlistedSpecialPage {
 
 		$gift = Gifts::getGift( $this->gift_id );
 
-		$gift_image = '<img src="' . $wgUploadPath . '/awards/' .
-			Gifts::getGiftImage( $this->gift_id, 'l' ) .
-			'" border="0" alt="gift" />';
+		$gift_image = 
+			Gifts::getGiftImageTag( $this->gift_id, 'l' );
 
 		$this->getOutput()->setPageTitle( $this->msg( 'g-remove-title', $gift['gift_name'] )->parse() );
 

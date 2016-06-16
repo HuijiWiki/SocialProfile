@@ -64,24 +64,24 @@ class wAvatar {
                 $avatar_filename = $wgAvatarKey . '_' . $this->user_id .  '_' . $this->avatar_size ;
                 $jpgDoesExist = $this->ossClient->doesObjectExist($bucket, $avatar_filename . ".jpg");
                 if ($jpgDoesExist){
-                	$avatar_filename .= ".jpg";
-                	$wgMemc->set( $key, $avatar_filename, 60 * 60 * 24 ); // cache for 24 hours
+                	$avatar_filename .= ".jpg" . '?r=' . microtime();
+                	$wgMemc->set( $key, $avatar_filename, 60 * 60 * 24 * 365 ); // cache for 365 day
                 	return $avatar_filename;
                 }
                 $pngDoesExist = $this->ossClient->doesObjectExist($bucket, $avatar_filename . ".png");
                 if ($pngDoesExist){
-                	$avatar_filename .= ".png";
-                	$wgMemc->set( $key, $avatar_filename, 60 * 60 * 24 ); // cache for 24 hours
+                	$avatar_filename .= ".png" . '?r=' . microtime();
+                	$wgMemc->set( $key, $avatar_filename, 60 * 60 * 24 * 365); // cache for 365 day
                 	return $avatar_filename;
                 }
 				$gifDoesExist = $this->ossClient->doesObjectExist($bucket, $avatar_filename . ".gif");  
 				if ($gifDoesExist){
-                	$avatar_filename .= ".gif";
-                	$wgMemc->set( $key, $avatar_filename, 60 * 60 * 24 ); // cache for 24 hours
+                	$avatar_filename .= ".gif" . '?r=' . microtime();
+                	$wgMemc->set( $key, $avatar_filename, 60 * 60 * 24 * 365); // cache for 365 day
                 	return $avatar_filename;
 				} 
 				$avatar_filename = 'default_' . $this->avatar_size . '.gif';
-				$wgMemc->set( $key, $avatar_filename, 60 * 60 * 24 ); // cache for 24 hours
+				$wgMemc->set( $key, $avatar_filename, 60 * 60 * 24 * 365); // cache for 365 day
 				return $avatar_filename;
 
 			}

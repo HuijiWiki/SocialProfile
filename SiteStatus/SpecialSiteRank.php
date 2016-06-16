@@ -25,18 +25,50 @@ class SpecialSiteRank extends SpecialPage {
 		global $wgUser,$wgSitename,$wgHuijiPrefix,$wgUserLevels;
 		$out = $this->getOutput();
 		$this->setHeaders();
-		$out->addHtml(TopUsersPoints::getRankingDropdown( '站点排行榜'));
-		$output = '<i>'.$this->msg( 'editranknote' )->plain().'</i>';
-		// Add CSS
 		$out->addModuleStyles( 'ext.socialprofile.userstats.css' );
-		$yesterday = date('Y-m-d',strtotime('-1 days'));
-		$beforeyesterday = date('Y-m-d',strtotime('-2 days'));
-		$allSiteRank = AllSitesInfo::getAllSitesRankData( '', $yesterday );
-		$beforeallSiteRank = AllSitesInfo::getAllSitesRankData( '', $beforeyesterday );
-		$beforeArr = array();
-		foreach ($beforeallSiteRank as $value) {
-			$beforeArr[$value['site_prefix']] = $value['site_rank'];
+		$request = $this->getRequest();
+		$method = $request->getVal('method');
+		$output = '<i>'.$this->msg( 'editranknote' )->plain().'</i>';
+		$month = date("Y-m", time());
+	    $allSiteRank = array();
+		// if ($method == 'allSiteDonateRank') {
+		if ($method == 1) {
+			$out->addHtml( TopUsersPoints::getRankingDropdown('站点加油排行榜') );
+
+			$siteArr = UserDonation::getAllSiteDonationRank();
+	        $firstFourSite = array_slice($siteArr, 0,21);
+	        $k=1;
+	        foreach ($firstFourSite as $key => $value) {
+	            if ( $k <= 20 ) {
+	                $donateSite = WikiSite::newFromPrefix($key);
+	                $siteUrl = $donateSite->getUrl();
+	                $siteName = $donateSite->getName();
+	                $rankSiteAvatar = $donateSite->getAvatar()->getAvatarHtml();
+	                $allSiteRank[] = array(
+	                                        'site_rank' => $k,
+	                                        'site_prefix' => $key,
+	                                        'site_score' => $value,//donate number
+	                                    );
+	                $k++;
+	            }
+	        }
+	        $style = 'display:none';
+	        $unit = '元';
+		}else{
+			$out->addHtml( TopUsersPoints::getRankingDropdown('站点排行榜') );
+			// Add CSS
+			$yesterday = date('Y-m-d',strtotime('-1 days'));
+			$beforeyesterday = date('Y-m-d',strtotime('-2 days'));
+			$allSiteRank = AllSitesInfo::getAllSitesRankData( '', $yesterday );
+			$beforeallSiteRank = AllSitesInfo::getAllSitesRankData( '', $beforeyesterday );
+			$beforeArr = array();
+			foreach ($beforeallSiteRank as $value) {
+				$beforeArr[$value['site_prefix']] = $value['site_rank'];
+			}
+			$style = '';
+			$unit='马赫';
 		}
+
 		$output .= '<div class="top-users">';
 		$total = count($allSiteRank);
 		if($total > 50){
@@ -47,28 +79,33 @@ class SpecialSiteRank extends SpecialPage {
 			$out->addHTML( $output );
 			return;
 		}
-		
 		foreach ($allSiteRank as $key => $value) {
-			$diff = abs( $value['site_rank'] - $beforeArr[$value['site_prefix']] );
-			if( $diff==0 ){
-				$diff ='';
-			}
-			if ( $value['site_rank'] > $beforeArr[$value['site_prefix']] ) {
-				$change = 'glyphicon glyphicon-arrow-down red';
-			}elseif ( $value['site_rank'] < $beforeArr[$value['site_prefix']] ) {
-				$change = 'glyphicon glyphicon-arrow-up green';
+			if ($style == '') {
+				$diff = abs( $value['site_rank'] - $beforeArr[$value['site_prefix']] );
+				if( $diff==0 ){
+					$diff ='';
+				}
+				if ( $value['site_rank'] > $beforeArr[$value['site_prefix']] ) {
+					$change = 'glyphicon glyphicon-arrow-down red';
+				}elseif ( $value['site_rank'] < $beforeArr[$value['site_prefix']] ) {
+					$change = 'glyphicon glyphicon-arrow-up green';
+				}else{
+					$change = 'glyphicon glyphicon-minus';
+				}
 			}else{
-				$change = 'glyphicon glyphicon-minus';
+				$diff = $change = '';
 			}
+			
 			$output .= "<div class=\"top-fan-row\">
 				<span class=\"top-fan-num\">{$value['site_rank']}.</span>
 				<span class=\"top-fan\"><a href='" . HuijiPrefix::prefixToUrl($value['site_prefix']) . "'>" . (new wSiteAvatar($value['site_prefix'], 's'))->getAvatarHtml() .
-				HuijiPrefix::prefixToSiteName($value['site_prefix']) ."</a><i class= \"".$change." hidden-sm hidden-xs\">".$diff."</i><i class=\"fa fa-flag-checkered hidden-sm hidden-xs\">".$value['best_rank']."</i></span><span class=\"top-fan-points\">".$value['site_score'].'马赫</sp>';
+				HuijiPrefix::prefixToSiteName($value['site_prefix']) ."</a><i style=\"".$style."\" class= \"".$change." hidden-sm hidden-xs\">".$diff."</i><i style=\"".$style."\" class=\"fa fa-flag-checkered hidden-sm hidden-xs\">".$value['best_rank']."</i></span><span class=\"top-fan-points\">".$value['site_score'].$unit.'</sp>';
 			$output .= '<div class="cleared"></div>';
 			$output .= '</div>';
 		}
 		$output .= '</div><div class="cleared"></div>';
 		$out->addHTML( $output );
+		
 	}
 	function getGroupName() {
     		return 'wiki';

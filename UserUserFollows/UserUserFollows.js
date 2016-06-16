@@ -15,15 +15,18 @@ function requestUserUserFollowsResponse( follower, followee, action,btn ) {
     //TODO: add waiting message.
     //TODO: validate wgUserName.
     if (!action){
-        jQuery.post(
-            mw.util.wikiScript(), {
-                action: 'ajax',
-                rs: 'wfUserUserFollowsResponse',
-                rsargs: [follower, followee]
+        $.ajax({
+            url:'/api.php',
+            data:{
+                action:'useruserfollow',
+                follower:follower,
+                followee:followee,
+                format: 'json'
             },
-            function( data ) {
-                var res = jQuery.parseJSON(data);
-                if (res.success){
+            type:'post',
+            success:function(data){
+                console.log(data);
+                if (data.useruserfollow.status == 'success') {
                     btn.html('<a><i class="fa fa-minus-square-o"></i> 取关</a>');
                     btn.addClass('unfollow');
                     var count = jQuery( '#user-follower-count').html();
@@ -35,18 +38,43 @@ function requestUserUserFollowsResponse( follower, followee, action,btn ) {
                     btn.html('<a><i class="fa fa-plus-square-o"></i> 关注</a>');
                 }
                 alreadySubmittedUserUserFollow = false;
+                // console.log(data.useruserfollow);
             }
-        );
+        })
+        // jQuery.post(
+        //     mw.util.wikiScript(), {
+        //         action: 'ajax',
+        //         rs: 'wfUserUserFollowsResponse',
+        //         rsargs: [follower, followee]
+        //     },
+        //     function( data ) {
+        //         var res = jQuery.parseJSON(data);
+        //         if (res.success){
+        //             btn.html('<a><i class="fa fa-minus-square-o"></i> 取关</a>');
+        //             btn.addClass('unfollow');
+        //             var count = jQuery( '#user-follower-count').html();
+        //             count = parseInt(count)+1;
+        //             jQuery( '#user-follower-count').html(count.toString());
+        //         }else{
+        //             alertime();
+        //             alertp.text(res.message);
+        //             btn.html('<a><i class="fa fa-plus-square-o"></i> 关注</a>');
+        //         }
+        //         alreadySubmittedUserUserFollow = false;
+        //     }
+        // );
     } else {
-        jQuery.post(
-            mw.util.wikiScript(), {
-                action: 'ajax',
-                rs: 'wfUserUserUnfollowsResponse',
-                rsargs: [follower, followee]
+        $.ajax({
+            url:'/api.php',
+            data:{
+                action:'useruserunfollow',
+                follower:follower,
+                followee:followee,
+                format: 'json'
             },
-            function( data ) {
-                var res = jQuery.parseJSON(data);
-                if (res.success){
+            type:'post',
+            success:function(data){
+                if (data.useruserunfollow.status == 'success') {
                     btn.html('<a><i class="fa fa-plus-square-o"></i> 关注</a>');
                     btn.removeClass('unfollow');
                     var count = jQuery( '#user-follower-count').html();
@@ -62,8 +90,35 @@ function requestUserUserFollowsResponse( follower, followee, action,btn ) {
                     jQuery( '#user-user-follow').html('<a><i class="fa fa-minus-square-o"></i> 取关</a>');
                 }
                 alreadySubmittedUserUserFollow = false;
+                // console.log(data.useruserfollow);
             }
-        );
+        })
+        // jQuery.post(
+        //     mw.util.wikiScript(), {
+        //         action: 'ajax',
+        //         rs: 'wfUserUserUnfollowsResponse',
+        //         rsargs: [follower, followee]
+        //     },
+        //     function( data ) {
+        //         var res = jQuery.parseJSON(data);
+        //         if (res.success){
+        //             btn.html('<a><i class="fa fa-plus-square-o"></i> 关注</a>');
+        //             btn.removeClass('unfollow');
+        //             var count = jQuery( '#user-follower-count').html();
+        //             count = parseInt(count)-1;
+        //             if (count >= 0){
+        //                 jQuery( '#user-follower-count').html(count.toString());
+        //             }else{
+        //                 jQuery( '#user-follower-count').html(0);
+        //             }
+        //         }else{
+        //             alertime();
+        //             alertp.text(res.message);
+        //             jQuery( '#user-user-follow').html('<a><i class="fa fa-minus-square-o"></i> 取关</a>');
+        //         }
+        //         alreadySubmittedUserUserFollow = false;
+        //     }
+        // );
     }
 }
 

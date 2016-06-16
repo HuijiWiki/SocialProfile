@@ -16,12 +16,29 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 	public $avatarUploadDirectory;
 	public $fileExtensions;
 	public $gift_id;
+	protected $ossClient;
+	const GIFT_BUCKET = "huiji-award";
 
 	/**
 	 * Constructor
 	 */
-	public function __construct() {
-		parent::__construct( 'GiftManagerLogo' );
+	public function __construct($arg = null) {
+		global $wgUseOss, $wgOssEndpoint;
+		if ($arg === null){
+			parent::__construct( 'GiftManagerLogo' );
+		} else {
+			parent::__construct( $arg );
+		}
+		if ($wgUseOss){
+            $accessKeyId = Confidential::$aliyunKey;
+            $accessKeySecret = Confidential::$aliyunSecret;
+            $endpoint = $wgOssEndpoint;
+            try {
+                $this->ossClient = new OSS\OssClient($accessKeyId, $accessKeySecret, $endpoint);
+            } catch (OssException $e) {
+                // print $e->getMessage();
+            }
+        }
 	}
 
 	/**
@@ -54,7 +71,7 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 		$gift = Gifts::getGift( $this->gift_id );
 		if (
 			$user->getID() == $gift['creator_user_id'] ||
-			in_array( 'giftadmin', $user->getGroups() )
+			$user->isAllowed('giftadmin')
 		)
 		{
 			return true;
@@ -115,12 +132,17 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 	 * Start doing stuff
 	 */
 	public function executeLogo() {
-		global $wgEnableUploads, $wgUploadDirectory;
+		global $wgEnableUploads, $wgUploadDirectory, $wgUseOss;
 
 		$out = $this->getOutput();
 		$user = $this->getUser();
 
-		$this->avatarUploadDirectory = $wgUploadDirectory . '/awards';
+		if ($wgUseOss){
+			$this->avatarUploadDirectory = "/tmp";
+		} else {
+			$this->avatarUploadDirectory = $wgUploadDirectory . '/awards';
+		}
+		
 
 		// Set the robot policies, etc.
 		$out->setArticleRelated( false );
@@ -167,7 +189,7 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 		 * If there was no filename or a zero size given, give up quick.
 		 */
 		if ( trim( $this->mOname ) == '' || empty( $this->mUploadSize ) ) {
-			return $this->mainUploadForm( '<li>' . $this->msg( 'emptyfile' )->plain() . '</li>' );
+			return $this->mainUploadForm( '<li>' . wfMessage( 'emptyfile' )->plain() . '</li>' );
 		}
 
 		# Chop off any directories in the given filename
@@ -198,7 +220,7 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 		if ( UploadBase::checkFileExtensionList( $ext, $wgFileBlacklist ) ||
 			( $wgStrictFileExtensions &&
 				!UploadBase::checkFileExtension( $finalExt, $this->fileExtensions ) ) ) {
-			return $this->uploadError( $this->msg( 'filetype-banned', htmlspecialchars( $fullExt ) )->escaped() );
+			return $this->uploadError( wfMessage( 'filetype-banned', htmlspecialchars( $fullExt ) )->escaped() );
 		}
 
 		/**
@@ -223,7 +245,7 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 			global $wgCheckFileExtensions;
 			if ( $wgCheckFileExtensions ) {
 				if ( !UploadBase::checkFileExtension( $finalExt, $this->fileExtensions ) ) {
-					$warning .= '<li>' . $this->msg( 'filetype-banned', htmlspecialchars( $fullExt ) )->escaped() . '</li>';
+					$warning .= '<li>' . wfMessage( 'filetype-banned', htmlspecialchars( $fullExt ) )->escaped() . '</li>';
 				}
 			}
 
@@ -232,11 +254,11 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 				$lang = $this->getLanguage();
 				$wsize = $lang->formatSize( $wgUploadSizeWarning );
 				$asize = $lang->formatSize( $this->mUploadSize );
-				$warning .= '<li>' . $this->msg( 'large-file', $wsize, $asize )->escaped() . '</li>';
+				$warning .= '<li>' . wfMessage( 'large-file', $wsize, $asize )->escaped() . '</li>';
 			}
 
 			if ( $this->mUploadSize == 0 ) {
-				$warning .= '<li>' . $this->msg( 'emptyfile' )->plain() . '</li>';
+				$warning .= '<li>' . wfMessage( 'emptyfile' )->plain() . '</li>';
 			}
 
 			if ( $warning != '' ) {
@@ -264,7 +286,7 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 	}
 
 	function createThumbnail( $imageSrc, $ext, $imgDest, $thumbWidth ) {
-		global $wgUseImageMagick, $wgImageMagickConvertCommand;
+		global $wgUseImageMagick, $wgImageMagickConvertCommand, $wgUseOss;
 
 		list( $origWidth, $origHeight, $typeCode ) = getimagesize( $imageSrc );
 
@@ -277,28 +299,44 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 				$border = ' -bordercolor white -border 0x' . ( ( $thumbWidth - $thumbHeight ) / 2 );
 			}
 			if ( $typeCode == 2 ) {
+				$dest = $this->avatarUploadDirectory . '/' . $imgDest . '.jpg';
 				exec(
 					$wgImageMagickConvertCommand . ' -size ' . $thumbWidth . 'x' .
 					$thumbWidth . ' -resize ' . $thumbWidth . '  -quality 100 ' .
 					$border . ' ' . $imageSrc . ' ' .
-					$this->avatarUploadDirectory . '/' . $imgDest . '.jpg'
+					$dest
 				);
 			}
 			if ( $typeCode == 1 ) {
+				$dest = $this->avatarUploadDirectory . '/' . $imgDest . '.gif';
 				exec(
 					$wgImageMagickConvertCommand . ' -size ' . $thumbWidth . 'x' .
 					$thumbWidth . ' -resize ' . $thumbWidth . ' ' . $imageSrc .
 					' ' . $border . ' ' .
-					$this->avatarUploadDirectory . '/' . $imgDest . '.gif'
+					$dest
 				);
 			}
 			if ( $typeCode == 3 ) {
+				$dest = $this->avatarUploadDirectory . '/' . $imgDest . '.png';
 				exec(
 					$wgImageMagickConvertCommand . ' -size ' . $thumbWidth . 'x' .
 					$thumbWidth . ' -resize ' . $thumbWidth . ' ' . $imageSrc .
-					' ' . $this->avatarUploadDirectory . '/' . $imgDest . '.png'
+					' ' . $dest
 				);
 			}
+			            // Copy the thumb, put it in OSS.
+            if ($wgUseOss){
+                $bucket = Gifts::GIFT_BUCKET;
+                $object = $imgDest . '.' . $ext;
+                $content = file_get_contents($dest); // 上传的文件内容
+                try {
+                    $this->ossClient->putObject($bucket, $object, $content);
+                } catch (Oss\OssException $e) {
+                    // print $e->getMessage();
+                    wfErrorLog($e->getMessage(),'/var/log/mediawiki/SocialProfile.log');
+                }
+                unlink( $dest );
+            }
 		} else { // ImageMagick is not enabled, so fall back to PHP's GD library
 			// Get the image size, used in calculations later.
 			switch( $typeCode ) {
@@ -343,16 +381,32 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 			} elseif ( $typeCode == 3 ) {
 				imagepng( $tnImage, $imageSrc );
 			}
+			// Copy the thumb, put it in OSS.
+            if ($wgUseOss){
+                $bucket = Gifts::GIFT_BUCKET;
+                $object = $imgDest . '.' . $ext;
+                $content = $tnImage; // 上传的文件内容
+                try {
+                    $ossClient->putObject($bucket, $object, $content);
+                } catch (OssException $e) {
+                    print $e->getMessage();
+                }
+                imagedestroy( $fullImage );
+                imagedestroy( $tnImage );
+                unlink( $imageSrc );
+            } else {
+				// Clean up.
+				imagedestroy( $fullImage );
+				imagedestroy( $tnImage );
 
-			// Clean up.
-			imagedestroy( $fullImage );
-			imagedestroy( $tnImage );
+				// Copy the thumb
+				copy(
+					$imageSrc,
+					$this->avatarUploadDirectory . '/' . $imgDest . '.' . $ext
+				);            	
+            }
 
-			// Copy the thumb
-			copy(
-				$imageSrc,
-				$this->avatarUploadDirectory . '/' . $imgDest . '.' . $ext
-			);
+
 		}
 	}
 
@@ -369,25 +423,58 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 	 *				is a PHP-managed upload temporary
 	 */
 	function saveUploadedFile( $saveName, $tempName, $ext ) {
+		global $wgUseOss;
+
 		$dest = $this->avatarUploadDirectory;
 
 		$this->mSavedFile = "{$dest}/{$saveName}";
-	 	$this->createThumbnail( $tempName, $ext, $this->gift_id . '_l', 75 );
-		$this->createThumbnail( $tempName, $ext, $this->gift_id . '_ml', 50 );
-		$this->createThumbnail( $tempName, $ext, $this->gift_id . '_m', 30 );
-		$this->createThumbnail( $tempName, $ext, $this->gift_id . '_s', 16 );
+		$lext = strtolower($ext);
+	 	$this->createThumbnail( $tempName, $lext, $this->gift_id . '_l', 200 );
+		$this->createThumbnail( $tempName, $lext, $this->gift_id . '_ml', 75 );
+		$this->createThumbnail( $tempName, $lext, $this->gift_id . '_m', 30 );
+		$this->createThumbnail( $tempName, $lext, $this->gift_id . '_s', 16 );
 
 		$type = 0;
-		if ( $ext == 'JPG' && is_file( $this->avatarUploadDirectory . '/' . $this->gift_id . '_l.jpg' ) ) {
+		if ( $ext == 'JPG' ) {
 			$type = 2;
 		}
-		if ( $ext == 'GIF' && is_file( $this->avatarUploadDirectory . '/' . $this->gift_id . '_l.gif' ) ) {
+		if ( $ext == 'GIF') {
 			$type = 1;
 		}
-		if ( $ext == 'PNG' && is_file( $this->avatarUploadDirectory . '/' . $this->gift_id . '_l.png' ) ) {
+		if ( $ext == 'PNG') {
 			$type = 3;
 		}
+		// if ( $type === 0 ) {
+		// 	throw new FatalError( wfMessage( 'filecopyerror', $tempName, $stash )->escaped() ); # FIXME: undefined variable $stash
+		// }
+		if ($wgUseOss){
+            if ( $type !== 2 ) {
+                $this->ossClient->deleteObjects(Gifts::GIFT_BUCKET, array(
+                    $this->gift_id  . '_s.jpg',
+                    $this->gift_id  . '_m.jpg',
+                    $this->gift_id  . '_l.jpg',
+                    $this->gift_id  . '_ml.jpg',  
+                ));
+            }
+            if ( $type !== 3) {
+                $this->ossClient->deleteObjects(Gifts::GIFT_BUCKET, array(
+                    $this->gift_id  . '_s.png',
+                    $this->gift_id  . '_m.png',
+                    $this->gift_id  . '_l.png',
+                    $this->gift_id  . '_ml.png',  
+                ));
+            }
+            if ( $type !== 1) {
+                $this->ossClient->deleteObjects(Gifts::GIFT_BUCKET, array(
+                    $this->gift_id  . '_s.gif',
+                    $this->gift_id  . '_m.gif',
+                    $this->gift_id  . '_l.gif',
+                    $this->gift_id  . '_ml.gif',  
+                ));
+            }
+            return;
 
+        }
 		if ( $ext != 'JPG' ) {
 			if ( is_file( $this->avatarUploadDirectory . '/' . $this->gift_id . '_s.jpg' ) ) {
 				unlink( $this->avatarUploadDirectory . '/' . $this->gift_id . '_s.jpg' );
@@ -430,11 +517,6 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 				unlink( $this->avatarUploadDirectory . '/' . $this->gift_id . '_ml.png' );
 			}
 		}
-
-		if ( $type === 0 ) {
-			throw new FatalError( $this->msg( 'filecopyerror', $tempName, $stash )->escaped() ); # FIXME: undefined variable $stash
-		}
-
 		return $type;
 	}
 
@@ -455,7 +537,7 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 		$stash = $archive . '/' . gmdate( 'YmdHis' ) . '!' . $saveName;
 
 		if ( !move_uploaded_file( $tempName, $stash ) ) {
-			throw new FatalError( $this->msg( 'filecopyerror', $tempName, $stash )->escaped() );
+			throw new FatalError( wfMessage( 'filecopyerror', $tempName, $stash )->escaped() );
 		}
 
 		return $stash;
@@ -499,7 +581,7 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 		$success = unlink( $this->mUploadTempName );
 		wfRestoreWarnings();
 		if ( !$success ) {
-			throw new FatalError( $this->msg( 'filedeleteerror', $this->mUploadTempName )->escaped() );
+			throw new FatalError( wfMessage( 'filedeleteerror', $this->mUploadTempName )->escaped() );
 		}
 	}
 
@@ -512,8 +594,8 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 
 		$ext = 'jpg';
 
-		$output = '<h2>' . $this->msg( 'g-uploadsuccess' )->plain() . '</h2>';
-		$output .= '<h5>' . $this->msg( 'g-imagesbelow' )->plain() . '</h5>';
+		$output = '<h2>' . wfMessage( 'g-uploadsuccess' )->plain() . '</h2>';
+		$output .= '<h5>' . wfMessage( 'g-imagesbelow' )->plain() . '</h5>';
 		if ( $status == 1 ) {
 			$ext = 'gif';
 		}
@@ -523,24 +605,23 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 		if ( $status == 3 ) {
 			$ext = 'png';
 		}
-
 		$output .= '<table cellspacing="0" cellpadding="5">';
-		$output .= '<tr><td valign="top" style="color:#666666;font-weight:800">' . $this->msg( 'g-large' )->plain() . '</td>
-		<td><img src="' . $wgUploadPath . '/awards/' . $this->gift_id . '_l.' . $ext . '?ts=' . rand() . '"></td></tr>';
-		$output .= '<tr><td valign="top" style="color:#666666;font-weight:800">' . $this->msg( 'g-mediumlarge' )->plain() . '</td>
-		<td><img src="' . $wgUploadPath . '/awards/' . $this->gift_id . '_ml.' . $ext . '?ts=' . rand() . '"></td></tr>';
-		$output .= '<tr><td valign="top" style="color:#666666;font-weight:800">' . $this->msg( 'g-medium' )->plain() . '</td>
-		<td><img src="' . $wgUploadPath . '/awards/' . $this->gift_id . '_m.' . $ext . '?ts=' . rand() . '"></td></tr>';
-		$output .= '<tr><td valign="top" style="color:#666666;font-weight:800">' . $this->msg( 'g-small' )->plain() . '</td>
-		<td><img src="' . $wgUploadPath . '/awards/' . $this->gift_id . '_s.' . $ext . '?ts' . rand()  . '"></td></tr>';
-		$output .= '<tr><td><input type="button" onclick="javascript:history.go(-1)" value="' . $this->msg( 'g-go-back' )->plain() . '"></td></tr>';
+		$output .= '<tr><td valign="top" style="color:#666666;font-weight:800">' . wfMessage( 'g-large' )->plain() . '</td>
+		<td>'.Gifts::getGiftImageTag($this->gift_id, "l").'</td></tr>';
+		$output .= '<tr><td valign="top" style="color:#666666;font-weight:800">' . wfMessage( 'g-mediumlarge' )->plain() . '</td>
+		<td>'.Gifts::getGiftImageTag($this->gift_id, "ml").'</td></tr>';
+		$output .= '<tr><td valign="top" style="color:#666666;font-weight:800">' . wfMessage( 'g-medium' )->plain() . '</td>
+		<td>'.Gifts::getGiftImageTag($this->gift_id, "m").'</td></tr>';
+		$output .= '<tr><td valign="top" style="color:#666666;font-weight:800">' . wfMessage( 'g-small' )->plain() . '</td>
+		<td>'.Gifts::getGiftImageTag($this->gift_id, "s").'</td></tr>';
+		$output .= '<tr><td><input type="button" onclick="javascript:history.go(-1)" value="' . wfMessage( 'g-go-back' )->plain() . '"></td></tr>';
 
 		$giftManager = SpecialPage::getTitleFor( 'GiftManager' );
 		$output .= $this->getLanguage()->pipeList( array(
 			'<tr><td><a href="' . htmlspecialchars( $giftManager->getFullURL() ) . '">' .
-				$this->msg( 'g-back-gift-list' )->plain() . '</a>&#160;',
+				wfMessage( 'g-back-gift-list' )->plain() . '</a>&#160;',
 			'&#160;<a href="' . htmlspecialchars( $giftManager->getFullURL( 'id=' . $this->gift_id ) ) .
-				'">' . $this->msg( 'g-back-edit-gift' )->plain() . '</a></td></tr>'
+				'">' . wfMessage( 'g-back-edit-gift' )->plain() . '</a></td></tr>'
 		) );
 		$output .= '</table>';
 		$this->getOutput()->addHTML( $output );
@@ -552,10 +633,10 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 	 */
 	function uploadError( $error ) {
 		$out = $this->getOutput();
-		$sub = $this->msg( 'uploadwarning' )->plain();
+		$sub = wfMessage( 'uploadwarning' )->plain();
 		$out->addHTML( "<h2>{$sub}</h2>\n" );
 		$out->addHTML( "<h4 class='error'>{$error}</h4>\n" );
-		$out->addHTML( '<br /><input type="button" onclick="javascript:history.go(-1)" value="' . $this->msg( 'g-go-back' )->plain() . '">' );
+		$out->addHTML( '<br /><input type="button" onclick="javascript:history.go(-1)" value="' . wfMessage( 'g-go-back' )->plain() . '">' );
 	}
 
 	/**
@@ -577,7 +658,7 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 			return;
 		}
 
-		$sub = $this->msg( 'uploadwarning' )->plain();
+		$sub = wfMessage( 'uploadwarning' )->plain();
 		$out->addHTML( "<h2>{$sub}</h2>\n" );
 		$out->addHTML( "<ul class='warning'>{$warning}</ul><br />\n" );
 
@@ -607,7 +688,7 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 
 			<tr>
 				<td align='right'>
-					<input tabindex='2' type='button' onclick=javascript:history.go(-1) value='" . $this->msg( 'back' )->plain() . "' />
+					<input tabindex='2' type='button' onclick=javascript:history.go(-1) value='" . wfMessage( 'back' )->plain() . "' />
 				</td>
 
 			</tr>
@@ -632,35 +713,33 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 		$out = $this->getOutput();
 
 		if ( $msg != '' ) {
-			$sub = $this->msg( 'uploaderror' )->plain();
+			$sub = wfMessage( 'uploaderror' )->plain();
 			$out->addHTML( "<h2>{$sub}</h2>\n" .
 				"<h4 class='error'>{$msg}</h4>\n" );
 		}
 
-		$ulb = $this->msg( 'uploadbtn' )->plain();
+		$ulb = wfMessage( 'uploadbtn' )->plain();
 
 		$source = null;
 
 		if ( $wgUseCopyrightUpload ) {
 			$source = "
-	<td align='right' nowrap='nowrap'>" . $this->msg( 'filestatus' )->plain() . "</td>
+	<td align='right' nowrap='nowrap'>" . wfMessage( 'filestatus' )->plain() . "</td>
 	<td><input tabindex='3' type='text' name=\"wpUploadCopyStatus\" value=\"" .
 	htmlspecialchars( $this->mUploadCopyStatus ) . "\" size='40' /></td>
 	</tr><tr>
-	<td align='right'>" . $this->msg( 'filesource' )->plain() . "</td>
+	<td align='right'>" . wfMessage( 'filesource' )->plain() . "</td>
 	<td><input tabindex='4' type='text' name='wpUploadSource' value=\"" .
 	htmlspecialchars( $this->mUploadSource ) . "\" style='width:100px' /></td>
 	";
 		}
 
 		global $wgUploadPath;
-		$gift_image = Gifts::getGiftImage( $this->gift_id, 'l' );
+		$gift_image = Gifts::getGiftImageTag( $this->gift_id, 'l' );
 		if ( $gift_image != '' ) {
 			$output = '<table><tr><td style="color:#666666;font-weight:800">' .
-				$this->msg( 'g-current-image' )->plain() . '</td></tr>';
-			$output .= '<tr><td><img src="' . $wgUploadPath .
-				'/awards/' . $gift_image . '" border="0" alt="' .
-				$this->msg( 'g-gift' )->plain() . '" /></td></tr></table><br />';
+				wfMessage( 'g-current-image' )->plain() . '</td></tr>';
+			$output .= '<tr><td>'.$gift_image.'</td></tr></table><br />';
 		}
 		$out->addHTML( $output );
 
@@ -668,8 +747,8 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 	<form id='upload' method='post' enctype='multipart/form-data' action=\"\">
 	<table border='0'><tr>
 
-	<td style='color:#666666;font-weight:800'>" . $this->msg( 'g-file-instructions' )->escaped() .
-	'<p>' . $this->msg( 'g-choose-file' )->plain() . "<br />
+	<td style='color:#666666;font-weight:800'>" . wfMessage( 'g-file-instructions' )->escaped() .
+	'<p>' . wfMessage( 'g-choose-file' )->plain() . "<br />
 	<input tabindex='1' type='file' name='wpUploadFile' id='wpUploadFile' style='width:100px' />
 	</td></tr><tr>
 	{$source}
@@ -687,40 +766,6 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 	 * @return Status object
 	 */
 	function verify( $tmpfile, $extension ) {
-		# magically determine mime type
-		$magic = MimeMagic::singleton();
-		$mime = $magic->guessMimeType( $tmpfile, false );
-
-		# check mime type, if desired
-		global $wgVerifyMimeType;
-		if ( $wgVerifyMimeType ) {
-			# check mime type against file extension
-			if ( !UploadBase::verifyExtension( $mime, $extension ) ) {
-				return Status::newFatal( 'uploadcorrupt' );
-			}
-
-			# check mime type blacklist
-			global $wgMimeTypeBlacklist;
-			if ( isset( $wgMimeTypeBlacklist ) && !is_null( $wgMimeTypeBlacklist )
-				&& UploadBase::checkFileExtension( $mime, $wgMimeTypeBlacklist ) ) {
-				return Status::newFatal( 'badfiletype', htmlspecialchars( $mime ) );
-			}
-		}
-
-		# check for htmlish code and javascript
-		if ( UploadBase::detectScript( $tmpfile, $mime, $extension ) ) {
-			return Status::newFatal( 'uploadscripted' );
-		}
-
-		/**
-		 * Scan the uploaded file for viruses
-		 */
-		$virus = UploadBase::detectVirus( $tmpfile );
-		if ( $virus ) {
-			return Status::newFatal( 'uploadvirus', htmlspecialchars( $virus ) );
-		}
-
-		// wfDebug( __METHOD__ . ": all clear; passing.\n" );
-		return Status::newGood();
+		return UploadUtil::check($tmpfile, $extension);
 	}
 }

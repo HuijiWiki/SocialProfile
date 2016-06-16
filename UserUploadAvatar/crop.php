@@ -1,11 +1,11 @@
 <?php
-use OSS;
 /**
  * This Class is way too hacky. It violate a bunch of rules of mediawiki principle.
  * We should rewrite this someday. For now it is working. @author Reasno
  * 
  * 
  */
+use OSS;
 class CropAvatar {
     private $src;
     private $data;
@@ -44,7 +44,6 @@ class CropAvatar {
             $this->setFile($this->file);   
           
         }
-
         $responseBody = array(
             'state'  => 200,
             'message' => $this -> getMsg(),
@@ -70,6 +69,7 @@ class CropAvatar {
         }
         $tempName = tempnam("/tmp", "php");
         file_put_contents( $tempName, $file);
+
         $type = exif_imagetype( $tempName );
     
         if ($type == IMAGETYPE_GIF || $type == IMAGETYPE_JPEG || $type == IMAGETYPE_PNG) {
@@ -82,6 +82,23 @@ class CropAvatar {
             $nameM = $avatarKey . '_' . $uid . '_m';
             $nameS = $avatarKey . '_' . $uid . '_s';
             $imageInfo = getimagesize( $tempName );
+            switch ( $imageInfo[2] ) {
+                case 1:
+                    $ext = 'gif';
+                    break;
+                case 2:
+                    $ext = 'jpg';
+                    break;
+                case 3:
+                    $ext = 'png';
+                    break;
+                default:
+                    return $this->msg = '请上传如下类型的图片: JPG, PNG, GIF（错误代码：14）';
+            }
+            $veri = UploadUtil::check($tempName, $ext);
+            if ( !$veri->isGood() ) {
+                return $this->msg = '文件类型与MIME不符（错误代码：15）';
+            }
         // upload first avatar should be awarded, atomically
             if (HuijiFunctions::addLock('first-avatar-'.$uid)){
 
@@ -93,19 +110,7 @@ class CropAvatar {
                 $this->createThumbnail( $tempName , $imageInfo, $nameML, 50 );
                 $this->createThumbnail( $tempName , $imageInfo, $nameM, 30 );
                 $this->createThumbnail( $tempName , $imageInfo, $nameS, 16 );
-                switch ( $imageInfo[2] ) {
-                    case 1:
-                        $ext = 'gif';
-                        break;
-                    case 2:
-                        $ext = 'jpg';
-                        break;
-                    case 3:
-                        $ext = 'png';
-                        break;
-                    default:
-                        return $this->msg = '请上传如下类型的图片: JPG, PNG, GIF（错误代码：14）';
-                }
+
                 unlink( $tempName );
                 $this->cleanUp( $ext, $avatarKey, $uid );
               
@@ -156,10 +161,13 @@ class CropAvatar {
         $imageInfo = getimagesize( $file->getTempName() );
         $errorCode = $file->getError();
         if ($errorCode === UPLOAD_ERR_OK) {
-            $type = exif_imagetype( $file->getTempName() );
+            $type = $this->type;
 
             if ($type) {
-                $extension = image_type_to_extension($type);
+                $veri = UploadUtil::check($file->getTempName(), substr($this->extension, 1) );
+                if ( !$veri->isGood() ) {
+                    return $this->msg = '文件类型与MIME不符（错误代码：15）';
+                }
 
                 // $src = $this->avatarUploadDirectory. '/' . date('YmdHis') . '.original' . $extension;
 
@@ -221,8 +229,6 @@ class CropAvatar {
                     			wfMessage( 'site-avatar-log-entry' )->inContentLanguage()->text()
                     	);      		  
               	    }
-                    $this->type = $type;
-                    $this->extension = $extension;
                 } else {
                     $this->msg = '请上传如下类型的图片: JPG, PNG, GIF（错误代码：12）';
                 }
@@ -579,7 +585,7 @@ class CropAvatar {
 
             // Copy the thumb, put it in OSS.
             if ($wgUseOss){
-                $bucket = "huiji-avatar";
+                $bucket = wAvatar::AVATAR_BUCKET;
                 $object = $imgDest . '.' . $ext;
                 $content = $tnImage; // 上传的文件内容
                 try {

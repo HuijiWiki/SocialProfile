@@ -114,9 +114,7 @@ class ViewGift extends UnlistedSpecialPage {
 				$removeGiftLink = SpecialPage::getTitleFor( 'RemoveGift' );
 				$giveGiftLink = SpecialPage::getTitleFor( 'GiveGift' );
 
-				$giftImage = '<img src="' . $wgUploadPath . '/awards/' .
-					Gifts::getGiftImage( $gift['gift_id'], 'l' ) .
-					'" border="0" alt="" />';
+				$giftImage = Gifts::getGiftImageTag( $gift['gift_id'], 'l' );
 
 				$message = $out->parse( trim( $gift['message'] ), false );
 				$inviteCode = UserGifts::checkIsInviteGift($gift['id']);

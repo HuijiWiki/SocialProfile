@@ -173,49 +173,4 @@ class UserDonation{
 		
 	}
 
-	//is achieve the month goal 
-	static function isAchieveGoalByMonth( $sitePrefix, $month ){
-		global $wgMemc;
-		$key = wfForeignMemcKey( 'huiji', '' , 'site_month_donate_goal', $sitePrefix, $month );
-		$data = $wgMemc->get( $key );
-		if ( $data == null ) {
-			$donateResult = self::getDonationInfoByPrefix( $sitePrefix, $month );
-			$monthDonate = array_sum($donateResult);
-			$wgMemc->set( $key, $monthDonate );
-		}else{
-			$monthDonate = $data;
-		}
-		
-		$site = WikiSite::newFromPrefix($sitePrefix);
-        $rating = $site->getRating();
-        switch ($rating) {
-            case 'A':
-                $goalDonate = 5000;
-                break;
-            case 'B':
-                $goalDonate = 1000;
-                break;
-            case 'C':
-                $goalDonate = 200;
-                break;
-            case 'D':
-                $goalDonate = 40;
-                break;
-            case 'E':
-                $goalDonate = 8;
-                break;
-            case 'NA':
-                $goalDonate = 200;
-                break;
-            default:
-                $goalDonate = 100;
-                break;
-        }
-        if ( $monthDonate < $goalDonate ) {
-        	return false;
-        }else{
-        	return true;
-        }
-	}
-
 }

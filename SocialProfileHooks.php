@@ -172,17 +172,7 @@ class SocialProfileHooks {
 	    $vars['wgCentralServer'] = $wgCentralServer;
 	    return true;
 	}
-	/**
-	 * modift vide mime type
-	 */
-	public static function onMimeMagicGuessFromContent( $mimeMagic, &$head, &$tail, $file, &$mime ) {
-		// wfDebugLog('SocialProfile', 'onMimeMagicGuessFromContent'.$file);
-		$mime = 'application/pdf';
-	}
 
-	public static function onBitmapHandlerTransform( $handler, $image, &$scalerParams, &$mto ) { 
-		
-	}
 	public static function onThumbnailBeforeProduceHTML( $handler, &$attribs, &$linkAttribs ){
 		$file = $handler->getFile();
 		$sha1 = $handler->getFile()->getSha1();
