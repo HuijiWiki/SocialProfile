@@ -115,14 +115,14 @@ class Gifts {
 				
             $bucket = self::GIFT_BUCKET;
             $avatar_filename = $id .  '_' . $size  ;
-            $jpgDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".JPG");
+            $jpgDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".jpg");
             if ($jpgDoesExist){
-            	$avatar_filename .= ".JPG";
+            	$avatar_filename .= ".jpg";
             	return $avatar_filename;
             }
-            $pngDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".PNG");
+            $pngDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".png");
             if ($pngDoesExist){
-            	$avatar_filename .= ".PNG";
+            	$avatar_filename .= ".png";
             	return $avatar_filename;
             }
 			$gifDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".gif");  

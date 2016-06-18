@@ -177,6 +177,8 @@ class SpecialViewFollows extends SpecialPage {
 				$userPageURL = htmlspecialchars( $userPage->getFullURL() );
 				// $avatar = new wAvatar( $follow['user_id'], 'ml' );
 				// $avatar_img = $avatar->getAvatarURL();
+				$userObj = HuijiUser::newFromName($allinfo['username'] );
+				$userAvatar = $userObj->getAvatar('ml')->getAvatarAnchor(); 
 				$avatar_img = $allinfo['url'];
 				$user_gender = $allinfo['gender'];
 				$user_status = $allinfo['status'];
@@ -202,7 +204,7 @@ class SpecialViewFollows extends SpecialPage {
 					$genderIcon = '♂/♀';
 				}
 				$output .= "<div class=\"relationship-item\">
-					<a class='mw-userlink' href=\"{$userPageURL}\" data-name=\"{$user_name_display}\">{$avatar_img}</a>
+					".$userAvatar."
 					<div class=\"relationship-info\">
 						<div class=\"relationship-name\">
 							<a class='mw-userlink' href=\"{$userPageURL}\">{$user_name_display}</a><i>{$genderIcon}</i><i>{$user_level}</i>

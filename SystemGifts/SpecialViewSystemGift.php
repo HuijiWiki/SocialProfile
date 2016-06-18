@@ -121,7 +121,7 @@ class ViewSystemGift extends UnlistedSpecialPage {
 				$message = $out->parse( trim( $value['description'] ), false );
 				$output .= '<div class="ga-description-container">';
 
-				$giftImage = SystemGifts::getGiftImageTag( $gift['gift_id'], 'l');
+				$giftImage = SystemGifts::getGiftImageTag( $value['gift_id'], 'l');
 				if ( !empty($value['designation']) ) {
 					$title_name = '称号：';
 				}else{

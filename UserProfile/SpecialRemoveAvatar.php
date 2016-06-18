@@ -149,7 +149,23 @@ class RemoveAvatar extends SpecialPage {
 	 * 			Doesn't really matter since we're just going to blast 'em all.
 	 */
 	private function deleteImage( $id, $size ) {
-		global $wgUploadDirectory, $wgAvatarKey, $wgMemc;
+		global $wgUploadDirectory, $wgAvatarKey, $wgMemc, $wgUseOss;
+		if ($wgUseOss){
+			$accessKeyId = Confidential::$aliyunKey;
+            $accessKeySecret = Confidential::$aliyunSecret;
+            $endpoint = $wgOssEndpoint;
+            try {
+                $ossClient = new OSS\OssClient($accessKeyId, $accessKeySecret, $endpoint);
+            } catch (OssException $e) {
+                // print $e->getMessage();
+            }
+            $this->ossClient->deleteObjects(wAvatar::AVATAR_BUCKET, array(
+                    $avatarKey . '_' . $id . '_' . $size . 'jpg',
+                    $avatarKey . '_' . $id . '_' . $size . 'png',
+                    $avatarKey . '_' . $id . '_' . $size . 'gif',
+            ));
+
+		}
 
 		$avatar = new wAvatar( $id, $size );
 		$files = glob( $wgUploadDirectory . '/avatars/' . $wgAvatarKey . '_' . $id .  '_' . $size . "*" );

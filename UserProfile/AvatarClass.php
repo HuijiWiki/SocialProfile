@@ -157,7 +157,7 @@ class wAvatar {
 	function getAvatarAnchor( $extraParams = array() ) {
 		global $wgUploadPath, $wgUseOss, $wgOssAvatarPath;
 		$user_id = $this->user_id;
-		$user = User::newFromId( $user_id );
+		$user = HuijiUser::newFromId( $user_id );
 		$defaultParams = array(
 			'src' => "{$wgUploadPath}/avatars/{$this->getAvatarImage()}",
 			'alt' => 'avatar',
@@ -167,8 +167,21 @@ class wAvatar {
 		if ($wgUseOss){
 			$defaultParams['src'] =  "{$wgOssAvatarPath}/{$this->getAvatarImage()}";
 		}
+		$systemGiftList = $user->getUserDesignation( 'system_gift', 2 );
+		$designName = '';
+		if ( count($systemGiftList) > 0 ) {
+			$designName = $systemGiftList[0]['title_content'];
+		}
 		$params = array_merge( $extraParams, $defaultParams );
-		$linker = Linker::LinkKnown($user->getUserPage(), Html::element( 'img', $params, '' ));
+		// l ml
+		if ( ($this->avatar_size == 'l' || $this->avatar_size == 'ml') && $designName != '' ) {
+			$disignation = array(
+								'class' => 'designation'
+							);
+			$linker = Linker::LinkKnown($user->getUserPage(), Html::element( 'img', $params, '' ).Html::element( 'div', $disignation, '称号:'.$designName ));
+		}else{
+			$linker = Linker::LinkKnown($user->getUserPage(), Html::element( 'img', $params, '' ));
+		}
 		return $linker;
 	}	
 

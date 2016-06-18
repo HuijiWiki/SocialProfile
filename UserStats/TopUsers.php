@@ -168,6 +168,8 @@ class TopUsersPoints extends SpecialPage {
 			$user_title = Title::makeTitle( NS_USER, $item['user_name'] );
 			$avatar = new wAvatar( $item['user_id'], 'm' );
 			$commentIcon = $avatar->getAvatarURL();
+			$userObj = HuijiUser::newFromName($item['user_name'] );
+			$userAvatar = $userObj->getAvatar('m')->getAvatarAnchor(); 
 
 			// Break list into sections based on User Level if it's defined for this site
 			// if ( is_array( $wgUserLevels ) ) {
@@ -186,9 +188,7 @@ class TopUsersPoints extends SpecialPage {
 			}
 			$output .= "<div class=\"top-fan-row {$active}\">
 				<span class=\"top-fan-num\">{$x}.</span>
-				<span class=\"top-fan\"><a href='" . htmlspecialchars( $user_title->getFullURL() ) . "' class='mw-userlink'>
-					{$commentIcon} </a><a href='" . htmlspecialchars( $user_title->getFullURL() ) . "' class='mw-userlink'>" .
-						$item['user_name'] . '</a>
+				<span class=\"top-fan\">{$userAvatar} <a href='" . htmlspecialchars( $user_title->getFullURL() ) . "' class='mw-userlink'>" . $item['user_name'] . '</a>
 				</span>';
 
 			$output .= '<span class="top-fan-points"><b>' .

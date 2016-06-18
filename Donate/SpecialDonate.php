@@ -31,6 +31,8 @@ class SpecialDonate extends SpecialPage{
 
         //商品描述，可空
         $body = $request->getVal('WIDbody');
+$userM = HuijiUser::newFromName('Slx' );
+echo $userAvatarM = $userM->getAvatar('m')->getAvatarAnchor();die();
         //构造要请求的参数数组，无需改动
         if ( isset($out_trade_no) && $out_trade_no != null && $subject != null && $total_fee != null) {
                 $parameter = array(

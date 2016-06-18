@@ -7,10 +7,12 @@ class UploadUtil {
         global $wgVerifyMimeType;
         if ( $wgVerifyMimeType ) {
             # check mime type against file extension
-            if ( !UploadBase::verifyExtension( $mime, $extension ) ) {
-                wfErrorLog('not pass!!!!1'.$extension,'/var/log/mediawiki/SocialProfile.log');
-                return Status::newFatal( 'uploadcorrupt' );
-            }
+            // if ($)
+
+            // if ( !UploadBase::verifyExtension( $mime, $extension == "jpeg" ? "jpg" : $extension ) ) {
+            //     wfErrorLog('not pass!!!!1'.$extension,'/var/log/mediawiki/SocialProfile.log');
+            //     return Status::newFatal( 'uploadcorrupt' );
+            // }
 
             # check mime type blacklist
             global $wgMimeTypeBlacklist;

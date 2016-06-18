@@ -78,14 +78,14 @@ class SpecialNotifyUrl extends UnlistedSpecialPage{
 					$userName = $user->getName();
 				}
 				$res = UserDonation::addUserDonationInfo( $userName, $wgHuijiPrefix, $_POST['total_fee'] );
-				if ( $userName != null ) {
+				if ( $userName != '' ) {
 					$log = new LogPage( 'Donate' );
 					$log->addEntry(
 							'addDescription',
 							SpecialPage::getTitleFor('Donate'),
 							wfMessage( 'user-donate-site-log-entry',array( $userName,$wgHuijiPrefix, $_POST['total_fee'] ) )->inContentLanguage()->text(),
 							array(),
-							$user
+							$userId
 						);
 				}
 				// logResult("add from NotifyUrl".$isAnon."<br>");

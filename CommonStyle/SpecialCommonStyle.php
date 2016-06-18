@@ -220,12 +220,12 @@ class SpecialCommonStyle extends SpecialPage{
         $subBg = !isset( $lessCon['@sub-bg'] ) ? "#f6f8f8" : $lessCon['@sub-bg'];
         $subA = !isset( $lessCon['@sub-a'] ) ? "#333" : $lessCon['@sub-a'];
         $modal = !isset( $lessCon['@modal'] ) ? "#222" : $lessCon['@modal'];
-        $default = !isset( $lessCon['@default'] ) ? "#ffffff" : $lessCon['@default'];
-        $primary = !isset( $lessCon['@primary'] ) ? "#337ab7" : $lessCon['@primary'];
-        $success = !isset( $lessCon['@success'] ) ? "#5cb85c" : $lessCon['@success'];
-        $info = !isset( $lessCon['@info'] ) ? "#5bc0de" : $lessCon['@info'];
-        $warning = !isset( $lessCon['@warning'] ) ? "#f0ad4e" : $lessCon['@warning'];
-        $danger = !isset( $lessCon['@danger'] ) ? "#d9534f" : $lessCon['@danger'];
+        $default = !isset( $lessCon['@brand-default'] ) ? "#ffffff" : $lessCon['@brand-default'];
+        $primary = !isset( $lessCon['@brand-primary'] ) ? "#337ab7" : $lessCon['@brand-primary'];
+        $success = !isset( $lessCon['@brand-success'] ) ? "#5cb85c" : $lessCon['@brand-success'];
+        $info = !isset( $lessCon['@brand-info'] ) ? "#5bc0de" : $lessCon['@brand-info'];
+        $warning = !isset( $lessCon['@brand-warning'] ) ? "#f0ad4e" : $lessCon['@brand-warning'];
+        $danger = !isset( $lessCon['@brand-danger'] ) ? "#d9534f" : $lessCon['@brand-danger'];
         $output .= $templateParser->processTemplate(
                             'view',
                             array(

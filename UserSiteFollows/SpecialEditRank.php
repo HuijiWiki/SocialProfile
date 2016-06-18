@@ -95,11 +95,11 @@ class SpecialEditRank extends SpecialPage {
 				$active = '';
 			}
 			$user_title = Title::makeTitle( NS_USER, $user['user'] );
-			$commentIcon = $user['url'];
+			$userObj = HuijiUser::newFromName($user['user'] );
+			$userAvatar = $userObj->getAvatar('m')->getAvatarAnchor();
 			$output .= "<div class=\"top-fan-row {$active}\">
 				<span class=\"top-fan-num\">{$x}.</span>
-				<span class=\"top-fan\"><a class='mw-userlink' href='" . $user['userUrl'] . "'>
-					{$commentIcon} </a><a class='mw-userlink' href='" . $user['userUrl'] . "'>" .
+				<span class=\"top-fan\">".$userAvatar."<a class='mw-userlink' href='" . $user['userUrl'] . "'>" .
 						$user['user'] .'</a><i class="hidden-xs hidden-sm">'.$user['level'] .'
 				</i></span>';
 			$output .= '<span class="top-fan-points"><b>' .

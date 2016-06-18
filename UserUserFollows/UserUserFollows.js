@@ -25,7 +25,6 @@ function requestUserUserFollowsResponse( follower, followee, action,btn ) {
             },
             type:'post',
             success:function(data){
-                console.log(data);
                 if (data.useruserfollow.status == 'success') {
                     btn.html('<a><i class="fa fa-minus-square-o"></i> 取关</a>');
                     btn.addClass('unfollow');

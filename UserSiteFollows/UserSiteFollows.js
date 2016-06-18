@@ -108,48 +108,6 @@ var userSiteFollows = {
 			);		
 		}
 	},
-	fillUsersModal: function( username, servername ){
-		$.post(
-			mw.util.wikiScript(), {
-				action: 'ajax',
-				rs: 'wfUsersFollowingSiteResponse',
-				rsargs: [username, servername]
-			},
-			function( data ) {
-                $('.follow-modal').empty();
-				var res = jQuery.parseJSON(data);
-				if(res.success){
-					if(res.result.length==0){
-						var sitename = mw.config.get('wgSiteName');
-						$('.follow-modal').append('暂时还没人关注'+sitename+' >-<');
-					}else{
-                        var msg = '<li class="row"><span class="col-xs-6 col-md-4 col-sm-4">昵称</span><span class="hidden-xs col-md-4 col-sm-4">等级</span><span class="col-xs-6 col-md-4 col-sm-4">编辑次数</span></li>'
-                        $('.follow-modal').append(msg);
-                        if(res.result.length>4) {
-                            var i;
-                            for( i=0;i<4;i++ ){
-                                var msg = '<li class="row"><span class="col-xs-6 col-md-4 col-sm-4 modal-user-info"><a href="' + res.result[i].userUrl + '" class="follow-modal-headimg">' + res.result[i].url + '</a><a href="' + res.result[i].userUrl + '" class="follow-modal-username">' + res.result[i].user + '</a></span><span class="follow-modal-level hidden-xs col-md-4 col-sm-4">' + res.result[i].level + '</span><span class="follow-modal-editnum col-xs-6 col-md-4 col-sm-4">' + res.result[i].count + '</span></li>';
-                                $('.follow-modal').append(msg);
-                            }
-
-                            $('.follow-modal').append('<div class="follow-modal-more"><a href="/wiki/Special:EditRank">更多</a></div>');
-                        }
-                        else{
-                            $.each(res.result,
-                                function (i, item) {
-                                    var msg = '<li class="row"><span class="col-xs-6 col-md-4 col-sm-4 modal-user-info"><a href="' + item.userUrl + '" class="follow-modal-headimg">' + item.url + '</a><a href="' + item.userUrl + '" class="follow-modal-username">' + item.user + '</a></span><span class="follow-modal-level hidden-xs col-md-4 col-sm-4">' + item.level + '</span><span class="follow-modal-editnum col-xs-6 col-md-4 col-sm-4">' + item.count + '</span></li>';
-                                    $('.follow-modal').append(msg);
-                                }
-                            );
-                        }
-                    }
-				}else{
-					userSiteFollows.alerttime();
-                    userSiteFollows.alertp.text(res.message);
-				}
-			}
-		);
-	},
     alertp : $('.alert-return p'),
     alerttime : function(){
         alreturn.show();
@@ -202,11 +160,4 @@ jQuery( document ).ready( function() {
 		);
 
 	} );
-
-	$('#site-follower-count').click(function(){
-		var user = mw.config.get('wgUserName');
-		var site_name = mw.config.get('wgHuijiPrefix');
-		userSiteFollows.fillUsersModal(user, site_name);
-        $('.follow-modal').empty().append('<i class="fa fa-spinner fa-spin fa-5x"></i>');
-	});
 } );

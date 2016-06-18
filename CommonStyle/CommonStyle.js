@@ -170,21 +170,7 @@ $(function(){
         $('.picker-detail li').removeClass('active');
         $(this).parents('li').find('.picker-detail li').eq(index).addClass('active');
     });
-//   $.ajax({
-//       url:mw.util.wikiScript(),
-//       data:{
-//           action: 'ajax',
-//           rs: 'getLessContent',
-//           rsargs: []
-//       },
-//       type: 'post',
-//       success: function(data){
-//           var content = '<link rel="stylesheet/less" href=""><script type="text/javascript">' +
-//               'less = {env: "development",async: false,fileAsync: false,poll: 1000,functions: {},dumpLineNumbers: "comments", relativeUrls: false, rootpath: ":/a.com/" };</script>' +
-//               '<script src="/resources/lib/less/less.min.js" type="text/javascript"></script>';
-//           $('head').append(content);
-//       }
-//   });
+
     var content = '<link rel="stylesheet/less" href="/wiki/special:DynamicLess"><script type="text/javascript">' +
         'less = {env: "development",async: false,fileAsync: false,poll: 1000,functions: {},dumpLineNumbers: "comments", relativeUrls: true, rootpath: ":/a.com/" };</script>' +
         '<script src="http://fs.huijiwiki.com/www/resources/assets/less.min.js" type="text/javascript"></script>';

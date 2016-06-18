@@ -46,8 +46,7 @@ $wgMessagesDirs['SocialProfileDonate'] = __DIR__ . '/Donate/i18n';
 
 // Classes to be autoloaded
 $wgAutoloadClasses['GenerateTopUsersReport'] = __DIR__ . '/UserStats/GenerateTopUsersReport.php';
-
-$wgAutoloadClasses['SpecialAddRelationship'] = __DIR__ . '/UserRelationship/SpecialAddRelationship.php';
+// $wgAutoloadClasses['SpecialAddRelationship'] = __DIR__ . '/UserRelationship/SpecialAddRelationship.php';
 $wgAutoloadClasses['SpecialBoardBlast'] = __DIR__ . '/UserBoard/SpecialSendBoardBlast.php';
 $wgAutoloadClasses['SpecialSendToFollowers'] = __DIR__ . '/UserBoard/SpecialSendToFollowers.php';
 $wgAutoloadClasses['SpecialSendToAllUsers'] = __DIR__ . '/UserBoard/SpecialSendToAllUsers.php';
@@ -64,7 +63,7 @@ $wgAutoloadClasses['SpecialViewFollows'] = __DIR__ . '/UserUserFollows/SpecialVi
 $wgAutoloadClasses['SpecialEditRank'] = __DIR__ . '/UserSiteFollows/SpecialEditRank.php';
 $wgAutoloadClasses['SpecialShowFollowedSites'] = __DIR__ . '/UserSiteFollows/SpecialShowFollowedSites.php';
 $wgAutoloadClasses['SpecialRandomwiki'] = __DIR__ . '/SpecialRandomwiki.php';
-$wgAutoloadClasses['RemoveAvatar'] = __DIR__ . '/UserProfile/SpecialRemoveAvatar.php';
+// $wgAutoloadClasses['RemoveAvatar'] = __DIR__ . '/UserProfile/SpecialRemoveAvatar.php';
 $wgAutoloadClasses['UpdateEditCounts'] = __DIR__ . '/UserStats/SpecialUpdateEditCounts.php';
 $wgAutoloadClasses['UserBoard'] = __DIR__ . '/UserBoard/UserBoardClass.php';
 $wgAutoloadClasses['BoardBlastJobs'] = __DIR__ . '/UserBoard/BoardBlastJobs.php';
@@ -129,9 +128,9 @@ $wgAutoloadClasses['SpecialDynamicLess'] = __DIR__ . '/CommonStyle/SpecialDynami
 // New special pages
 // $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
 // $wgSpecialPages['EditProfile'] = 'SpecialEditProfile';
-$wgSpecialPages['GenerateTopUsersReport'] = 'GenerateTopUsersReport';
+// $wgSpecialPages['GenerateTopUsersReport'] = 'GenerateTopUsersReport';
 // $wgSpecialPages['PopulateUserProfiles'] = 'SpecialPopulateUserProfiles';
-$wgSpecialPages['RemoveAvatar'] = 'RemoveAvatar';
+// $wgSpecialPages['RemoveAvatar'] = 'RemoveAvatar';
 // $wgSpecialPages['RemoveRelationship'] = 'SpecialRemoveRelationship';
 $wgSpecialPages['SendBoardBlast'] = 'SpecialBoardBlast';
 $wgSpecialPages['SendToFollowers'] = 'SpecialSendToFollowers';
@@ -142,7 +141,7 @@ $wgSpecialPages['TopUsersRecent'] = 'TopFansRecent';
 // $wgSpecialPages['ToggleUserPage'] = 'SpecialToggleUserPage';
 $wgSpecialPages['UpdateEditCounts'] = 'UpdateEditCounts';
 // $wgSpecialPages['UpdateProfile'] = 'SpecialUpdateProfile';
-$wgSpecialPages['UploadAvatar'] = 'SpecialUploadAvatar';
+// $wgSpecialPages['UploadAvatar'] = 'SpecialUploadAvatar';
 $wgSpecialPages['UserBoard'] = 'SpecialViewUserBoard';
 // $wgSpecialPages['ViewRelationshipRequests'] = 'SpecialViewRelationshipRequests';
 // $wgSpecialPages['ViewRelationships'] = 'SpecialViewRelationships';
@@ -333,8 +332,8 @@ $wgHooks['CanonicalNamespaces'][] = 'SocialProfileHooks::onCanonicalNamespaces';
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'SocialProfileHooks::onLoadExtensionSchemaUpdates';
 $wgHooks['ParserFirstCallInit'][] = 'AvatarParserFunction::setupAvatarParserFunction';
 $wgHooks['BeforePageDisplay'][] = 'SocialProfileHooks::onBeforePageDisplay';
-$wgHooks['MimeMagicGuessFromContent'][] = 'SocialProfileHooks::onMimeMagicGuessFromContent';
-$wgHooks['BitmapHandlerTransform'][] = 'SocialProfileHooks::onBitmapHandlerTransform';
+// $wgHooks['MimeMagicGuessFromContent'][] = 'SocialProfileHooks::onMimeMagicGuessFromContent';
+// $wgHooks['BitmapHandlerTransform'][] = 'SocialProfileHooks::onBitmapHandlerTransform';
 $wgHooks['ThumbnailBeforeProduceHTML'][] = 'SocialProfileHooks::onThumbnailBeforeProduceHTML';
 // For the Renameuser extension
 $wgHooks['RenameUserComplete'][] = 'SocialProfileHooks::onRenameUserComplete';
@@ -714,6 +713,12 @@ $wgAutoloadClasses['UserUserFollowApi'] = __DIR__ . '/UserUserFollows/api/UserUs
 $wgAPIModules['useruserfollow'] = 'UserUserFollowApi';
 $wgAutoloadClasses['UserUserUnfollowApi'] = __DIR__ . '/UserUserFollows/api/UserUserUnfollow.api.php';
 $wgAPIModules['useruserunfollow'] = 'UserUserUnfollowApi';
+$wgAutoloadClasses['GetUserFollowInfo'] = __DIR__ . '/UserUserFollows/api/GetUserFollowInfo.api.php';
+$wgAPIModules['getuserfollowinfo'] = 'GetUserFollowInfo';
+$wgAutoloadClasses['GetUserFollowRecommend'] = __DIR__ . '/UserUserFollows/api/GetUserFollowRecommend.api.php';
+$wgAPIModules['getuserfollowrecommend'] = 'GetUserFollowRecommend';
+$wgAutoloadClasses['GetFollowingUser'] = __DIR__ . '/UserUserFollows/api/GetFollowingUser.api.php';
+$wgAPIModules['getfollowinguser'] = 'GetFollowingUser';
 
 //Log
 global $wgLogTypes, $wgLogNames, $wgLogHeaders, $wgLogActions;
@@ -727,7 +732,7 @@ $wgLogActions['AdminDashboard/setSiteProperty'] = 'admindashboardlogentry';
 $wgLogTypes[]                    = 'Donate';
 $wgLogNames['Donate']           = 'donatepage';
 $wgLogHeaders['Donate']         = 'donatepagetext';
-$wgLogActions['Donate/addDescription'] = 'donatelogentry';
+$wgLogActions['Donate/addDonation'] = 'donatelogentry';
 $wgLogActions['Donate/setSiteProperty'] = 'donatelogentry';
 
 //add_user_donate_log
