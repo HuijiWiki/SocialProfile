@@ -120,7 +120,7 @@ class ViewGift extends UnlistedSpecialPage {
 				$inviteCode = UserGifts::checkIsInviteGift($gift['id']);
 				$userTitle = UserGifts::checkIsTitleGift($gift['gift_id'], $gift['user_id_to']);
 				if ( $userTitle != null ) {
-					$title_name = '<称号>';
+					$title_name = '【称号】';
 				}else{
 					$title_name = '';
 				}
