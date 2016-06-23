@@ -396,9 +396,8 @@ class GiveGift extends SpecialPage {
 				$res = $ug->doesUserOwnGift( $this->user_id_to, $gift['id'] );
 				$fromUser = HuijiUser::newFromID( $wgUser->getID() );
 				$level = $fromUser->getLevel();
-				$gift_image = "<img id=\"gift_image_{$gift['id']}\" src=\"{$wgUploadPath}/awards/" .
-					Gifts::getGiftImage( $gift['id'], 'l' ) .
-					'" border="0" alt="" />';
+				$gift_image = 
+					Gifts::getGiftImageTag( $gift['id'], 'l' );
 				if ($res == true && $gift['repeat'] == 2) {
 					$gclass = 'g-give-all g-had-got';
 					$warning = '不可重复获得';
