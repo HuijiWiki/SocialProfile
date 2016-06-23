@@ -96,12 +96,10 @@ class SpecialDesignation extends SpecialPage {
 		if ( count($giftList) > 0 ) {
 			foreach ($giftList as $key => $value) {
 				$gifts = UserGifts::getUserGift( $wgUser->getName(), $value['gift_id'], 1 );
-				$description = empty($gifts[0]['description']) ? '<small>(暂无描述)</small>' : $out->parse($gifts[0]['description']);
 				$giftImage = Gifts::getGiftImageTag( $value['gift_id'], 'l' );
 				$output .= '<div class="admin-setting-li">
 						'.$giftImage.'
 				        <div class="setting-title" title="'.$value['title_content'].'">称号：'.$value['title_content'].'</div>
-				        <p class="setting-des">描述：'.$description.'</p>
 				        <div class="setting-toggle">';
 				if ( $value['is_open'] == 1 ) {
 					$open = 'false';
