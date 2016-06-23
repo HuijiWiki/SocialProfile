@@ -81,7 +81,7 @@ class SpecialNotifyUrl extends UnlistedSpecialPage{
 				if ( $userName != '' ) {
 					$log = new LogPage( 'Donate' );
 					$log->addEntry(
-							'addDescription',
+							'进行了捐赠',
 							SpecialPage::getTitleFor('Donate'),
 							wfMessage( 'user-donate-site-log-entry',array( $userName,$wgHuijiPrefix, $_POST['total_fee'] ) )->inContentLanguage()->text(),
 							array(),

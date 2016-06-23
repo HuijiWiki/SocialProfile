@@ -248,7 +248,7 @@ class SocialProfileHooks {
     	// var_dump($target);
         if ($target->getNamespace() == NS_USER){
         	$text = $target->getRootText();
-        	if ($text == $html && class_exists("HuijiUser")){
+        	if ($text == $html && class_exists("HuijiUser") && !in_array('no-designation', $options)){
         		$user = HuijiUser::newFromName( $target->getRootText() );
         		list($prefix, $suffix) = $user->getDesignation(true);
         		$ret = $prefix.$suffix."<a class='mw-userlink' rel='nofollow' href='".$target->getFullUrl()."'>$html</a>";
