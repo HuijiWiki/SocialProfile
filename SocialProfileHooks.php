@@ -243,6 +243,26 @@ class SocialProfileHooks {
         $wgMemc->delete( $key );
 	}
 
-
+    public static function UserLinkBegin( $dummy, $target, &$html, &$customAttribs, &$query,
+        &$options, &$ret ) {
+    	// var_dump($target);
+        if ($target->getNamespace() == NS_USER){
+        	$text = $target->getRootText();
+        	if ($text == $html && class_exists("HuijiUser")){
+        		$user = HuijiUser::newFromName( $target->getRootText() );
+        		list($prefix, $suffix) = $user->getDesignation(true);
+        		$ret = $prefix."<a class='mw-userlink' rel='nofollow'>$html</a>".$suffix;
+        		return false;
+        	}
+            $customAttribs['class'] = 'mw-userlink';
+            $customAttribs['rel'] = 'nofollow';
+        } elseif( $target->getNamespace()== NS_FILE || $target){
+            $path = pathinfo($target->getFullText());
+            if (array_key_exists('extension', $path) && pathinfo($target->getFullText())['extension'] == 'ass'){
+                $customAttribs['download'] = $target->getText();
+            };
+        }
+        return true;
+    }
 
 }

@@ -2,6 +2,7 @@
  * Used on Sidebar.
  */
 var userSiteFollows = {
+	appended : false,
 	submitted : false,
 	follow: function( username, servername, action ){
 		if (!action){
@@ -160,4 +161,108 @@ jQuery( document ).ready( function() {
 		);
 
 	} );
+
+	$( '#pt-following > a' ).click(function(e){
+		e.preventDefault();
+	});
+	
+	$( '#pt-following' ).click(function(e){
+		// if (window.is_mobile_device() ){
+		// 	return;
+		// }
+		$( '#pt-following > a' ).attr('href', '');
+		$ignore = $(this);
+		if (userSiteFollows.appended){
+			userSiteFollows.appended.toggle();
+			return;
+		}
+		mw.loader.using(['oojs-ui','ext.echo.ui'], function(){
+			username = mw.config.get("wgUserName");
+			specialpage = "/wiki/Special:关注的站点?user_id="+mw.config.get("wgUserId")+"&target_user_id="+mw.config.get("wgUserId");
+			jQuery.post(
+					mw.util.wikiScript(), {
+						action: 'ajax',
+						rs: 'wfUserSiteFollowsDetailsResponse',
+						rsargs: [username, username]
+					},
+					function( data ) {
+						var header = new OO.ui.LabelWidget({
+							label: '我关注的维基'
+						});
+						var dummyIcon = new OO.ui.IconWidget({
+							icon: 'Next',
+							iconTitle: 'dummy'
+						});
+						var moreIcon = new OO.ui.IconWidget( {
+  							icon: 'Next',
+  							iconTitle: '更多'
+						} );
+						var footer = new OO.ui.LabelWidget({
+							label: $('<div class="oo-ui-widget oo-ui-widget-enabled oo-ui-buttonGroupWidget" aria-disabled="false"><div class="mw-echo-ui-notificationBadgeButtonPopupWidget-footer-allnotifs oo-ui-widget oo-ui-widget-enabled oo-ui-buttonElement oo-ui-buttonElement-framed oo-ui-iconElement oo-ui-labelElement oo-ui-buttonWidget" aria-disabled="false"><a class="oo-ui-buttonElement-button" role="button" aria-disabled="false" href="'+specialpage+'" rel="nofollow"><span class="oo-ui-iconElement-icon oo-ui-icon-next"></span><span class="oo-ui-labelElement-label">所有关注</span><span class="oo-ui-indicatorElement-indicator"></span></a></div><div class="mw-echo-ui-notificationBadgeButtonPopupWidget-footer-preferences oo-ui-widget oo-ui-widget-enabled oo-ui-buttonElement oo-ui-buttonElement-framed oo-ui-iconElement oo-ui-labelElement oo-ui-buttonWidget" aria-disabled="false"><a class="oo-ui-buttonElement-button" role="button" tabindex="0" aria-disabled="false" href="/wiki/%E7%89%B9%E6%AE%8A:%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE#mw-prefsection-echo" rel="nofollow"><span class="oo-ui-iconElement-icon oo-ui-icon-advanced"></span><span class="oo-ui-labelElement-label">设置</span><span class="oo-ui-indicatorElement-indicator"></span></a></div></div>')
+						});
+						var out = '<div class="mw-echo-ui-notificationsWidget">';
+						console.log(data);
+						data = JSON.parse(data);
+						if (data.success){
+							if (data.result.length > 0){
+								for (var i in data.result){
+									out += '<div class="oo-ui-optionWidget oo-ui-labelElement mw-echo-ui-notificationOptionWidget">';
+									var target = 'http://'+data.result[i].key+mw.config.get('wgHuijiSuffix');
+									out += '<a class="mw-echo-ui-notificationOptionWidget-linkWrapper" href="'+target+'">';
+									out += "<div class='mw-echo-ui-notificationOptionWidget mw-echo-state'>";
+									out += '<img class="mw-echo-icon" src="http://av.huijiwiki.com/site_avatar_'+data.result[i].key+'_m.png">';
+									out += "<span class='oo-ui-lableElement-label'>";
+									out += "<div class='mw-echo-content'>";
+									out += "<div class='mw-echo-title'>";
+									out += "<span href='http://";
+									out += data.result[i].key;
+									out += mw.config.get('wgHuijiSuffix')+"'>"+data.result[i].val+"</span>";
+									out += "</div>";
+									out += "<div class='mw-echo-notification-footer'>编辑了"+data.result[i].count+"次</div>";
+									out += "</div>";
+									out += "</span>";
+									out += "</div>";
+									out += "</a>";
+									out += "</div>";
+								}
+								out += "</div>";
+								console.log(out);
+
+							} else {
+								out += "<div class='top-users'><li>您关注的维基会出现在这里~</li></div>";
+							}
+						
+						} else {
+							out += "<div><li>您关注的维基会出现在这里~</li></div>";
+						}
+						// Set the 'anchor' config option to 'false' to remove the triangular anchor that points toward the popup origin.
+						var popup = new OO.ui.PopupWidget( {
+						  $content: $( out ),
+						  padded: false,
+						  $container: $('body'),
+						  anchor: true,
+						  head:true,
+						  autoClose: true,
+						  classes: "following",
+						  $autoCloseIgnore: $ignore,
+						  label: dummyIcon.$element,
+						  align: "force-right",
+						  $footer: footer.$element
+						} );
+						popup.$label.append(header.$element);
+						popup.closeButton.$element.remove();
+						if (!userSiteFollows.appended){
+							userSiteFollows.appended = popup;
+							$ignore.append( popup.$element );
+						}
+						popup.toggle();
+
+					}
+			);
+		});
+
+
+	});
+	
+
 } );

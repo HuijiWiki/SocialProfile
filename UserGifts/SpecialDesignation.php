@@ -61,39 +61,12 @@ class SpecialDesignation extends SpecialPage {
 		$giftList = $HuijiUser->getUserDesignation( 'gift', 0 );
 		$systemGiftList = $HuijiUser->getUserDesignation( 'system_gift', 0 );
 
-
 		// $wikiSite = WikiSite::newFromPrefix($wgHuijiPrefix);
 		// $follower = $wikiSite->getFollowers(true);
 		// print_r($follower);die();
 		// print_r($systemGiftList);die();
-		$output .= '<div id="gift-list" class="list-wrap"><div class="list-title">称号</div>';
-		if ( count($giftList) > 0 ) {
-			foreach ($giftList as $key => $value) {
-				$gifts = UserGifts::getUserGift( $wgUser->getName(), $value['gift_id'], 1 );
-				$description = empty($gifts[0]['description']) ? '<small>(暂无描述)</small>' : $gifts[0]['description'];
-				$giftImage = Gifts::getGiftImageTag( $value['gift_id'], 'l' );
-				$output .= '<div class="admin-setting-li">
-						'.$giftImage.'
-				        <div class="setting-title" title="'.$value['title_content'].'">称号：'.$value['title_content'].'</div>
-				        <p class="setting-des" title="'.$description.'">描述：'.$description.'</p>
-				        <div class="setting-toggle">';
-				if ( $value['is_open'] == 1 ) {
-					$open = 'false';
-				}elseif ( $value['is_open'] == 2 ) {
-					$open = 'true';
-				}
-				$output .= '<span class="toggle" data-value="'.$open.'" data-state="false"></span>
-				       		<input class="gift-title-id" type="hidden" value="'.$value['ut_id'].'">
-				       		<input class="gift-title-from" type="hidden" value="gift">
-				        </div>
-				    </div>';
-			}
-		}else{
-			$output .= '<span>暂无</span>';
-		}
-		$output .='</div>';
-		
-		$output .= '<div id="system-list" class="list-wrap"><div class="list-title">系统称号</div>';
+
+		$output .= '<div id="system-list" class="list-wrap"><div class="list-title">前缀</div>';
 		if ( count($systemGiftList) > 0 ) {
 			foreach ($systemGiftList as $key => $value) {
 				$gifts = UserSystemGifts::getUserGift( $value['gift_id'], $wgUser->getName() );
@@ -119,6 +92,33 @@ class SpecialDesignation extends SpecialPage {
 			$output .= '<span>暂无</span>';
 		}
 		$output .= '</div>';
+
+		$output .= '<div id="gift-list" class="list-wrap"><div class="list-title">后缀</div>';
+		if ( count($giftList) > 0 ) {
+			foreach ($giftList as $key => $value) {
+				$gifts = UserGifts::getUserGift( $wgUser->getName(), $value['gift_id'], 1 );
+				$description = empty($gifts[0]['description']) ? '<small>(暂无描述)</small>' : $gifts[0]['description'];
+				$giftImage = Gifts::getGiftImageTag( $value['gift_id'], 'l' );
+				$output .= '<div class="admin-setting-li">
+						'.$giftImage.'
+				        <div class="setting-title" title="'.$value['title_content'].'">称号：'.$value['title_content'].'</div>
+				        <p class="setting-des" title="'.$description.'">描述：'.$description.'</p>
+				        <div class="setting-toggle">';
+				if ( $value['is_open'] == 1 ) {
+					$open = 'false';
+				}elseif ( $value['is_open'] == 2 ) {
+					$open = 'true';
+				}
+				$output .= '<span class="toggle" data-value="'.$open.'" data-state="false"></span>
+				       		<input class="gift-title-id" type="hidden" value="'.$value['ut_id'].'">
+				       		<input class="gift-title-from" type="hidden" value="gift">
+				        </div>
+				    </div>';
+			}
+		}else{
+			$output .= '<span>暂无</span>';
+		}
+		$output .='</div>';
 		$out->addHTML( $output );
 	}
 		

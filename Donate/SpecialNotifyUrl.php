@@ -87,12 +87,15 @@ class SpecialNotifyUrl extends UnlistedSpecialPage{
 							array(),
 							$userId
 						);
+
 				}
+				file_get_contents('/wiki/Special:SendHiddenGift?award=MaskedShooter&user='.$userName.'&token='.$user->getEditToken());
 				// logResult("add from NotifyUrl".$isAnon."<br>");
 		        //调试用，写文本函数记录程序运行情况是否正常
 		        $this->getOutput()->setArticleBodyOnly(true);
 				echo "success";//请不要修改或删除
 			    $this->getOutput()->output();
+
 		    }
 
 			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——

@@ -29,11 +29,41 @@ class SpecialSendHiddenGift extends UnlistedSpecialPage {
 	 * @param $period String: either weekly or monthly
 	 */
 	public function execute( $award ) {
-		global $wgContLang, $wgUser, $wgCentralServer;
+		global $wgContLang, $wgUser, $wgCentralServer,$wgMemc;
 
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$user = $this->getUser();
+		$award = $request->getVal( 'award', $award );
+		$userOfChoice = $request->getVal('user');
+		if ($award == "MaskedShooter"){
+			// Match token against what we have in session
+			$token = $request->getVal('token');
+			$userFromName = User::newFromName($userOfChoice);
+			if (!$userFromName->matchEditToken( $token )){
+				$this->getOutput()->setArticleBodyOnly(true);
+				echo "fail";//请不要修改或删除
+				$this->getOutput()->output();
+		        return true;				
+			}
+
+			$gift = new UserGifts( "Reasno" );
+			$giftInfo = Gifts::getGift( 8 );
+			$ug_gift_id = $gift->sendGift(
+				$userOfChoice,
+				8,
+				0,
+				"感谢您对灰机的加油"
+			);
+			$gift->addCustomInvitationCode( $ug_gift_id , "MaskedShooter");
+			$gift->addUserGiftTitleInfo( $giftInfo['gift_id'], $userFromName->getId() , $giftInfo['designation'], 'gift' );
+			$wgMemc->delete( wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'gifts', $userFromName->getId() ) );
+			
+			$this->getOutput()->setArticleBodyOnly(true);
+			echo "success";//请不要修改或删除
+			$this->getOutput()->output();
+	        return true;
+		}
 
 		// Blocked through Special:Block? Tough luck.
 		if ( $user->isBlocked() ) {
@@ -58,8 +88,9 @@ class SpecialSendHiddenGift extends UnlistedSpecialPage {
 		// Set the page title, robot policy, etc.
 		$this->setHeaders();
 
-		$award = $request->getVal( 'award', $award );
-		if (!$award || $award != 72){
+		
+		
+		if (!$award || $award != 72 || $award != "MaskedShooter"){
 			$this->getOutput()->redirect( $wgCentralServer.'/wiki/U_found_me' );
 		} 
 		$usg = new UserSystemGifts( $user->getName() );

@@ -568,6 +568,48 @@ class UserGifts {
 	}
 
 	/**
+	 * addCustomInvitationCode
+	 * @param int $user_gift_id    usergift_id
+	 * @param string $source where does this code come from
+	 */
+	public function addCustomInvitationCode( $user_gift_id, $source ){
+		if ($source == 'MaskedShooter'){
+			$dbw = wfGetDB(DB_MASTER);
+			if($dbw->lock('masked_shooter','addCustomInvitationCode')){
+				$res = $dbw->selectRow(
+					'masked_shooter',
+					array('code'),
+					array('status' => 1),
+					__METHOD__
+				);
+				$invite_code = $res->code;
+				$dbw->update(
+					'masked_shooter',
+					array('status' => 0),
+					array('code' => $invite_code ),
+					__METHOD__
+				);
+				$dbw->unlock('masked_shooter','addCustomInvitationCode');
+				$dbw->insert(
+	        		'ug_invite',
+	        		array(
+	        			'ug_id' => $user_gift_id,
+	        			'invitation_code' => $invite_code
+	        		),
+	        		__METHOD__
+	        	);
+
+	        	if ( $dbw->insertId() ) {
+		        	return $dbw->insertId();
+		        }else{
+		        	return 0;
+		        }		
+			}
+			//throw an exception
+		}
+	}
+
+	/**
 	 * check user_gift_id is in ug_invite
 	 * @param $ug_id int user_gift_id
 	 * @return string invitationCode
@@ -651,7 +693,9 @@ class UserGifts {
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->update(
 			'user_title',
-			array( 'is_open=1' ),
+			array(
+				'is_open' => '1'
+			),
 			array( 
 				'title_from' => $title_from,
 				'user_to_id' => $user_to_id

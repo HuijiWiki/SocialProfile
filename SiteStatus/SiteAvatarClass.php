@@ -21,8 +21,8 @@ class wSiteAvatar extends wAvatar{
 	 *			image size (s, m, ml or l)
 	 */
 	function getAvatarImage() {
-		global $wgSiteAvatarKey, $wgUploadDirectory, $wgMemc, $wgUseOss;
-
+		global $wgSiteAvatarKey, $wgUploadDirectory, $wgUseOss;
+		$wgMemc = wfGetMainCache();
 		$key = wfForeignMemcKey( 'huiji', '', 'site', 'profile', 'avatar', $this->user_id, $this->avatar_size );
 		$data = $wgMemc->get( $key );
 

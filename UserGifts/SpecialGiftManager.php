@@ -362,6 +362,8 @@ class GiftManager extends SpecialPage {
 							</option>
 							<option value="3"' . $invite_code . '>邀请码
 							</option>
+							<option value="4"' . $invite_code . '>MaskedShooter激活码
+							</option>
 						</select>
 						</td>
 					</tr>';

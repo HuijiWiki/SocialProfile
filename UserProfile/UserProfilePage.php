@@ -107,7 +107,7 @@ class UserProfilePage extends Article {
 			$rollback = '<li>回退员</li> ';
 		}
 		if (in_array( 'autoconfirmed', $this->user->getEffectiveGroups(true))){
-			$autoconfirmed = '<li>自动确认用户</li> ';
+			$autoconfirmed = '<li>资深用户</li> ';
 		}
 		$usf = new UserSiteFollow();
 		$uuf = new UserUserFollow();
@@ -1147,6 +1147,14 @@ class UserProfilePage extends Article {
 		$level_link = Title::makeTitle( NS_HELP, wfMessage( 'user-profile-userlevels-link' )->inContentLanguage()->text() );
 
 		$this->initializeProfileData( $user_name );
+		$huijiUser = HuijiUser::newFromName($user_name);
+		$designation = $huijiUser->getDesignation();
+		if ( $designation != $user_name ){
+			$fullName = '<div>' . $user_name . '</div>' . '<div class="small secondary hidden-xs hidden-sm">' . $designation . '</div>';
+		} else {
+			$fullName = '<div>' . $user_name . '</div>';
+		}
+
 		$profile_data = $this->profile_data;
 
 		// Variables and other crap
@@ -1212,7 +1220,7 @@ class UserProfilePage extends Article {
 		$output .= '<div id="profile-title-container">
 				<h1 id="profile-title">
 				<div id="profile-image">' .($this->isOwner()? ('<div class="profile-image-container crop-headimg" id="crop-avatar"><div class="avatar-view upload-tool" title="上传头像">'.$avatar->getOwnerAvatarURL().'</div>'.$this->cropModal().'</div>'): $avatar->getAvatarURL()) .'</div>' .
-					$user_name .
+					$fullName .
 				'</h1></div>';
         $output .='<div class="modal fade watch-url" tabindex="-1" role="dialog" aria-labelledby="mySmModalLabel" aria-hidden="true">
                       <div class="modal-dialog modal-sm">

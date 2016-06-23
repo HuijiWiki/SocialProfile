@@ -161,10 +161,21 @@ class SpecialCommonStyle extends SpecialPage{
                     '@detail-navbox-abovebelow-a'=>'链接',
                 )
         );
+        $hArr16 = array(
+                'label'=>'投票',
+                    'detail'=>array(
+                        '@detail-vote-color'=>'文字',
+                        '@detail-vote-score-bg'=>'分数背景',
+                        '@detail-vote-score-color'=>'分数字体',
+                        '@detail-vote-star'=>'星星颜色',
+                        '@detail-vote-active-star'=>'选中颜色',
+                    )
+        );
         $valueName = array(
                         '@detail-bg' => 'wiki-outer-body背景',
                         '@detail-inner-bg' => 'wiki-body背景',
                         '@detail-color' => '文字',
+                        '@detail-secondary' => '文字辅色',
                         '@detail-contentsub' => '副标题文字',
                         '@detail-a' => '有效链接',
                         '@detail-new' => '无效链接',
@@ -186,6 +197,7 @@ class SpecialCommonStyle extends SpecialPage{
                         'h13' => $hArr13,
                         'h14' => $hArr14,
                         'h15' => $hArr15,
+                        'h16' => $hArr16,
                     );
         $styleArr = array();
         foreach ($valueName as $key => $value) {

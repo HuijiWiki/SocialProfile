@@ -102,6 +102,18 @@ class GiveGift extends SpecialPage {
 								// $usg2->sendSystemGift( 92 );
 							// }
 						}
+						//customcode
+						if ( $giftInfo['gift_type'] == 4 && $ug_gift_id != null ) {
+							//give system_gift $this->user_name_to $user->getName()
+							
+							$res = $gift->addCustomInvitationCode( $ug_gift_id , "MaskedShooter");
+							// if ($res != 0 ) {
+								// $usg1 = new UserSystemGifts( $user->getName() );
+								// $usg1->sendSystemGift( 91 );
+								// $usg2 = new UserSystemGifts( $this->user_name_to );
+								// $usg2->sendSystemGift( 92 );
+							// }
+						}						
 						//user title
 						if ( $giftInfo['designation'] != null && $this->user_name_to != null ) {
 							$gift->addUserGiftTitleInfo( $giftInfo['gift_id'], $this->user_id_to, $giftInfo['designation'], 'gift' );
@@ -143,9 +155,8 @@ class GiveGift extends SpecialPage {
 						$numg = 0;
 						$sent_gift = UserGifts::getUserGift( $this->user_name_to,$request->getInt( 'gift_id' ) , $numg );
 						if ($sent_gift) {
-							$gift_image = '<img src="' . $wgUploadPath . '/awards/' .
-								Gifts::getGiftImage( $sent_gift[0]['gift_id'], 'l' ) .
-								'" border="0" alt="" />';
+							$gift_image = 
+								Gifts::getGiftImageTag( $sent_gift[0]['gift_id'], 'l' );
 			
 							$out->setPageTitle( $this->msg( 'g-sent-title', $this->user_name_to )->parse() );
 			

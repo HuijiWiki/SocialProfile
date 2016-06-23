@@ -118,7 +118,7 @@ function incEditCount( $article, $revision, $baseRevId ) {
 	        }elseif ($maxlen == 1949) {
 				$usg->sendSystemGift( 45 ); 
 	        }elseif ($maxlen == 2333) {
-				$usg->sendSystemGift( 46 ); 
+				$usg->sendSystemGift( 86 ); 
 	        }
 	    }
 	    HuijiFunctions::releaseLock( 'USG-maxlen-'.$wgUser->getID() );

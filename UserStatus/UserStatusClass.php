@@ -255,6 +255,8 @@ class UserStatus{
 		$result = array();
 		$result['username'] = $this->username;
 		$user_id = $this->userid;
+		$huijiUser = HuijiUser::newFromName($this->username);
+		$result['designation'] = $huijiUser->getDesignation();
 		$avatar = new wAvatar( $user_id, 'ml' );
 		$result['url'] = $avatar->getAvatarURL();
 		$gender = $this->getGender();

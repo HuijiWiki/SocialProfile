@@ -1,5 +1,5 @@
-<?php
-use OSS;
+<?php 
+use \OSS;
 /**
  * wAvatar class - used to display avatars
  * Example usage:
@@ -167,21 +167,10 @@ class wAvatar {
 		if ($wgUseOss){
 			$defaultParams['src'] =  "{$wgOssAvatarPath}/{$this->getAvatarImage()}";
 		}
-		$systemGiftList = $user->getUserDesignation( 'system_gift', 2 );
-		$designName = '';
-		if ( count($systemGiftList) > 0 ) {
-			$designName = $systemGiftList[0]['title_content'];
-		}
 		$params = array_merge( $extraParams, $defaultParams );
-		// l ml
-		if ( ($this->avatar_size == 'l' || $this->avatar_size == 'ml') && $designName != '' ) {
-			$disignation = array(
-								'class' => 'designation'
-							);
-			$linker = Linker::LinkKnown($user->getUserPage(), Html::element( 'img', $params, '' ).Html::element( 'div', $disignation, '称号:'.$designName ));
-		}else{
-			$linker = Linker::LinkKnown($user->getUserPage(), Html::element( 'img', $params, '' ));
-		}
+
+		$linker = Linker::LinkKnown($user->getUserPage(), Html::element( 'img', $params, '' ));
+		
 		return $linker;
 	}	
 
