@@ -27,9 +27,6 @@ class SpecialNotifyUrl extends UnlistedSpecialPage{
 		//计算得出通知验证结果
 		$alipayNotify = new AlipayNotify($alipay_config);
 		$verify_result = $alipayNotify->verifyNotify();
-$user = HuijiUser::newFromId( 1 );
-$userName = $user->getName();
-file_get_contents("http://www.huiji.wiki/wiki/Special:SendHiddenGift?award=MaskedShooter&user=".urlencode($userName)."&token=".md5($userName.'huijirocks'));
 		if($verify_result) {//验证成功
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			//请在这里加上商户的业务逻辑程序代

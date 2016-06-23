@@ -92,22 +92,22 @@ class UserProfilePage extends Article {
 		$rollback = '';
 		$autoconfirmed = '';
 		if (in_array( 'staff', $this->user->getEffectiveGroups(true))){
-			$staff = '<li>职员</li> ';
+			$staff = '<span class="label label-primary">职员</span> ';
 		}
 		if (in_array( 'bot', $this->user->getEffectiveGroups(true))){
-			$staff = '<li>机器人</li> ';
+			$staff = '<span class="label label-primary">机器人</span>  ';
 		}
 		if (in_array( 'bureaucrat', $this->user->getEffectiveGroups(true))){
-			$bureaucrat = '<li>行政员</li> ';
+			$bureaucrat = '<span class="label label-primary">行政员</span>  ';
 		}
 		if (in_array( 'sysop', $this->user->getEffectiveGroups(true))){
-			$sysop = '<li>管理员</li> ';
+			$sysop = '<span class="label label-primary">管理员</span>  ';
 		}
 		if (in_array( 'rollback', $this->user->getEffectiveGroups(true))){
-			$rollback = '<li>回退员</li> ';
+			$rollback = '<span class="label label-primary">回退员</span>  ';
 		}
 		if (in_array( 'autoconfirmed', $this->user->getEffectiveGroups(true))){
-			$autoconfirmed = '<li>资深用户</li> ';
+			$autoconfirmed = '<span class="label label-primary">资深用户</span>  ';
 		}
 		$usf = new UserSiteFollow();
 		$uuf = new UserUserFollow();
@@ -138,20 +138,20 @@ class UserProfilePage extends Article {
 		if ($this->isOwner()){
 			$target = SpecialPage::getTitleFor('ViewFollows');
 			$query = array('user' => $this->user_name, 'rel_type' => 1);
-			$button1 = '<li class="mw-ui-button">'.Linker::LinkKnown($target, '<i class="fa fa-users"></i>朋友', array(), $query).'</li> ';
+			$button1 = '<li class="mw-ui-button mw-ui-primary">'.Linker::LinkKnown($target, '<i class="fa fa-users"></i>朋友', array(), $query).'</li> ';
 		} elseif ($huijiUser->isFollowedBy($wgUser) ){
-			$button1 = '<li id="user-user-follow" class="unfollow mw-ui-button"><a><i class="fa fa-minus-square-o"></i>取关</a></li> ';
+			$button1 = '<li id="user-user-follow" class="unfollow mw-ui-button mw-ui-primary"><a><i class="fa fa-minus-square-o"></i>取关</a></li> ';
 		} else {
-			$button1 = '<li id="user-user-follow" class="mw-ui-button"><i class="fa fa-plus-square-o"></i></i>关注</li> ';
+			$button1 = '<li id="user-user-follow" class="mw-ui-button mw-ui-primary"><i class="fa fa-plus-square-o"></i></i>关注</li> ';
 		}
 		if ($this->isOwner()){
 			$target = SpecialPage::getTitleFor('ViewGifts');
 			$query = array('user' => $this->user_name);
-			$button2 = '<li class="mw-ui-button">'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>礼物</a>', array(), $query).'</li> ';
+			$button2 = '<li class="mw-ui-button mw-ui-primary">'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>礼物</a>', array(), $query).'</li> ';
 		} else {
 			$target = SpecialPage::getTitleFor( 'GiveGift' );
 			$query = array('user' => $this->user_name);
-			$button2 = '<li class="mw-ui-button">'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>赠送</a>', array(), $query).'</li> ';
+			$button2 = '<li class="mw-ui-button mw-ui-primary">'.Linker::LinkKnown($target, '<i class="fa fa-gift"></i>赠送</a>', array(), $query).'</li> ';
 		}
 		$contributions = SpecialPage::getTitleFor( 'Contributions' );
 		$watchlist = SpecialPage::getTitleFor('Watchlist');
@@ -227,7 +227,7 @@ class UserProfilePage extends Article {
 				$tools[] = '<li><a href="' . htmlspecialchars( $watchlist->getFullURL() ) . '">' . wfMessage( 'user-watchlist' )->escaped() . '</a></li>';
 			}
 		}
-		$wgOut->addHTML( '<div class="profile-page"><div id="profile-top" class="jumbotron row">' );
+		$wgOut->addHTML( '<div class="profile-page"><div id="profile-top" class="jumbotron row darken">' );
 		$wgOut->addHTML( $this->getProfileTop( $this->user_id, $this->user_name ) );
         
         $wgOut->addHTML('
@@ -266,7 +266,7 @@ class UserProfilePage extends Article {
                     <div>
                         <ul class="profile-interactive">'.
                             $button1.$button2.
-                            '<li class="dropdown-toggle mw-ui-button" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-align-justify"></span></li>
+                            '<li class="dropdown-toggle mw-ui-button mw-ui-primary" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-align-justify"></span></li>
                             <ul class="dropdown-menu" role="menu">
                                         '.implode('', $tools).' 
                                         <li><a href="' . htmlspecialchars( $contributions->getFullURL('target='. $user_safe.'&contribs=user'  )) . '" rel="nofollow">' . wfMessage( 'user-contributions' )->escaped() . '</a></li>
@@ -284,7 +284,7 @@ class UserProfilePage extends Article {
         $maxlen = $currentMaxlen = 0; //init variables.
         if ($editBox != false) {
         	$wgOut->addHTML('<div id="user-page-center" class="col-md-12 hidden-xs">
-        	<div class="panel panel-default"><div class="user-section-heading panel-heading">
+        	<div class="panel panel-primary darken no-border"><div class="user-section-heading panel-heading">
  			<div class="user-section-title">贡献</div>
  			<div class="action-right"></div>
 			<div class="cleared"></div></div><div class="user-gift-container panel-body check-body">');
@@ -508,7 +508,7 @@ class UserProfilePage extends Article {
 						$stats_data['quiz_points'];
 
 		if ( $total_value != 0 ) {
-			$output .= '<div class="panel panel-default"><div class="user-section-heading panel-heading">
+			$output .= '<div class="panel panel-primary darken no-border"><div class="user-section-heading panel-heading">
 				<div class="user-section-title">' .
 					wfMessage( 'user-stats-title' )->escaped() .
 				'</div>
@@ -762,7 +762,7 @@ class UserProfilePage extends Article {
 		usort( $combined_array, array( 'UserProfilePage', 'sortItems' ) );
 
 		if ( count( $combined_array ) > 0 ) {
-			$output .= '<div class="panel panel-default"><div class="user-section-heading panel-heading">
+			$output .= '<div class="panel panel-primary darken no-border"><div class="user-section-heading panel-heading">
 				<div class="user-section-title">' .
 					wfMessage('casual-games-title')->escaped().'
 				</div>
@@ -939,7 +939,7 @@ class UserProfilePage extends Article {
 
 		$output = '';
 		if ( $joined_data ) {
-			$output .= '<div class="panel panel-default"><div class="user-section-heading panel-heading">
+			$output .= '<div class="panel panel-primary darken no-border"><div class="user-section-heading panel-heading">
 				<div class="user-section-title">' .
 					wfMessage( 'user-personal-info-title' )->escaped() .
 				'</div>
@@ -966,7 +966,7 @@ class UserProfilePage extends Article {
 				$this->getProfileSection( wfMessage( 'user-personal-info-about-me' )->escaped(), $profile_data['about'], false ) .
 			'</div></div>';
 		} elseif ( $wgUser->getName() == $user_name ) {
-			$output .= '<div class="panel panel-default"><div class="user-section-heading panel-heading">
+			$output .= '<div class="panel panel-primary darken no-border"><div class="user-section-heading panel-heading">
 				<div class="user-section-title">' .
 					wfMessage( 'user-personal-info-title' )->escaped() .
 				'</div>
@@ -1011,7 +1011,7 @@ class UserProfilePage extends Article {
 
 		$output = '';
 		if ( $joined_data ) {
-			$output .= '<div class="panel panel-default">
+			$output .= '<div class="panel panel-primary darken no-border">
 				<div class="user-section-heading panel-heading">
 				<div class="user-section-title">' .
 					wfMessage( 'custom-info-title' )->escaped() .
@@ -1034,7 +1034,7 @@ class UserProfilePage extends Article {
 				$this->getProfileSection( wfMessage( 'custom-info-field4' )->escaped(), $profile_data['custom_4'], false ) .
 			'</div></div>';
 		} elseif ( $wgUser->getName() == $user_name ) {
-			$output .= '<div class="panel panel-default"><div class="user-section-heading panel-heading">
+			$output .= '<div class="panel panel-primary darken no-border"><div class="user-section-heading panel-heading">
 				<div class="user-section-title">' .
 					wfMessage( 'custom-info-title' )->escaped() .
 				'</div>
@@ -1082,7 +1082,7 @@ class UserProfilePage extends Article {
 
 		$output = '';
 		if ( $joined_data ) {
-			$output .= '<div class="panel panel-default"><div class="user-section-heading panel-heading">
+			$output .= '<div class="panel panel-primary darken no-border"><div class="user-section-heading panel-heading">
 				<div class="user-section-title">' .
 					wfMessage( 'other-info-title' )->escaped() .
 				'</div>
@@ -1108,7 +1108,7 @@ class UserProfilePage extends Article {
 				$this->getProfileSection( wfMessage( 'other-info-drinks' )->escaped(), $profile_data['drinks'], false ) .
 			'</div></div>';
 		} elseif ( $this->isOwner() ) {
-			$output .= '<div class="panel panel-default"><div class="user-section-heading panel-heading">
+			$output .= '<div class="panel panel-primary darken no-border"><div class="user-section-heading panel-heading">
 				<div class="user-section-title">' .
 					wfMessage( 'other-info-title' )->escaped() .
 				'</div>
@@ -1259,7 +1259,7 @@ class UserProfilePage extends Article {
 						<a href="' . htmlspecialchars( $level_link->getFullURL() ) . '" rel="nofollow">' . $user_level->getLevelName() . '</a>
 					</div>
 					<div id="points-level" class="progress">
-						<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="'.$progress.'" aria-valuemin="0" aria-valuemax="100" style="width: '.$progress.'%">
+						<div class="progress-bar progress-bar-striped active primary" role="progressbar" aria-valuenow="'.$progress.'" aria-valuemin="0" aria-valuemax="100" style="width: '.$progress.'%">
 							<span class="sr-only">'.wfMessage(
 								'user-profile-points',
 								$wgLang->formatNum( $stats_data['points'] )
@@ -1365,12 +1365,12 @@ class UserProfilePage extends Article {
 			$x = 1;
 			$per_row = 4;
 
-			$output .= '<div class="panel panel-default"><div class="user-section-heading panel-heading">
+			$output .= '<div class="panel panel-primary"><div class="user-section-heading panel-heading">
 				<div class="user-section-title">' . $relationship_title . '</div>
 				<div class="user-section-actions">
 					<div class="action-right">';
 			if ( intval( str_replace( ',', '', $relationship_count ) ) > 4 ) {
-				$output .= '<a href="' . htmlspecialchars( $view_all_title->getFullURL( 'user=' . $user_name . '&rel_type=' . $rel_type ) ) .
+				$output .= '<a class="quite" href="' . htmlspecialchars( $view_all_title->getFullURL( 'user=' . $user_name . '&rel_type=' . $rel_type ) ) .
 					'" rel="nofollow">' . wfMessage( 'user-view-all' )->escaped() . '</a>';
 			}
 			$output .= '</div>
@@ -1442,7 +1442,7 @@ class UserProfilePage extends Article {
 		$activity = $rel->getActivityList();
 
 		if ( $activity ) {
-			$output .= '<div class="panel panel-default"><div class="user-section-heading panel-heading">
+			$output .= '<div class="panel panel-primary darken no-border"><div class="user-section-heading panel-heading">
 				<div class="user-section-title">' .
 					wfMessage( 'user-recent-activity-title' )->escaped() .
 				'</div>
@@ -1673,7 +1673,7 @@ class UserProfilePage extends Article {
 		$activity = $rel->getActivityList();
 
 		if ( $activity ) {
-			$output .= '<div class="panel panel-default"><div class="user-section-heading panel-heading">
+			$output .= '<div class="panel panel-primary darken no-border"><div class="user-section-heading panel-heading">
 				<div class="user-section-title">' .
 					wfMessage( 'user-recent-local-activity-title' )->escaped() .
 				'</div>
@@ -1894,14 +1894,14 @@ class UserProfilePage extends Article {
 		$per_row = 5;
 
 		if ( $gifts ) {
-			$output .= '<div class="panel panel-default"><div class="user-section-heading panel-heading">
+			$output .= '<div class="panel panel-primary darken no-border"><div class="user-section-heading panel-heading">
 				<div class="user-section-title">' .
 					wfMessage( 'user-gifts-title' )->escaped() .
 				'</div>
 				<div class="user-section-actions">
 					<div class="action-right">';
 			if ( $gift_count > 4 ) {
-				$output .= '<a href="' . htmlspecialchars( $gift_link->getFullURL( 'user=' . $user_safe ) ) . '" rel="nofollow">' .
+				$output .= '<a class="quite" href="' . htmlspecialchars( $gift_link->getFullURL( 'user=' . $user_safe ) ) . '" rel="nofollow">' .
 					wfMessage( 'user-view-all' )->escaped() . '</a>';
 			}
 			$output .= '</div>
@@ -2014,14 +2014,14 @@ class UserProfilePage extends Article {
 
 		if ( $system_gifts ) {
 			$x = 1;
-			$output .= '<div class="panel panel-default"><div class="user-section-heading panel-heading">
+			$output .= '<div class="panel panel-primary darken no-border"><div class="user-section-heading panel-heading">
 				<div class="user-section-title">' .
 					wfMessage( 'user-awards-title' )->escaped() .
 				'</div>
 				<div class="user-section-actions">
 					<div class="action-right">';
 			if ( $system_gift_count > 5 ) {
-				$output .= '<a href="' . htmlspecialchars( $system_gift_link->getFullURL( 'user=' . $user_name ) ) . '" rel="nofollow">' .
+				$output .= '<a class="quite" href="' . htmlspecialchars( $system_gift_link->getFullURL( 'user=' . $user_name ) ) . '" rel="nofollow">' .
 					wfMessage( 'user-view-all' )->escaped() . '</a>';
 			}
 			$output .= '</div>
@@ -2097,10 +2097,6 @@ class UserProfilePage extends Article {
 		// Add JS
 		// $wgOut->addModules( 'skins.editable' );
 		$wgOut->addModules( 'ext.socialprofile.userprofile.js' );
-		
-		$rel = new UserRelationship( $user_name );
-		$friends = $rel->getRelationshipList( 1, 4 );
-
 		$stats = new UserStats( $user_id, $user_name );
 		$stats_data = $stats->getUserStats();
 		$total = $stats_data['user_board'];
@@ -2112,23 +2108,14 @@ class UserProfilePage extends Article {
 			$total = $total + $stats_data['user_board_priv'];
 		}
 
-		$output .= '<div class="panel panel-default"><div class="user-section-heading panel-heading">
+		$output .= '<div class="panel panel-primary darken no-border"><div class="user-section-heading panel-heading">
 			<div class="user-section-title">' .
 				wfMessage( 'user-board-title' )->escaped() .
 			'</div>
 			<div class="user-section-actions">
 				<div class="action-right">';
-		if ( $wgUser->getName() == $user_name ) {
-			if ( $friends ) {
-				$output .= '<a href="' . UserBoard::getBoardBlastURL() . '">' .
-					wfMessage( 'user-send-board-blast' )->escaped() . '</a>';
-			}
-			if ( $total > 10 ) {
-				$output .= wfMessage( 'pipe-separator' )->escaped();
-			}
-		}
 		if ( $total > 10 ) {
-			$output .= '<a href="' . UserBoard::getUserBoardURL( $user_name ) . '">' .
+			$output .= '<a class="quite" href="' . UserBoard::getUserBoardURL( $user_name ) . '">' .
 				wfMessage( 'user-view-all' )->escaped() . '</a>';
 		}
 		$output .= '</div>
@@ -2225,7 +2212,7 @@ class UserProfilePage extends Article {
 		$per_row = 1;
 
 		if ( $fanboxes ) {
-			$output .= '<div class="panel panel-default"><div class="user-section-heading panel-heading">
+			$output .= '<div class="panel panel-primary darken no-border"><div class="user-section-heading panel-heading">
 				<div class="user-section-title">' .
 					wfMessage( 'user-fanbox-title' )->plain() .
 				'</div>
@@ -2424,7 +2411,7 @@ class UserProfilePage extends Article {
 		} else {
 			$genderIcon = 'TA';
 		}
-		$output = '<div class="panel panel-default"><div class="user-section-heading panel-heading">
+		$output = '<div class="panel panel-primary darken no-border"><div class="user-section-heading panel-heading">
 				<div class="user-section-title">我和'.$genderIcon.'的共同兴趣:
 				</div>
 				<div class="user-section-actions">

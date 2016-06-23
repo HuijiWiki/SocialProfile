@@ -63,7 +63,7 @@ class SystemGifts {
 
 		$res = $dbw->select(
 			'system_gift',
-			array( 'gift_id', 'gift_category', 'gift_threshold', 'gift_name' ),
+			array( 'gift_id', 'gift_category', 'gift_threshold', 'gift_name', 'designation' ),
 			array( 
 				'gift_id' => $giftId
 			),
@@ -72,6 +72,13 @@ class SystemGifts {
 		);
 		$x = 0;
 		foreach ( $res as $row ) {
+			$dbw->update(
+				'user_title',
+				array('title_content' => $row->designation,
+					),
+				array('gift_id' => $row->gift_id),
+				__METHOD__
+			);
 			if ( $row->gift_category && !in_array( $row->gift_category, $this->repeatableGifts ) && !empty($stats->stats_fields[$this->categories[$row->gift_category]]) ) {
 				$res2 = $dbw->select(
 					'user_stats',

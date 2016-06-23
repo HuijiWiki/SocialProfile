@@ -11,10 +11,14 @@
 	font-size: 24px;
     font-weight: bold;
     margin-bottom: 5px;
+    display: inline-block;
 }
 .site-desc{
 	font-size: 14px;
 	text-align: center;
+}
+.month-total{
+    padding-bottom: 0;
 }
 .month-total, .have-reached{
 	margin-top: 10px;
@@ -36,11 +40,11 @@
     display: inline-block;
 }
 .site-avatar img{
-	width: 50px;
+	width: 30px;
+    display: inline-block;
+    margin-bottom: 10px;
 }
 .site-info{
-	float: left;
-    max-width: 200px;
     padding-top: 10px;
 }
 .have-reached{
@@ -49,11 +53,12 @@
 #points-level{
 	margin-bottom: 0;
     display: inline-block;
-    width: 200px;
+    width: 320px;
 }
 
 .have-reached{
 	margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 .einput {
     font-size: 18px;
@@ -72,9 +77,15 @@
 	margin-left:40px; 
 }
 .donate-bottom-wrapper{
-    max-width: 100px;
+    max-width: 400px;
     margin: auto;
     text-align: left;
+}
+.rank{
+    font-size: 18px;
+}
+.donate-rank{
+    display: inline-block;
 }
 @media screen and (max-width: 768px){
 	.title{
@@ -101,5 +112,8 @@
     margin-top: 10px;	
 }
 .donate-name{
-	padding-right: 132px;
+	padding-right: 10px;
+}
+.text-center{
+    text-align: center;
 }

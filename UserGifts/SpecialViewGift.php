@@ -120,7 +120,7 @@ class ViewGift extends UnlistedSpecialPage {
 				$inviteCode = UserGifts::checkIsInviteGift($gift['id']);
 				$userTitle = UserGifts::checkIsTitleGift($gift['gift_id'], $gift['user_id_to']);
 				if ( $userTitle != null ) {
-					$title_name = '称号：';
+					$title_name = '<称号>';
 				}else{
 					$title_name = '';
 				}
@@ -138,11 +138,11 @@ class ViewGift extends UnlistedSpecialPage {
 							htmlspecialchars( $sender->getFullURL() ),
 							$gift['user_name_from']
 						)->text() . '</div>';
-				if ( $message ) {
-					$output .= '<div class="g-user-message">' . $message . '</div>';
+				if ( $gift['description'] ) {
+					$output .= '<div class="g-user-message">' . $out->parse($gift['description']) . '</div>';
 				}
 				$output .= '<div class="cleared"></div>
-						<div class="g-describe">' . $gift['description'] . '</div>';
+						<div class="g-describe">' . $out->parse($message) . '</div>';
 						if( $inviteCode != null && $wgUser->getID() == $gift['user_id_to'] ){
 							$output .= '<div class="invite-code well well-sm">'.$inviteCode.'</div><small>(仅自己可见)</small>';
 						}

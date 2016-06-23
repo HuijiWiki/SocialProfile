@@ -147,7 +147,7 @@ class ViewSystemGifts extends SpecialPage {
 				$output .= "<div class=\"ga-item have\">
 					<a href=\"" .
                     htmlspecialchars( $view_system_gift_link->getFullURL( 'user='.$gift['user_name'] .'&gift_id=' . $gift['gift_id'] ) ) .
-                    "\" data-toggle='popover' data-trigger='hover' title='{$gift['gift_name']}' data-content='{$gift['gift_description']}'>
+                    "\" data-toggle='popover' data-trigger='hover' title='{$gift['gift_name']}' data-content='{$out->parse($gift['gift_description'])}'>
                     {$gift_image}";
 
 				if ( $gift['status'] == 1 ) {

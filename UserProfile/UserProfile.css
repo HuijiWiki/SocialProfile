@@ -127,6 +127,9 @@
     vertical-align: top;
     width: 15%;
 }
+#honorific-level .primary{
+    border-radius: 5px;
+}
 /*#points-level {
 	float: left;
 	font-size: 11px;
@@ -715,6 +718,7 @@
 #profile-top.row{
     margin-left: 15px;
     margin-right: 15px;
+    border-radius: 0;
 }
 .profile-actions{
     color: #999;
@@ -729,7 +733,6 @@
     position: relative;
 }
 .form-location.edit,.form-autograph.edit,.form-sex.edit,.form-date.edit{
-    color:#428bca;
     cursor: pointer;
 }
 .form-container span{
@@ -835,12 +838,13 @@ span.span-color{
 .profile-top-right-bottom>ul>li{
     padding:5px 0 5px 15px;
     cursor: pointer;
-    border-left: 1px solid #09c;
+    border-left-width: 1px;
+    border-left-style: solid;
     margin-bottom: 0!important;
 }
-.profile-top-right-bottom>ul>li:hover{
-    border-left: 1px solid #2A62CC;
-}
+/*.profile-top-right-bottom>ul>li:hover{*/
+    /*border-left: 1px solid #2A62CC;*/
+/*}*/
 
 .profile-top-right-bottom>div{
     padding-top: 30px;
@@ -861,7 +865,7 @@ span.span-color{
     min-width: 0;
 }
 .profile-interactive a{
-    color: #333;
+    color: inherit;
 }
 .profile-interactive>li>span{
     display: inline;
@@ -884,6 +888,9 @@ span.span-color{
     line-height: 30px;
     text-align: center;
 }
+/*.profile-page .panel-primary{*/
+    /*background-color: inherit;*/
+/*}*/
 @media screen and (max-width: 992px) {
     .profile-top-right{
         border-left: none;
@@ -1135,11 +1142,9 @@ body>.tooltip.top .tooltip-arrow{
     font-size: 18px;
     float: left;
     border: none;
-    color: #333;
 }
 .edit-statistics span {
     display: block;
-    color: #09c;
 }
 /*hack crop avatar img*/
 #profile-image #avatar-modal img {

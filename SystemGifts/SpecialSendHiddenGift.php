@@ -1,26 +1,11 @@
 <?php
-/**
- * A special page to generate the report of the users who earned the most
- * points during the past week or month. This is the only way to update the
- * points_winner_weekly and points_winner_monthly columns in the user_stats
- * table.
- *
- * This special page also creates a weekly report in the project namespace.
- * The name of that page is controlled by two system messages,
- * MediaWiki:User-stats-report-weekly-page-title and
- * MediaWiki:User-stats-report-monthly-page-title (depending on the type of the
- * report).
- *
- * @file
- * @ingroup Extensions
- */
 class SpecialSendHiddenGift extends UnlistedSpecialPage {
 
 	/**
 	 * Constructor -- set up the new special page
 	 */
-	public function __construct() {
-		parent::__construct( 'SendHiddenGift', 'sendhiddengift' );
+	function __construct() {
+		parent::__construct( 'SendHiddenGift' );
 	}
 
 	/**
@@ -28,27 +13,27 @@ class SpecialSendHiddenGift extends UnlistedSpecialPage {
 	 *
 	 * @param $period String: either weekly or monthly
 	 */
-	public function execute( $award ) {
-		global $wgContLang, $wgUser, $wgCentralServer,$wgMemc;
+	public function execute( $params ) {
+		global $wgUser, $wgCentralServer,$wgMemc;
 
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$user = $this->getUser();
-		$award = $request->getVal( 'award', $award );
+		$award = $request->getVal( 'award' );
 		$userOfChoice = $request->getVal('user');
 		if ($award == "MaskedShooter"){
 			// Match token against what we have in session
 			$token = $request->getVal('token');
 			$userFromName = User::newFromName($userOfChoice);
-			if ($token == md5($userOfChoice.'huijirocks')){
+			if ($token !== md5($userOfChoice.'huijirocks')){
 				$this->getOutput()->setArticleBodyOnly(true);
-				echo "fail";//请不要修改或删除
+				// echo "fail";//请不要修改或删除
 				$this->getOutput()->output();
 		        return true;				
 			}
 
 			$gift = new UserGifts( "Reasno" );
-			$giftInfo = Gifts::getGift( 1 );
+			$giftInfo = Gifts::getGift( 8 );
 			$ug_gift_id = $gift->sendGift(
 				$userOfChoice,
 				8,
