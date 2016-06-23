@@ -242,9 +242,8 @@ class GiveGift extends SpecialPage {
 
 		$out->setPageTitle( $this->msg( 'g-give-to-user-title', $gift['gift_name'], $this->user_name_to )->parse() );
 
-		$gift_image = "<img id=\"gift_image_{$gift['gift_id']}\" src=\"{$wgUploadPath}/awards/" .
-			Gifts::getGiftImage( $gift['gift_id'], 'l' ) .
-			'" border="0" alt="" />';
+		$gift_image = 
+			Gifts::getGiftImageTag( $gift['gift_id'], 'l' );
 
 		$output = '<form action="" method="post" enctype="multipart/form-data" name="gift">
 			<div class="g-message">' .
