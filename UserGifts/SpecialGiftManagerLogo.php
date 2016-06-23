@@ -430,7 +430,7 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 		$this->mSavedFile = "{$dest}/{$saveName}";
 		$lext = strtolower($ext);
 	 	$this->createThumbnail( $tempName, $lext, $this->gift_id . '_l', 200 );
-		$this->createThumbnail( $tempName, $lext, $this->gift_id . '_ml', 75 );
+		$this->createThumbnail( $tempName, $lext, $this->gift_id . '_ml', 50 );
 		$this->createThumbnail( $tempName, $lext, $this->gift_id . '_m', 30 );
 		$this->createThumbnail( $tempName, $lext, $this->gift_id . '_s', 16 );
 
