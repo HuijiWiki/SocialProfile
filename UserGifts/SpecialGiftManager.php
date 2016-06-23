@@ -322,6 +322,8 @@ class GiftManager extends SpecialPage {
 				$usual = ' selected="selected"';
 			}elseif ( isset( $gift['gift_type'] ) && $gift['gift_type'] == 3 ) {
 				$invite_code = ' selected="selected"';
+			}elseif ( isset( $gift['gift_type'] ) && $gift['gift_type'] == 4 ) {
+				$masked_shooter = ' selected="selected"';
 			}
 
 			$form .= '<tr>
@@ -355,14 +357,14 @@ class GiftManager extends SpecialPage {
 						</td>
 					</tr>
 					<tr>
-						<td class="view-form">'. $this->msg( 'giftmanager-type' )->plain() .'</td>
+						<td class="view-form">'. wfMessage( 'giftmanager-type' )->plain() .'</td>
 						<td>
 						<select name="gift_type">
 							<option value="1"' . $usual . '>普通礼物
 							</option>
 							<option value="3"' . $invite_code . '>邀请码
 							</option>
-							<option value="4"' . $invite_code . '>MaskedShooter激活码
+							<option value="4"' . $masked_shooter . '>MaskedShooter激活码
 							</option>
 						</select>
 						</td>
