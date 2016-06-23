@@ -87,9 +87,9 @@ class SpecialNotifyUrl extends UnlistedSpecialPage{
 							array(),
 							$userId
 						);
-
+					file_get_contents('http://www.huiji.wiki/wiki/Special:SendHiddenGift?award=MaskedShooter&user='.$userName.'&token='.$user->getEditToken());
 				}
-				file_get_contents('/wiki/Special:SendHiddenGift?award=MaskedShooter&user='.$userName.'&token='.$user->getEditToken());
+				
 				// logResult("add from NotifyUrl".$isAnon."<br>");
 		        //调试用，写文本函数记录程序运行情况是否正常
 		        $this->getOutput()->setArticleBodyOnly(true);

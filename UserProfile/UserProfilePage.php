@@ -1150,7 +1150,7 @@ class UserProfilePage extends Article {
 		$huijiUser = HuijiUser::newFromName($user_name);
 		$designation = $huijiUser->getDesignation();
 		if ( $designation != $user_name ){
-			$fullName = '<div>' . $user_name . '</div>' . '<div class="small secondary hidden-xs hidden-sm">' . $designation . '</div>';
+			$fullName = '<div>' . $designation . '</div>';
 		} else {
 			$fullName = '<div>' . $user_name . '</div>';
 		}
