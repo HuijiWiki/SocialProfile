@@ -39,7 +39,6 @@
 	margin: 0px 0px 5px 0px;
 	font-size: 17px;
 	letter-spacing: -1px;
-	color: #333;
 }
 
 .no-info-container {
@@ -226,7 +225,8 @@
 
 /* User Activity */
 .activity-item {
-	border-bottom: 1px solid #dcdcdc;
+    border-bottom-width: 1px;
+	border-bottom-style: solid;
 	padding: 7px 10px;
 }
 
@@ -268,7 +268,8 @@
 }
 
 .user-board-message {
-	border: 1px solid #e2e2e2;
+	border-top-width: 1px;
+    border-top-style: solid;
 	margin: 0px 0px 15px 0px;
 }
 
@@ -742,9 +743,6 @@
 span.span-color{
     color: #e0e0e0;
 }
-.form-sex{
-    color: #666;
-}
 .form-container .form-change{
     font-size: 12px;
     color:#999;
@@ -793,7 +791,8 @@ span.span-color{
 }
 .profile-top-right{
     float: left;
-    border-left: 1px solid #e0e0e0;
+    border-left-width: 1px;
+    border-left-style: solid;
     padding-left: 50px!important;
 }
 .profile-top-right-top ul{
@@ -818,7 +817,8 @@ span.span-color{
     cursor: pointer;
 }
 .profile-top-right-top{
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
 }
 .profile-top-right-top li{
     display: inline-block;
@@ -1032,8 +1032,8 @@ span.span-color{
     margin-top: 15px;
 }
 .user-board-message{
-    border: none;
-    border-top: 1px solid #e2e2e2;
+    /*border: none;*/
+    /*border-top: 1px solid #e2e2e2;*/
     padding-top: 15px;
 }
 .fa{

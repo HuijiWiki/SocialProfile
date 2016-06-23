@@ -299,7 +299,6 @@
 }
 .setting-title,.setting-des{
     max-width: 108px;
-    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }

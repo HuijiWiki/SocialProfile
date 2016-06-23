@@ -85,6 +85,14 @@ class GiftManager extends SpecialPage {
 					'</span><br /><br />'
 				);
 			}
+			$dbw = wfGetDB(DB_MASTER);
+			$dbw->update(
+				'user_title',
+				array('title_content' => $request->getVal( 'designation' ),
+					),
+				array('gift_id' => $giftId ),
+				__METHOD__
+			);
 
 			$out->addHTML( $this->displayForm( $giftId ) );
 		} else {

@@ -207,7 +207,7 @@ jQuery( document ).ready( function() {
                     return data;
                 },
                 display: function(value, sourceData) {
-                    var colors = {"unkown": "gray", "male": "green", "female": "blue"},
+                    var colors = {"unkown": "", "male": "", "female": ""},
                         elem = $.grep(sourceData, function(o){return o.value == value;});
                     if(elem.length) {
                         $(this).text(elem[0].val).css("color", colors[value]);
