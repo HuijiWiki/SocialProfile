@@ -251,7 +251,7 @@ class SocialProfileHooks {
         	if ($text == $html && class_exists("HuijiUser")){
         		$user = HuijiUser::newFromName( $target->getRootText() );
         		list($prefix, $suffix) = $user->getDesignation(true);
-        		$ret = $prefix."<a class='mw-userlink' rel='nofollow'>$html</a>".$suffix;
+        		$ret = $prefix."<a class='mw-userlink' rel='nofollow' href='".$target->getFullUrl()."'>$html</a>".$suffix;
         		return false;
         	}
             $customAttribs['class'] = 'mw-userlink';

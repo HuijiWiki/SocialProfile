@@ -13,11 +13,16 @@
     margin-bottom: 5px;
 }
 .site-desc{
-	font-size: 18px;
-	text-align: left;
+	font-size: 14px;
+	text-align: center;
 }
 .month-total, .have-reached{
 	margin-top: 10px;
+}
+.month-total .icon-info{
+    font-size: 12px;
+    position: relative;
+    bottom: 12px;
 }
 #firstHeading{
 	display: none;
@@ -31,8 +36,7 @@
     display: inline-block;
 }
 .site-avatar img{
-	width: 100px;
-	float: left;
+	width: 50px;
 }
 .site-info{
 	float: left;
@@ -66,6 +70,11 @@
 }
 .donate-qa{
 	margin-left:40px; 
+}
+.donate-bottom-wrapper{
+    max-width: 100px;
+    margin: auto;
+    text-align: left;
 }
 @media screen and (max-width: 768px){
 	.title{

@@ -40,7 +40,7 @@ class SpecialSendHiddenGift extends UnlistedSpecialPage {
 			// Match token against what we have in session
 			$token = $request->getVal('token');
 			$userFromName = User::newFromName($userOfChoice);
-			if (!$userFromName->matchEditToken( $token )){
+			if ($token == md5($userOfChoice.'huijirocks')){
 				$this->getOutput()->setArticleBodyOnly(true);
 				echo "fail";//请不要修改或删除
 				$this->getOutput()->output();
@@ -48,7 +48,7 @@ class SpecialSendHiddenGift extends UnlistedSpecialPage {
 			}
 
 			$gift = new UserGifts( "Reasno" );
-			$giftInfo = Gifts::getGift( 8 );
+			$giftInfo = Gifts::getGift( 1 );
 			$ug_gift_id = $gift->sendGift(
 				$userOfChoice,
 				8,
@@ -101,3 +101,4 @@ class SpecialSendHiddenGift extends UnlistedSpecialPage {
     	$this->getOutput()->redirect( $wgCentralServer.'/wiki/U_found_me' );
     }
 }
+?>

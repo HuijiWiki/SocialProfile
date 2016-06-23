@@ -79,7 +79,7 @@
 }
 
 .g-user-message {
-	margin: 8px 0px;
+	margin: 0.25em 0 0 0;
 	color: #666;
 	font-weight: bold;
 }
@@ -189,6 +189,7 @@
 .g-describe {
 	font-size: 11px;
 	line-height: 12px !important;
+	margin: 0.5em 0.5em 0.75em 0.5em;
 }
 
 .g-give-all {
@@ -313,4 +314,9 @@
     font-weight: 100;
     font-size: 18px;
     color: #999;
+}
+.invite-code {
+	margin: 0.5em 0 0 0;
+	border:none;
+	border-radius:0;
 }
