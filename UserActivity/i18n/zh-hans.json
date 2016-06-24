@@ -6,7 +6,7 @@
 		]
 	},
 	"useractivity": "用户动态",
-	"useractivity-award": "$1获得了一个奖励",
+	"useractivity-award": "$1获得了一个成就",
 	"useractivity-all": "查看全部",
 	"useractivity-edit": "$1{{PLURAL:$4|编辑了$6的页面|编辑了$6的$4个页面：}}$3",
 	"useractivity-foe": "$1{{PLURAL:$2|现在与|现在与}}$3成为仇敌",
@@ -31,7 +31,7 @@
     "useractivity-domain-creation":"$1创建了$2",
     "useractivity-user_user_follow":"$1{{PLURAL:$2|关注了|关注了$4个用户：<br />}}$3",
     "useractivity-user_site_follow":"$1{{PLURAL:$2|关注了|关注了$4个站点：<br />}}$6",
-    "useractivity-friendsactivity-filter":"*edit|编辑|\n*vote|投票|\n*comment|评论|blah\n*gift-rec|礼物|blah\n*system_message|升级|blah\n*system_gift|奖励|blah\n*user_message|消息|blah\n*domain_creation|wiki创建|blah\n*user_user_follow|用户关注|blah\n*user_site_follow|维基关注|blah\n*user_update_status|用户状态|blah\n*image_upload|图片上传|blah",
+    "useractivity-friendsactivity-filter":"*edit|编辑|\n*vote|投票|\n*comment|评论|blah\n*gift-rec|礼物|blah\n*system_message|升级|blah\n*system_gift|成就|blah\n*user_message|消息|blah\n*domain_creation|wiki创建|blah\n*user_user_follow|用户关注|blah\n*user_site_follow|维基关注|blah\n*user_update_status|用户状态|blah\n*image_upload|图片上传|blah",
     "useractivity-filter":"过滤器",
     "useractivity-image_upload":"$1{{PLURAL:$4|在$6上传了|在$6上传了$4个文件：}}<br /><div class='user-home-item-img-wrap'>$3</div>"
 

@@ -144,7 +144,7 @@ class SpecialViewUserBoard extends SpecialPage {
 
 		if ( $currentUser->getName() != $user_name ) {
 			$board_to_board = '<a href="' . UserBoard::getUserBoardToBoardURL( $currentUser->getName(), $user_name ) . '">' .
-				$this->msg( 'userboard_boardtoboard' )->plain() . '</a>';
+				'<span class="icon-users"></span>' . '</a>';
 		}
 
 		if ( $total ) {
@@ -281,12 +281,12 @@ class SpecialViewUserBoard extends SpecialPage {
 
 				if ( $currentUser->getName() != $ub_message['user_name_from'] ) {
 					$board_to_board = '<a href="' . UserBoard::getUserBoardToBoardURL( $user_name, $ub_message['user_name_from'] ) . '">' .
-						$this->msg( 'userboard_boardtoboard' )->plain() . '</a>';
+						"<span class='icon-users'></span>" . '</a>';
 					$board_link = '<a href="' . UserBoard::getUserBoardURL( $ub_message['user_name_from'] ) . '">' .
-						$this->msg( 'userboard_sendmessage', $ub_message['user_name_from'] )->parse() . '</a>';
+						"<span class='icon-bubble'></span>" . '</a>';
 				} else {
 					$board_link = '<a href="' . UserBoard::getUserBoardURL( $ub_message['user_name_from'] ) . '">' .
-						$this->msg( 'userboard_myboard' )->plain() . '</a>';
+						"<span class='icon-user'></span>" . '</a>';
 				}
 
 				// If the user owns this private message or they are allowed to
@@ -298,7 +298,7 @@ class SpecialViewUserBoard extends SpecialPage {
 				{
 					$delete_link = "<span class=\"user-board-red\">
 						<a href=\"javascript:void(0);\" data-message-id=\"{$ub_message['id']}\">" .
-							$this->msg( 'userboard_delete' )->plain() . '</a>
+							"<span class='icon-trash'></span>" . '</a>
 					</span>';
 				}
 
@@ -310,6 +310,11 @@ class SpecialViewUserBoard extends SpecialPage {
 				// had global function to cut link text if too long and no breaks
 				// $ub_message_text = preg_replace_callback( "/(<a[^>]*>)(.*?)(<\/a>)/i", 'cut_link_text', $ub_message['message_text'] );
 				$ub_message_text = $ub_message['message_text'];
+				$ub_message_text = preg_replace_callback(
+					"/(<a[^>]*>)(.*?)(<\/a>)/i",
+					array( 'HuijiFunctions', 'cutCommentLinkText' ),
+					$ub_message_text
+				);
 
 				$userPageURL = htmlspecialchars( $user->getFullURL() );
 				$output .= "<div class=\"user-board-message\">

@@ -118,7 +118,7 @@ class ViewSystemGifts extends SpecialPage {
 			$this->msg( 'ga-count', $rel->user_name, $total )->parse() .
 		', 在'.$who.'的好友中排第<span style="color:#428bca;font-size:20px;font-weight: bold;">'.$countRes[$curUserObj->getName()].
 		'</span>名</div>';
-		$output .= '<div><a href="'.$allGiftList.'">查看所有奖励</a></div><div class="giftlist">';
+		$output .= '<div><a href="'.$allGiftList.'">查看所有成就</a></div><div class="giftlist">';
 		// Safelinks
 		$view_system_gift_link = SpecialPage::getTitleFor( 'ViewSystemGift' );
 		//get all gift user had got
@@ -164,7 +164,7 @@ class ViewSystemGifts extends SpecialPage {
 			}
 			$output .= '</div>';
 		}else{
-			$output .= "<br><div>你暂时还没收到奖励哟~</div>";
+			$output .= "<br><div>你暂时还没收到成就哟~</div>";
 		}
 
 		/**

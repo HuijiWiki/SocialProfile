@@ -1093,26 +1093,26 @@ class UserActivity {
 				$view_gift_link = SpecialPage::getTitleFor( 'ViewGift' );
 				$avatar = new wAvatar($row->ug_user_id_to, 'ml');
 				$avatarUrl = $avatar->getAvatarAnchor();
-				$user_name_short = $wgLang->truncate( $row->ug_user_name_to, 25 );
+				//$user_name_short = $wgLang->truncate( $row->ug_user_name_to, 25 );
 				// $timeago = HuijiFunctions::getTimeAgo($row->item_date);
 				/* build html */
 				$html = $this->templateParser->processTemplate(
 					'user-home-item',
 					array(
 						'userAvatar' => $avatarUrl,
-						'userName'  => '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b>",
+						'userName'  => Linker::link($user_title,$user_title->getText()),
 						'timestamp' => $timeago,
 						'description' => wfMessage( 'useractivity-gift',
-										'<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$row->ug_user_name_to}</a></b>",
-										'<a href="' . htmlspecialchars( $user_title_from->getFullURL() ) . "\">{$user_title_from->getText()}</a>"
+										Linker::link($user_title,$user_title->getText()),
+										Linker::link($user_title_from, $user_title_from->getText())
 									)->text(),
 						'hasShowcase' => true,
-						'showcase' =>  
-									"<a href=\"" . htmlspecialchars( $view_gift_link->getFullURL( 'user='.$user_name_short.'&gift_id=' . $row->gift_id ) ) . "\" rel=\"nofollow\">
-											{$gift_image}
-											{$row->gift_name}
-										</a>
-									",
+						'showcase' =>  Linker::Link($view_gift_link, $gift_image.$row->gift_name, ["rel"=>"nofollow"], ["user" => $user_name, "gift_id" => $row->gift_id]),
+									// "<a href=\"" . htmlspecialchars( $view_gift_link->getFullURL( 'user='.$user_name_short.'&gift_id=' . $row->gift_id ) ) . "\" rel=\"nofollow\">
+									// 		{$gift_image}
+									// 		{$row->gift_name}
+									// 	</a>
+									// ",
 					)
 				);
 				$wgMemc->set($key, $html);
@@ -1191,20 +1191,20 @@ class UserActivity {
 					'user-home-item',
 					array(
 						'userAvatar' => $avatarUrl,
-						'userName'  => '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b>",
+						'userName'  => Linker::link($user_title, $row->sg_user_name),
 						'timestamp' => $timeago,
 						'description' => wfMessage(
 											'useractivity-award',
-											'<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$row->sg_user_name}</a></b>",
+											Linker::link($user_title, $row->sg_user_name),
 											$row->sg_user_name
 										)->text(),
 						'hasShowcase' => true,
-						'showcase' =>  
-									'<a href="' . htmlspecialchars( $system_gift_link->getFullURL( 'user='.$row->sg_user_name.'&gift_id=' . $row->gift_id ) ) . "\" rel=\"nofollow\">
-											{$system_gift_image}
-											{$row->gift_name}
-									</a>
-									",
+						'showcase' =>  Linker::link($system_gift_link, $system_gift_image.$row->gift_name, ['rel'=>'nofollow'], ['user'=>$row->sg_user_name, 'gift_id'=>$row->gift_id]),
+									// '<a href="' . htmlspecialchars( $system_gift_link->getFullURL( 'user='.$row->sg_user_name.'&gift_id=' . $row->gift_id ) ) . "\" rel=\"nofollow\">
+									// 		{$system_gift_image}
+									// 		{$row->gift_name}
+									// </a>
+									// ",
 					)
 				);
 				$wgMemc->set($key, $html);
@@ -1395,7 +1395,6 @@ class UserActivity {
 				$html = $this->updateTime($html, $timeago);
 			} else {
 				$user_title = Title::makeTitle( NS_USER, $row->um_user_name );
-				$user_name_short = $wgLang->truncate( $row->um_user_name, 15 );
 				$avatar = new wAvatar( $row->um_user_id, 'ml');
 				$avatarUrl = $avatar->getAvatarAnchor();
 				// $timeago = HuijiFunctions::getTimeAgo($row->item_date).'前';
@@ -1404,9 +1403,9 @@ class UserActivity {
 					'user-home-item',
 					array(
 						'userAvatar' => $avatarUrl,
-						'userName'  => '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b>",
+						'userName'  => Linker::link($user_title, $user_title->getText()),
 						'timestamp' => $timeago,
-						'description' => ' ' . '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b> {$row->um_message}",
+						'description' => Linker::link($user_title, $user_title->getText()) . $row->um_message,
 						'hasShowcase' => false,
 					)
 				);
@@ -1576,7 +1575,7 @@ class UserActivity {
 				$domainUrl = HuijiPrefix::prefixToUrl($row->domain_prefix);
 				$user_name_short = $wgLang->truncate( $row->domain_founder_name, 15 );
 				$user_title = Title::makeTitle( NS_USER, $row->domain_founder_name );
-				$founder_link = '<b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\">{$user_name_short}</a></b>";
+				$founder_link = Linker::link($user_title,$user_title->getText());
 				// $timeago = HuijiFunctions::getTimeAgo($row->item_date).'前';
 				$page_link = '<a href="' . $domainUrl .
 					"\" rel=\"nofollow\">{$row->domain_name}</a>";
@@ -1928,10 +1927,8 @@ class UserActivity {
 				}
 
 				$user_title = Title::makeTitle( NS_USER, $user_name );
-				$user_name_short = $wgLang->truncate( $user_name, 15 );
-
 				$safeTitle = htmlspecialchars( $user_title->getText() );
-				$users .= ' <b><a href="' . htmlspecialchars( $user_title->getFullURL() ) . "\" title=\"{$safeTitle}\" class='mw-userlink'>{$user_name_short}</a></b>";
+				$users .= Linker::link($user_title, $user_title->getText());
 			}
 			/* memcache checking */
 			$html = $wgMemc->get($key);
@@ -2145,7 +2142,7 @@ class UserActivity {
 				}
 				$repo = new ForeignDBRepo($this->streamlineForeignDBRepo($page_data['prefix'][0]));
 				$f =  ForeignDBFile::newFromTitle($page_title, $repo);
-				return ' <a href="'.htmlspecialchars( $f->getDescriptionUrl() ).'"><img src="' .htmlspecialchars( $f->createThumb(200,100) ). '"></img></a>';
+				return Linker::link($page_title,'<img src="' .htmlspecialchars( $f->createThumb(200,100) ). '"></img>');
 			} if($page_title->inNamespace( NS_TOPIC ) || strpos($page_title->getText(), 'Topic:') === 0){
 				// $oldDB = $wgFlowDefaultWikiDb;
 				// if (!$isProduction){
@@ -2173,9 +2170,9 @@ class UserActivity {
 				// );
 				// $wgFlowDefaultWikiDb = $oldDB;
 				// Container::reset();
-				return ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">".$topicDisplayText."</a>";
+				return Linker::link($page_title, $topicDisplayText);
 			}else {
-				return ' <a href="' . htmlspecialchars( $page_title->getFullURL() ) . "\">{$page_title->getText()}</a>";
+				return Linker::link($page_title, $page_title->getText());
 
 			}
 		}

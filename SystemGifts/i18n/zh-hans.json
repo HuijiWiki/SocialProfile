@@ -6,7 +6,7 @@
 			"PhiLiP"
 		]
 	},
-	"systemgiftmanager": "系统礼物管理",
+	"systemgiftmanager": "成就管理",
 	"ga-addnew": "+ 添加新的礼物",
 	"ga-back-edit-gift": "返回编辑礼物",
 	"ga-back-gift-list": "返回礼品列表",
@@ -39,17 +39,17 @@
 	"ga-threshold": "阈值",
 	"ga-uploadsuccess": "上载成功",
 	"ga-viewlist": "检视礼物清单",
-	"notification-system-gift": "恭喜您获得了一个新的成就奖励。$1",
-	"notification-system-gift-flyout": "恭喜您获得了一个新的成就奖励。$1",
-	"notification-system-gift-view-link": "查看奖励",
+	"notification-system-gift": "恭喜您获得了一个新的成就。$1",
+	"notification-system-gift-flyout": "恭喜您获得了一个新的成就。$1",
+	"notification-system-gift-view-link": "查看成就",
 	"ga-back-link": "<a href=\"$1\">< 返回 $2的页面</a>",
-	"ga-title": "$1收到的奖励",
+	"ga-title": "$1收到的成就",
 	"gl-title": "礼物列表",
-	"ga-count": "$1共收到$2份奖励",
+	"ga-count": "$1共收到$2份成就",
 	"ga-recent-recipients-award": "最近获得此成就的用户",
-	"systemgiftlist": "系统礼物列表",
-	"givesystemgift": "系统成就",
+	"systemgiftlist": "成就列表",
+	"givesystemgift": "站点专属成就",
 	"action-GiveSystemGift":"查看此页面",
 	"action-AddFestivalGift":"查看此页面",
-	"reissuesystemgift":"补发系统礼物"
+	"reissuesystemgift":"补发成就"
 }

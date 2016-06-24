@@ -19,9 +19,9 @@
 	"echo-category-title-board-msg":"留言",
 	"echo-category-title-gift-receive":"收到礼物",
 	"echo-category-title-advancement":"升级",
-	"echo-category-title-system-gift-receive":"收到奖励",
+	"echo-category-title-system-gift-receive":"收到成就",
 	"echo-category-title-comment-msg":"收到吐槽",
-	"echo-pref-tooltip-system-gift-receive":"当系统颁发我奖励的时候通知我。",
+	"echo-pref-tooltip-system-gift-receive":"当系统颁发我成就的时候通知我。",
 	"echo-pref-tooltip-advancement":"当我升级的时候通知我。",
 	"echo-pref-tooltip-gift-receive":"当我收到一个其他用户赠送的礼物时通知我。",
 	"echo-pref-tooltip-follow-msg":"当有其他用户关注我时通知我。",
@@ -51,8 +51,8 @@
 	"videos":"添加媒体文件",
 	"videoslist":"媒体文件列表",
 	"mainpage-nstab":"首页",
-	"givesystemgift": "系统成就",
-	"reissuesystemgift":"补发系统礼物",
+	"givesystemgift": "站点专属成就",
+	"reissuesystemgift":"补发成就",
 	"commonstyle":"自定义主题",
 	"specialpages-group-trans":"翻译"
 }

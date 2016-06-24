@@ -24,8 +24,6 @@
     "boardblast-js-error-missing-message": "请填写消息",
     "boardblast-js-error-missing-user": "请至少选择一个人",
     "userboard": "用户留言板",
-    "userboard_board-to-board": "对话",
-    "userboard_delete": "删除",
     "userboard_noexist": "你正在查看的用户不存在",
     "userboard_yourboard": "你的留言板",
     "userboard_owner": "$1的留言板",

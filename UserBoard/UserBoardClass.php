@@ -425,14 +425,14 @@ class UserBoard {
 
 				if ( $wgUser->getName() != $message['user_name_from'] ) {
 					$board_to_board = '<a href="' . UserBoard::getUserBoardToBoardURL( $message['user_name'], $message['user_name_from'] ) . '">' .
-						wfMessage( 'userboard_board-to-board' )->plain() . '</a>';
+						'<span class="icon-users">'. '</a>';
 					$board_link = '<a href="' . UserBoard::getUserBoardURL( $message['user_name_from'] ) . '">' .
-						wfMessage( 'userboard_sendmessage', $message['user_name_from'] )->parse() . '</a>';
+						'<span class="icon-bubble">' . '</a>';
 				}
 				if ( $wgUser->getName() == $message['user_name'] || $wgUser->isAllowed( 'userboard-delete' ) ) {
 					$delete_link = "<span class=\"user-board-red\">
 							<a href=\"javascript:void(0);\" data-message-id=\"{$message['id']}\">" .
-								wfMessage( 'userboard_delete' )->plain() . '</a>
+								'<span class="icon-trash">'. '</a>
 						</span>';
 				}
 				if ( $message['type'] == 1 ) {
@@ -440,6 +440,11 @@ class UserBoard {
 				}
 
 				$message_text = $message['message_text'];
+				$message_text = preg_replace_callback(
+					"/(<a[^>]*>)(.*?)(<\/a>)/i",
+					array( 'HuijiFunctions', 'cutCommentLinkText' ),
+					$message_text
+				);
 				# $message_text = preg_replace_callback( "/(<a[^>]*>)(.*?)(<\/a>)/i", 'cut_link_text', $message['message_text'] );
 
 				$sender = htmlspecialchars( $user->getFullURL() );

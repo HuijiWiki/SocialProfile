@@ -60,12 +60,16 @@ class SpecialDesignation extends SpecialPage {
 		$HuijiUser = HuijiUser::newFromId($wgUser->getId());
 		$giftList = $HuijiUser->getUserDesignation( 'gift', 0 );
 		$systemGiftList = $HuijiUser->getUserDesignation( 'system_gift', 0 );
-
-		// $wikiSite = WikiSite::newFromPrefix($wgHuijiPrefix);
-		// $follower = $wikiSite->getFollowers(true);
-		// print_r($follower);die();
-		// print_r($systemGiftList);die();
-
+		$systemGiftsResult = $GiftsResult = array();
+		// del repeate title
+		foreach ($systemGiftList as $key => $value) {
+			
+			if ( in_array( $value['title_content'], $systemGiftsResult ) ) {
+				unset($systemGiftList[$key]);
+			}else{
+				$systemGiftsResult[] = $value['title_content'];
+			}
+		}
 		$output .= '<div id="system-list" class="list-wrap"><div class="list-title">前缀</div>';
 		if ( count($systemGiftList) > 0 ) {
 			foreach ($systemGiftList as $key => $value) {
@@ -91,7 +95,15 @@ class SpecialDesignation extends SpecialPage {
 			$output .= '<span>暂无</span>';
 		}
 		$output .= '</div>';
-
+		
+		// del repeate title
+		foreach ($giftList as $key => $value) {
+			if ( in_array( $value['title_content'], $GiftsResult ) ) {
+				unset($giftList[$key]);
+			}else{
+				$GiftsResult[] = $value['title_content'];
+			}
+		}
 		$output .= '<div id="gift-list" class="list-wrap"><div class="list-title">后缀</div>';
 		if ( count($giftList) > 0 ) {
 			foreach ($giftList as $key => $value) {

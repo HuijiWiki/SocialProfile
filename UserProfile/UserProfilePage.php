@@ -227,14 +227,14 @@ class UserProfilePage extends Article {
 				$tools[] = '<li><a href="' . htmlspecialchars( $watchlist->getFullURL() ) . '">' . wfMessage( 'user-watchlist' )->escaped() . '</a></li>';
 			}
 		}
-		$wgOut->addHTML( '<div class="profile-page"><div id="profile-top" class="jumbotron row darken">' );
+		$wgOut->addHTML( '<div class="profile-page"><div id="profile-top" class="jumbotron row">' );
 		$wgOut->addHTML( $this->getProfileTop( $this->user_id, $this->user_name ) );
         
         $wgOut->addHTML('
             
             <div class="col-md-6 col-sm-12 col-xs-12 profile-top-right">
                 <div class="profile-top-right-top">
-                    <div><h4><span class="icon-huiji"></span>在本wiki</h4></div>
+                    <div><h5><span class="icon-huiji"></span> 在本wiki</h5></div>
                     <ul>'.
                     $staff.$bureaucrat.$sysop.$rollback.$autoconfirmed
                     .'</ul>
@@ -1243,7 +1243,7 @@ class UserProfilePage extends Article {
 		$contributions = SpecialPage::getTitleFor('Contributions');
 		$huijiUser = HuijiUser::newFromUser($this->user);
         $output .='<div>
-					    <ul class="user-follow-msg">
+					    <ul class="user-follow-msg secondary">
 					        <li><h5>编辑</h5>'.Linker::link( $contributions, $stats_data['edits'], array(), array( 'target' => $user,'contribs' => 'user' ) ).'</li>
 					        <li><h4>|</h4></li>
 					        <li><h5>关注</h5>'.Linker::link( $notice, $huijiUser->getFollowingUsersCount(), array(  'id' => 'user-following-count'  ), array( 'user' => $user,'rel_type' => 1 ) ).'</li>
