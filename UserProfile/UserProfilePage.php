@@ -229,12 +229,12 @@ class UserProfilePage extends Article {
 		}
 		$wgOut->addHTML( '<div class="profile-page"><div id="profile-top" class="jumbotron row">' );
 		$wgOut->addHTML( $this->getProfileTop( $this->user_id, $this->user_name ) );
-        
+
         $wgOut->addHTML('
-            
+
             <div class="col-md-6 col-sm-12 col-xs-12 profile-top-right">
                 <div class="profile-top-right-top">
-                    <div><h5><span class="icon-huiji"></span> 在本wiki</h5></div>
+
                     <ul>'.
                     $staff.$bureaucrat.$sysop.$rollback.$autoconfirmed
                     .'</ul>
@@ -248,11 +248,11 @@ class UserProfilePage extends Article {
         }
         if(isset($Tname)){
         	$num = ( count($Tname) > 3 )?3:count($Tname);
-	        for ($i=0; $i < $num; $i++) { 
+	        for ($i=0; $i < $num; $i++) {
 	           	$wgOut->addHTML('<li><a href="'.$Turl[$i].'">'.$Tname[$i].'</a></li>');
 	        }
         }
-        
+
         $wgOut->addHTML(' </ul>
 
         ');
@@ -261,14 +261,14 @@ class UserProfilePage extends Article {
         }else{
         	$wgOut->addHTML('<a >关注了<i>'.$userCount.'</i>个wiki</a>');
         }
-                    
+
         $wgOut->addHTML('
                     <div>
                         <ul class="profile-interactive">'.
                             $button1.$button2.
                             '<li class="dropdown-toggle mw-ui-button mw-ui-primary" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-align-justify"></span></li>
                             <ul class="dropdown-menu" role="menu">
-                                        '.implode('', $tools).' 
+                                        '.implode('', $tools).'
                                         <li><a href="' . htmlspecialchars( $contributions->getFullURL('target='. $user_safe.'&contribs=user'  )) . '" rel="nofollow">' . wfMessage( 'user-contributions' )->escaped() . '</a></li>
                             </ul>
                         </ul>
@@ -277,7 +277,7 @@ class UserProfilePage extends Article {
             </div>
         ');
         $wgOut->addHTML( '<div class="cleared"></div></div>');
-       
+
         $ueb = new UserEditBox();
         $editBox = $editData = array();
         $editBox = $ueb->getUserEditInfo($this->user_id);
@@ -346,7 +346,7 @@ class UserProfilePage extends Article {
 		            		$m = 7;
 		            		$start = $i*7-$dayofweek;
 		            	}
-		            	
+
 		            	$zoneDate = array_slice($desdateArr, $start, $m);
 		            	foreach ($zoneDate as $val) {
 		            		$arrDate[$j] = $val;
@@ -384,7 +384,7 @@ class UserProfilePage extends Article {
 			    $Stime = strtotime($sunDay);
 				$sunDay = date('Y-m-d',$Stime);
 				if (!isset($translate[$sunDay])) {
-				    $Suntime = strtotime($sunDay); 
+				    $Suntime = strtotime($sunDay);
 					$Sundate = date('Y',$Suntime)-1;
 				    $sunDay = UserEditBox::getSunday($mon,$Sundate);
 				    if(!isset($translate[$sunDay])){
@@ -790,7 +790,7 @@ class UserProfilePage extends Article {
 						"\" rel=\"nofollow\">
 							{$poll_title->getText()}
 						</a>
-						<span class=\"item-small\">{$casual_game_title}</span>";
+						<span class=\"item-small secondary\">{$casual_game_title}</span>";
 				}
 
 				if ( $item['type'] == 'Quiz' ) {
@@ -800,7 +800,7 @@ class UserProfilePage extends Article {
 						"\" rel=\"nofollow\">
 							{$item['text']}
 						</a>
-						<span class=\"item-small\">{$casual_game_title}</span>";
+						<span class=\"item-small secondary\">{$casual_game_title}</span>";
 				}
 
 				if ( $item['type'] == 'Picture Game' ) {
@@ -827,7 +827,7 @@ class UserProfilePage extends Article {
 								{$image_2}
 								{$item['title']}
 							</a>
-							<span class=\"item-small\">{$casual_game_title}</span>";
+							<span class=\"item-small secondary\">{$casual_game_title}</span>";
 					}
 				}
 
@@ -1219,9 +1219,12 @@ class UserProfilePage extends Article {
 
 		$output .= '<div id="profile-title-container">
 				<h1 id="profile-title">
-				<div id="profile-image">' .($this->isOwner()? ('<div class="profile-image-container crop-headimg" id="crop-avatar"><div class="avatar-view upload-tool" title="上传头像">'.$avatar->getOwnerAvatarURL().'</div>'.$this->cropModal().'</div>'): $avatar->getAvatarURL()) .'</div>' .
-					$fullName .
-				'</h1></div>';
+				<div id="profile-image">' .($this->isOwner()? ('<div class="profile-image-container crop-headimg" id="crop-avatar"><div class="avatar-view upload-tool" title="上传头像">'.$avatar->getOwnerAvatarURL().'</div>'.$this->cropModal().'</div>'): $avatar->getAvatarURL()) .'</div>
+
+				</h1>
+               <div id="honorific-level" class="label">
+                    <a href="' . htmlspecialchars( $level_link->getFullURL() ) . '" rel="nofollow">' . $user_level->getLevelName() . '</a>
+                </div></div>';
         $output .='<div class="modal fade watch-url" tabindex="-1" role="dialog" aria-labelledby="mySmModalLabel" aria-hidden="true">
                       <div class="modal-dialog modal-sm">
                         <div class="modal-content">
@@ -1242,19 +1245,16 @@ class UserProfilePage extends Article {
 		$notice = SpecialPage::getTitleFor('ViewFollows');
 		$contributions = SpecialPage::getTitleFor('Contributions');
 		$huijiUser = HuijiUser::newFromUser($this->user);
-        $output .='<div>
+        $output .='<div class="user-info">'	.$fullName .'
 					    <ul class="user-follow-msg secondary">
 					        <li><h5>编辑</h5>'.Linker::link( $contributions, $stats_data['edits'], array(), array( 'target' => $user,'contribs' => 'user' ) ).'</li>
 					        <li><h5>关注</h5>'.Linker::link( $notice, $huijiUser->getFollowingUsersCount(), array(  'id' => 'user-following-count'  ), array( 'user' => $user,'rel_type' => 1 ) ).'</li>
 					        <li><h5>被关注</h5>'.Linker::link( $notice, $huijiUser->getFollowerCount(), array( 'id' => 'user-follower-count' ), array( 'user' => $user,'rel_type' => 2 ) ).'</li>
                         </ul>
-                        <div class="cleared"></div>
                     <!--<span id="user-site-count">'.'</span>个站点。-->';
 		if ( $wgUserLevels ) {
 			$progress = $user_level->getLevelProgress()*100;
-			$output .= '<div id="honorific-level" class="label">
-						<a href="' . htmlspecialchars( $level_link->getFullURL() ) . '" rel="nofollow">' . $user_level->getLevelName() . '</a>
-					</div>
+			$output .= '
 					<div id="points-level" class="progress">
 						<div class="progress-bar progress-bar-striped active primary" role="progressbar" aria-valuenow="'.$progress.'" aria-valuemin="0" aria-valuemax="100" style="width: '.$progress.'%">
 							<span class="sr-only">'.wfMessage(
@@ -1265,7 +1265,7 @@ class UserProfilePage extends Article {
 
 					</div>';
 		}
-		$output .= '</div><div class="profile-actions">';
+		$output .= '<div class="cleared"></div></div><div class="profile-actions">';
         $output .='<div class="form-container '.($this->isOwner()?'owner':'').'"><div class="form-msg"><a class="form-location '.($this->isOwner()?'edit':'').'">'.($city == ''?($this->isOwner()?'填写居住地':'居住地未公开'):$city).'</a>
                     <span class="span-color">|</span><a class="form-date '.($this->isOwner()?'edit':'').'" data-birthday="'.($birthday == ''||$birthday == '0000-00-00'?'':$birthday).'">'.($birthday == ''||$birthday == '0000-00-00'?($this->isOwner()?'填写生日':'生日未公开'):'').'</a>
                     <span class="span-color">|</span><a class="form-sex '.($this->isOwner()?'edit':'').'" data-sex="'.$gender.'">'.$genderIcon.'</a></div>';
@@ -1479,7 +1479,7 @@ class UserProfilePage extends Article {
 					$comment_url = "#comment-{$item['id']}";
 				}
 				if (array_key_exists('prefix', $item)){
-					$site_link = '<b><a href="' . HuijiPrefix::prefixToUrl($item['prefix']).'">'.HuijiPrefix::prefixToSiteName($item['prefix'])  . '</a></b> ';					
+					$site_link = '<b><a href="' . HuijiPrefix::prefixToUrl($item['prefix']).'">'.HuijiPrefix::prefixToSiteName($item['prefix'])  . '</a></b> ';
 				}
 				if($title->inNamespace( NS_TOPIC ) || strpos($title->getText(), 'Topic:') === 0){
 					if (strpos($title->getText(), 'Topic:') === 0){
@@ -1492,7 +1492,7 @@ class UserProfilePage extends Article {
 					$pc = PostCollection::newFromId($id);
 					$pcr = $pc->getRoot()->getLastRevision();
 					$topicDisplayText = Container::get( 'templating' )->getContent( $pcr, 'wikitext' );
-					// 1.27 
+					// 1.27
 					// $topicDisplayText = Utils::htmlToPlaintext(
 					// 	Container::get( 'templating' )->getContent( $pcr, 'topic-title-html' )
 					// );
@@ -1505,7 +1505,7 @@ class UserProfilePage extends Article {
 				}
 
 				$b = new UserBoard(); // Easier than porting the time-related functions here
-				$item_time = '<span class="item-small">' .
+				$item_time = '<span class="item-small secondary">' .
 					wfMessage( 'user-time-ago', $b->getTimeAgo( $item['timestamp'] ) )->escaped() .
 				'</span>';
 
@@ -1527,13 +1527,13 @@ class UserProfilePage extends Article {
 						$item_html .= '</div>';
 						break;
 					case 'vote':
-						$item_html .= wfMessage( 'user-recent-activity-vote' )->escaped() . " {$page_link} {$item_time} 							
+						$item_html .= wfMessage( 'user-recent-activity-vote' )->escaped() . " {$page_link} {$item_time}
 						<div class=\"item\">
 							\"{$value}\"
 						</div>";
 						break;
 					case 'poll':
-						$item_html .= wfMessage( 'user-recent-activity-poll' )->escaped() . "{$page_link} {$item_time}";							
+						$item_html .= wfMessage( 'user-recent-activity-poll' )->escaped() . "{$page_link} {$item_time}";
 						break;
 					case 'comment':
 						$item_html .= wfMessage( 'user-recent-activity-comment' )->escaped() . " {$page_link} {$item_time}
@@ -1603,11 +1603,11 @@ class UserProfilePage extends Article {
 					case 'user_user_follow':
 						$item_html .= wfMessage( 'user-recent-activity-follow' )->escaped() .
 							" <b>{$user_link_2}</b> {$item_time}";
-						break;	
+						break;
 					case 'user_site_follow':
 						$item_html .= wfMessage( 'user-recent-activity-follow' )->escaped() .
 							" <b>{$site_link}</b> {$item_time}";
-						break;						
+						break;
 					case 'domain_creation':
 						$item_html .= wfMessage( 'user-recent-activity-create')->escaped() .
 							" <b>{$site_link}</b> {$item_time}";
@@ -1652,18 +1652,18 @@ class UserProfilePage extends Article {
 		$rel = new UserActivity( $user_name, 'user', $limit );
 		$rel->setActivityToggle( 'show_votes', 0 );
 		$rel->setActivityToggle( 'show_edits', 1 );
-		$rel->setActivityToggle( 'show_comments', 1);		
+		$rel->setActivityToggle( 'show_comments', 1);
 		$rel->setActivityToggle( 'show_relationships', 0);
 		$rel->setActivityToggle( 'show_system_gifts', 0);
 		$rel->setActivityToggle( 'show_system_messages', 0);
 		$rel->setActivityToggle( 'show_messages_sent', 0);
 		$rel->setActivityToggle( 'show_user_user_follows', 0);
-		$rel->setActivityToggle( 'show_user_site_follows', 0);		
+		$rel->setActivityToggle( 'show_user_site_follows', 0);
 		$rel->setActivityToggle( 'show_user_update_status', 0);
-		$rel->setActivityToggle( 'show_gifts_sent', 0);		
-		$rel->setActivityToggle( 'show_gifts_rec', 0);		
-		$rel->setActivityToggle( 'show_domain_creations', 1);	
-		$rel->setActivityToggle( 'show_image_uploads', 0);	
+		$rel->setActivityToggle( 'show_gifts_sent', 0);
+		$rel->setActivityToggle( 'show_gifts_rec', 0);
+		$rel->setActivityToggle( 'show_domain_creations', 1);
+		$rel->setActivityToggle( 'show_image_uploads', 0);
 		/**
 		 * Get all relationship activity
 		 */
@@ -1720,8 +1720,8 @@ class UserProfilePage extends Article {
 					$pc = PostCollection::newFromId($id);
 					$pcr = $pc->getRoot()->getLastRevision();
 					$topicDisplayText = Container::get( 'templating' )->getContent( $pcr, 'wikitext' );
-					
-					// 1.27 
+
+					// 1.27
 					// $topicDisplayText = Utils::htmlToPlaintext(
 					// 	Container::get( 'templating' )->getContent( $pcr, 'topic-title-html' )
 					// );
@@ -1733,7 +1733,7 @@ class UserProfilePage extends Article {
 						"{$comment_url}\">" . $title->getPrefixedText() . '</a></b> ';
 				}
 				$b = new UserBoard(); // Easier than porting the time-related functions here
-				$item_time = '<span class="item-small">' .
+				$item_time = '<span class="item-small secondary">' .
 					wfMessage( 'user-time-ago', $b->getTimeAgo( $item['timestamp'] ) )->escaped() .
 				'</span>';
 
@@ -1921,7 +1921,7 @@ class UserProfilePage extends Article {
 				$g_name[] = $value['gift_name'];
 			}
 			$gift_count = array_count_values($g_name);
-			
+
 			$grepeat = array();
 			foreach ($gifts as $key => $value) {
 				if(isset($grepeat[$value['gift_name']])){
@@ -2145,7 +2145,7 @@ class UserProfilePage extends Article {
 						</select><p><div class="form-group" style="padding:14px;">
                                       <div class="lead emoji-picker-container"><div name="message" id="message" class="text-area mention-area" rows="4" contenteditable="true"  data-emojiable="true" data-emoji-input="unicode"></div></div>
                                     </div>
-						
+
 						<div class="user-page-message-box-button">
 							<input type="button" value="' . wfMessage( 'userboard_sendbutton' )->escaped() . '" class="site-button mw-ui-button mw-ui-progressive" />
 						</div>
@@ -2421,7 +2421,7 @@ class UserProfilePage extends Article {
 			</div>
 			<div class="cleared"></div>
 			<div class="common-interest-container panel-body">';
-			
+
 		if(!empty($res)){
 			foreach ($res as $value) {
 				$Iname = HuijiPrefix::prefixToSiteName($value);
@@ -2454,7 +2454,7 @@ class UserProfilePage extends Article {
                       <input type="hidden" class="avatar-src" name="avatar_src">
                       <input type="hidden" class="avatar-data" name="avatar_data">
                       <input type="hidden" class="action" name="action" value="avatarsubmit">
-                      <input type="hidden" class="format" name="format" value="json"> 
+                      <input type="hidden" class="format" name="format" value="json">
                       <input type="hidden" class="token" name="token" value="'.$token.'">
                       <label for="avatarInput">本地上传</label>
                       <input type="file" class="avatar-input" id="avatarInput" name="avatar_file">

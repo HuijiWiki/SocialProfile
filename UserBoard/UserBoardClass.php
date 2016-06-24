@@ -455,7 +455,7 @@ class UserBoard {
 						</div>".
 						Linker::link($user,$message['user_name_from'],array(),array(),array())."
 						 {$message_type_label}
-						<div class=\"user-board-message-time\">" .
+						<div class=\"user-board-message-time secondary\">" .
                             wfMessage( 'userboard_posted_ago', $this->getTimeAgo( $message['timestamp'] ) )->parse() .
                         "</div>
 						<div class=\"cleared\"></div>

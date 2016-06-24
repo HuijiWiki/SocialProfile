@@ -39,7 +39,8 @@ class SpecialGiveSystemGift extends SpecialPage{
 		}
 
 		$desigGiftId = empty($request->getInt( 'designation' ))?null:$request->getInt( 'designation' );
-		$condition = empty($request->getInt('condition'))?null:$request->getInt('condition');
+		// $condition = empty($request->getInt('condition'))?null:$request->getInt('condition');
+		$editNum = empty($request->getInt('editNum'))?null:$request->getInt('editNum');
 		$output = "";
 
 		$login = SpecialPage::getTitleFor( 'Userlogin' );
@@ -57,10 +58,7 @@ class SpecialGiveSystemGift extends SpecialPage{
 			}
 			$output .= "</select>";
 			$output .= "达成条件：
-						<select name='condition'>
-							<option value='3' >编辑次数不少于1次</option>
-							<option value='2' >编辑次数不少于500次</option>
-						</select>
+						<input name='editNum' >
 						<input class='mw-ui-button mw-ui-progressive' type='submit' value='发送'>
 						</form>";
 		}else {
@@ -71,17 +69,9 @@ class SpecialGiveSystemGift extends SpecialPage{
 			$wikiSite = WikiSite::newFromPrefix($wgHuijiPrefix);
 			$follower = $wikiSite->getFollowers(true);
 			$i = 0;
-			if ( $condition == 2 ) {
+			if ( $editNum != null && is_numeric($editNum) ) {
 				foreach ($follower as $key => $value) {
-					if ( $value['count'] >= 500 ) {
-						$usg = new UserSystemGifts( $value['user'] );
-						$usg->sendSystemGift( $desigGiftId );
-						$i++;
-					}
-				}
-			}elseif ( $condition == 3 ) {
-				foreach ($follower as $key => $value) {
-					if ( $value['count'] >= 1 ) {
+					if ( $value['count'] >= $editNum ) {
 						$usg = new UserSystemGifts( $value['user'] );
 						$usg->sendSystemGift( $desigGiftId );
 						$i++;

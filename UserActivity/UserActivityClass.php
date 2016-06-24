@@ -1087,9 +1087,7 @@ class UserActivity {
 				$user_title = Title::makeTitle( NS_USER, $row->ug_user_name_to );
 				$user_title_from = Title::makeTitle( NS_USER, $row->ug_user_name_from );
 
-				$gift_image = '<img src="' . $wgUploadPath . '/awards/' .
-					Gifts::getGiftImage( $row->gift_id, 'm' ) .
-					'" border="0" alt="" />';
+				$gift_image = Gifts::getGiftImageTag( $row->gift_id, 'm' );
 				$view_gift_link = SpecialPage::getTitleFor( 'ViewGift' );
 				$avatar = new wAvatar($row->ug_user_id_to, 'ml');
 				$avatarUrl = $avatar->getAvatarAnchor();
@@ -1107,7 +1105,7 @@ class UserActivity {
 										Linker::link($user_title_from, $user_title_from->getText())
 									)->text(),
 						'hasShowcase' => true,
-						'showcase' =>  Linker::Link($view_gift_link, $gift_image.$row->gift_name, ["rel"=>"nofollow"], ["user" => $user_name, "gift_id" => $row->gift_id]),
+						'showcase' =>  Linker::Link($view_gift_link, $gift_image.$row->gift_name, ["rel"=>"nofollow"], ["user" => $row->us_user_name, "gift_id" => $row->gift_id]),
 									// "<a href=\"" . htmlspecialchars( $view_gift_link->getFullURL( 'user='.$user_name_short.'&gift_id=' . $row->gift_id ) ) . "\" rel=\"nofollow\">
 									// 		{$gift_image}
 									// 		{$row->gift_name}
@@ -1178,9 +1176,7 @@ class UserActivity {
 				$html = $this->updateTime($html, $timeago);
 			} else {
 				$user_title = Title::makeTitle( NS_USER, $row->sg_user_name );
-				$system_gift_image = '<img src="' . $wgUploadPath . '/awards/' .
-					SystemGifts::getGiftImage( $row->gift_id, 'm' ) .
-					'" border="0" alt="" />';
+				$system_gift_image = SystemGifts::getGiftImageTag( $row->gift_id, 'm' );
 				$system_gift_link = SpecialPage::getTitleFor( 'ViewSystemGift' );
 				$user_name_short = $wgLang->truncate( $row->sg_user_name, 25 );
 				$avatar = new wAvatar( $row->sg_user_id, 'ml');

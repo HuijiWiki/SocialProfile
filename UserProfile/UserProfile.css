@@ -110,17 +110,24 @@
 	font-weight: bold;
 	margin: 0px 15px 0px 0px;
 }*/
+.user-info{
+    margin-left: 130px;
+}
 #points-level{
-	display: inline-block;
+	display: block;
 	margin: 0;
-	width: 320px;
+	width: 240px;
+    height: 10px;
 }
 #honorific-level {
 	display: inline-block;
 	font-size: 20px;
     padding:0;
     vertical-align: top;
-    width: 15%;
+    width: 50px;
+    position: absolute;
+    bottom: 20px;
+    left: 25px;
 }
 #honorific-level .primary{
     border-radius: 7px;
@@ -152,7 +159,6 @@
 
 #profile-image {
 	position: relative;
-	float: left;
 	margin: 0px 20px 0px 0px;
 }
 
@@ -174,7 +180,7 @@
 .profile-actions a {
 	text-decoration: none;
 	font-weight: bold;
-	margin: 0px 6px;
+	/*margin: 0px 6px;*/
 }
 
 /* User-Relationship */
@@ -204,13 +210,12 @@
 	text-decoration: none;
 	display: block;
 	float: left;
-	margin: 5px 10px 0px 0px;
+	margin: 5px;
 }
 
 .user-gift-container img {
-	padding: 3px;
-	border: 1px solid #dcdcdc;
-	background-color: #fff;
+	border-width: 4px;
+    border-style: solid;
 }
 
 /* Fanboxes */
@@ -219,15 +224,12 @@
 }
 
 /* User Activity */
-.activity-item {
-    border-bottom-width: 1px;
-	border-bottom-style: solid;
-	padding: 7px 10px;
+.activity-item,.activity-item-bottom {
+    padding: 7px 10px;
+    margin-bottom: 3px;
+    background-color: rgba(0,0,0,.05);
 }
 
-.activity-item-bottom {
-	padding: 7px 10px ;
-}
 
 .activity-item img, .activity-item-bottom img {
 	vertical-align: middle;
@@ -248,24 +250,20 @@
 	font-weight: bold;
 }
 
-#recent-all {
-	padding: 0px 0px 25px 0px;
-}
+/*#recent-all {*/
+	/*padding: 0px 0px 25px 0px;*/
+/*}*/
 
 /* Message Board */
-#user-page-board {
-	margin: 5px 0px 10px 0px;
+.panel{
+    font-size: 14px;
 }
-
+.panel-body{
+    padding: 0!important;
+}
 .user-page-message-form {
 	margin: 5px 0px 15px 0px;
 	font-weight: bold;
-}
-
-.user-board-message {
-	border-top-width: 1px;
-    border-top-style: solid;
-	margin: 0px 0px 15px 0px;
 }
 
 .user-board-message-from {
@@ -285,7 +283,6 @@
 
 .user-board-message-time {
 	font-size: 11px;
-	color: #797979;
 	margin: 2px 0px 0px 5px;
 }
 
@@ -298,8 +295,9 @@
 	border: 1px solid #dcdcdc;
 }
 
-.user-board-message-body {
-	margin: 0px 10px 0px 0px;
+.user-board-message-body,.user-board-message-links {
+	margin-left: 60px;
+    margin-right: 20px;
 }
 
 .user-board-message-body p {
@@ -707,6 +705,7 @@
 .user-follow-msg>li h5{
     margin-bottom: 0;
     font-size: 12px;
+    text-align: left;
 }
 .user-follow-msg a{
     font-size: 24px;
@@ -717,9 +716,14 @@
     border-radius: 0;
     background: inherit;
 }
+#profile-title-container{
+    position: absolute;
+}
 .profile-actions{
     color: #999;
     margin-top: 10px;
+    font-size: 14px;
+    margin-left: 130px;
 }
 .user-autograph{
     margin-top: 10px;
@@ -1018,7 +1022,8 @@ span.span-color{
 }
 .user-board-message{
     padding-left: 10px;
-    border-radius: 3px;
+    margin-bottom: 5px;
+    background: rgba(0,0,0,.03);
 }
 .user-board-message-image>a>img{
     width: 50px;
@@ -1031,9 +1036,6 @@ span.span-color{
     height: 60px;
     margin-top: 10px;
 }
-.user-board-message-body{
-    margin-left: 5px;
-}
 .user-board-message-time{
     margin-top: 15px;
 }
@@ -1041,6 +1043,7 @@ span.span-color{
     /*border: none;*/
     /*border-top: 1px solid #e2e2e2;*/
     padding-top: 15px;
+    padding-bottom: 15px;
 }
 .fa{
     padding-right: 5px;
