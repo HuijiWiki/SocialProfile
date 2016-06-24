@@ -571,6 +571,7 @@ class UserGifts {
 	 * addCustomInvitationCode
 	 * @param int $user_gift_id    usergift_id
 	 * @param string $source where does this code come from
+	 * @return int id
 	 */
 	public function addCustomInvitationCode( $user_gift_id, $source ){
 		if ($source == 'MaskedShooter'){
@@ -582,6 +583,9 @@ class UserGifts {
 					array('status' => 1),
 					__METHOD__
 				);
+				if($res == ''){
+					return 0;
+				}
 				$invite_code = $res->code;
 				$dbw->update(
 					'masked_shooter',

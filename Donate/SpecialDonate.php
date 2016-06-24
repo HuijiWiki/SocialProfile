@@ -28,7 +28,16 @@ class SpecialDonate extends SpecialPage{
 
         //付款金额，必填
         $total_fee = $request->getVal('WIDtotal_fee');
-
+        $feeArr = explode('.',$total_fee);
+        if ( isset($total_fee) && count($feeArr) > 1 ) {
+            $out->addHTML( '<div class="bs-callout bs-callout-danger">
+                                <h4><span class="mw-headline" >'.$this->msg( 'ga-error-donate' )->plain().'</span></h4>
+                                <p>'.$this->msg( 'ga-error-donate-no-dot' )->plain().'</p>
+                            </div>' );
+            return false;
+            
+        }
+        
         //商品描述，可空
         $body = $request->getVal('WIDbody');
         //构造要请求的参数数组，无需改动

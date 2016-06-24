@@ -143,9 +143,9 @@ class ViewGift extends UnlistedSpecialPage {
 				}
 				$output .= '<div class="cleared"></div>
 						<div class="g-describe">' . $out->parse($message) . '</div>';
-						if( $inviteCode != null && $wgUser->getID() == $gift['user_id_to'] ){
-							$output .= '<div class="invite-code well well-sm">'.$inviteCode.'</div><small>(仅自己可见)</small>';
-						}
+				if( $inviteCode != null && $wgUser->getID() == $gift['user_id_to'] ){
+					$output .= '<div class="invite-code well well-sm">'.$inviteCode.'</div><small>(仅自己可见)</small>';
+				}
 				$output .= '<div class="g-actions">';
 				if ( $gift['user_name_to'] == $user->getName() ) {
 					// $output .= $this->msg( 'pipe-separator' )->escaped();

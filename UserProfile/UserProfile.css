@@ -125,9 +125,6 @@
 #honorific-level .primary{
     border-radius: 7px;
 }
-#honorific-level,#points-level{
-    margin-top: 10px;
-}
 /*#points-level {
 	float: left;
 	font-size: 11px;
@@ -674,8 +671,9 @@
 	color: #797979;
 }
 
-#profile-title{
+#content #profile-title{
     font-size: 24px;
+    display: inline-block;
 }
 .jumbotron #profile-image img{
     top: 0!important;

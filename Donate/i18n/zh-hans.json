@@ -8,5 +8,7 @@
 	"donatepage": "加油日志",
 	"donatepagetext":"本日志记录了站点的加油历史。",
 	"donatelogentry": "对站点加油",
-	"user-donate-site-log-entry": "用户:$1 为站点:$2 捐赠了$3元"
+	"user-donate-site-log-entry": "用户:$1 为站点:$2 捐赠了$3元",
+	"ga-error-donate": "格式错误",
+	"ga-error-donate-no-dot": "加油金额需要是个整数~"
 }

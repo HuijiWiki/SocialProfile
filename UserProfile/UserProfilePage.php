@@ -1245,13 +1245,10 @@ class UserProfilePage extends Article {
         $output .='<div>
 					    <ul class="user-follow-msg secondary">
 					        <li><h5>编辑</h5>'.Linker::link( $contributions, $stats_data['edits'], array(), array( 'target' => $user,'contribs' => 'user' ) ).'</li>
-					        <li><h4>|</h4></li>
 					        <li><h5>关注</h5>'.Linker::link( $notice, $huijiUser->getFollowingUsersCount(), array(  'id' => 'user-following-count'  ), array( 'user' => $user,'rel_type' => 1 ) ).'</li>
-					        <li><h4>|</h4></li>
 					        <li><h5>被关注</h5>'.Linker::link( $notice, $huijiUser->getFollowerCount(), array( 'id' => 'user-follower-count' ), array( 'user' => $user,'rel_type' => 2 ) ).'</li>
                         </ul>
                         <div class="cleared"></div>
-                    </div>
                     <!--<span id="user-site-count">'.'</span>个站点。-->';
 		if ( $wgUserLevels ) {
 			$progress = $user_level->getLevelProgress()*100;
@@ -1268,7 +1265,7 @@ class UserProfilePage extends Article {
 
 					</div>';
 		}
-		$output .= '<div class="profile-actions">';
+		$output .= '</div><div class="profile-actions">';
         $output .='<div class="form-container '.($this->isOwner()?'owner':'').'"><div class="form-msg"><a class="form-location '.($this->isOwner()?'edit':'').'">'.($city == ''?($this->isOwner()?'填写居住地':'居住地未公开'):$city).'</a>
                     <span class="span-color">|</span><a class="form-date '.($this->isOwner()?'edit':'').'" data-birthday="'.($birthday == ''||$birthday == '0000-00-00'?'':$birthday).'">'.($birthday == ''||$birthday == '0000-00-00'?($this->isOwner()?'填写生日':'生日未公开'):'').'</a>
                     <span class="span-color">|</span><a class="form-sex '.($this->isOwner()?'edit':'').'" data-sex="'.$gender.'">'.$genderIcon.'</a></div>';
