@@ -13,8 +13,14 @@ $wgAvailableRights[] = 'sendSysopGifts';
 $wgAvailableRights[] = 'sendGifts';
 
 $wgGroupPermissions['staff']['sendStaffGifts'] = true;
+$wgGroupPermissions['staff']['sendBureaucratGifts'] = true;
+$wgGroupPermissions['staff']['sendSysopGifts'] = true;
+$wgGroupPermissions['staff']['sendGifts'] = true;
 $wgGroupPermissions['bureaucrat']['sendBureaucratGifts'] = true;
+$wgGroupPermissions['bureaucrat']['sendSysopGifts'] = true;
+$wgGroupPermissions['bureaucrat']['sendGifts'] = true;
 $wgGroupPermissions['sysop']['sendSysopGifts'] = true;
+$wgGroupPermissions['sysop']['sendGifts'] = true;
 $wgGroupPermissions['user']['sendGifts'] = true;
 
 
