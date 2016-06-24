@@ -90,7 +90,8 @@ class GiftManager extends SpecialPage {
 				'user_title',
 				array('title_content' => $request->getVal( 'designation' ),
 					),
-				array('gift_id' => $giftId ),
+				array('gift_id' => $giftId ,
+					'title_from' => 'gift'),
 				__METHOD__
 			);
 

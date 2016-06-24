@@ -76,7 +76,8 @@ class SystemGifts {
 				'user_title',
 				array('title_content' => $row->designation,
 					),
-				array('gift_id' => $row->gift_id),
+				array('gift_id' => $row->gift_id,
+					'title_from' => 'system_gift'),
 				__METHOD__
 			);
 			if ( $row->gift_category && !in_array( $row->gift_category, $this->repeatableGifts ) && !empty($stats->stats_fields[$this->categories[$row->gift_category]]) ) {
