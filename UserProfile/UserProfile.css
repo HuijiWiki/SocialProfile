@@ -664,9 +664,10 @@
 }
 
 /* The text "Message type" on the left side of the message type selector on profile page */
-/*.profile-board-message-type {*/
+.profile-board-message-type {
 	/*color: #797979;*/
-/*}*/
+	padding-left:1em;
+}
 
 #content #profile-title{
     font-size: 24px;
@@ -928,7 +929,14 @@ span.span-color{
     #content h1#profile-title{
         font-size: 1.5em;
     }
-   
+    .user-info{
+	margin-top: 11em;
+	margin-left: 0em;
+    }  
+    .profile-actions{
+        margin-left:0em;
+    }
+     
     .profile-top-right {
         padding-left: 15px!important;
     }

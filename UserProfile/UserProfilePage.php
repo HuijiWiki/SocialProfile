@@ -1245,7 +1245,7 @@ class UserProfilePage extends Article {
 		$notice = SpecialPage::getTitleFor('ViewFollows');
 		$contributions = SpecialPage::getTitleFor('Contributions');
 		$huijiUser = HuijiUser::newFromUser($this->user);
-        $output .='<div class="user-info">'	.$fullName .'
+        $output .='<div class="user-info clearfix">'	.$fullName .'
 					    <ul class="user-follow-msg secondary">
 					        <li><h5>编辑</h5>'.Linker::link( $contributions, $stats_data['edits'], array(), array( 'target' => $user,'contribs' => 'user' ) ).'</li>
 					        <li><h5>关注</h5>'.Linker::link( $notice, $huijiUser->getFollowingUsersCount(), array(  'id' => 'user-following-count'  ), array( 'user' => $user,'rel_type' => 1 ) ).'</li>
