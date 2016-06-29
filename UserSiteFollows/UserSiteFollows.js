@@ -210,7 +210,7 @@ jQuery( document ).ready( function() {
 									var target = 'http://'+data.result[i].key+mw.config.get('wgHuijiSuffix');
 									out += '<a class="mw-echo-ui-notificationOptionWidget-linkWrapper" href="'+target+'">';
 									out += "<div class='mw-echo-ui-notificationOptionWidget mw-echo-state'>";
-									out += '<img class="mw-echo-icon" src="http://av.huijiwiki.com/site_avatar_'+data.result[i].key+'_m.png">';
+									out += '<img class="mw-echo-icon" src="http://av.huijiwiki.com/'+data.result[i].avatar+'">';
 									out += "<span class='oo-ui-lableElement-label'>";
 									out += "<div class='mw-echo-content'>";
 									out += "<div class='mw-echo-title'>";

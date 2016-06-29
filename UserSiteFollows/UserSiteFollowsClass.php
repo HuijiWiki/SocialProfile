@@ -395,6 +395,8 @@ class UserSiteFollow{
 				$is_follow = 'N';
 			}
 			$temp['is'] = $is_follow;
+			$siteAvatar = new wSiteAvatar($domain, 'm');
+			$temp['avatar'] =  $siteAvatar->getAvatarImage();
 			$followed[] = $temp; 
 		}
 		$count = array();

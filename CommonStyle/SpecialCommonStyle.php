@@ -238,6 +238,7 @@ class SpecialCommonStyle extends SpecialPage{
         $info = !isset( $lessCon['@brand-info'] ) ? "#5bc0de" : $lessCon['@brand-info'];
         $warning = !isset( $lessCon['@brand-warning'] ) ? "#f0ad4e" : $lessCon['@brand-warning'];
         $danger = !isset( $lessCon['@brand-danger'] ) ? "#d9534f" : $lessCon['@brand-danger'];
+        $well = !isset( $lessCon['@well'] ) ? "#f5f5f5" : $lessCon['@well'];
         $output .= $templateParser->processTemplate(
                             'view',
                             array(
@@ -254,6 +255,7 @@ class SpecialCommonStyle extends SpecialPage{
                                 'info' => $info,
                                 'warning' => $warning,
                                 'danger' => $danger,
+                                'well' => $well,
                                 'styleArr' => $styleArr,
                                 'isNew' => $isNew,
                             )

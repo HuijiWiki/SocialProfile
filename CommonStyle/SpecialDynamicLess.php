@@ -1,4 +1,5 @@
 <?php   
+use \MediaWiki as mw;
 /**
 * DynamicLess
 */
@@ -28,6 +29,7 @@ class SpecialDynamicLess extends SpecialPage{
         }
         $lessPath = "/var/www/virtual/".$wgHuijiPrefix."/skins/bootstrap-mediawiki/less/custom.less";
         $lessStr .= file_get_contents($lessPath);
+        mw\suppressWarnings();
         $this->getOutput()->setArticleBodyOnly(true);
         echo $lessStr;
         $this->getOutput()->output();
