@@ -29,6 +29,13 @@ class SpecialDynamicLess extends SpecialPage{
         }
         $lessPath = "/var/www/virtual/".$wgHuijiPrefix."/skins/bootstrap-mediawiki/less/custom.less";
         $lessStr .= file_get_contents($lessPath);
+        $re = "/[\"']([a-z]*+.less)[\"']/"; 
+        $lessStr = preg_replace_callback($re,
+                            function($matches){
+                                global $wgHuijiPrefix;
+                                return "\"/skins/bootstrap-mediawiki/less/{$matches[1]}\"";
+                            }, 
+                            $lessStr);
         mw\suppressWarnings();
         $this->getOutput()->setArticleBodyOnly(true);
         echo $lessStr;
