@@ -59,7 +59,6 @@
 	border-bottom: 1px solid #DCDCDC;
 	width: 100%;
 	line-height: 22px;
-	margin: 0px 0px 8px 0px;
 }
 
 .user-section-title {
@@ -257,8 +256,11 @@
 .panel{
     font-size: 14px;
 }
-.panel-body{
+#user-page-right .panel-body{
     padding: 0!important;
+}
+#user-page-left .panel-body{
+    padding: 10px!important;
 }
 .user-page-message-form {
 	margin: 5px 0px 15px 0px;
@@ -895,6 +897,9 @@ span.span-color{
     line-height: 30px;
     text-align: center;
 }
+#user-page-right .darken{
+    background-color: inherit;
+}
 /*.profile-page .panel-primary{*/
     /*background-color: inherit;*/
 /*}*/
@@ -1030,7 +1035,6 @@ span.span-color{
 .user-board-message{
     padding-left: 10px;
     margin-bottom: 5px;
-    background: rgba(0,0,0,.03);
 }
 .user-board-message-image>a>img{
     width: 50px;
@@ -1051,6 +1055,12 @@ span.span-color{
     /*border-top: 1px solid #e2e2e2;*/
     padding-top: 15px;
     padding-bottom: 15px;
+}
+#user-page-center .panel-body{
+    padding-top: 25px;
+}
+#content .edit-statistics p{
+    margin-bottom: 0;
 }
 .fa{
     padding-right: 5px;

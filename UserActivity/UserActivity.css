@@ -97,6 +97,7 @@
 }
 .user-home-item-description{
     display: inline;
+    word-break: break-all;
 }
 .user-home-item-body img{
     margin-top: 10px;

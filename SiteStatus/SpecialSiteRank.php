@@ -86,11 +86,11 @@ class SpecialSiteRank extends SpecialPage {
 					$diff ='';
 				}
 				if ( $value['site_rank'] > $beforeArr[$value['site_prefix']] ) {
-					$change = 'glyphicon glyphicon-arrow-down red';
+					$change = 'fa fa-sort-down red';
 				}elseif ( $value['site_rank'] < $beforeArr[$value['site_prefix']] ) {
-					$change = 'glyphicon glyphicon-arrow-up green';
+					$change = 'fa fa-sort-up green';
 				}else{
-					$change = 'glyphicon glyphicon-minus';
+					$change = 'fa fa-minus';
 				}
 			}else{
 				$diff = $change = '';
