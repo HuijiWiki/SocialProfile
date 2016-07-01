@@ -44,9 +44,6 @@ body #profile-image .upload-tool{
 .admin-tab-content{
     padding-top: 25px;
 }
-#wiki-body .admin-tab .active a {
-    background-color: #000;
-}
 .profile-image-container{
     width: 80px;
     float: left;
@@ -270,6 +267,9 @@ hr {
     position: absolute;
     right: 10px;
     top: 40px;
+}
+#home .panel-body{
+    background-color: #fff;
 }
 @media screen and (max-width: 768px){
     .admin-member-header-right {

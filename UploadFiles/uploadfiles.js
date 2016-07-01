@@ -321,7 +321,9 @@ var uploadfiles = {
     },
     onProgress: function(that,loaded,total){
         //获得下载进度动态百分比
-        var  percent = 50+parseInt((loaded / total * 50).toFixed(2)) + '%';
+
+//        var  percent = 50+parseInt((loaded / total * 50).toFixed(2)) + '%';
+        var percent = '100%';
         that.siblings('.upload-progress').css('width',percent);
     },
     funAddEvent: function(){
