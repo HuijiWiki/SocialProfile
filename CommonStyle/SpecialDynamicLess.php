@@ -16,16 +16,7 @@ class SpecialDynamicLess extends SpecialPage{
         foreach ($default as $key => $value) {
             $defaultRes['@'.$key] = $value;
         }
-        $title = ApiCommonStyle::getStyleTitle();
-        $wp = new WikiPage($title);
-        $content = $wp->getContent()->getNativeData();
-        if ($content == ''){
-            $cssContent = CommonStyle::getCurrentCssStyle(1); //backward capability;
-        } elseif($content != '-' ) {
-            $cssContent['cssContent'] = $content;
-        } else {
-            $cssContent['cssContent'] = null;
-        }
+        $cssContent = CommonStyle::getStyle();
         
         if ( $cssContent['cssContent'] == null ) {
             $lessCon = array();

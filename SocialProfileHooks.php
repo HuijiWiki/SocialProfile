@@ -248,6 +248,7 @@ class SocialProfileHooks {
     	// var_dump($target);
         if ($target->getNamespace() == NS_USER){
         	$text = $target->getRootText();
+        	$prefix = $suffix = '';
         	if ($text == $html && class_exists("HuijiUser") && !in_array('no-designation', $options)){
         		$user = HuijiUser::newFromName( $target->getRootText() );
         		list($prefix, $suffix) = $user->getDesignation(true);
