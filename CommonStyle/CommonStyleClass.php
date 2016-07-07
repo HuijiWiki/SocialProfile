@@ -106,6 +106,44 @@ class CommonStyle{
 	 * @param  [int] $cssId if null, get the current css
 	 * @return [type]        [description]
 	 */
+	public static function getStyle(){
+		global $wgMemc;
+		$key = wfMemcKey("commonStyle", "getStyle" );
+
+		$cssContent = $wgMemc->get($key);
+		if ($cssContent != ''){
+			return $cssContent;
+		}
+		if ($wgMemc)
+		$content = '';
+		$title = ApiCommonStyle::getStyleTitle();
+        $wp = new WikiPage($title);
+        if ($wp->exists()){
+        	$content = $wp->getContent()->getNativeData();
+        }
+        if ($content == ''){
+            $cssContent = CommonStyle::getCurrentCssStyle(1); //backward capability;
+        } elseif($content != '-' ) {
+            $cssContent['cssContent'] = $content;
+        } else {
+            $cssContent['cssContent'] = null;
+        }
+        $wgMemc->set($key, $cssContent);
+        return $cssContent;
+	}
+
+	public static function clearCache(){
+		global $wgMemc;
+		$key = wfMemcKey("commonStyle", "getStyle" );
+		$wgMemc->delete($key);		
+	}
+
+	/**
+	 * get current css
+	 * @param  [int] $cssId if null, get the current css
+	 * @return [type]        [description]
+	 * @deprecated
+	 */
 	public static function getCurrentCssStyle( $cssId ){
 		$dbr = wfGetDB( DB_SLAVE );
 		if ( $cssId != null ) {

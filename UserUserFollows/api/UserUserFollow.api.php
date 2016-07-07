@@ -23,11 +23,11 @@ class UserUserFollowAPI extends ApiBase {
                 $result->addValue( $this->getModuleName(), 'status', 'success' );
                 return true;
             }
-        }else{
-            $result = $this->getResult();
-            $result->addValue( $this->getModuleName(), 'status', 'failed' );
-            return true;
         }
+        $result = $this->getResult();
+        $result->addValue( $this->getModuleName(), 'status', 'failed' );
+        return true;
+        
     }
 
     public function getAllowedParams() {

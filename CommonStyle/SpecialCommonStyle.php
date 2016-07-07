@@ -19,7 +19,7 @@ class SpecialCommonStyle extends SpecialPage{
             $out->permissionRequired( 'editinterface' );
             return;
         }
-        $cssCon_1 = CommonStyle::getCurrentCssStyle(1);
+        $cssCon_1 = CommonStyle::getStyle();
         if ($cssCon_1 == false) {
             $isNew = 0;
         }else{
@@ -75,6 +75,7 @@ class SpecialCommonStyle extends SpecialPage{
                     '@detail-wikitable-color'=>'文字',
                     '@detail-wikitable-a'=>'链接',
                     '@detail-wikitable-border'=>'边框',
+                    '@detail-wikitable-th-bg'=>'th背景',
                 )
         );
         $hArr6 = array(

@@ -11,6 +11,9 @@ class GetFollowingUser extends ApiBase {
         ) {
             return true;
         }
+        $this->setWarning(
+            "Deprecated; Don't use this off site."
+        );
         $username = $this->getMain()->getVal( 'username' );
         $user = User::newFromName($username);
         //No such user

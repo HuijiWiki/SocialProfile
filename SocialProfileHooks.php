@@ -256,6 +256,7 @@ class SocialProfileHooks {
         	}
             $customAttribs['class'] = 'mw-userlink';
             $customAttribs['rel'] = 'nofollow';
+            $customAttribs['title'] = $text;
         } elseif( $target->getNamespace()== NS_FILE || $target){
             $path = pathinfo($target->getFullText());
             if (array_key_exists('extension', $path) && pathinfo($target->getFullText())['extension'] == 'ass'){

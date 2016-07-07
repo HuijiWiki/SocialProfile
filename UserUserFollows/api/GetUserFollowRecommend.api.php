@@ -11,6 +11,9 @@ class GetUserFollowRecommend extends ApiBase {
         ) {
             return true;
         }
+        $this->setWarning(
+                "Deprecated; Don't use this off site."
+            );
         $follower = $this->getMain()->getVal( 'follower' );
         $followee = $this->getMain()->getVal( 'followee' );
         if ( $follower === $wgUser->getName() && $followee !== $follower){

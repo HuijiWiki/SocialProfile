@@ -124,7 +124,7 @@ $wgAutoloadClasses['UserDonation'] = __DIR__ . '/Donate/UserDonationClass.php';
 $wgAutoloadClasses['SpecialReturnUrl'] = __DIR__ . '/Donate/SpecialReturnUrl.php';
 $wgAutoloadClasses['SpecialNotifyUrl'] = __DIR__ . '/Donate/SpecialNotifyUrl.php';
 $wgAutoloadClasses['SpecialDynamicLess'] = __DIR__ . '/CommonStyle/SpecialDynamicLess.php';
-
+$wgAutoloadClasses['ApiCommonStyle'] = __DIR__ . '/CommonStyle/api/ApiCommonStyle.php';
 // New special pages
 // $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
 // $wgSpecialPages['EditProfile'] = 'SpecialEditProfile';
@@ -459,8 +459,13 @@ $wgResourceModules['socialprofile.commonstyle.css'] = array(
 );
 
 $wgResourceModules['ext.socialprofile.commonstyle.js'] = array(
-	'scripts' =>array('jcolor.min.js','CommonStyle.js'),
-	'dependencies' => 'mediawiki.notification',
+	'scripts' =>array(
+		'jcolor.min.js',
+		'CommonStyle.js'
+	),
+	'dependencies' => array(
+		'mediawiki.notification',
+	),
 	'localBasePath' => __DIR__ . '/CommonStyle',
 	'remoteExtPath' => 'SocialProfile/CommonStyle',
 	'position' => 'bottom',
@@ -720,6 +725,7 @@ $wgAutoloadClasses['GetUserFollowRecommend'] = __DIR__ . '/UserUserFollows/api/G
 $wgAPIModules['getuserfollowrecommend'] = 'GetUserFollowRecommend';
 $wgAutoloadClasses['GetFollowingUser'] = __DIR__ . '/UserUserFollows/api/GetFollowingUser.api.php';
 $wgAPIModules['getfollowinguser'] = 'GetFollowingUser';
+$wgAPIModules['commonstyle'] = "ApiCommonStyle";
 
 //Log
 global $wgLogTypes, $wgLogNames, $wgLogHeaders, $wgLogActions;

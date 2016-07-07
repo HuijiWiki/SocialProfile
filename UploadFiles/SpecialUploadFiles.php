@@ -46,7 +46,7 @@ class SpecialUploadFiles extends SpecialPage{
                             <span class='file-btn'>选择电脑上的文件</span>
 		                </div>
 		          </form>
-		          <div class='clear'><div class='btn mw-ui-button mw-ui-constructive' id='upload-btn' data-loading-text='上传中...'>上传</div></div>";
+		          <div class='clear'><button class='btn mw-ui-button mw-ui-constructive' id='upload-btn' data-loading-text='上传中...'>上传</button></div>";
 		$output .= '<div class="modal fade img-description" tabindex="-1" role="dialog" aria-labelledby="imgDescriptionModalLabel" aria-hidden="true">
                        <div class="modal-dialog">
                            <div class="modal-content">

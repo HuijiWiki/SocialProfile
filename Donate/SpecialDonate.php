@@ -104,6 +104,7 @@ class SpecialDonate extends SpecialPage{
             $display = 'none';
         }else{
             $type = 'checkbox';
+            $display = '';
         }
         $percentage = 100*$currentDonate/$goalDonate;
         //tradenumber

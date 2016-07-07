@@ -7,7 +7,7 @@ $wgAjaxExportList[] = 'wfOpenCssStyle';
 $wgAjaxExportList[] = 'getLessContent';
 function wfUpdateCssStyle( $cssContent, $fileName, $cssId ) {
 	
-	global $wgUser, $wgHuijiPrefix;
+	global $wgUser, $wgHuijiPrefix, $wgSitename;
 	$cssPath = "/var/www/virtual/".$wgHuijiPrefix."/style";
 
 	$out = ResponseGenerator::getJson(ResponseGenerator::ERROR_UNKNOWN);
@@ -63,7 +63,7 @@ function wfUpdateCssStyle( $cssContent, $fileName, $cssId ) {
 		$log->addEntry(
 				'addDescription',
 				SpecialPage::getTitleFor('CommonStyle'),
-				wfMessage( 'user-modify-sitestyle-log-entry',array( $wgUser->getName(),$wgHuijiPrefix ) )->inContentLanguage()->text(),
+				wfMessage( 'user-modify-sitestyle-log-entry',array( $wgUser->getName(),$wgSitename ) )->inContentLanguage()->text(),
 				array()
 			);
 	}else{

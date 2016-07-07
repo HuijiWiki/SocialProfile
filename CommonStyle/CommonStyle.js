@@ -115,53 +115,85 @@ $(function(){
         var that = this;
         $(this).attr('disabled','');
         var reset = [];
-        $.ajax({
-            url:mw.util.wikiScript(),
-            data:{
-                action: 'ajax',
-                rs: 'wfUpdateCssStyle',
-                rsargs: ['','HuijiColor1',1]
-            },
-            type: 'post',
-            format: 'json',
-            success: function(data){
-                $(that).removeAttr('disabled');
-
-                var res = JSON.parse(data);
-                if(res.result == 'true'){
-                    mw.notification.notify('设置成功');
-                    location.reload();
-                }else{
-                    mw.notification.notify('请使用调试模式刷新页面重试',{tag:'error'})
-                }
+        var api = new mw.Api();
+        api.postWithToken('edit', {
+            action: 'commonstyle',
+            task: 'reset',
+            format: 'json'
+        }).done( function(data){
+            $(that).removeAttr('disabled');
+            var res = data;
+            if (res.commonstyle.res.success == 'true'){
+                mw.notification.notify('设置成功');
+                location.reload();                
+            } else {
+                mw.notification.notify('请使用调试模式刷新页面重试',{tag:'error'});
             }
-        });
+        } );
+        // $.ajax({
+        //     url:mw.util.wikiScript(),
+        //     data:{
+        //         action: 'ajax',
+        //         rs: 'wfUpdateCssStyle',
+        //         rsargs: ['','HuijiColor1',1]
+        //     },
+        //     type: 'post',
+        //     format: 'json',
+        //     success: function(data){
+        //         $(that).removeAttr('disabled');
+
+        //         var res = JSON.parse(data);
+        //         if(res.result == 'true'){
+        //             mw.notification.notify('设置成功');
+        //             location.reload();
+        //         }else{
+        //             mw.notification.notify('请使用调试模式刷新页面重试',{tag:'error'});
+        //         }
+        //     }
+        // });
     });
     $('.commonstyle-submit').click(function(){
         var that = this;
         $(this).attr('disabled','');
         var state = $('.is-new').val();
-        $.ajax({
-            url:mw.util.wikiScript(),
-            data:{
-                action: 'ajax',
-                rs: 'wfUpdateCssStyle',
-                rsargs: [obj,'HuijiColor1',state]
-            },
-            type: 'post',
-            format: 'json',
-            success: function(data){
-                $(that).removeAttr('disabled');
-
-                var res = JSON.parse(data)
-                if(res.result == 'true'){
-                    mw.notification.notify('设置成功');
-                    location.reload();
-                }else{
-                    mw.notification.notify('请请使用调试模式刷新页面重试',{tag:'error'})
-                }
-            }
+        var api = new mw.Api();
+        console.log(obj);
+        api.postWithToken('edit', {
+            action: "commonstyle",
+            task: "save",
+            content: JSON.stringify(obj)
+        }).done(function(data){
+            $(that).removeAttr('disabled');
+            var res = data;
+            if(res.commonstyle.res.success == 'true'){
+                mw.notification.notify('设置成功');
+                location.reload();
+            }else{
+                mw.notification.notify('请请使用调试模式刷新页面重试',{tag:'error'})
+            }            
         });
+
+        // $.ajax({
+        //     url:mw.util.wikiScript(),
+        //     data:{
+        //         action: 'ajax',
+        //         rs: 'wfUpdateCssStyle',
+        //         rsargs: [obj,'HuijiColor1',state]
+        //     },
+        //     type: 'post',
+        //     format: 'json',
+        //     success: function(data){
+        //         $(that).removeAttr('disabled');
+
+        //         var res = JSON.parse(data)
+        //         if(res.result == 'true'){
+        //             mw.notification.notify('设置成功');
+        //             location.reload();
+        //         }else{
+        //             mw.notification.notify('请请使用调试模式刷新页面重试',{tag:'error'})
+        //         }
+        //     }
+        // });
     });
     $('.picker-label li').click(function(){
         var index = $(this).index();

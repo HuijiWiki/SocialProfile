@@ -14,6 +14,7 @@
 	"socialprofile-error-not-allowed":"您是否还没有验证邮箱？",
 	"socialprofile-error-no-such-user":"目标用户不存在",
 	"socialprofile-error-database-failed":"数据库错误",
+	"socialprofile-error-missing-arg":"缺少参数",
 	"socialprofile-error-unknown":"请刷新页面重试",
 	"echo-category-title-follow-msg":"关注",
 	"echo-category-title-board-msg":"留言",
