@@ -39,26 +39,26 @@ class SpecialGlobalSearch extends SpecialPage {
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
 		$out->addModuleStyles('ext.socialprofile.globalsearch.css');
+		$out->addModules('skins.bootstrapmediawiki.search');
 		$output = "";
 		$output .= "<form method='get' class='form-inline' action='/wiki/special:globalsearch' >
-			<input type='text' class='form-control' name='key' value='".$key."' >
-			<input class='mw-ui-button mw-ui-progressive' type='submit' value='搜索'>
-			</form>";
+			<div id='mw-search-top-table'><input type='text' class='form-control' name='key' value='".$key."' >
+			<input class='mw-ui-button mw-ui-progressive' type='submit' value='搜索'>";
 		if ( !is_null($key) ) {
 			$resJson = QueryInterface::pageSearch($key, $per_page, $star_page);
 			$resObj = json_decode($resJson);
 			// print_r($resObj);exit;
 			$resCount = empty($resObj->hits)?0:$resObj->hits;
 			if ( $resCount == 0 ) {
-				$output .= "暂时没有此词条";
+				$output .= "<div class=\"results-info\">暂时没有相关条目</div></div></form>";
 			}else{
 				if ( $page*$per_page > $resCount ) {
 					$endPageNum = $resCount;
 				}else{
 				    $endPageNum = ( $resCount < 10 )?$resCount:$per_page*$page;
 				}
-				$output .= "<div class=\"results-info\"><strong>".$resCount."</strong>条结果中的<strong>".($star_page+1)."<span>到</span>".$endPageNum."</strong>条</div>
-						<ul class=\"mw-search-results\">";
+				$output .= "<div class=\"results-info\"><strong>".$resCount."</strong>条结果中的<strong>".($star_page+1)."<span>到</span>".$endPageNum."</strong>条</div></div></form>
+						<div class=\"searchresults\"> <ul class=\"mw-search-results\">";
 				foreach ($resObj->sites as $value) {
 					$d = strtotime($value->timestamp);
 					$output .= "<li><div class=\"mw-search-result-heading\">
@@ -94,7 +94,7 @@ class SpecialGlobalSearch extends SpecialPage {
 								</div>
 								</li>";
 				}
-				$output .= '</ul>';
+				$output .= '</ul></div>';
 			}
 			/**
 			 * Build next/prev navigation links
@@ -211,7 +211,10 @@ class SpecialGlobalSearch extends SpecialPage {
 				}
 				$output .= '</nav></div>';
 			}
+		}else{
+		      $output .= "</div></form>";
 		}
+		
 		$out->addHTML( $output );
 	}
 }

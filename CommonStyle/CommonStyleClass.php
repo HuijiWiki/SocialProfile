@@ -118,7 +118,7 @@ class CommonStyle{
 		$content = '';
 		$title = ApiCommonStyle::getStyleTitle();
         $wp = new WikiPage($title);
-        if ($wp->exists() || isset($wp->getContent())){
+        if ($wp->exists() || null !== ($wp->getContent())){
         	$content = $wp->getContent()->getNativeData();
         }
         if ($content == ''){
