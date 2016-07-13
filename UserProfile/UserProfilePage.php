@@ -1475,7 +1475,7 @@ class UserProfilePage extends Article {
 				$user_title = Title::makeTitle( NS_USER, $item['username'] );
 				$user_title_2 = Title::makeTitle( NS_USER, $item['comment'] );
 
-				if ( $user_title_2->exists() ) {
+				if ($item['comment'] != ''){
 					$user_link_2 = Linker::linkKnown($user_title_2);
 				} else {
 					$user_link_2 = '';
