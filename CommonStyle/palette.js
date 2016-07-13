@@ -85,12 +85,12 @@ var palette = {
 		var page1 = new palette.Page( 'one', data1 );
 		var data2 = {
 			color:{
-				default: this.cssContent['@default']||"#fff",
-				primary: this.cssContent['@primary']||"#337ab7",
-				success: this.cssContent['@success']||"#5cb85c",
-				info: this.cssContent['@info']||"#5bc0de",
-				warning: this.cssContent['@warning']||"#f0ad4e",
-				danger: this.cssContent['@danger']||"#d9534f"				
+				default: this.cssContent['@brand-default']||"#fff",
+				primary: this.cssContent['@brand-primary']||"#337ab7",
+				success: this.cssContent['@brand-success']||"#5cb85c",
+				info: this.cssContent['@brand-info']||"#5bc0de",
+				warning: this.cssContent['@brand-warning']||"#f0ad4e",
+				danger: this.cssContent['@brand-danger']||"#d9534f"				
 			},
 			outline:"语义配色",
 			template: "page2.mustache",
