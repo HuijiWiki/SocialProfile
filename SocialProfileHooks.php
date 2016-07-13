@@ -232,7 +232,6 @@ class SocialProfileHooks {
 
 		// }
 	}
-
 	/**
 	 * onUserGroupsChanged
 	 * when user's sysop right have been remove, delete cache
