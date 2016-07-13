@@ -174,6 +174,9 @@ jQuery( document ).ready( function() {
                     return data;
                 },
                 display: function(value){
+                    if(!value){
+                        return;
+                    }
                     var year = new Date().getFullYear() - value.getFullYear();
                     var month = new Date().getMonth() - value.getMonth();
                     var day = new Date().getDate() - value.getDate();

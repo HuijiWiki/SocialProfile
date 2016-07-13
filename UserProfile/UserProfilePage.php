@@ -1415,7 +1415,7 @@ class UserProfilePage extends Article {
 	 * @param $user_name String: name of the user whose activity we want to fetch
 	 */
 	function getNonEditingActivity( $user_name ) {
-		global $wgUser, $wgUserProfileDisplay, $wgExtensionAssetsPath, $wgUploadPath;
+		global $wgUser, $wgUserProfileDisplay, $wgExtensionAssetsPath, $wgUploadPath, $wgHuijiPrefix;
 
 		// If not enabled in site settings, don't display
 		if ( $wgUserProfileDisplay['activity'] == false ) {
@@ -1462,25 +1462,28 @@ class UserProfilePage extends Article {
 			foreach ( $activity as $item ) {
 				$user_gift = new UserSystemGifts( $item['username'] );
 				$item_html = '';
-				$title = Title::makeTitle( $item['namespace'], $item['pagetitle'] );
+				if (array_key_exists('prefix', $item)){
+					$site_link = '<b><a href="' . HuijiPrefix::prefixToUrl($item['prefix']).'">'.HuijiPrefix::prefixToSiteName($item['prefix'])  . '</a></b> ';
+				} else {
+					$item['prefix'] = $wgHuijiPrefix;
+				}
+				if ($item['type'] == 'comment'){
+					$title = Title::makeTitle( $item['namespace'], $item['pagetitle'], "comment-".$item['id'], $item['prefix'] );
+				} else {
+					$title = Title::makeTitle( $item['namespace'], $item['pagetitle'], '', $item['prefix'] );
+				}
 				$user_title = Title::makeTitle( NS_USER, $item['username'] );
 				$user_title_2 = Title::makeTitle( NS_USER, $item['comment'] );
 
-				if ( $user_title_2 ) {
-					$user_link_2 = '<a href="' . htmlspecialchars( $user_title_2->getFullURL() ) .
-						'" rel="nofollow">' . $item['comment'] . '</a>';
+				if ( $user_title_2->exists() ) {
+					$user_link_2 = Linker::linkKnown($user_title_2);
+				} else {
+					$user_link_2 = '';
 				}
 				if (is_numeric($item['comment']) ){
 					$value = $item['comment'].'星';
 				}
 
-				$comment_url = '';
-				if ( $item['type'] == 'comment' ) {
-					$comment_url = "#comment-{$item['id']}";
-				}
-				if (array_key_exists('prefix', $item)){
-					$site_link = '<b><a href="' . HuijiPrefix::prefixToUrl($item['prefix']).'">'.HuijiPrefix::prefixToSiteName($item['prefix'])  . '</a></b> ';
-				}
 				if($title->inNamespace( NS_TOPIC ) || strpos($title->getText(), 'Topic:') === 0){
 					if (strpos($title->getText(), 'Topic:') === 0){
 						$strid = substr($title->getText(), 6);
@@ -1498,10 +1501,10 @@ class UserProfilePage extends Article {
 					// );
 					// $wgFlowDefaultWikiDb = $oldDB;
 					// Container::reset();
-					$page_link = '<b><a href="' . htmlspecialchars( $title->getFullURL() ) . "\">".$topicDisplayText."</a></b>";
+					
+					$page_link = Linker::LinkKnown( $title, $topicDisplayText);
 				}else {
-					$page_link = '<b><a href="' . htmlspecialchars( $title->getFullURL() ) .
-						"{$comment_url}\">" . $title->getPrefixedText() . '</a></b> ';
+					$page_link = Linker::LinkKnown( $title );
 				}
 
 				$b = new UserBoard(); // Easier than porting the time-related functions here

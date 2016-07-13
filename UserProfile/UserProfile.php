@@ -132,7 +132,7 @@ $wgHooks['ArticleFromTitle'][] = 'wfUserProfileFromTitle';
 function wfUserProfileFromTitle( &$title, &$article ) {
 	global $wgRequest, $wgOut, $wgHooks, $wgUserPageChoice;
 
-	if ( strpos( $title->getText(), '/' ) === false &&
+	if ( !$title->isSubpage() &&
 		( NS_USER == $title->getNamespace() || NS_USER_PROFILE == $title->getNamespace() )
 	) {
 		$show_user_page = false;

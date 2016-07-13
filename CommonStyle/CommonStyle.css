@@ -1,17 +1,27 @@
-.color-picker{
+#color-container{
+    height: 350px;
+    width: 100%;
+    z-index: 10000;
     position: fixed;
-    max-height: 500px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    width: 300px;
-    border: 1px solid #c0c0c0;
-    padding: 10px;
-    top: 110px;
+    bottom: 0;
+    left:0;
 }
-.color-picker-item{
-    border-bottom:1px solid #efefef;
-    margin-bottom: 10px;
+#wrapper{
+    margin-bottom:350px;
 }
+.color-picker-bottom > button{
+    margin-right: 0.3em;
+}
+.color-picker-bottom{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    padding: 0.5em 2em;
+    z-index: 100001;
+    height: 50px;
+}
+/*.color-picker-item{*/
+
 .color-picker-item .senior,.color-picker-item .set{
     display: none;
 }
@@ -42,9 +52,6 @@
     float: left;
     cursor: pointer;
     line-height: 1;
-}
-.senior-detail {
-    background: #fafafa;
 }
 .picker-img .file-btn{
     display: none;
@@ -77,13 +84,9 @@
     right: -20px;
     top: 0;
 }
-.senior .picker-color{
-    max-height: 500px!important;
-    overflow-y: auto;
-}
 .input-color {
     line-height: 1;
-    width: 80px;
+    width: 100px;
     float: left;
     margin: 10px;
     border: 1px solid #e0e0e0;
@@ -115,30 +118,50 @@
     margin-bottom: 10px;
     padding-left: 10px;
 }
-@media screen and (max-width: 767px) {
-    .color-picker{
-        width: 100%;
-    }
-    .color-box {
-        float: left;
-        margin-right: 5px;
-    }
-    .color-name{
-        margin-right: 0;
-    }
-    .color-picker{
-        position: static;
-        max-height: none;
-        border: none;
-    }
+/*.color-picker-bottom{*/
+    /*position: fixed;*/
+    /*bottom: 0;*/
+/*}*/
+// @media screen and (max-width: 767px) {
+//     .color-picker{
+//         width: 100%;
+//     }
+//     .color-box {
+//         float: left;
+//         margin-right: 5px;
+//     }
+//     .color-name{
+//         margin-right: 0;
+//     }
+//     .color-picker{
+//         position: static;
+//         max-height: none;
+//         border: none;
+//     }
 
-    .preview{
-        margin-left: 0;
-        display: none;
+//     .preview{
+//         margin-left: 0;
+//         display: none;
+//     }
+// }
+@media screen and (max-width: 767px){
+    #color-container{
+        top: 0;
+        bottom: 50px;
+        height: auto;
+    }
+    .color-picker-bottom{
+        width: auto;
+        right: 0;
+        height: 50px;
     }
 }
-@media screen and (min-height: 768px){
+@media screen and (min-width: 768px){
     .color-picker{
         max-height: 765px;
+    }
+    .picker-color li.separated{
+        width: 33%;
+        display: inline-block;
     }
 }

@@ -251,7 +251,9 @@ class SocialProfileHooks {
         	$prefix = $suffix = '';
         	if ($text == $html && class_exists("HuijiUser") && !in_array('no-designation', $options)){
         		$user = HuijiUser::newFromName( $target->getRootText() );
+        		MediaWiki\suppressWarnings();
         		list($prefix, $suffix) = $user->getDesignation(true);
+        		MediaWiki\restoreWarnings();
         		$ret = $prefix.$suffix."<a class='mw-userlink' rel='nofollow' href='".$target->getFullUrl()."'>{$target->getRootText()}</a>";
         		return false;
         	}
@@ -267,4 +269,56 @@ class SocialProfileHooks {
         return true;
     }
 
+
+	/**
+	 * Called by ArticleFromTitle hook
+	 * Calls UserProfilePage instead of standard article
+	 *
+	 * @param &$title Title object
+	 * @param &$article Article object
+	 * @return true
+	 */
+	public static function onArticleFromTitle( &$title, &$article, $context ) {
+		global $wgHuijiPrefix;
+		if ( $title->getFullText() == "Bootstrap:自定义主题" && $wgHuijiPrefix != 'templatemanager'){
+			$content = new WikitextContent('{{raw:templatemanager::自定义主题}}');
+			//$article = new Article(Title::makeTitle(NS_BOOTSTRAP, 'Bootstrap:自定义主题', '', 'templatemanager'));
+			$article = new ThemeDesigner($title);
+			$context->getOutput()->addHtml("<div id='color-container' class='darken'></div>");
+			// Prevents editing of userpage
+			if ( $context->getRequest()->getVal( 'action' ) == 'edit' ) {
+				$context->getOutput()->redirect( $title->getFullURL() );
+			}
+		}
+		return true;
+
+	}
+}
+class ThemeDesigner extends Article{
+	public function view(){
+		$user = $this->getContext()->getUser();
+		$permErrors = $this->getTitle()->getUserPermissionsErrors( 'editinterface', $user );
+		if ( count( $permErrors ) ) {
+	        throw new PermissionsError( 'editinterface', $permErrors );
+		}
+		$outputPage = $this->getContext()->getOutput();
+		$outputPage->setPageTitle( $this->getTitle()->getPrefixedText() );
+		$outputPage->addWikitext("{{raw:templatemanager::Bootstrap:自定义主题}}");
+		$outputPage->addModulestyles( array(
+			'socialprofile.commonstyle.css', 
+			'ext.comments.css'
+			)
+		);
+        $outputPage->addModules( array(
+        	'ext.socialprofile.commonstyle.js',
+        	'skins.bootstrapmediawiki.content',
+        	'ext.comments.js'
+        	)
+        );
+        if (class_exists('Vote')){
+        	$outputPage->addModulestyles('ext.voteNY.styles');
+        	$outputPage->addModules('ext.voteNY.scripts');
+        } 
+
+	}
 }

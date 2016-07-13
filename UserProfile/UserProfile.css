@@ -1183,3 +1183,6 @@ body>.tooltip.top .tooltip-arrow{
 	display: inline-block;
 	position: relative;
 }
+.editable-clear-x{
+    margin: 0;
+}

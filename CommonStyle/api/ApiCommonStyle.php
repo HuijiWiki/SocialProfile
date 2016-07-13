@@ -21,6 +21,14 @@ class ApiCommonStyle extends ApiBase {
             CommonStyle::clearCache();
             return true;
         }
+        if ($this->params['task'] == 'get'){
+            $result->addValue(null, $this->getModuleName(), CommonStyle::getStyle());
+            $title = self::getStyleTitle();
+            $count = $title->estimateRevisionCount();
+            $result->addValue(null, $this->getModuleName, $count );
+            $result->addValue(null, $this->getModuleName, $title->getFullUrl(['action'=>'history']) );
+            return true;
+        }
         if ($this->params['task'] == 'reset'){
             $title = self::getStyleTitle();
             $wp = new WikiPage($title);

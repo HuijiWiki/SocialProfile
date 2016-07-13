@@ -350,6 +350,7 @@ $wgHooks['ImagePageAfterImageLinks'][] = 'SocialProfileHooks::onImagePageAfterIm
 $wgHooks['UserGroupsChanged'][] = 'SocialProfileHooks::onUserGroupsChanged';
 $wgHooks['LinkBegin'][] = 'SocialProfileHooks::UserLinkBegin';
 // $wgHooks['SkinGetPageLink'][] = 'SocialProfileHooks::onSkinGetPageLink';
+$wgHooks['ArticleFromTitle'][] = 'SocialProfileHooks::onArticleFromTitle';
 
 // ResourceLoader module definitions for certain components which do not have
 // their own loader file
@@ -451,7 +452,8 @@ $wgResourceModules['ext.socialprofile.uploadfiles.js'] = array(
 $wgResourceModules['socialprofile.commonstyle.css'] = array(
 	'styles' => array('jcolor.min.css','CommonStyle.css'),
     'dependencies' => array(
-                    'skins.bootstrapmediawiki.top'
+                    'skins.bootstrapmediawiki.top',
+                    'oojs-ui'
                     ),
 	'localBasePath' => __DIR__ . '/CommonStyle',
 	'remoteExtPath' => 'SocialProfile/CommonStyle',
@@ -461,10 +463,25 @@ $wgResourceModules['socialprofile.commonstyle.css'] = array(
 $wgResourceModules['ext.socialprofile.commonstyle.js'] = array(
 	'scripts' =>array(
 		'jcolor.min.js',
-		'CommonStyle.js'
+		'CommonStyle.js',
+		'palette.js'
+	),
+	'templates' => array(
+		'page1.mustache' =>  '/pages/page1.mustache',
+		'page2.mustache' =>  '/pages/page2.mustache',
+		'page3.mustache' =>  '/pages/page3.mustache',
+		'page4.mustache' =>  '/pages/page4.mustache',
+		'page5.mustache' =>  '/pages/page5.mustache',
+		'page6.mustache' =>  '/pages/page6.mustache',
+		'dummypage.mustache' => '/pages/dummypage.mustache',
+		// 'page3.mustache' =>  '/pages/page3.mustache',
+		// 'page4.mustache' =>  '/pages/page4.mustache',
+		// 'page5.mustache' =>  '/pages/page5.mustache',
+		// 'page6.mustache' =>  '/pages/page6.mustache',
 	),
 	'dependencies' => array(
 		'mediawiki.notification',
+		'oojs-ui'
 	),
 	'localBasePath' => __DIR__ . '/CommonStyle',
 	'remoteExtPath' => 'SocialProfile/CommonStyle',

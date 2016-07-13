@@ -19,6 +19,14 @@ class SpecialCommonStyle extends SpecialPage{
             $out->permissionRequired( 'editinterface' );
             return;
         }
+        // $output = "<div id='color-container' class='darken'></div>";
+        if (class_exists('VoteStar')){
+            $out->addModules( 'ext.VoteNY.styles' );
+        }
+        $out->addModulestyles('socialprofile.commonstyle.css');
+        $out->addModules( 'ext.socialprofile.commonstyle.js' );
+        // $out->addHtml($output);
+        return true;
         $cssCon_1 = CommonStyle::getStyle();
         if ($cssCon_1 == false) {
             $isNew = 0;
