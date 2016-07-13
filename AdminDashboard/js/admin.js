@@ -63,7 +63,7 @@ var admin = {
         var base = this;
         $('.admin-member-header-right .label').each(function () {
             this.ondragstart = function(e){
-                e.dataTransfer.setData("Text","灰机wiki为何这么叼");
+                e.dataTransfer.setData("Text","灰机wiki为何这么叼");  //拖动到不可拖放区域新打开页面时搜索
                 base.dragcontent = e.target;
             }
         })
@@ -138,7 +138,6 @@ var admin = {
                     }
                 }else{
                     console.log(data);
-//                    mw.notification.notify('权限不足')
                     for(var i=0,j=li.find('input');i< j.length;i++){
                         if(j[i].getAttribute('data-name')==rights){
                             $(j[i]).parents('.checkbox').removeClass('disabled');
@@ -183,7 +182,6 @@ var admin = {
                     selector.remove();
                 }else{
                     console.log(data);
-//                    mw.notification.notify('权限不足');
                 }
             }
         })
@@ -290,7 +288,7 @@ var admin = {
                 }
 
             }
-        })
+        });
         return obj;
     },
     getLabelObj:function (rights){
@@ -387,7 +385,7 @@ var admin = {
                         name = $(e.target).parents('.setting-toggle .toggle').siblings('.setting-options').val();
                         value = $(e.target).attr('aria-checked')==='false'?1:0;    //点击时取的是变前的值，相反
                         base.sendSetting(name,value);
-                    })
+                    });
                 $(this).append(toggle.$element)
                 });
 
@@ -422,7 +420,6 @@ var admin = {
         this.loadMore();
         this.checkRights();
         this.closeEvent();
-        //this.sendSetting();
     },
     init: function(){
         this.domReady();

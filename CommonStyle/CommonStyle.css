@@ -122,28 +122,28 @@
     /*position: fixed;*/
     /*bottom: 0;*/
 /*}*/
-// @media screen and (max-width: 767px) {
-//     .color-picker{
-//         width: 100%;
-//     }
-//     .color-box {
-//         float: left;
-//         margin-right: 5px;
-//     }
-//     .color-name{
-//         margin-right: 0;
-//     }
-//     .color-picker{
-//         position: static;
-//         max-height: none;
-//         border: none;
-//     }
+/*// @media screen and (max-width: 767px) {*/
+/*//     .color-picker{*/
+/*//         width: 100%;*/
+/*//     }*/
+/*//     .color-box {*/
+/*//         float: left;*/
+/*//         margin-right: 5px;*/
+/*//     }*/
+/*//     .color-name{*/
+/*//         margin-right: 0;*/
+/*//     }*/
+/*//     .color-picker{*/
+/*//         position: static;*/
+/*//         max-height: none;*/
+/*//         border: none;*/
+/*//     }*/
 
-//     .preview{
-//         margin-left: 0;
-//         display: none;
-//     }
-// }
+/*//     .preview{*/
+/*//         margin-left: 0;*/
+/*//         display: none;*/
+/*//     }*/
+/*// }*/
 @media screen and (max-width: 767px){
     #color-container{
         top: 0;
