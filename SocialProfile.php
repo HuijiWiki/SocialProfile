@@ -41,7 +41,7 @@ $wgMessagesDirs['SocialProfileVideos'] = __DIR__ . '/Videos/i18n';
 $wgExtensionMessagesFiles['SocialProfileNamespaces'] = __DIR__ . '/SocialProfile.namespaces.php';
 $wgExtensionMessagesFiles['AvatarMagic'] = __DIR__ . '/UserProfile/Avatar.magic.i18n.php';
 // $wgMessagesDirs['SocialProfileTransModal'] = __DIR__ . '/TransModal/i18n';
-$wgMessagesDirs['SocialProfileCommonStyle'] = __DIR__ . '/CommonStyle/i18n';
+
 $wgMessagesDirs['SocialProfileDonate'] = __DIR__ . '/Donate/i18n';
 
 // Classes to be autoloaded
@@ -115,16 +115,16 @@ $wgAutoloadClasses['WikiDoctor'] = __DIR__ . '/AdminDashboard/WikiDoctor.php';
 $wgAutoloadClasses['SpecialDesignation'] = __DIR__ . '/UserGifts/SpecialDesignation.php';
 $wgAutoloadClasses['SpecialGiveSystemGift'] = __DIR__ . '/SystemGifts/SpecialGiveSystemGift.php';
 // $wgAutoloadClasses['SpecialTransModal'] = __DIR__ . '/TransModal/SpecialTransModal.php';
-$wgAutoloadClasses['SpecialCommonStyle'] = __DIR__ . '/CommonStyle/SpecialCommonStyle.php';
-$wgAutoloadClasses['CommonStyle'] = __DIR__ . '/CommonStyle/CommonStyleClass.php';
+// $wgAutoloadClasses['SpecialCommonStyle'] = __DIR__ . '/CommonStyle/SpecialCommonStyle.php';
+// $wgAutoloadClasses['CommonStyle'] = __DIR__ . '/CommonStyle/CommonStyleClass.php';
 $wgAutoloadClasses['SpecialReissueSystemGift'] = __DIR__ . '/SystemGifts/SpecialReissueSystemGift.php';
 $wgAutoloadClasses['UploadUtil'] = __DIR__.'/UploadFiles/UploadUtil.php';
 $wgAutoloadClasses['SpecialDonate'] = __DIR__ . '/Donate/SpecialDonate.php';
 $wgAutoloadClasses['UserDonation'] = __DIR__ . '/Donate/UserDonationClass.php';
 $wgAutoloadClasses['SpecialReturnUrl'] = __DIR__ . '/Donate/SpecialReturnUrl.php';
 $wgAutoloadClasses['SpecialNotifyUrl'] = __DIR__ . '/Donate/SpecialNotifyUrl.php';
-$wgAutoloadClasses['SpecialDynamicLess'] = __DIR__ . '/CommonStyle/SpecialDynamicLess.php';
-$wgAutoloadClasses['ApiCommonStyle'] = __DIR__ . '/CommonStyle/api/ApiCommonStyle.php';
+// $wgAutoloadClasses['SpecialDynamicLess'] = __DIR__ . '/CommonStyle/SpecialDynamicLess.php';
+// $wgAutoloadClasses['ApiCommonStyle'] = __DIR__ . '/CommonStyle/api/ApiCommonStyle.php';
 // New special pages
 // $wgSpecialPages['AddRelationship'] = 'SpecialAddRelationship';
 // $wgSpecialPages['EditProfile'] = 'SpecialEditProfile';
@@ -166,7 +166,7 @@ $wgSpecialPages['Designation'] = 'SpecialDesignation';
 // $wgSpecialPages['FamilyTree'] = 'SpecialFamilyTree';
 $wgSpecialPages['GiveSystemGift'] = 'SpecialGiveSystemGift';
 // $wgSpecialPages['TransModal'] = 'SpecialTransModal';
-$wgSpecialPages['CommonStyle'] = 'SpecialCommonStyle';
+// $wgSpecialPages['CommonStyle'] = 'SpecialCommonStyle';
 $wgSpecialPages['ReissueSystemGift'] = 'SpecialReissueSystemGift';
 $wgSpecialPages['Donate'] = 'SpecialDonate';
 $wgSpecialPages['ReturnUrl'] = 'SpecialReturnUrl';
@@ -187,7 +187,7 @@ require_once( "$IP/extensions/SocialProfile/UserProfile/OauthLogin_AjaxFunctions
 require_once( "$IP/extensions/SocialProfile/UserGifts/UserGift_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/Videos/UploadVideos_AjaxFunctions.php" );
 require_once( "$IP/extensions/SocialProfile/AdminDashboard/AdminDashboard_AjaxFunctions.php" );
-require_once( "$IP/extensions/SocialProfile/CommonStyle/CommonStyle_AjaxFunctions.php" );
+// require_once( "$IP/extensions/SocialProfile/CommonStyle/CommonStyle_AjaxFunctions.php" );
 // What to display on social profile pages by default?
 $wgUserProfileDisplay['board'] = true;
 $wgUserProfileDisplay['foes'] = false;
@@ -447,46 +447,6 @@ $wgResourceModules['ext.socialprofile.uploadfiles.js'] = array(
 	'remoteExtPath' => 'SocialProfile/UploadFiles',
 	'position' => 'top',
 );
-
-//commonstyle
-$wgResourceModules['socialprofile.commonstyle.css'] = array(
-	'styles' => array('jcolor.min.css','CommonStyle.css'),
-    'dependencies' => array(
-                    'skins.bootstrapmediawiki.top',
-                    'oojs-ui'
-                    ),
-	'localBasePath' => __DIR__ . '/CommonStyle',
-	'remoteExtPath' => 'SocialProfile/CommonStyle',
-	'position' => 'top',
-);
-
-$wgResourceModules['ext.socialprofile.commonstyle.js'] = array(
-	'scripts' =>array(
-		'jcolor.min.js',
-		'CommonStyle.js',
-		'palette.js'
-	),
-	'templates' => array(
-		'page1.mustache' =>  '/pages/page1.mustache',
-		'page2.mustache' =>  '/pages/page2.mustache',
-		'page3.mustache' =>  '/pages/page3.mustache',
-		'page4.mustache' =>  '/pages/page4.mustache',
-		'page5.mustache' =>  '/pages/page5.mustache',
-		'page6.mustache' =>  '/pages/page6.mustache',
-		'dummypage.mustache' => '/pages/dummypage.mustache',
-		// 'page3.mustache' =>  '/pages/page3.mustache',
-		// 'page4.mustache' =>  '/pages/page4.mustache',
-		// 'page5.mustache' =>  '/pages/page5.mustache',
-		// 'page6.mustache' =>  '/pages/page6.mustache',
-	),
-	'dependencies' => array(
-		'mediawiki.notification',
-		'oojs-ui'
-	),
-	'localBasePath' => __DIR__ . '/CommonStyle',
-	'remoteExtPath' => 'SocialProfile/CommonStyle',
-	'position' => 'bottom',
-);
 //transmodal
 $wgResourceModules['ext.socialprofile.transmodal.css'] = array(
 	'styles' => 'TransModal.css',
@@ -742,7 +702,7 @@ $wgAutoloadClasses['GetUserFollowRecommend'] = __DIR__ . '/UserUserFollows/api/G
 $wgAPIModules['getuserfollowrecommend'] = 'GetUserFollowRecommend';
 $wgAutoloadClasses['GetFollowingUser'] = __DIR__ . '/UserUserFollows/api/GetFollowingUser.api.php';
 $wgAPIModules['getfollowinguser'] = 'GetFollowingUser';
-$wgAPIModules['commonstyle'] = "ApiCommonStyle";
+// $wgAPIModules['commonstyle'] = "ApiCommonStyle";
 
 //Log
 global $wgLogTypes, $wgLogNames, $wgLogHeaders, $wgLogActions;
@@ -759,9 +719,3 @@ $wgLogHeaders['Donate']         = 'donatepagetext';
 $wgLogActions['Donate/addDonation'] = 'donatelogentry';
 $wgLogActions['Donate/setSiteProperty'] = 'donatelogentry';
 
-//add_user_donate_log
-$wgLogTypes[]                    = 'CommonStyle';
-$wgLogNames['CommonStyle']           = 'commonstylepage';
-$wgLogHeaders['CommonStyle']         = 'commonstylepagetext';
-$wgLogActions['CommonStyle/addDescription'] = 'commonstylelogentry';
-$wgLogActions['CommonStyle/setSiteProperty'] = 'commonstylelogentry';

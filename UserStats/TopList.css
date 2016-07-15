@@ -28,14 +28,16 @@
 .top-fan i.red {
 	color: darkred;
 }
-
-.top-fan i {
+.top-fan-row{
+    padding: 5px;
+}
+.top-fan i{
     float: right;
     margin-top: 5px;
-    width: 40px;
+    margin-right: 60px;
     font-weight: 100;
+    max-width: 100px;
 }
-
 .top-fan img {
 	vertical-align: middle;
 	padding-right: 4px;
