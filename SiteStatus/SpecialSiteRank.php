@@ -99,7 +99,7 @@ class SpecialSiteRank extends SpecialPage {
 			$output .= "<div class=\"top-ranking-row\">
 				<span class=\"top-ranking-num\">{$value['site_rank']}.</span>
 				<span class=\"top-ranking-name\"><a href='" . HuijiPrefix::prefixToUrl($value['site_prefix']) . "'>" . (new wSiteAvatar($value['site_prefix'], 's'))->getAvatarHtml() .
-				HuijiPrefix::prefixToSiteName($value['site_prefix']) ."</a><i style=\"".$style."\" class= \"".$change." hidden-sm hidden-xs\">".$diff."</i><i style=\"".$style."\" class=\"fa fa-flag-checkered hidden-sm hidden-xs\">".isset($value['best_rank'])?$value['best_rank']:"新"."</i></span><span class=\"top-ranking-points\">".$value['site_score'].$unit.'</sp>';
+				HuijiPrefix::prefixToSiteName($value['site_prefix']) ."</a><i style=\"".$style."\" class= \"".$change." hidden-sm hidden-xs\">".$diff."</i><i style=\"".$style."\" class=\"fa fa-flag-checkered hidden-sm hidden-xs\">".(isset($value['best_rank'])?$value['best_rank']:"新")."</i></span><span class=\"top-ranking-points\">".$value['site_score'].$unit.'</sp>';
 			$output .= '<div class="cleared"></div>';
 			$output .= '</div>';
 		}
