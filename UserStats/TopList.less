@@ -1,0 +1,176 @@
+/** Styles for Special:TopUsers etc. **/
+.dropdown{
+    button{
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    ul{
+        margin-left: auto;
+        margin-right: auto;        
+    }
+    .dropdown-menu{
+        float:none;
+        width: 30%;
+        left: 35%;
+        @media screen {
+            @media (max-width: 767px){
+                left: 5%;
+                width: 90%;
+            }
+        } 
+        min-width: 250px;
+    }
+
+}
+.topNameColor (@n) when (iscolor(@n)) {
+  & when (lightness(@n) >= 50%) {
+    color: darken(@n, 10%);
+  }
+  & when (lightness(@n) < 50%) {
+    color: lighten(@n, 10%);
+  }
+}
+.top-users,.top-ranking{
+	margin: 15px auto 0px auto;
+	width: 90%;
+	max-width: 1100px;
+	min-width: 300px;
+	.top-fan-row,.top-ranking-row {
+        margin: 0px 0px 0px 0px;
+        clear: both;
+        width: 100%;
+        max-width: 1100px;
+        min-width: 250px;
+        padding: 8px;
+        border-bottom: 1px solid lighten(@main-base, 62%);
+    }
+    .top-fan-row:after,.top-ranking-row:after {
+        content: '';
+        display: block;
+        clear: both;   
+    }
+    .top-fan-row.active,.top-ranking-row:active {
+        border-left: 3px solid @well;
+        padding-left: 2px;
+    }
+    
+    .top-fan-row:hover,.top-ranking-row:hover {
+        background-color: @well;
+    }
+    .top-fan-num,.top-ranking-num {
+        font-weight: bold;
+        font-size: 18px;
+        color: #DCDCDC;
+        float: left;
+        max-width: 45px;
+        width: 10%;
+        padding: 3px 0px 0px 0px;
+        margin: 0px 0px 0px 5px;
+    }
+    .top-fan,.top-ranking-name {
+        width: 50%;
+        padding-right: 10px;
+        font-weight: bold;
+        font-size: 90%;
+        line-height: 30px;
+        float: left;
+        position: relative;
+    }
+    
+    .top-fan a,.top-ranking-name a {
+        font-size: 13px;
+        text-decoration: none;
+    }
+    .top-ranking-name a:nth-child(2) {
+        margin-left: 40px;
+        line-height: 41px;
+        display: inline-block;
+    }
+    
+    .top-fan i.green,.top-ranking-name i.green {
+        color: green;
+    }
+    
+    .top-fan i.red,.top-ranking-name i.red {
+        color: darkred;
+    }
+    .top-fan i,.top-ranking-name i{
+        margin-top: 11px;
+        margin-right: 60px;
+        font-weight: 100;
+        max-width: 100px;
+        float: right;
+    }
+    .top-ranking-name2 i{
+        margin-top: 6px;
+        margin-left: 10px;
+        float: none;
+    }
+    .top-fan i:before,.top-ranking-name i:before{
+        margin-right: 2px;
+    }
+    .top-fan img,.top-ranking-name img {
+        vertical-align: middle;
+        padding-right: 4px;
+    }
+    .top-ranking-name2 img{
+         position: absolute;
+        top: 50%;
+        margin-top: -15px;
+    }
+    .top-fan-points,.top-ranking-points {
+        //.topNameColor(@bg-inner);
+        //color: @bg-inner;
+        float: right;
+        font-size: 13px;
+        height: 30px;
+        width: 40%;
+        max-width: 100px;
+        min-width: 50px;
+        line-height: 30px;
+    }
+    .top-ranking-points2{
+        line-height: 41px;
+    }
+}
+
+
+.top-fan-level {
+	font-size: 16px;
+	font-weight: 800;
+	color: darken(@well, 20%);
+	margin: 0px 0px 10px 0px;
+}
+
+.top-fan-nav h1 {
+	font-size: 16px;
+	color: #333333;
+	padding: 0px 0px 3px 0px;
+	border-bottom: 1px solid darken(@well, 20%);
+	margin: 0px 0px 10px 0px !important;
+}
+
+.top-fan-level {
+	font-size: 16px;
+	font-weight: 800;
+	color: #797979;
+	margin: 0px 0px 10px 0px;
+}
+
+.top-fan-nav {
+	float: right;
+	margin: 10px 0px 0px 0px;
+	width: 200px;
+	padding: 5px;
+}
+
+.top-fan-nav a {
+	font-weight: bold;
+	text-decoration: none;
+}
+
+/* A "Top users by category" <h1> on Special:TopFansByStatistics and Special:TopUsersRecent */
+.top-title {
+	margin-top: 15px !important;
+}
