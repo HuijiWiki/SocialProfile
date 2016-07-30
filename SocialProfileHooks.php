@@ -252,7 +252,11 @@ class SocialProfileHooks {
         	if ($text == $html && class_exists("HuijiUser") && !in_array('no-designation', $options)){
         		$user = HuijiUser::newFromName( $target->getRootText() );
         		MediaWiki\suppressWarnings();
-        		list($prefix, $suffix) = $user->getDesignation(true);
+			if (isset($user)){
+        			list($prefix, $suffix) = $user->getDesignation(true);
+			} else {
+				list($prefix, $suffix) = array( '', '');
+			}
         		MediaWiki\restoreWarnings();
         		$ret = $prefix.$suffix."<a class='mw-userlink' rel='nofollow' title='{$text}' href='".$target->getFullUrl()."'>{$target->getRootText()}</a>";
         		return false;
