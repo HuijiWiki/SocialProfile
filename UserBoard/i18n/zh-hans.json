@@ -58,5 +58,8 @@
     "notification-board-msg-mention-link": "提到了你",
     "notification-board-email-subject": "{{SITENAME}}的$1$2。",
     "notification-board-email-body": "$1在$3$2。",
-    "notification-board-email-batch-body":"$1在$3$2。"
+    "notification-board-email-batch-body":"$1在$3$2。",
+    "notification-header-board-msg":"$1在您的留言板留言了。",
+    "notification-header-board-metioned": "$1在与$3的对话中提及了您。",
+    "notification-bundle-header-board-msg": "您有$1条留言板消息。"
 }

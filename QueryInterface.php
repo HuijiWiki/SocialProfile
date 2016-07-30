@@ -26,10 +26,6 @@ class QueryInterface
 	return $out; 
 	}
 
-
-
-	
-
 	static function pageSearch($content,$size, $offset)
 	{
 		$data =json_encode(array('content'=>$content,'size'=>$size,'offset'=>$offset));

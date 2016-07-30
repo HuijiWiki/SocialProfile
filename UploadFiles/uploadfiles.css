@@ -28,6 +28,14 @@ span.gray{
     padding: 100px;
     width: 500px;
     margin: 20px auto;
+    -webkit-user-select: none;/*禁用手机浏览器的用户选择功能 */
+	-moz-user-select: none;
+}
+@media (max-width: 540px){
+	#drag-area{
+	width: 290px;
+	padding: 40px;
+}
 }
 #wiki-body #drag-area p{
     color: #999;

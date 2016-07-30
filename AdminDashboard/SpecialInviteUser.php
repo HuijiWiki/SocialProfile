@@ -7,6 +7,9 @@ class SpecialInviteUser extends UnlistedSpecialPage{
     function __construct(){
         parent::__construct( 'InviteUser' );
     }
+    public function getGroup(){
+        return 'user';
+    }
 
     public function execute( $params ) {
         global $wgUser, $wgHuijiPrefix, $wgLocalFileRepo, $wgContLang;

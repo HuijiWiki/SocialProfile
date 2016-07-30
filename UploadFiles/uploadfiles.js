@@ -14,7 +14,10 @@ var uploadfiles = {
     filter: null,
     //触发隐藏input的事件
     funTrigger:function(){
-       $('#file').trigger('click');
+    	$('#file').trigger('click');
+    },
+    funTriggerMobile:function(){
+    	$('#file').trigger('touchstart');
     },
     funDrag: function(e){
         //阻止浏览器默认拖拽行为
@@ -345,6 +348,7 @@ var uploadfiles = {
 
         if(this.fileBtn){
             this.fileBtn.addEventListener('click', function(){ self.funTrigger();}, false)
+            this.fileBtn.addEventListener('touchstart', function(){ self.funTriggerMobile();}, false)
         }
 
         if (this.fileInput) {
@@ -357,7 +361,22 @@ var uploadfiles = {
         this.funAddEvent();
     }
 };
+var mobile = {
+	mobile_upload: function  () {
+		if(document.body.scrollWidth <= 540){
+			$('.file-btn').html('选择手机上的文件');
+			$('#drag-area p').hide();
+		}else{
+			$('.file-btn').html('选择电脑上的文件');
+			$('#drag-area p').show();
+		}
+	}
+}
 $(function(){
     mw.notification.autoHideSeconds = 3;
     uploadfiles.init();
+    mobile.mobile_upload();
+	$(window).resize(function(){
+		mobile.mobile_upload();
+	});
 });

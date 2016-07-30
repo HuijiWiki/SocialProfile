@@ -44,9 +44,9 @@ class UserGifts {
 			), __METHOD__
 		);
 
-		$ug_gift_id = $dbw->insertId();
+		$ug_id = $dbw->insertId();
 		$this->incGiftGivenCount( $gift_id );
-		$this->sendGiftNotificationEmail( $user_id_to, $this->user_name, $gift_id, $type );
+		$this->sendGiftNotificationEmail( $user_id_to, $this->user_name, $gift_id, $message );
 
 		// Add to new gift count cache for receiving user
 		$this->incNewGiftCount( $user_id_to );
@@ -56,7 +56,7 @@ class UserGifts {
 
 		$stats = new UserStatsTrack( $this->user_id, $this->user_name );
 		$stats->incStatField( 'gift_sent' );
-		return $ug_gift_id;
+		return $ug_id;
 	}
 
 	/**
@@ -66,11 +66,11 @@ class UserGifts {
 	 *
 	 * @param $user_id_to Integer: user ID of the receiver of the gift
 	 * @param $user_from Mixed: name of the user who sent the gift
-	 * @param $gift_id Integer: ID number of the given gift
-	 * @param $type Integer: gift type; unused
+	 * @param $gift_id Integer: ID number of the given gift in user gift table
+	 * @param $message  Mixed: message as supplied by the sender
 	 */
-	public function sendGiftNotificationEmail( $user_id_to, $user_from, $gift_id, $type ) {
-		$gift = Gifts::getGift( $gift_id );
+	public function sendGiftNotificationEmail( $user_id_to, $user_from, $gift_id, $message ) {
+
 		$user = User::newFromId( $user_id_to );
 		$user->loadFromDatabase();
 
@@ -80,8 +80,11 @@ class UserGifts {
 		EchoEvent::create( array(
 		     'type' => 'gift-receive',
 		     'extra' => array(
-		         'gift-user-id' => $user_id_to,  
-		         'gift-id' => $gift_id,
+		     	'gift-user-name-from' => $user_from,
+		     	'gift_description' => $message,
+		        'gift-user-id' => $user_id_to,  
+		        'gift-id' => $gift_id,
+		        'user' => $user->getName()
 		     ),
 		     'agent' => $agent,
 		     'title' => $giftsLink,
@@ -497,22 +500,14 @@ class UserGifts {
             'tooltip' => 'echo-pref-tooltip-gift-receive',
         );
         $notifications['gift-receive'] = array(
-        	'primary-link' => array('message' => 'notification-link-text-respond-to-user', 'destination' => 'gift-page'),
-            'category' => 'gift-receive',
-            'group' => 'positive',
-            'formatter-class' => 'EchoGiftFormatter',
-            'title-message' => 'notification-gift',
-            'title-params' => array( 'agent', 'giftview', 'main-title-text' ),
-            'flyout-message' => 'notification-gift-flyout',
-            'flyout-params' => array( 'agent', 'giftview', 'main-title-text' ),
-            'payload' => array( 'summary' ),
-            'email-subject-message' => 'notification-gift-email-subject',
-            'email-subject-params' => array( 'agent' ),
-            'email-body-message' => 'notification-gift-email-body',
-            'email-body-params' => array( 'agent', 'giftview', 'main-title-text', 'email-footer' ),
-            'email-body-batch-message' => 'notification-system-gift-email-batch-body',
-            'email-body-batch-params' => array( 'agent', 'main-title-text' ),
-            'icon' => 'gratitude',
+        	'category' => 'gift-receive',
+        	'group' => 'positive',
+        	'section' => 'alert',
+        	'presentation-model' => 'EchoUserGiftPresentationModel',
+        	'bundle' => [
+        		'web' => true,
+        		'expandable' => true,
+        	]
         );
         return true;
     }
@@ -709,59 +704,59 @@ class UserGifts {
 	}
 
 }
-class EchoGiftFormatter extends EchoCommentFormatter {
-	/**
-	 * Helper function for getLink()
-	 *
-	 * @param \EchoEvent $event
-	 * @param \User $user The user receiving the notification
-	 * @param string $destination The destination type for the link
-	 * @return array including target and query parameters
-	 * @throws FlowException
-	 */
-	protected function getLinkParams( $event, $user, $destination ) {
-		// Set up link parameters based on the destination (or pass to parent)
-		switch ( $destination ) {
-			case 'gift-page':
-				$titleData = $event->getTitle();
-				$eventData = $event->getExtra();
-	            if ( !isset( $eventData['gift-id'])  ) {
-	                return array($titleData, array());
-	            } else {
-        			return array($titleData, array('fromnotif' => 1, 'gift_id' => $eventData['gift-id']));
-        		}
-			default:
-				return parent::getLinkParams( $event, $user, $destination );
+class EchoUserGiftPresentationModel extends EchoEventPresentationModel {
+	public function canRender() {
+		return (bool)$this->event->getTitle();
+	}
+	public function getIconType() {
+		return 'thanks';
+	}
+	public function getHeaderMessage() {
+		if ( $this->isBundled() ) {
+			$msg = $this->msg( 'notification-bundle-header-gift-receive' );
+			$msg->params( $this->getBundleCount() );
+			return $msg;
+		} else {
+			$msg = parent::getHeaderMessage();
+			return $msg;
 		}
 	}
-   /**
-     * @param $event EchoEvent
-     * @param $param
-     * @param $message Message
-     * @param $user User
-     */
-    protected function processParam( $event, $param, $message, $user ) {
-        if ( $param === 'giftview' ) {
-            $eventData = $event->getExtra();
-            if ( !isset( $eventData['gift-id']) ) {
-                $message->params( '' );
-                return;
-            }
-            $this->setTitleLink(
-                $event,
-                $message,
-                array(
-                    'class' => 'mw-echo-gift-view',
-                    'linkText' => wfMessage( 'notification-gift-view-link' )->text(),
-                    'param' => array(
-                        'gift_id' => $eventData['gift-id'],
-                        'user'=> $user->getName()
-                    )
-                )
-            );
-        } else {
-            parent::processParam( $event, $param, $message, $user );
-        }
-    }
+	public function getCompactHeaderMessage() {
+		$msg = parent::getCompactHeaderMessage();
+		$msg->params( $this->getViewingUserForGender() );
+		return $msg;
+	}
+	public function getBodyMessage() {
+		$excerpt = $this->event->getExtraParam( 'gift-description' );
+		if ( $excerpt ) {
+			$msg = new RawMessage( '$1' );
+			$msg->plaintextParams( $excerpt );
+			return $msg;
+		}
+	}
+	public function getPrimaryLink() {
+		$title = $this->event->getTitle();
+		// Make a link to #flow-post-{postid}
+		$title = Title::makeTitle(
+			$title->getNamespace(),
+			$title->getDBKey()
+		);
+		$p1 = $this->event->getExtraParam('gift-user-name-from');
+		return [
+			'url' => $title->getFullURL( [
+                        'gift_id' => $this->event->getExtraParam('gift-id'),
+                        'user' => $this->event->getExtraParam('user'),
+			] ),
+			'label' => $this->msg( 'notification-view-gift' )->text(),
+		];
+	}
+	public function getSecondaryLinks() {
+		return [ $this->getAgentLink(), array(
+		    'url' => SpecialPage::getTitleFor('ViewGifts')->getFullURL(),
+		    'label' => $this->msg('notification-view-all-gifts')->text(),
+		    // 'description' => $this->msg('notification-view-all-gifts')->text(),
+		    'icon' => false,
+		    'prioritized' => false
+		) ];
+	}
 }
-

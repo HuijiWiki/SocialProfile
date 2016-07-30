@@ -1,5 +1,5 @@
 <?php 
-use \OSS;
+use \OSS as Oss;
 /**
  * wAvatar class - used to display avatars
  * Example usage:

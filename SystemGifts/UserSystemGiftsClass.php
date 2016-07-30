@@ -65,7 +65,7 @@ class UserSystemGifts {
 			$this->incNewSystemGiftCount( $this->user_id );
 
 			if ( $email && !empty( $sg_gift_id ) ) {
-				$this->sendGiftNotificationEmail( $this->user_id, $sg_gift_id );
+				$this->sendGiftNotificationEmail( $this->user_id, $gift_id, $gift_info['gift_description'] );
 			}
 			$wgMemc->delete( wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'system_gifts', $this->user_id ) );
 			return $sg_gift_id;
@@ -82,8 +82,9 @@ class UserSystemGifts {
 	 *
 	 * @param $user_id_to Integer: user ID of the recipient
 	 * @param $gift_id Integer: system gift ID number
+	 * @param $gift_description Mixed:  gift description
 	 */
-	public function sendGiftNotificationEmail( $user_id_to, $gift_id ) {
+	public function sendGiftNotificationEmail( $user_id_to, $gift_id, $gift_description ) {
 		$gift = SystemGifts::getGift( $gift_id );
 		$user = User::newFromId( $user_id_to );
 		$user->loadFromDatabase();
@@ -94,39 +95,13 @@ class UserSystemGifts {
 		EchoEvent::create( array(
 		     'type' => 'system-gift-receive',
 		     'extra' => array(
+		     	 'user-name' => $user->getName(),
 		         'gift-user-id' => $user_id_to,  
 		         'gift-id' => $gift_id,
+		         'gift-description' => $gift_description
 		     ),
 		     'title' => $giftsLink,
 		) );
-		// if ( $user->isEmailConfirmed() && $user->getIntOption( 'notifygift', 1 ) ) {
-		// 	$gifts_link = SpecialPage::getTitleFor( 'ViewSystemGifts' );
-		// 	$update_profile_link = SpecialPage::getTitleFor( 'UpdateProfile' );
-		// 	$subject = wfMessage( 'system_gift_received_subject',
-		// 		$gift['gift_name']
-		// 	)->text();
-		// 	if ( trim( $user->getRealName() ) ) {
-		// 		$name = $user->getRealName();
-		// 	} else {
-		// 		$name = $user->getName();
-		// 	}
-		// 	$body = wfMessage( 'system_gift_received_body',
-		// 		$name,
-		// 		$gift['gift_name'],
-		// 		$gift['gift_description'],
-		// 		$gifts_link->getFullURL(),
-		// 		$update_profile_link->getFullURL()
-		// 	)->text();
-
-		// 	// The email contains HTML, so actually send it out as such, too.
-		// 	// That's why this no longer uses User::sendMail().
-		// 	// @see https://bugzilla.wikimedia.org/show_bug.cgi?id=68045
-		// 	global $wgPasswordSender;
-		// 	$sender = new MailAddress( $wgPasswordSender,
-		// 		wfMessage( 'emailsender' )->inContentLanguage()->text() );
-		// 	$to = new MailAddress( $user );
-		// 	UserMailer::send( $to, $sender, $subject, $body, null, 'text/html; charset=UTF-8' );
-		// }
 	}
 
 	/**
@@ -540,23 +515,14 @@ class UserSystemGifts {
             'tooltip' => 'echo-pref-tooltip-system-gift-receive',
         );
         $notifications['system-gift-receive'] = array(
-        	'primary-link' => array('message' => 'notification-link-text-respond-to-user', 'destination' => 'gift-page'),
-            'category' => 'system-gift-receive',
-            'group' => 'positive',
-            'formatter-class' => 'EchoSystemGiftFormatter',
-            'title-message' => 'notification-system-gift',
-            'title-params' => array(  'giftview', 'main-title-text' ),
-            'flyout-message' => 'notification-system-gift-flyout',
-            'flyout-params' => array( 'giftview', 'main-title-text' ),
-            'payload' => array( 'summary' ),
-            'email-subject-message' => 'notification-system-gift-email-subject',
-            'email-subject-params' => array( 'agent' ),
-            'email-body-message' => 'notification-system-gift-email-body',
-            'email-body-params' => array( 'giftview', 'main-title-text', 'email-footer' ),
-            'email-body-batch-message' => 'notification-system-gift-email-batch-body',
-            'email-body-batch-params' => array( 'main-title-text' ),
-            'icon' => 'featured',
-            'section' => 'alert',
+        	'category' => 'system-gift-receive',
+        	'group' => 'positive',
+        	'section' => 'alert',
+        	'presentation-model' => 'EchoSystemGiftPresentationModel',
+        	'bundle' => [
+        		'web' => true,
+        		'expandable' => true,
+        	]
         );
         return true;
     }
@@ -584,64 +550,58 @@ class UserSystemGifts {
 	}
 
 }
-class EchoSystemGiftFormatter extends EchoCommentFormatter {
-	/**
-	 * Helper function for getLink()
-	 *
-	 * @param \EchoEvent $event
-	 * @param \User $user The user receiving the notification
-	 * @param string $destination The destination type for the link
-	 * @return array including target and query parameters
-	 * @throws FlowException
-	 */
-	protected function getLinkParams( $event, $user, $destination ) {
-		// Set up link parameters based on the destination (or pass to parent)
-		global $wgUser;
-		switch ( $destination ) {
-			case 'gift-page':
-				$titleData = $event->getTitle();
-				$eventData = $event->getExtra();
-				$usg = new UserSystemGifts( $wgUser->getName() );
-				$gift_id = $usg->getGiftIdByGetId( $eventData['gift-id'] );
-	            if ( !isset( $eventData['gift-id'])) {
-	                return array($titleData, array());
-	            } else {
-        			return array($titleData, array('user' => $wgUser->getName(), 'gift_id' => $gift_id));
-        		}
-			default:
-				return parent::getLinkParams( $event, $user, $destination );
+class EchoSystemGiftPresentationModel extends EchoEventPresentationModel {
+	public function canRender() {
+		return (bool)$this->event->getTitle();
+	}
+	public function getIconType() {
+		return 'thanks';
+	}
+	public function getHeaderMessage() {
+		if ( $this->isBundled() ) {
+			$msg = $this->msg( 'notification-bundle-header-system-gift-receive' );
+			$msg->params( $this->getBundleCount() );
+			return $msg;
+		} else {
+			$msg = parent::getHeaderMessage();
+			return $msg;
 		}
 	}
-   /**
-     * @param $event EchoEvent
-     * @param $param
-     * @param $message Message
-     * @param $user User
-     */
-    protected function processParam( $event, $param, $message, $user ) {
-    	global $wgUser;
-        if ( $param === 'giftview' ) {
-            $eventData = $event->getExtra();
-            if ( !isset( $eventData['gift-id']) ) {
-                $message->params( '' );
-                return;
-            }
-            $usg = new UserSystemGifts( $wgUser->getName() );
-			$gift_id = $usg->getGiftIdByGetId( $eventData['gift-id'] );
-            $this->setTitleLink(
-                $event,
-                $message,
-                array(
-                    'class' => 'mw-echo-system-gift-view',
-                    'linkText' => wfMessage( 'notification-system-gift-view-link' )->text(),
-                    'param' => array(
-                    	'user' => $wgUser->getName(),
-                        'gift_id' => $gift_id,
-                    )
-                )
-            );
-        } else {
-            parent::processParam( $event, $param, $message, $user );
-        }
-    }
+	public function getCompactHeaderMessage() {
+		$msg = parent::getCompactHeaderMessage();
+		$msg->params( $this->getViewingUserForGender() );
+		return $msg;
+	}
+	public function getBodyMessage() {
+		$excerpt = $this->event->getExtraParam( 'gift-description' );
+		if ( $excerpt ) {
+			$msg = new RawMessage( '$1' );
+			$msg->plaintextParams( $excerpt );
+			return $msg;
+		}
+	}
+	public function getPrimaryLink() {
+		$title = $this->event->getTitle();
+		// Make a link to #flow-post-{postid}
+		$title = Title::makeTitle(
+			$title->getNamespace(),
+			$title->getDBKey()
+		);
+		return [
+			'url' => $title->getFullURL( [
+                        'gift_id' => $this->event->getExtraParam('gift-id'),
+                        'user' => $this->event->getExtraParam('user-name')
+			] ),
+			'label' => $this->msg( 'notification-view-system-gift' )->text(),
+		];
+	}
+	public function getSecondaryLinks() {
+		return [ $this->getAgentLink(), array(
+		    'url' => SpecialPage::getTitleFor('ViewSystemGifts')->getFullURL(),
+		    'label' => $this->msg('notification-view-all-system-gifts')->text(),
+		    // 'description' => $this->msg('notification-view-all-system-gifts')->text(),
+		    'icon' => false,
+		    'prioritized' => false
+		) ];
+	}
 }

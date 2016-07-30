@@ -23,7 +23,9 @@ class UserUserFollowAPI extends ApiBase {
                 $result->addValue( $this->getModuleName(), 'status', 'success' );
                 return true;
             }
+            // echo 'in if';
         }
+        // echo 'stuff';
         $result = $this->getResult();
         $result->addValue( $this->getModuleName(), 'status', 'failed' );
         return true;

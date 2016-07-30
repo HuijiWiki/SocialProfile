@@ -55,5 +55,7 @@
 	"givesystemgift": "站点专属成就",
 	"reissuesystemgift":"补发成就",
 	"commonstyle":"自定义主题",
-	"specialpages-group-trans":"翻译"
+	"specialpages-group-trans":"翻译",
+	"removecredentials":"删除证书",
+	"changecredentials":"修改证书"
 }

@@ -75,10 +75,10 @@ class SpecialShowFollowedSites extends SpecialPage {
 		$star_page = $per_page*($page-1);
 		$per_sites = array_slice($sites,$star_page ,$per_page );
 		if( !$sites ){
-		    $output .= '<div class="top-users"><h3>暂时还没有关注哦</h3>';
+		    $output .= '<div class="top-users"><div class="secondary text-center">暂时还没有关注哦</div>';
 		}
-		if( !$per_sites ){
-		    $output .= '<div class="top-users"><h3>此页暂时没有站点</h3>';
+		else if( !$per_sites ){
+		    $output .= '<div class="top-users"><div class="secondary text-center">此页还不存在~</div>';
 		}
 		$output .= '<div class="top-users" style="width:90%; max-width:500px">';
 		foreach ( $per_sites as $user ) {

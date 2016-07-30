@@ -8,6 +8,9 @@ class SpecialDonate extends SpecialPage{
         parent::__construct( 'Donate' );
         
     }
+    public function getGroup(){
+        return 'wiki';
+    }
 
     public function execute( $params ) {
         header("Content-type:text/html;charset=utf-8");

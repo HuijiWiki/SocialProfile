@@ -176,7 +176,7 @@ jQuery( document ).ready( function() {
 			userSiteFollows.appended.toggle();
 			return;
 		}
-		mw.loader.using(['oojs-ui','ext.echo.ui'], function(){
+		mw.loader.using(['oojs-ui','ext.echo.ui', 'ext.echo.styles.badge', 'ext.echo.ui.desktop'], function(){
 			username = mw.config.get("wgUserName");
 			specialpage = "/wiki/Special:关注的站点?user_id="+mw.config.get("wgUserId")+"&target_user_id="+mw.config.get("wgUserId");
 			jQuery.post(
@@ -198,7 +198,7 @@ jQuery( document ).ready( function() {
   							iconTitle: '更多'
 						} );
 						var footer = new OO.ui.LabelWidget({
-							label: $('<div class="oo-ui-widget oo-ui-widget-enabled oo-ui-buttonGroupWidget" aria-disabled="false"><div class="mw-echo-ui-notificationBadgeButtonPopupWidget-footer-allnotifs oo-ui-widget oo-ui-widget-enabled oo-ui-buttonElement oo-ui-buttonElement-framed oo-ui-iconElement oo-ui-labelElement oo-ui-buttonWidget" aria-disabled="false"><a class="oo-ui-buttonElement-button" role="button" aria-disabled="false" href="'+specialpage+'" rel="nofollow"><span class="oo-ui-iconElement-icon oo-ui-icon-next"></span><span class="oo-ui-labelElement-label">所有关注</span><span class="oo-ui-indicatorElement-indicator"></span></a></div><div class="mw-echo-ui-notificationBadgeButtonPopupWidget-footer-preferences oo-ui-widget oo-ui-widget-enabled oo-ui-buttonElement oo-ui-buttonElement-framed oo-ui-iconElement oo-ui-labelElement oo-ui-buttonWidget" aria-disabled="false"><a class="oo-ui-buttonElement-button" role="button" tabindex="0" aria-disabled="false" href="/wiki/%E7%89%B9%E6%AE%8A:%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE#mw-prefsection-echo" rel="nofollow"><span class="oo-ui-iconElement-icon oo-ui-icon-advanced"></span><span class="oo-ui-labelElement-label">设置</span><span class="oo-ui-indicatorElement-indicator"></span></a></div></div>')
+							label: $('<div class="oo-ui-popupWidget-footer"><div class="mw-echo-ui-notificationBadgeButtonPopupWidget-footer"><div class="mw-echo-ui-notificationBadgeButtonPopupWidget-footer-buttons oo-ui-widget oo-ui-widget-enabled oo-ui-buttonGroupWidget" aria-disabled="false"><div class="mw-echo-ui-notificationBadgeButtonPopupWidget-footer-allnotifs oo-ui-widget oo-ui-widget-enabled oo-ui-buttonElement oo-ui-buttonElement-framed oo-ui-iconElement oo-ui-labelElement oo-ui-buttonWidget" aria-disabled="false"><a class="oo-ui-buttonElement-button" role="button" aria-disabled="false" href="'+specialpage+'" rel="nofollow"><span class="oo-ui-iconElement-icon oo-ui-icon-next"></span><span class="oo-ui-labelElement-label">所有关注</span><span class="oo-ui-indicatorElement-indicator"></span></a></div><div class="mw-echo-ui-notificationBadgeButtonPopupWidget-footer-preferences oo-ui-widget oo-ui-widget-enabled oo-ui-buttonElement oo-ui-buttonElement-framed oo-ui-iconElement oo-ui-labelElement oo-ui-buttonWidget" aria-disabled="false"><a class="oo-ui-buttonElement-button" role="button" tabindex="0" aria-disabled="false" href="/wiki/%E7%89%B9%E6%AE%8A:%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE" rel="nofollow"><span class="oo-ui-iconElement-icon oo-ui-icon-advanced"></span><span class="oo-ui-labelElement-label">设置</span><span class="oo-ui-indicatorElement-indicator"></span></a></div></div></div></div>')
 						});
 						var out = '<div class="mw-echo-ui-notificationsWidget">';
 						console.log(data);

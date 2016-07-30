@@ -49,6 +49,7 @@ class UserUserFollow{
 			'type' => 'follow-msg',
 			'extra' => array(
 					'followee-user-id' => $followee->getId(),
+					'followee-user-name' => $followee->getName(),
 					'agent-page' => $follower->getUserPage(),
 				),
 			'agent' => $follower,
@@ -251,6 +252,9 @@ class UserUserFollow{
 	 */
 	public function getFollowList( $user, $type = 0, $limit = 0, $page = 0 ) {
 		$dbr = wfGetDB( DB_SLAVE );
+		if ($user == null){
+			return array();
+		}
 
 		$where = array();
 		$options = array();
@@ -401,23 +405,14 @@ class UserUserFollow{
             'tooltip' => 'echo-pref-tooltip-follow-msg',
         );
         $notifications['follow-msg'] = array(
-        	// 'primary-link' => array('message' => 'notification-link-text-respond-to-user', 'destination' => 'agent'),
-            'category' => 'follow-msg',
-            'group' => 'positive',
-            'formatter-class' => 'EchoFollowFormatter',
-            'title-message' => 'notification-follow',
-            'title-params' => array( 'agent', 'agent-link', 'follow', 'main-title-text' ),
-            'flyout-message' => 'notification-follow-flyout',
-            'flyout-params' => array( 'agent', 'agent-link', 'follow', 'main-title-text' ),
-            'payload' => array( 'summary' ),
-            'email-subject-message' => 'notification-follow-email-subject',
-            'email-subject-params' => array( 'agent' ),
-            'email-body-message' => 'notification-follow-email-body',
-            'email-body-params' => array( 'agent', 'follow', 'main-title-text', 'email-footer' ),
-            'email-body-batch-message' => 'notification-follow-email-batch-body',
-            'email-body-batch-params' => array( 'agent', 'main-title-text' ),
-            'icon' => 'gratitude',
-            'section' => 'alert',
+        	'category' => 'follow-msg',
+        	'group' => 'positive',
+        	'section' => 'alert',
+        	'presentation-model' => 'EchoUserUserFollowPresentationModel',
+        	'bundle' => [
+        		'web' => true,
+        		'expandable' => true,
+        	]
         );
         return true;
     }
@@ -445,40 +440,36 @@ class UserUserFollow{
 	}
 
 }
-class EchoFollowFormatter extends EchoCommentFormatter {
-   /**
-     * @param $event EchoEvent
-     * @param $param
-     * @param $message Message
-     * @param $user User
-     */
-    protected function processParam( $event, $param, $message, $user ) {
-        if ( $param === 'follow' ) {
-            $this->setTitleLink(
-                $event,
-                $message,
-                array(
-                    'class' => 'mw-echo-follow-msg',
-                    'linkText' => wfMessage('notification-follow-msg-link')->text(),
-                )
-            );
-        } elseif ( $param === 'agent-link') {
-        	$eventData = $event->getExtra();
-            if ( !isset( $eventData['agent-page']) ) {
-                $message->params( '' );
-                return;
-            }
-            $link = $this->buildLinkParam(
-                $eventData['agent-page'],
-                array(
-                    'class' => 'mw-echo-follow-msg',
-                    'linkText' => $eventData['agent-page']->getText(),
-                )
-            );
-            $message->params( $link );
-        } else {
-            parent::processParam( $event, $param, $message, $user );
-        }
-    }
+class EchoUserUserFollowPresentationModel extends EchoEventPresentationModel {
+	public function canRender() {
+		return (bool)$this->event->getTitle();
+	}
+	public function getIconType() {
+		return 'thanks';
+	}
+	public function getHeaderMessage() {
+		if ( $this->isBundled() ) {
+			$msg = $this->msg( 'notification-bundle-header-follow-msg' );
+			$msg->params( $this->getBundleCount() );
+			return $msg;
+		}
+		$msg = parent::getHeaderMessage();
+		return $msg;
+	}
+	public function getBodyMessage() {
+		return false;
+	}
+	public function getPrimaryLink() {
+		$title = SpecialPage::getTitleFor("ViewFollows");
+		return [
+			'url' => $title->getFullURL( array(
+	                        'username' => $this->event->getExtraParam('followee-user-name'),
+	                        'rel_type' => 1,
+	                    ) ),
+			'label' => $this->msg( 'notification-view-follow' )->text(),
+		];
+	}
+	public function getSecondaryLinks() {
+		return [ $this->getAgentLink() ];
+	}
 }
-

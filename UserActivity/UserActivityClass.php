@@ -1105,7 +1105,7 @@ class UserActivity {
 										Linker::link($user_title_from, $user_title_from->getText())
 									)->text(),
 						'hasShowcase' => true,
-						'showcase' =>  Linker::Link($view_gift_link, $gift_image.$row->gift_name, ["rel"=>"nofollow"], ["user" => $row->us_user_name, "gift_id" => $row->gift_id]),
+						'showcase' =>  Linker::Link($view_gift_link, $gift_image.$row->gift_name, ["rel"=>"nofollow"], ["user" => $row->ug_user_name_to, "gift_id" => $row->gift_id]),
 									// "<a href=\"" . htmlspecialchars( $view_gift_link->getFullURL( 'user='.$user_name_short.'&gift_id=' . $row->gift_id ) ) . "\" rel=\"nofollow\">
 									// 		{$gift_image}
 									// 		{$row->gift_name}

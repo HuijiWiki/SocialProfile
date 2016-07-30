@@ -4,7 +4,7 @@
  *
  */
 
-class SpecialCallbackQQ extends SpecialPage {
+class SpecialCallbackQQ extends UnlistedSpecialPage {
 
 	/**
 	 * Constructor

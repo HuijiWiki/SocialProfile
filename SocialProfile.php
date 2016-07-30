@@ -517,7 +517,7 @@ $wgResourceModules['ext.socialprofile.userrelationship.js'] = array(
 
 // UserStats
 $wgResourceModules['ext.socialprofile.userstats.css'] = array(
-	'styles' => 'TopList.css',
+	'styles' => 'TopList.less',
 	'localBasePath' => __DIR__ . '/UserStats',
 	'remoteExtPath' => 'SocialProfile/UserStats',
 	'position' => 'top' // just in case
@@ -544,6 +544,14 @@ $wgResourceModules['ext.socialprofile.useruserfollows.css'] = array(
 	'localBasePath' => __DIR__ . '/UserUserFollows',
 	'remoteExtPath' => 'SocialProfile/UserUserFollows',
 	'position' => 'top',
+);
+// UserUserFollows
+$wgResourceModules['ext.socialprofile.specialviewfollows'] = array(
+	'scripts' => 'ViewFollows.js',
+	'styles' => 'ViewFollows.less',
+	'localBasePath' => __DIR__ . '/UserUserFollows',
+	'remoteExtPath' => 'SocialProfile/UserUserFollows',
+	'position' => 'bottom',
 );
 // SiteActivity
 $wgResourceModules['ext.socialprofile.siteactivity.css'] = array(
@@ -668,6 +676,21 @@ $wgResourceModules['ext.socialprofile.donate.css'] = array(
 	'localBasePath' => __DIR__ . '/Donate',
 	'remoteExtPath' => 'SocialProfile/Donate',
 	'position' => 'top',
+);
+//Steam Achievement
+$wgResourceModules['ext.socialprofile.steamachievement'] = array(
+	'styles' => array(
+					'SteamAchievement.less',
+				),
+	'scripts' => array(
+					'SteamAchievement.js',
+				),
+	'templates' => array(
+					'SteamAchievement.mustache' => 'SteamAchievement.mustache',
+				),
+	'localBasePath' => __DIR__ . '/SteamAchievement',
+	'remoteExtPath' => 'SocialProfile/SteamAchievement',
+	'position' => 'bottom',
 );
 // End ResourceLoader stuff
 

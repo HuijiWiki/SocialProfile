@@ -30,6 +30,7 @@ class SpecialCompleteUserInfo extends UnlistedSpecialPage {
 	 * @param $params Mixed: parameter(s) passed to the page or null
 	 */
 	public function execute( $params ) {
+		global $wgRequest;
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$access_token = empty($request->getVal( 'code' ))?null:$request->getVal( 'code' );
@@ -85,6 +86,7 @@ class SpecialCompleteUserInfo extends UnlistedSpecialPage {
 			<input id='userType' type='hidden' value='".$type."' >
 			<input id='redirect_url' type='hidden' value='".$redirect."' >
 			<input id='inviteuser' type='hidden' value=0 >
+			<input id='wpCreateaccountToken' type='hidden' value='".$wgRequest->getSession()->getToken( '', 'createaccount' )->toString()."' >
             <div class='mw-ui-button  mw-ui-block mw-ui-constructive btn' data-loading-text='提交中...' id='qqConfirm'>提交</div></form>";
 
 		$output .=	'<div class="mw-createacct-benefits-container unite-container">'.

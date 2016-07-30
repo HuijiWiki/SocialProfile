@@ -3,14 +3,6 @@
 class GetFollowingUser extends ApiBase {
 
     public function execute() {
-        global $wgUser;
-        if (
-            $wgUser->isBlocked() ||
-            !$wgUser->isAllowed( 'edit' ) ||
-            wfReadOnly()
-        ) {
-            return true;
-        }
         $this->setWarning(
             "Deprecated; Don't use this off site."
         );
@@ -26,8 +18,10 @@ class GetFollowingUser extends ApiBase {
         $huijiUser = HuijiUser::newFromUser($user);
         $res = $huijiUser->getFollowingUsers();
         $result = $this->getResult();
+
         // $result->addValue( $this->getModuleName(), 'status', array('a'=>1,'b'=>2,'c'=>3) );
         $result->addValue( $this->getModuleName(), 'result', $res );
+        $result->addValue( $this->getModuleName(), 'count', $huijiUser->getFollowingUsersCount());
         return true;
 
 

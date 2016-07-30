@@ -70,6 +70,7 @@ class SocialProfileHooks {
 		$updater->addExtensionUpdate( array( 'addTable', 'video_page', "$dir/Videos/video_page$dbExt.sql", true ) );
 		$updater->addExtensionUpdate( array( 'addTable', 'video_revision', "$dir/Videos/video_revision$dbExt.sql", true ) );
 		$updater->addExtensionUpdate( array( 'addTable', 'common_css', "$dir/CommonStyle/common_css$dbExt.sql", true ) );
+		$updater->addExtensionUpdate( array( 'addTable', 'echo_unread_wikis', "$dir/../Echo/db_patches/echo_unread_wikis.sql", true) );
 		return true;
 	}
 
@@ -253,7 +254,7 @@ class SocialProfileHooks {
         		MediaWiki\suppressWarnings();
         		list($prefix, $suffix) = $user->getDesignation(true);
         		MediaWiki\restoreWarnings();
-        		$ret = $prefix.$suffix."<a class='mw-userlink' rel='nofollow' href='".$target->getFullUrl()."'>{$target->getRootText()}</a>";
+        		$ret = $prefix.$suffix."<a class='mw-userlink' rel='nofollow' title='{$text}' href='".$target->getFullUrl()."'>{$target->getRootText()}</a>";
         		return false;
         	}
             $customAttribs['class'] = 'mw-userlink';

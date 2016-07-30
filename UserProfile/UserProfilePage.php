@@ -353,18 +353,18 @@ class UserProfilePage extends Article {
 		            		$y = $j*13;
 		            		$dataCount = (isset($editBox[$val]))?$editBox[$val]:0;
 		            		if ($dataCount == 0) {
-	                                $color = '#eee';
+	                                $color = 'lowest';
 	                            }elseif ($dataCount > 0 && $dataCount <= 8 ) {
-	                                $color = '#86beee';
+	                                $color = 'low';
 	                            }elseif ($dataCount > 8 && $dataCount <= 21 ){
-	                                $color = '#5ea2de';
+	                                $color = 'normal';
 	                            }elseif ($dataCount > 21 && $dataCount <= 55 ){
-	                                $color = '#256fb1';
+	                                $color = 'high';
 	                            }else {
-	                                $color = '#0d5493';
+	                                $color = 'highest';
 	                            }
 
-		                	$wgOut->addHTML('<rect class="day" width="11" height="11" y="'.$y.'" fill="'.$color.'" data-count="'.$dataCount.'" data-date="'.$val.'" title="'.$val.' 编辑'.$dataCount.'次"></rect>');
+		                	$wgOut->addHTML('<rect class="day" width="11" height="11" y="'.$y.'" data-depth="'.$color.'" data-count="'.$dataCount.'" data-date="'.$val.'" title="'.$val.' 编辑'.$dataCount.'次"></rect>');
 			            	$j=($j>=7)?0:($j+1);
 		            	}
 		            	if (!empty($arrDate[0])){
@@ -413,11 +413,11 @@ class UserProfilePage extends Article {
 			        <div class="legend-intro">
 			        <span><b>编辑数</b> 低</span>
 			        <ul class="legend">
-			            <li style="background-color: #eee"></li>
-			            <li style="background-color: #86beee"></li>
-			            <li style="background-color: #5ea2de"></li>
-			            <li style="background-color: #256fb1"></li>
-			            <li style="background-color: #0d5493"></li>
+			            <li><svg><rect class="day" width="11" height="11" data-depth="lowest"></svg></rect></li>
+			            <li><svg><rect class="day" width="11" height="11" data-depth="low"></svg></li>
+			            <li><svg><rect class="day" width="11" height="11" data-depth="normal"></svg></li>
+			            <li><svg><rect class="day" width="11" height="11" data-depth="high"></svg></li>
+			            <li><svg><rect class="day" width="11" height="11" data-depth="highest"></svg></li>
 		            </ul>
 		            <span>高</span>
 		            </div>

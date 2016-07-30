@@ -97,6 +97,8 @@ class UserBoard {
 	 * @param $user_from Mixed: the user name of the person who wrote the board message
 	 */
 	public function sendBoardNotificationEmail( $user_id_to, $user_from, $message ) {
+		global $wgHuijiPrefix;
+
 		$user = User::newFromId( $user_id_to );
 		$user->loadFromId();
 
@@ -112,6 +114,7 @@ class UserBoard {
 		         'board-user' => $username,
 		         'board-user-conv' => $user_from,
 		         'board-content' => $message,
+		         'interwiki' => $wgHuijiPrefix,
 		     ),
 		     'agent' => $agent,
 		     'title' => $board_link,
@@ -566,23 +569,14 @@ class UserBoard {
             'tooltip' => 'echo-pref-tooltip-board-msg',
         );
         $notifications['board-msg'] = array(
-        	'primary-link' => array('message' => 'notification-link-text-respond-to-user', 'destination' => 'board-page'),
-            'category' => 'board-msg',
-            'group' => 'positive',
-            'formatter-class' => 'EchoBoardFormatter',
-            'title-message' => 'notification-board',
-            'title-params' => array( 'agent', 'b2b', 'main-title-text' ),
-            'flyout-message' => 'notification-board-flyout',
-            'flyout-params' => array( 'agent', 'b2b', 'main-title-text' ),
-            'payload' => array( 'summary' ),
-            'email-subject-message' => 'notification-board-email-subject',
-            'email-subject-params' => array( 'agent', 'b2b', 'main-title-text' ),
-            'email-body-message' => 'notification-board-email-body',
-            'email-body-params' => array( 'agent', 'b2b', 'main-title-text', 'email-footer' ),
-            'email-body-batch-message' => 'notification-board-email-batch-body',
-            'email-body-batch-params' => array( 'agent', 'b2b', 'main-title-text' ),
-            'icon' => 'chat',
-            'section' => 'message',
+        	'category' => 'board-msg',
+        	'group' => 'positive',
+        	'section' => 'message',
+        	'presentation-model' => 'EchoBoardPresentationModel',
+        	'bundle' => [
+        		'web' => true,
+        		'expandable' => true,
+        	]
         );
         return true;
     }
@@ -617,90 +611,54 @@ class UserBoard {
 	}
 
 }
-class EchoBoardFormatter extends EchoCommentFormatter {
+class EchoBoardPresentationModel extends EchoEventPresentationModel {
+	public function canRender() {
+		return (bool)$this->event->getTitle();
+	}
+	public function getIconType() {
+		return 'chat';
+	}
+	public function getHeaderMessage() {
+		if ( $this->isBundled() ) {
+			$msg = $this->msg( 'notification-bundle-header-board-msg' );
+			$msg->params( $this->getBundleCount() );
+			return $msg;
+		}
+		if ($this->event->getExtraParam('mentioned-users')){
 
-	protected function formatPayload( $payload, $event, $user ) {
-		switch ( $payload ) {
-		   	case 'summary': 
-				$eventData = $event->getExtra();
-	        	if ( !isset( $eventData['board-content']) ) {
-	                return;
-	            }
-			    return $eventData['board-content'];
-		        break;
-		   	default:
-		        return parent::formatPayload( $payload, $event, $user );
-		        break;
+			$msg = $this->getMessageWithAgent('notification-header-board-metioned');
+			$msg->param($this->event->getExtraParam('board-user'));
+			return $msg;
+		}
+		$msg = parent::getHeaderMessage();
+		return $msg;
+	}
+	public function getBodyMessage() {
+		$excerpt = $this->event->getExtraParam( 'board-content' );
+		if ( $excerpt ) {
+			$msg = new RawMessage( '$1' );
+			$msg->plaintextParams( $excerpt );
+			return $msg;
 		}
 	}
-	/**
-	 * Helper function for getLink()
-	 *
-	 * @param \EchoEvent $event
-	 * @param \User $user The user receiving the notification
-	 * @param string $destination The destination type for the link
-	 * @return array including target and query parameters
-	 * @throws FlowException
-	 */
-	protected function getLinkParams( $event, $user, $destination ) {
-		// Set up link parameters based on the destination (or pass to parent)
-		switch ( $destination ) {
-			case 'board-page':
-				$titleData = $event->getTitle();
-				$eventData = $event->getExtra();
-	            if ( !isset( $eventData['board-user']) || !isset( $eventData['board-user-conv'] ) ) {
-	                return array($titleData, array());
-	            } else {
-        			return array($titleData, array('fromnotif' => 1, 'user' => $eventData['board-user'], 'conv'=> $eventData['board-user-conv']));
-        		}
-			default:
-				return parent::getLinkParams( $event, $user, $destination );
-		}
+	public function getPrimaryLink() {
+		$title = $this->event->getTitle();
+		// Make a link to #flow-post-{postid}
+		$title = Title::makeTitle(
+			$title->getNamespace(),
+			$title->getDBKey(),
+			'',
+			''
+		);
+		return [
+			'url' => $title->getFullURL( array(
+	                        'user' => $this->event->getExtraParam('board-user'),
+	                        'conv' => $this->event->getExtraParam('board-user-conv'),
+	                    ) ),
+			'label' => $this->msg( 'userboard_yourboard' )->text(),
+		];
 	}
-   /**
-     * @param $event EchoEvent
-     * @param $param
-     * @param $message Message
-     * @param $user User
-     */
-    protected function processParam( $event, $param, $message, $user ) {
-        if ( $param === 'b2b' ) {
-            $eventData = $event->getExtra();
-            if ( !isset( $eventData['board-user']) || !isset( $eventData['board-user-conv'] ) ) {
-                $message->params( '' );
-                return;
-            }
-            if ( isset( $eventData['mentioned-users'])){
-	            $this->setTitleLink(
-	                $event,
-	                $message,
-	                array(
-	                    'class' => 'mw-echo-board-msg',
-	                    'linkText' => wfMessage( 'notification-board-msg-mention-link' )->text(),
-	                    'param' => array(
-	                        'user' => $eventData['board-user'],
-	                        'conv' => $eventData['board-user-conv'],
-	                    )
-	                )
-	            );             	
-
-            } else {
-	            $this->setTitleLink(
-	                $event,
-	                $message,
-	                array(
-	                    'class' => 'mw-echo-board-msg',
-	                    'linkText' => wfMessage( 'notification-board-msg-link' )->text(),
-	                    'param' => array(
-	                        'user' => $eventData['board-user'],
-	                        'conv' => $eventData['board-user-conv'],
-	                    )
-	                )
-	            );            	
-            } 
-
-        } else {
-            parent::processParam( $event, $param, $message, $user );
-        }
-    }
+	public function getSecondaryLinks() {
+		return [ $this->getAgentLink() ];
+	}
 }

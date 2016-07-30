@@ -86,7 +86,7 @@ class SpecialEditRank extends SpecialPage {
 		if( !$result ){
 		    $output .= '<div class="top-users"><h3>此页暂时没有排行</h3>';
 		}
-		$output .= '<div class="top-users">';
+		$output .= '<div class="top-ranking">';
 		$x = $star_page+1;
 		foreach ( $result as $user ) {
 			if($wgUser->getName() == $user['user']){
@@ -97,12 +97,12 @@ class SpecialEditRank extends SpecialPage {
 			$user_title = Title::makeTitle( NS_USER, $user['user'] );
 			$userObj = HuijiUser::newFromName($user['user'] );
 			$userAvatar = $userObj->getAvatar('m')->getAvatarAnchor();
-			$output .= "<div class=\"top-fan-row {$active}\">
-				<span class=\"top-fan-num\">{$x}.</span>
-				<span class=\"top-fan\">".$userAvatar."<a class='mw-userlink' href='" . $user['userUrl'] . "'>" .
+			$output .= "<div class=\"top-ranking-row {$active}\">
+				<span class=\"top-ranking-num\">{$x}.</span>
+				<span class=\"top-ranking-name top-ranking-name2\">".$userAvatar."<a class='mw-userlink' href='" . $user['userUrl'] . "'>" .
 						$user['user'] .'</a><i class="hidden-xs hidden-sm">'.$user['level'] .'
 				</i></span>';
-			$output .= '<span class="top-fan-points"><b>' .
+			$output .= '<span class="top-ranking-points top-ranking-points2"><b>' .
 				number_format( $user['count'] ) . '</b> ' .
 				$this->msg( 'top-fans-times' )->plain() . '</span>';
 			$output .= '<div class="cleared"></div>';
