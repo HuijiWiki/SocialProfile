@@ -15,7 +15,7 @@ $(document).ready(function(){
     //user avatar & del avatar cookie
     if( u_avatar != null && mw.config.get( 'wgUserId' ) != null ){
     	var api = new mw.Api();
-    	api.postWithToken('edit', { 'action': 'avatarsubmit', 'format': 'json', 'avatar_src': u_avatar })
+    	api.postWithToken('csrf', { 'action': 'avatarsubmit', 'format': 'json', 'avatar_src': u_avatar })
 			.done(function( response ) {
 				mw.cookie.set( 'user_avatar' , null);
 			} );
@@ -24,9 +24,9 @@ $(document).ready(function(){
 		WB2.logout();
    });
 
-	if(mw.config.get('wgUserId') != null){
-		return '';
-	}
+	// if(mw.config.get('wgUserId') != null){
+	// 	return '';
+	// }
 
 	var paras = {};
 	// var qqOpenid;
@@ -43,7 +43,7 @@ $(document).ready(function(){
         var inviter = $('#inviter').val();
         var token = $('#wpCreateaccountToken').val();
 		inviteuser = $('#inviteuser').val();
-        redirect_url = $('#redirect_url').val();
+        redirect_url = $('#redirect_url').val() || 'www';
 		mw.cookie.set( 'user_gender', userGender );
 		mw.cookie.set( 'user_avatar', userAvatar );
         $('#qqConfirm').button('loading');
@@ -56,7 +56,7 @@ $(document).ready(function(){
         if ( inviteuser == 1 ) {
             var red = 'http://www'+mw.config.get('wgHuijiSuffix');
         }else{
-            addOauth(type,outhId,data.createaccount.userid,inviteuser,redirect_url,inviter);
+            
             var red = "http://"+redirect_url+".huiji.wiki/";
         }
         // $.post('/api.php?action=createaccount&name='+login+'&email='+email+'&password='+pass+ '&format=json',function(data){

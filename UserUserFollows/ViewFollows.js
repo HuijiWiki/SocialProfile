@@ -3,7 +3,7 @@ var WikiUserFollow = {
 	theScroll: 0,
 	userId: 0, //of the listed user
 	username: '', //of the current viewpoint user
-
+	hasMore: true,
 	init: function() {
 
 	},
@@ -75,7 +75,7 @@ var WikiUserFollow = {
 						'</div>');
 					$('.UserFollow_Self' + WikiUserFollow.userId).append('<div class="UserFollow_Self_right">' +
 						'<a class="mw-userlink UserFollow_Self_right_name" title="用户:' + theData[i].name + '" href="/wiki/User:' + encodeURIComponent(theData[i].name) + '">' + theData[i].name + '</a>' + '<span class="icon-lv' + theData[i].level + '"></span>' +
-						'<div class="UserFollow_Self_right_count">被关注:' + '<a href="/wiki/Special:ViewFollows&user='+encodeURIComponent(theData[i].name)+'&rel_type=2">' + theData[i].followingcount + '</a>&nbsp;&nbsp;&nbsp;' + '|&nbsp;&nbsp;&nbsp;关注数:' + '<a href="/wiki/Special:ViewFollows&user='+encodeURIComponent(theData[i].name)+'&rel_type=1">' + theData[i].followercount + '</a>&nbsp;&nbsp;&nbsp;' + ' |&nbsp;&nbsp;&nbsp;编辑:<a href="/wiki/Special:Contribution&target="'+encodeURIComponent(theData[i].name)+'&contribs=user">' + theData[i].stats.edits + '</a>&nbsp;&nbsp;&nbsp;</div>' +
+						'<div class="UserFollow_Self_right_count">被关注:' + '<a href="/wiki/Special:ViewFollows&user='+encodeURIComponent(theData[i].name)+'&rel_type=2">' + theData[i].followercount + '</a>&nbsp;&nbsp;&nbsp;' + '|&nbsp;&nbsp;&nbsp;关注数:' + '<a href="/wiki/Special:ViewFollows&user='+encodeURIComponent(theData[i].name)+'&rel_type=1">' + theData[i].followingcount + '</a>&nbsp;&nbsp;&nbsp;' + ' |&nbsp;&nbsp;&nbsp;编辑:<a href="/wiki/Special:Contribution&target="'+encodeURIComponent(theData[i].name)+'&contribs=user">' + theData[i].stats.edits + '</a>&nbsp;&nbsp;&nbsp;</div>' +
 						'<div class="UserFollow_Self_right_dec">' + theData[i].status + '</div>' +
 						'</div>');
 					var button0 = new OO.ui.ButtonWidget({
@@ -94,6 +94,8 @@ var WikiUserFollow = {
 						href: 'http://www.huiji.wiki/index.php?title=%E7%89%B9%E6%AE%8A:GiveGift&user='+encodeURIComponent(theData[i].name),
 						classes: ['UserFollowBtn_gift'],
 					});
+					button0.on('click', WikiUserFollow.FollowUserBtn, [theData[i].name], button0 );
+					button1.on('click', WikiUserFollow.UnFollowUserBtn, [theData[i].name], button1 );
 					$('.UserFollow_Self' + WikiUserFollow.userId + ' .UserFollow_Self_right').append(button0.$element, button1.$element, button2.$element);
 					if (theData[i].context.followedbyme == 'true') {
 						$('.UserFollowBtn_unfollow'+ WikiUserFollow.userId).show();
@@ -101,16 +103,17 @@ var WikiUserFollow = {
 						$('.UserFollowBtn_follow'+ WikiUserFollow.userId).show();
 					}
 					WikiUserFollow.userId++;
+
 				}
 			}
 		}
 		xmlHttp.send(null);
 	},
-	FollowUserBtn: function() {
-		$('.UserFollowBtn_follow').on('click', function() {
-			var _this = $(this)
+	FollowUserBtn: function(name) {
+			var _this = this.$element;
+			console.log(this);
 			if (mw.config.get('wgUserName')) {
-				var API = '/api.php?action=useruserfollow&follower=' + mw.config.get('wgUserName') + '&followee=' + $(this).siblings('.UserFollow_Self_right_name').html() + '&format=json';
+				var API = '/api.php?action=useruserfollow&follower=' + mw.config.get('wgUserName') + '&followee=' + encodeURIComponent(name) + '&format=json';
 				var xmlHttp = new XMLHttpRequest();
 				xmlHttp.open("post", API, true);
 				xmlHttp.send(API);
@@ -124,13 +127,12 @@ var WikiUserFollow = {
 			} else {
 				$('#pt-login').trigger('click');
 			}
-		})
 	},
-	UnFollowUserBtn: function() {
-		$('.UserFollowBtn_unfollow').on('click', function() {
-			var _this = $(this)
+	UnFollowUserBtn: function(name) {
+			var _this = this.$element;
+			console.log(this);
 			if (mw.config.get('wgUserName')) {
-				var API = '/api.php?action=useruserunfollow&follower=' + mw.config.get('wgUserName') + '&followee=' + $(this).siblings('.UserFollow_Self_right_name').html() + '&format=json';
+				var API = '/api.php?action=useruserunfollow&follower=' + mw.config.get('wgUserName') + '&followee=' + encodeURIComponent(name) + '&format=json';
 				console.log(API)
 				var xmlHttp = new XMLHttpRequest();
 				xmlHttp.open("post", API, true);
@@ -145,7 +147,7 @@ var WikiUserFollow = {
 			} else {
 				$('#pt-login').trigger('click');
 			}
-		})
+
 	},
 	ScrollAjax: function() {
 		$(window).scroll(function() {　
@@ -164,6 +166,8 @@ var WikiUserFollow = {
 				window.setTimeout(function() {
 					if (WikiUserFollow.theNextPage != ''){
 						WikiUserFollow.UserInfoAjax(WikiUserFollow.UserNameAjax(20, WikiUserFollow.theNextPage));
+					} else {
+						WikiUserFollow.theNextPage = '';
 					}
 					WikiUserFollow.theScroll = 0;
 				}, 800);
@@ -230,8 +234,6 @@ $(function() {
 		WikiUserFollow.UserInfoAjax(WikiUserFollow.UserNameAjax(8, ''));
 		WikiUserFollow.ScrollAjax();
 		WikiUserFollow.Search();
-		WikiUserFollow.FollowUserBtn();
-		WikiUserFollow.UnFollowUserBtn();
 	});
 
 })

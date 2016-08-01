@@ -245,7 +245,6 @@
         dataType: 'json',
         processData: false,
         contentType: false,
-
         beforeSend: function () {
           _this.submitStart();
 //            console.log('beforesend');
