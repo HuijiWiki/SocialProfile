@@ -43,5 +43,5 @@
 	"ga-viewlist": "Se gavelista",
 	"system_gift_received_subject": "Du har mottatt utmerkelsen $1 på {{SITENAME}}!",
 	"system_gift_received_body": "Hei $1.\n\nDu har akkurat mottatt en $2-utmerkelse på {{SITENAME}}!\n\n«$3»\n\nKlikk under for å se trofeet ditt!\n\n$4\n\nVi håper du liker det!\n\nTakk,\n\n{{SITENAME}}-laget\n\n---\n\nVil du ikke lenger motta e-poster fra oss?\n\nKlikk $5\nog forandre dine innstillinger for å slå av e-postbeskjeder.",
-	"right-awardsmanage": "Opprett nye og endre eksisterende utmerkelser"
+	"right-giftadmin": "Opprett nye og endre eksisterende utmerkelser"
 }

@@ -44,5 +44,5 @@
 	"ga-viewlist": "Varda la lista dij cadò",
 	"system_gift_received_subject": "It l'has arseivù ël premi $1 dzora a {{SITENAME}}!",
 	"system_gift_received_body": "Cerea $1.\n\nIt l'has pen-e arseivù ël premi $2 dzora {{SITENAME}}!\n\n\"$3\"\n\nSgnaca sota për controlé tò trofeo!\n\n$4\n\nI speroma ch'at piasa!\n\nMersì,\n\n\nL'echip {{SITENAME}}\n\n---\n\nScota, veus-to pa pi arseive mëssagi ëd pòsta eletrònica da noiàutri?\n\nSgnaca $5\ne cambia toe ampostassion për disabilité le notìfiche an pòsta eletrònica.",
-	"right-awardsmanage": "Crea neuv premi e modìfica j'esistent"
+	"right-giftadmin": "Crea neuv premi e modìfica j'esistent"
 }

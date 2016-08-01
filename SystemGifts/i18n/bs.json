@@ -43,5 +43,5 @@
 	"ga-viewlist": "Pogledajte spisak poklona",
 	"system_gift_received_subject": "Dobili ste $1 nagradu na {{SITENAME}}!",
 	"system_gift_received_body": "Pozdrav $1.\n\nUpravo ste dobili $2 nagradu na {{SITENAME}}!\n\n\"$3\"\n\nKliknite ispod da pregledate Vašu kolekciju nagrada!\n\n$4\n\nNadamo se da Vam se sviđa!\n\nHvala,\n\n\n{{SITENAME}} tim\n\n---\n\nHej, da li želite da prestanete dobivati e-mailove od nas?\n\nKliknite $5\ni promijenite Vaše postavke onemogućavajući obavještenja putem emaila.",
-	"right-awardsmanage": "Pravljenje novih i uređivanje postojećih nagrada"
+	"right-giftadmin": "Pravljenje novih i uređivanje postojećih nagrada"
 }

@@ -12,7 +12,7 @@ class RemoveMasterSystemGift extends UnlistedSpecialPage {
 	 */
 	public function __construct() {
 		global $wgUseOss, $wgOssEndpoint;
-		parent::__construct( 'RemoveMasterSystemGift' );
+		parent::__construct( 'RemoveMasterSystemGift', 'giftadmin' );
 		if ($wgUseOss){
             $accessKeyId = Confidential::$aliyunKey;
             $accessKeySecret = Confidential::$aliyunSecret;
@@ -24,6 +24,7 @@ class RemoveMasterSystemGift extends UnlistedSpecialPage {
             }
         }
 	}
+
 
 	/**
 	 * Deletes a gift image from $wgUploadDirectory/awards/
@@ -60,12 +61,6 @@ class RemoveMasterSystemGift extends UnlistedSpecialPage {
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$user = $this->getUser();
-
-		// If the user doesn't have the required 'awardsmanage' permission, display an error
-		if ( !$user->isAllowed( 'awardsmanage' ) ) {
-			$out->permissionRequired( 'awardsmanage' );
-			return;
-		}
 
 		// Show a message if the database is in read-only mode
 		if ( wfReadOnly() ) {

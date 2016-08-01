@@ -13,7 +13,7 @@ class PopulateAwards extends UnlistedSpecialPage {
 	 * Constructor -- set up the new special page
 	 */
 	public function __construct() {
-		parent::__construct( 'PopulateAwards'/*class*/, 'awardsmanage' /*restriction*/ );
+		parent::__construct( 'PopulateAwards'/*class*/, 'giftadmin' /*restriction*/ );
 	}
 
 	/**
@@ -26,12 +26,6 @@ class PopulateAwards extends UnlistedSpecialPage {
 
 		$out = $this->getOutput();
 		$user = $this->getUser();
-
-		// If the user doesn't have the required 'awardsmanage' permission, display an error
-		if ( !$user->isAllowed( 'awardsmanage' ) ) {
-			$out->permissionRequired( 'awardsmanage' );
-			return;
-		}
 
 		// Show a message if the database is in read-only mode
 		if ( wfReadOnly() ) {

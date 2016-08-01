@@ -70,5 +70,5 @@
 	"topawards-empty": "Er zijn geen onderscheidingen voor deze categorie of niemand heeft de onderscheiding nog ontvangen.",
 	"system_gift_received_subject": "U hebt de $1-prijs gekregen op {{SITENAME}}!",
 	"system_gift_received_body": "Hallo $1,\n\nU hebt zojuist de $2-prijs op {{SITENAME}} gekregen!\n\n\"$3\"\n\nKlik op de verwijzing hieronder om uw prijzenkast te bekijken!\n\n$4\n\nWe hopen dat u er blij mee bent!\n\nBedankt,\n\n\nHet {{SITENAME}}-team\n\n---\n\nWilt u geen e-mails meer van ons ontvangen?\n\nKlik op $5\nen wijzig uw instellingen om e-mailwaarschuwingen uit te schakelen.",
-	"right-awardsmanage": "Nieuwe prijzen aanmaken en bestaande prijzen bewerken"
+	"right-giftadmin": "Nieuwe prijzen aanmaken en bestaande prijzen bewerken"
 }

@@ -67,5 +67,5 @@
 	"topawards-empty": "Sama ada anugerah belum dikonfigurasi untuk kategori anugerah ini, ataupun belum ada sesiapa yang menerima anugerah itu.",
 	"system_gift_received_subject": "Anda telah menerima anugerah $1 di {{SITENAME}}!",
 	"system_gift_received_body": "Kepada $1.\n\nAnda baru menerima anugerah $2 di {{SITENAME}}!\n\n\"$3\"\n\nKlik di bawah untuk melihat piala anda!\n\n$4\n\nSemoga anda menyukainya!\n\nIhsan,\n\n\nPasukan {{SITENAME}}\n\n---\n\nAdakah anda tidak mahu menerima e-mel daripada kami?\n\nKlik $5\ndan tukar tetapan anda untuk mematikan pemberitahuan e-mel.",
-	"right-awardsmanage": "Mencipta anugerah baru dan menyunting anugerah sedia ada"
+	"right-giftadmin": "Mencipta anugerah baru dan menyunting anugerah sedia ada"
 }

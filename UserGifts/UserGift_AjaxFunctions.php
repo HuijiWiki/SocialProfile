@@ -12,7 +12,7 @@ function wfCheckUserIsHaveGift( $user_id, $gift_id ) {
 	// }
 	$user = User::newFromID($user_id);
 	$ug = new UserGifts( $user->getName() );
-	$res = $ug->doesUserOwnGift( $user_id, $gift_id );
+	$res = $ug->doesUserOwnGiftOfTheSameGiftType( $user_id, $gift_id );
 	if ($res == false) {
 		return 'success';
 	}else{

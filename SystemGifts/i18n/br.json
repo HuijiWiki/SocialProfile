@@ -52,5 +52,5 @@
 	"topawards-friends": "Mignoned",
 	"system_gift_received_subject": "Resevet hoc'h eus ar garedon $1 war {{SITENAME}} !",
 	"system_gift_received_body": "Salud deoc'h, $1.\n\nEmaoc'h o paouez resev ar garedon $2 war {{SITENAME}} !\n\n\"$3\"\n\nKlikit war al liamm amañ dindan evit gwelet ho trofe !\n\n$4\n\nEmichañs e plijo deoc'h !\n\nTrugarez deoc'h,\n\n\nSkipailh {{SITENAME}} \n\n---\n\nC'hoant hoc'h eus da baouez da resev posteloù diganimp ?\n\nKlikit war $5\nha cheñchit hoc'h arventennoù evit diweredekaat ar c'hemenn dra bostel.",
-	"right-awardsmanage": "Krouiñ hag aozañ garedonoù"
+	"right-giftadmin": "Krouiñ hag aozañ garedonoù"
 }

@@ -43,5 +43,5 @@
 	"ga-viewlist": "Leß met Jeschenke aanloore",
 	"system_gift_received_subject": "Do häs {{GRAMMAR:em|{{SITENAME}}}} de Belohnung „$1“ krääje!",
 	"system_gift_received_body": "Joden Daach $1,\n\n{{GRAMMAR:em|{{SITENAME}}}} häs De jrad de Belohung $2 bekumme!\n\n„$3“\n\nJangl op die Sigg hee, un don Ding Sammlung vun Belohnunge beloore:\n\n$4\n\nMer hoffe, Do maachs dat!\n\nMer bedanke uns.\n\n---\n\nWells de kein e-mail mieh vun uns krijje?\n\nDann jangk noh $5\nun donn en Dinge Ensstellunge de Nohrechte övver e-mail affschallde.",
-	"right-awardsmanage": "Belohnunge ändere udder neu aanlööje"
+	"right-giftadmin": "Belohnunge ändere udder neu aanlööje"
 }

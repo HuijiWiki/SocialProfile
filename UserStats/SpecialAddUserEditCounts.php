@@ -6,7 +6,7 @@
 class SpecialAddUserEditCounts extends UnlistedSpecialPage{
 	
 	public function __construct() {
-		parent::__construct( 'AddUserEditCounts' );
+		parent::__construct( 'AddUserEditCounts', 'AddUserEditCounts' );
 
 	}
 
@@ -28,13 +28,6 @@ class SpecialAddUserEditCounts extends UnlistedSpecialPage{
 		global $wgMemc, $wgUser;
 		$out = $this->getOutput();
 		$request = $this->getRequest();
-		/**
-		 * only staff can operate this special page
-		 */
-		if ( !$wgUser->isAllowed( 'AddUserEditCounts' ) ) {
-			$out->permissionRequired( 'AddUserEditCounts' );
-			return;
-		}
 		$userName = empty($request->getVal( 'user' ))?null:$request->getVal( 'user' );
 		$num = empty($request->getVal('num'))?null:$request->getVal('num');
 		$date = empty($request->getVal('date'))?null:$request->getVal('date');

@@ -5,7 +5,7 @@
 class SpecialVideos extends SpecialPage{
     
     function __construct(){
-        parent::__construct( 'Videos' );
+        parent::__construct( 'Videos', 'upload' );
     }
 
     function getGroupName() {
@@ -47,8 +47,7 @@ class SpecialVideos extends SpecialPage{
             $output .="<div>URL<input type='text' class='video-url' id='uploadvideos' name='uploadvideos'><br>";
             if( !empty($reupload) ){
                 if( !$wgUser->isAllowed('reupload') ){
-                    $out->permissionRequired( 'reupload' );
-                    return false;
+                    throw new PermissionsError( 'reupload' );
                 }
                 $output .="文件名<input type='text' class='video-name' name='upload-video-name' readonly='true' value='".$filename."'>
                 <input  type='hidden' class='upload-new-revision' value='reupload'>";

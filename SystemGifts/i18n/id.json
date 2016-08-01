@@ -46,5 +46,5 @@
 	"ga-viewlist": "Lihat daftar hadiah",
 	"system_gift_received_subject": "Anda mendapatkan $1 piala di {{SITENAME}}!",
 	"system_gift_received_body": "Hai $1.\n\nAnda baru menerima $2 penghargaan di {{SITENAME}}!\n\n\"$3\"\n\nKlik di bawah untuk mengetahui jenis penghargaan Anda!\n\n$4\n\nKami harap Anda menyukainya!\n\nTerima kasih,\n\n\n{{SITENAME}} tim\n\n---\n\nIngin berhenti mendapatkan surel dari kami?\n\nKlik $5\ndan ubah setting anda untuk menonaktifkan notifikasi surel.",
-	"right-awardsmanage": "Buat baru dan sunting penghargaan yang ada"
+	"right-giftadmin": "Buat baru dan sunting penghargaan yang ada"
 }

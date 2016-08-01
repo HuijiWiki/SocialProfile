@@ -14,7 +14,7 @@ class SpecialSendToFollowers extends UnlistedSpecialPage {
 	 */
 	public function __construct() {
 
-		parent::__construct( 'SendToFollowers' );
+		parent::__construct( 'SendToFollowers', 'SendToFollowers' );
 	}
 
 	/**
@@ -26,11 +26,6 @@ class SpecialSendToFollowers extends UnlistedSpecialPage {
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$user = $this->getUser();
-		// If the user doesn't have the required 'SendToFollowers' permission, display an error
-		if ( !$user->isAllowed( 'SendToFollowers' ) ) {
-			$out->permissionRequired( 'SendToFollowers' );
-			return;
-		}
 
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();

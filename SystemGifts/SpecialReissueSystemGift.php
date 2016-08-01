@@ -7,7 +7,7 @@ class SpecialReissueSystemGift extends SpecialPage{
 	
 	function __construct(){
 
-		parent::__construct( 'ReissueSystemGift' );
+		parent::__construct( 'ReissueSystemGift', 'giftadmin' );
 	
 	}
 
@@ -30,13 +30,7 @@ class SpecialReissueSystemGift extends SpecialPage{
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$this->setHeaders();
-		/**
-		 * only staff can operate this special page
-		 */
-		if ( !$wgUser->isAllowed( 'AddFestivalGift' ) ) {
-			$out->permissionRequired( 'AddFestivalGift' );
-			return;
-		}
+
 		$output = "";
 		$output .= "<form method='post' action='/wiki/special:reissuesystemgift?method=add' >
 			成就ID：<input type='text' name='giftId' >

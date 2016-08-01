@@ -43,5 +43,5 @@
 	"ga-viewlist": "Ver Lista de Presentes",
 	"system_gift_received_subject": "Você recebeu o prêmio $1 em {{SITENAME}}!",
 	"system_gift_received_body": "Oi $1:\n\nVocê acaba de receber o prêmio $2 em {{SITENAME}}!\n\n\"$3\"\n\nClique abaixo para ver sua estante de troféis!\n\n$4\n\nEsperamos que tenha gostado!\n\nObrigado,\n\n\nO Time de {{SITENAME}}\n\n---\n\nEi, quer parer de receber e-mails de nós?\n\nClique $5\ne altere suas preferências para desabilitar e-mails de notificação.",
-	"right-awardsmanage": "Crie novos e edite prêmios existentes"
+	"right-giftadmin": "Crie novos e edite prêmios existentes"
 }

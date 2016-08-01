@@ -43,5 +43,5 @@
 	"ga-viewlist": "Vejatz la lista dels presents",
 	"system_gift_received_subject": "Avètz recebut lo prèmi $1 sus {{SITENAME}} !",
 	"system_gift_received_body": "Bonjorn $1,\n\nAvètz recebut lo prèmi $2 sus {{SITENAME}} !\n\n« $3 »\n\nClicatz sul ligam çaijós per veire vòstre trofèu\n\n$4\n\nEsperam que vos agradarà !\n\nMercés,\n\n\nL'equipa de {{SITENAME}}\n\n---\n\nVolètz pas recebre mai de corrièrs electronics de nòstra part ?\n\nClicatz $5\ne modificatz vòstras preferéncias per desactivar las notificacions per corrièr electronic.",
-	"right-awardsmanage": "Crear de prèmis novèls e modificar los prèmis existents"
+	"right-giftadmin": "Crear de prèmis novèls e modificar los prèmis existents"
 }

@@ -55,12 +55,6 @@ class SpecialEditProfile extends SpecialUpdateProfile {
 			return;
 		}
 
-		// Are we even allowed to do this?
-		if ( !$user->isAllowed( 'editothersprofiles' ) ) {
-			$out->permissionRequired( 'editothersprofiles' );
-			return;
-		}
-
 		// Add CSS & JS
 		$out->addModuleStyles( 'ext.socialprofile.userprofile.css' );
 		$out->addModules( 'ext.userProfile.updateProfile' );

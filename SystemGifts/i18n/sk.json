@@ -43,5 +43,5 @@
 	"ga-viewlist": "Zobraziť zoznam darčekov",
 	"system_gift_received_subject": "Dostali ste ocenenie $1 na {{GRAMMAR:lokál|{{SITENAME}}}}",
 	"system_gift_received_body": "Ahoj $1:\n\nPráve ste dostali ocenenie $2 na {{GRAMMAR:lokál|{{SITENAME}}}}\n\n„$3“\n\nChcete si pozrieť svoje ocenenie? Kliknite na nasledovný odkaz:\n\n$4\n\nDúfame, že sa vám bude páčiť!\n\nVďaka,\n\n\nTím {{GRAMMAR:genitív|{{SITENAME}}}}\n\n---\n\nNeželáte si od nás dostávať emaily?\n\nKliknite na $5\na zmeňte svoje nastavenia týkajúce sa upozornení emailom.",
-	"right-awardsmanage": "Vytvárať nové alebo upravovať existujúce ocenenia"
+	"right-giftadmin": "Vytvárať nové alebo upravovať existujúce ocenenia"
 }

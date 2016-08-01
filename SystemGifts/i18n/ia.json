@@ -69,5 +69,5 @@
 	"topawards-empty": "O il non ha premios configurate pro iste categoria, o nemo ha ancora recipite iste premios.",
 	"system_gift_received_subject": "Tu ha recipite le premio $1 in {{SITENAME}}!",
 	"system_gift_received_body": "Salute $1.\n\nTu ha justo recipite le premio $2 in {{SITENAME}}!\n\n\"$3\"\n\nClicca infra pro vider tu armario de tropheos!\n\n$4\n\nNos spera que isto te place!\n\nGratias,\n\n\nLe equipa de {{SITENAME}}\n\n---\n\nTu non vole reciper plus messages de nos?\n\nClicca $5\ne disactiva in tu preferentias le notificationes per e-mail.",
-	"right-awardsmanage": "Crear nove premios e modificar existentes"
+	"right-giftadmin": "Crear nove premios e modificar existentes"
 }

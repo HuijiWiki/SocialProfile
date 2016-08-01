@@ -21,5 +21,5 @@
 	"ga-uploadsuccess": "আপলোড সফল",
 	"ga-viewlist": "উপহারের তালিকা দেখাও",
 	"system_gift_received_subject": "আপনি {{SITENAME}} সাইটে $1 পুরস্কার লাভ করেছেন!",
-	"right-awardsmanage": "নতুন তৈরি এবং ইতিমধ্যেই থাকা পুরস্কারসমূহ সম্পাদনা করো"
+	"right-giftadmin": "নতুন তৈরি এবং ইতিমধ্যেই থাকা পুরস্কারসমূহ সম্পাদনা করো"
 }

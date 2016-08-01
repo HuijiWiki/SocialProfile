@@ -150,16 +150,30 @@ class UserGifts {
 	 * @return Boolean: true if the user owns the gift, otherwise false
 	 */
 	public function doesUserOwnGift( $user_id, $ug_id ) {
-		return $this->doesUserHaveGiftOfTheSameGiftType( $user_id, $ug_id );
-	}
-
-	public function doesUserHaveGiftOfTheSameGiftType( $user_id, $ug_id ){
 		$dbr = wfGetDB( DB_SLAVE );
 		$s = $dbr->selectRow(
 			'user_gift',
 			array( 'ug_user_id_to' ),
 			array( 
-				'ug_gift_id' => $ug_id,
+				'ug_id' => $ug_id,
+				'ug_user_id_to' => $user_id
+			 ),
+			__METHOD__
+		);
+		if ( $s !== false ) {
+			return true;
+		}
+		return false;		
+
+	}
+
+	public function doesUserHaveGiftOfTheSameGiftType( $user_id, $us_gfit_id ){
+		$dbr = wfGetDB( DB_SLAVE );
+		$s = $dbr->selectRow(
+			'user_gift',
+			array( 'ug_user_id_to' ),
+			array( 
+				'ug_gift_id' => $ug_gift_id,
 				'ug_user_id_to' => $user_id
 			 ),
 			__METHOD__

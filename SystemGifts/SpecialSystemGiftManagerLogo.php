@@ -14,7 +14,7 @@ class SystemGiftManagerLogo extends GiftManagerLogo {
 	 * Constructor -- set up the new special page
 	 */
 	public function __construct() {
-		parent::__construct( 'SystemGiftManagerLogo' );
+		parent::__construct( 'SystemGiftManagerLogo', 'giftadmin' );
 	}
 
 	/**
@@ -30,12 +30,6 @@ class SystemGiftManagerLogo extends GiftManagerLogo {
 		// Set the robot policies, etc.
 		$out->setArticleRelated( false );
 		$out->setRobotPolicy( 'noindex,nofollow' );
-
-		// If the user doesn't have the required 'awardsmanage' permission, display an error
-		if ( !$user->isAllowed( 'awardsmanage' ) ) {
-			$out->permissionRequired( 'awardsmanage' );
-			return;
-		}
 
 		// Show a message if the database is in read-only mode
 		if ( wfReadOnly() ) {

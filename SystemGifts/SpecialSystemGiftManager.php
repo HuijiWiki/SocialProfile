@@ -13,7 +13,7 @@ class SystemGiftManager extends SpecialPage {
 	 * Constructor -- set up the new special page
 	 */
 	public function __construct() {
-		parent::__construct( 'SystemGiftManager'/*class*/, 'awardsmanage'/*restriction*/ );
+		parent::__construct( 'SystemGiftManager'/*class*/, 'giftadmin'/*restriction*/ );
 	}
 	function getGroupName() {
     		return 'wiki';
@@ -31,12 +31,6 @@ class SystemGiftManager extends SpecialPage {
 
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
-
-		// If the user doesn't have the required 'awardsmanage' permission, display an error
-		if ( !$user->isAllowed( 'awardsmanage' ) ) {
-			$out->permissionRequired( 'awardsmanage' );
-			return;
-		}
 
 		// Show a message if the database is in read-only mode
 		if ( wfReadOnly() ) {
@@ -125,7 +119,7 @@ class SystemGiftManager extends SpecialPage {
 		if ( $gifts ) {
 			foreach ( $gifts as $gift ) {
 				$deleteLink = '';
-				if ( $user->isAllowed( 'awardsmanage' ) ) {
+				if ( $user->isAllowed( 'giftadmin' ) ) {
 					$removePage = SpecialPage::getTitleFor( 'RemoveMasterSystemGift' );
 					$deleteLink = '<a href="' .
 						htmlspecialchars( $removePage->getFullURL( "gift_id={$gift['id']}" ) ) .

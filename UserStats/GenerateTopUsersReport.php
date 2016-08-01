@@ -48,12 +48,6 @@ class GenerateTopUsersReport extends UnlistedSpecialPage {
 			return false;
 		}
 
-		// Check for the correct permission
-		if ( !$user->isAllowed( 'generatetopusersreport' ) ) {
-			$out->permissionRequired( 'generatetopusersreport' );
-			return false;
-		}
-
 		// Set the page title, robot policy, etc.
 		$this->setHeaders();
 

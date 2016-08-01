@@ -68,5 +68,5 @@
 	"topawards-empty": "Entweder git's für nie Usszeichnigskategori no kei Usszeichnige, oder es het no niemer eini vo dänne Usszeichnige übercho.",
 	"system_gift_received_subject": "Du hesch d $1 Uuszeichnig iberchu uf {{SITENAME}}!",
 	"system_gift_received_body": "Sali $1:\n\nDu hesch grad d $2 Uuszeichnig iberchu uf {{SITENAME}}!\n\n\"$3\"\n\nDruck doo go die Uuszeichnig iberpriefe!\n\n$4\n\nMir hoffe, s gfallt Dir!\n\nDankschen,\n\n\nD Lyt vu {{SITENAME}}\n\n---\n\nHa, Du wetsch gar keini E-Mai meh vun is iberchu?\n\nDruck $5\nun ändere Dyyni Yystellige go d E-Mail-Benochrichtigunge abstelle.",
-	"right-awardsmanage": "Neji Uuszeichnige aalege un sonigi bearbeite wu s scho het"
+	"right-giftadmin": "Neji Uuszeichnige aalege un sonigi bearbeite wu s scho het"
 }

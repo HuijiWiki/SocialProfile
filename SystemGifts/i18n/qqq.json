@@ -40,5 +40,5 @@
 	"topawards-comment-milestone": "Parameters:\n* $1 is a number; also used for PLURAL.",
 	"topawards-recruit-milestone": "Parameters:\n* $1 is a number; also used for PLURAL.",
 	"topawards-friend-milestone": "Parameters:\n* $1 is a number; also used for PLURAL.",
-	"right-awardsmanage": "{{doc-right|awardsmanage}}"
+	"right-giftadmin": "{{doc-right|giftadmin}}"
 }

@@ -67,5 +67,5 @@
 	"topawards-empty": "Ou non hai ningún premio configurado para esta categoría de premios ou ben aínda ninguén obtivo estes premios.",
 	"system_gift_received_subject": "Recibiu o premio $1 en {{SITENAME}}!",
 	"system_gift_received_body": "Ola $1:\n\nAcaba de recibir o premio $2 en {{SITENAME}}!\n\n\"$3\"\n\nPrema embaixo para ver o seu trofeo!\n\n$4\n\nAgardamos que lle guste!\n\nGrazas,\n\n\nO equipo de {{SITENAME}}\n\n---\n\nQuere deixar de recibir os nosos correos electrónicos?\n\nPrema $5\ne cambie as súas preferencias para desactivar as notificacións por correo electrónico.",
-	"right-awardsmanage": "Crear novos agasallos e editar os existentes"
+	"right-giftadmin": "Crear novos agasallos e editar os existentes"
 }

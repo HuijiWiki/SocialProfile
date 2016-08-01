@@ -20,9 +20,9 @@ var WikiUserFollow = {
 	},
 	UserNameAjax: function(num, next) {
 		if (this.rel_type == 1 || this.rel_type == ''){
-			var API = 'http://www.huiji.wiki/api.php?action=query&list=allhuijiusers&aufollowing=' + this.username + '&aulimit=' + num + '&format=json&aufrom=' + next;
+			var API = '/api.php?action=query&list=allhuijiusers&aufollowing=' + this.username + '&aulimit=' + num + '&format=json&aufrom=' + next;
 		} else {
-			var API = 'http://www.huiji.wiki/api.php?action=query&list=allhuijiusers&aufollowedby=' + this.username + '&aulimit=' + num + '&format=json&aufrom=' + next;
+			var API = '/api.php?action=query&list=allhuijiusers&aufollowedby=' + this.username + '&aulimit=' + num + '&format=json&aufrom=' + next;
 		}
 		
 		var allUser = [];
@@ -34,7 +34,7 @@ var WikiUserFollow = {
 				var theData = data.query.allhuijiusers;
 				//console.log(data.continue.aufrom)
 				if (data.continue) {
-					WikiUserFollow.theNextPage = data.continue.aufrom;
+					WikiUserFollow.theNextPage = data.continue.aufrom || '';
 				}
 				for (var i = 0; i < theData.length; i++) {
 					allUser[i] = theData[i].name;
@@ -43,11 +43,10 @@ var WikiUserFollow = {
 		}
 		xmlHttp.send(null);
 		allUser = allUser.join('|');
-		console.log(allUser)
 		return allUser;
 	},
 	UserInfoAjax: function(userList) {
-		var API = 'http://www.huiji.wiki/api.php?action=query&list=huijiusers&ususers=' + userList + '&usprop=context|avatar|gender|context|editcount|gender|status|followingcount|followercount|level|stats|&format=json';
+		var API = '/api.php?action=query&list=huijiusers&ususers=' + userList + '&usprop=context|avatar|gender|context|editcount|gender|status|followingcount|followercount|level|stats|&format=json';
 		var xmlHttp = new XMLHttpRequest();
 		xmlHttp.open("get", API, false);
 		xmlHttp.onreadystatechange = function() {
@@ -111,7 +110,7 @@ var WikiUserFollow = {
 		$('.UserFollowBtn_follow').on('click', function() {
 			var _this = $(this)
 			if (mw.config.get('wgUserName')) {
-				var API = 'http://www.huiji.wiki/api.php?action=useruserfollow&follower=' + mw.config.get('wgUserName') + '&followee=' + $(this).siblings('.UserFollow_Self_right_name').html() + '&format=json';
+				var API = '/api.php?action=useruserfollow&follower=' + mw.config.get('wgUserName') + '&followee=' + $(this).siblings('.UserFollow_Self_right_name').html() + '&format=json';
 				var xmlHttp = new XMLHttpRequest();
 				xmlHttp.open("post", API, true);
 				xmlHttp.send(API);
@@ -131,7 +130,7 @@ var WikiUserFollow = {
 		$('.UserFollowBtn_unfollow').on('click', function() {
 			var _this = $(this)
 			if (mw.config.get('wgUserName')) {
-				var API = 'http://www.huiji.wiki/api.php?action=useruserunfollow&follower=' + mw.config.get('wgUserName') + '&followee=' + $(this).siblings('.UserFollow_Self_right_name').html() + '&format=json';
+				var API = '/api.php?action=useruserunfollow&follower=' + mw.config.get('wgUserName') + '&followee=' + $(this).siblings('.UserFollow_Self_right_name').html() + '&format=json';
 				console.log(API)
 				var xmlHttp = new XMLHttpRequest();
 				xmlHttp.open("post", API, true);
@@ -163,7 +162,9 @@ var WikiUserFollow = {
 					'<div class="rect5"></div>' +
 					'</div>');
 				window.setTimeout(function() {
-					WikiUserFollow.UserInfoAjax(WikiUserFollow.UserNameAjax(20, WikiUserFollow.theNextPage));
+					if (WikiUserFollow.theNextPage != ''){
+						WikiUserFollow.UserInfoAjax(WikiUserFollow.UserNameAjax(20, WikiUserFollow.theNextPage));
+					}
 					WikiUserFollow.theScroll = 0;
 				}, 800);
 			}
@@ -185,7 +186,7 @@ var WikiUserFollow = {
 		$('.searchInput').on('keyup', function() {
 			var _inputValue = _thisInput.getValue().toUpperCase();
 			if (_inputValue) {
-				var API = 'http://www.huiji.wiki/api.php?action=query&list=allhuijiusers&aufollowing=Volvo&aulimit=10&format=json&aufrom=' + _inputValue;
+				var API = '/api.php?action=query&list=allhuijiusers&aufollowing=Volvo&aulimit=10&format=json&aufrom=' + _inputValue;
 				console.log(API)
 				var xmlHttp = new XMLHttpRequest();
 				xmlHttp.open("get", API, false);
@@ -224,8 +225,8 @@ var WikiUserFollow = {
 }
 $(function() {
 	mw.loader.using('oojs-ui').done(function() {
-		WikiUserFollow.username = WikiUserFollow.getParameterByName('user');
-		WikiUserFollow.rel_type = WikiUserFollow.getParameterByName('rel_type');
+		WikiUserFollow.username = WikiUserFollow.getParameterByName('user') || mw.config.get('wgUserName');
+		WikiUserFollow.rel_type = WikiUserFollow.getParameterByName('rel_type') || 1;
 		WikiUserFollow.UserInfoAjax(WikiUserFollow.UserNameAjax(8, ''));
 		WikiUserFollow.ScrollAjax();
 		WikiUserFollow.Search();

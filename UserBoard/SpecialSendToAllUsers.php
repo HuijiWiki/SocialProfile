@@ -14,7 +14,7 @@ class SpecialsendToAllUsers extends UnlistedSpecialPage {
 	 */
 	public function __construct() {
 		set_time_limit(0);
-		parent::__construct( 'sendToAllUsers' );
+		parent::__construct( 'sendToAllUsers', 'SendToAllUsers' );
 	}
 
 	/**
@@ -26,11 +26,6 @@ class SpecialsendToAllUsers extends UnlistedSpecialPage {
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$user = $this->getUser();
-		// If the user doesn't have the required 'sendToAllUsers' permission, display an error
-		if ( !$user->isAllowed( 'SendToAllUsers' ) ) {
-			$out->permissionRequired( 'SendToAllUsers' );
-			return;
-		}
 
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();

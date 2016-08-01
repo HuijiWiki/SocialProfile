@@ -157,24 +157,14 @@ class UserSystemMessage {
             'tooltip' => 'echo-pref-tooltip-advancement',
         );
         $notifications['advancement'] = array(
-        	// 'primary-link' => array('message' => 'notification-link-text-respond-to-user', 'destination' => 'advancement-page'),
-            'category' => 'advancement',
-            'group' => 'positive',
-            'formatter-class' => 'EchoAdvancementFormatter',
-            'title-message' => 'notification-advancement',
-            'title-params' => array( 'title', 'lvl', 'main-title-text' ),
-            'flyout-message' => 'notification-advancement-flyout',
-            'flyout-params' => array( 'title', 'lvl', 'main-title-text' ),
-            'payload' => array( 'summary' ),
-            'email-subject-message' => 'notification-advancement-email-subject',
-            'email-subject-params' => array( 'title' ),
-            'email-body-message' => 'notification-advancement-email-body',
-            'email-body-params' => array( 'title', 'lvl', 'main-title-text', 'email-footer' ),
-            'email-body-batch-message' => 'notification-advancement-email-batch-body',
-            'email-body-batch-params' => array( 'title', 'main-title-text' ),
-            'icon' => 'featured',
-            'section' => 'alert',
-            'secondary-link' => array( ),
+        	'category' => 'advancement',
+        	'group' => 'positive',
+        	'section' => 'alert',
+        	'presentation-model' => 'EchoUserAdvancementPresentationModel',
+        	'bundle' => [
+        		'web' => true,
+        		'expandable' => true,
+        	]
         );
         return true;
     }
@@ -202,49 +192,34 @@ class UserSystemMessage {
 	}
 
 }
-class EchoAdvancementFormatter extends EchoCommentFormatter {
-	/**
-	 * Helper function for getLink()
-	 *
-	 * @param \EchoEvent $event
-	 * @param \User $user The user receiving the notification
-	 * @param string $destination The destination type for the link
-	 * @return array including target and query parameters
-	 * @throws FlowException
-	 */
-	protected function getLinkParams( $event, $user, $destination ) {
-		// Set up link parameters based on the destination (or pass to parent)
-		switch ( $destination ) {
-			case 'advancement-page':
-				$titleData = $event->getTitle();
-        		return array($titleData, array());
-			default:
-				return parent::getLinkParams( $event, $user, $destination );
-		}
+
+class EchoUserAdvancementPresentationModel extends EchoEventPresentationModel {
+	public function canRender() {
+		return (bool)$this->event->getTitle();
 	}
-   /**
-     * @param $event EchoEvent
-     * @param $param
-     * @param $message Message
-     * @param $user User
-     */
-    protected function processParam( $event, $param, $message, $user ) {
-        if ( $param === 'lvl' ) {
-            $eventData = $event->getExtra();
-            if ( !isset( $eventData['new-level']) ) {
-                $message->params( '' );
-                return;
-            }
-            $this->setTitleLink(
-                $event,
-                $message,
-                array(
-                    'class' => 'mw-echo-advancement',
-                    'linkText' => $eventData['new-level'],
-                )
-            );
-        } else {
-            parent::processParam( $event, $param, $message, $user );
-        }
-    }
+	public function getIconType() {
+		return 'thanks';
+	}
+	public function getHeaderMessage() {
+		if ( $this->isBundled() ) {
+			$msg = $this->msg( 'notification-bundle-header-advancement' );
+			$msg->params( $this->getBundleCount() );
+			return $msg;
+		}
+		$msg = parent::getHeaderMessage();
+		$msg->params( $this->event->getExtraParam('new-level'));
+		return $msg;
+	}
+	public function getBodyMessage() {
+		return false;
+	}
+	public function getPrimaryLink() {
+		return [
+			'url' => $this->event->getTitle()->getFullURL(),
+			'label' => $this->msg( 'notification-view-user-page' )->text(),
+		];
+	}
+	public function getSecondaryLinks() {
+		return [];
+	}
 }

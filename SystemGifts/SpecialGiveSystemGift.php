@@ -7,7 +7,7 @@ class SpecialGiveSystemGift extends SpecialPage{
 	
 	function __construct(){
 
-		parent::__construct( 'GiveSystemGift' );
+		parent::__construct( 'GiveSystemGift', 'giftadmin' );
 	
 	}
 
@@ -33,10 +33,6 @@ class SpecialGiveSystemGift extends SpecialPage{
 		/**
 		 * only staff can operate this special page
 		 */
-		if ( !$wgUser->isAllowed( 'GiveSystemGift' ) ) {
-			$out->permissionRequired( 'GiveSystemGift' );
-			return;
-		}
 
 		$desigGiftId = empty($request->getInt( 'designation' ))?null:$request->getInt( 'designation' );
 		// $condition = empty($request->getInt('condition'))?null:$request->getInt('condition');

@@ -7,9 +7,9 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 global $IP, $wgAutoloadClasses, $wgAvailableRights, $wgGroupPermissions,
 	$wgSpecialPages;
 
-$wgAvailableRights[] = 'awardsmanage';
-$wgGroupPermissions['staff']['awardsmanage'] = true;
-$wgGroupPermissions['sysop']['awardsmanage'] = true;
+$wgAvailableRights[] = 'giftadmin';
+$wgGroupPermissions['staff']['giftadmin'] = true;
+$wgGroupPermissions['sysop']['giftadmin'] = true;
 
 $wgSystemGiftsDirectory = "$IP/extensions/SocialProfile/SystemGifts";
 

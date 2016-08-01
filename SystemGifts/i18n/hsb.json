@@ -43,5 +43,5 @@
 	"ga-viewlist": "Lisćinu darow sej wobhladać",
 	"system_gift_received_subject": "Sy myto $1 na {{GRAMMAR:lokatiw|{{SITENAME}}}} dóstał!",
 	"system_gift_received_body": "Witaj $1.\n\nSy runje myto $2 na {{GRAMMAR:lokatiw|{{SITENAME}}}} dóstał!\n\n\"$3\"\n\nKlikń deleka, zo by sej swoju trofeju wobhladał!\n\n$4\n\nNadźijamy so, zo so ći spodoba!\n\nDźakujemy so,\n\nTeam {{SITENAME}}\n\n---\n\nHej, hižo nochceš nam e-mejle słać?\n\nKlikń na $5\na změń swoje nastajenja, zo by e-mejlowe zdźělenja znjemóžnił.",
-	"right-awardsmanage": "Nowe myta wutworić a eksistowace wobdźěłać"
+	"right-giftadmin": "Nowe myta wutworić a eksistowace wobdźěłać"
 }

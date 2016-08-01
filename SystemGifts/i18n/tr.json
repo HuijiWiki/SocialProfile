@@ -44,5 +44,5 @@
 	"ga-viewlist": "Hediye listesini gör",
 	"system_gift_received_subject": "{{SITENAME}} üzerinde $1 ödülü aldınız!",
 	"system_gift_received_body": "Merhaba $1.\n\n{{SITENAME}} üzerinde $2 ödülünü aldınız!\n\n\"$3\"\n\nÖdül dolabınızı kontrol etmek için aşağıya tıklayın!\n\n$4\n\nUmarız hoşunuza gider!\n\nTeşekkürler,\n\n{{SITENAME}} ekibi\n\n---\n\nHey, bizden e-posta alımını durdurmak ister misiniz?\n\n$5 bağlantısına tıklayın\nve e-posta bildirimlerini devre dışı bırakmak için ayarlarınızı değiştirin.",
-	"right-awardsmanage": "Yeni ödül oluşturur ve mevcut ödülleri düzenler"
+	"right-giftadmin": "Yeni ödül oluşturur ve mevcut ödülleri düzenler"
 }

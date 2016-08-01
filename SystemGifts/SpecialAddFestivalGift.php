@@ -7,7 +7,7 @@ class SpecialAddFestivalGift extends SpecialPage{
 	
 	function __construct(){
 
-		parent::__construct( 'AddFestivalGift' );
+		parent::__construct( 'AddFestivalGift', 'giftadmin' );
 	
 	}
 
@@ -20,7 +20,6 @@ class SpecialAddFestivalGift extends SpecialPage{
 	function getGroupName() {
 		return 'wiki';
 	}
-
 	/**
 	 * Show the special page
 	 *
@@ -33,10 +32,6 @@ class SpecialAddFestivalGift extends SpecialPage{
 		/**
 		 * only staff can operate this special page
 		 */
-		if ( !$wgUser->isAllowed( 'AddFestivalGift' ) ) {
-			$out->permissionRequired( 'AddFestivalGift' );
-			return;
-		}
 		$output = "";
 		$output .= "<form method='post' action='/wiki/special:addfestivalgift?method=add' >
 			成就ID：<input type='text' name='giftId' >
