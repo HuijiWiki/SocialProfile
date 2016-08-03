@@ -3,8 +3,8 @@
  */
 
 mw.__proto__.steamAchievement = function (option) {
-	if (typeof option != "object" || option == null){
-		option = {};	
+	if (typeof option != "object" || option == null || option.key == undefined){
+		return; //not a proper call	
 	}
 	var config = {
 		page : option.page || '',
