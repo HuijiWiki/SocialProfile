@@ -1,10 +1,6 @@
 /**
  * Huiji SteamAchievement getter.
- * @example: 
  */
-// $(document).ready(function() {
-// 	mw.steamAchievement(['智慧祝福', '350640']);
-// });
 
 mw.__proto__.steamAchievement = function (option) {
 	if (!option){
