@@ -11,7 +11,7 @@ mw.__proto__.steamAchievement = function (option) {
 		key : option.key || '',
 		language :option.language || 'schinese'
 	}
-	if (config.page == '' || ( mw.config.get('wgPageName') === config.page && mw.config.get('wgAction') === 'View' ) ) {
+	if (config.page == '' || ( mw.config.get('wgPageName') === config.page && mw.config.get('wgAction') === 'view' ) ) {
 		var data = {
 			achievement: []
 		}
