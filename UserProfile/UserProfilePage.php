@@ -283,7 +283,7 @@ class UserProfilePage extends Article {
         $editBox = $ueb->getUserEditInfo($this->user_id);
         $maxlen = $currentMaxlen = 0; //init variables.
         if ($editBox != false) {
-        	$wgOut->addHTML('<div id="user-page-center" class="col-md-12 hidden-xs">
+        	$wgOut->addHTML('<div id="user-page-center" class="row hidden-xs">
         	<div class="panel panel-primary darken no-border"><div class="user-section-heading panel-heading">
  			<div class="user-section-title">贡献</div>
  			<div class="action-right"></div>
@@ -426,7 +426,7 @@ class UserProfilePage extends Article {
         $wgOut->addHTML('</div></div></div>');
     }
 		// Left side
-		$wgOut->addHTML( '<div id="user-page-left" class="col-md-6">' );
+		$wgOut->addHTML( '<div class="row"><div id="user-page-left" class="col-md-6">' );
 
 		if ( !wfRunHooks( 'UserProfileBeginLeft', array( &$this ) ) ) {
 			// wfDebug( __METHOD__ . ": UserProfileBeginLeft messed up profile!\n" );
@@ -473,7 +473,7 @@ class UserProfilePage extends Article {
 			// wfDebug( __METHOD__ . ": UserProfileEndRight messed up profile!\n" );
 		}
 
-		$wgOut->addHTML( '</div><div class="cleared"></div></div>' );
+		$wgOut->addHTML( '</div><div><div class="cleared"></div></div>' );
 	}
 
 	function getUserStatsRow( $label, $value ) {
