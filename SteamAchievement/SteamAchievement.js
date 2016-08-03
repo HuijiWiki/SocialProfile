@@ -3,7 +3,7 @@
  */
 
 mw.__proto__.steamAchievement = function (option) {
-	if (!option){
+	if (typeof option != "object" || option == null){
 		option = {};	
 	}
 	var config = {
@@ -11,7 +11,7 @@ mw.__proto__.steamAchievement = function (option) {
 		key : option.key || '',
 		language :option.language || 'schinese'
 	}
-	if (config.key == '' || ( mw.config.get('wgPageName') === config.key && mw.config.get('wgAction') === 'View' ) ) {
+	if (config.page == '' || ( mw.config.get('wgPageName') === config.page && mw.config.get('wgAction') === 'View' ) ) {
 		var data = {
 			achievement: []
 		}
