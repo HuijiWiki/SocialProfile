@@ -2,7 +2,7 @@
  * Huiji SteamAchievement getter.
  */
 
-mw.__proto__.steamAchievement = function (option) {
+mw.steamAchievement = function (option) {
 	if (typeof option != "object" || option == null){
 		option = {};	
 	}
