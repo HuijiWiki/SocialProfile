@@ -7,9 +7,9 @@ mw.__proto__.steamAchievement = function (option) {
 		option = {};	
 	}
 	var config = {
-		page  = option.page || '',
-		key = option.key || '',
-		language = option.language || 'schinese'
+		page : option.page || '',
+		key : option.key || '',
+		language :option.language || 'schinese'
 	}
 	if (config.key == '' || ( mw.config.get('wgPageName') === config.key && mw.config.get('wgAction') === 'View' ) ) {
 		var data = {
