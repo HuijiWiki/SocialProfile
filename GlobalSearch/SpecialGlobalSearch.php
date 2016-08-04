@@ -39,7 +39,8 @@ class SpecialGlobalSearch extends SpecialPage {
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
 		$out->addModuleStyles('ext.socialprofile.globalsearch.css');
-		$out->addModules('skins.bootstrapmediawiki.search');
+		$out->addModulesStyles('skins.bootstrapmediawiki.search');
+		$out->addModulesScripts('skins.bootstrapmediawiki.search');
 		$output = "";
 		$output .= "<form method='get' class='form-inline' action='/wiki/special:globalsearch' >
 			<div id='mw-search-top-table'><input type='text' class='form-control' name='key' value='".$key."' >
