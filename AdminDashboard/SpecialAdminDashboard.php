@@ -40,7 +40,8 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 			array(
 				'ext.socialprofile.admindashboard.js',
 				'ext.comments.js',
-				'skins.bootstrapmediawiki.emoji'
+				'skins.bootstrapmediawiki.emoji',
+				'skins.bootstrapmediawiki.huiji.getrecordsinterface.js',
 			) 
 		);
 		$out->addJsConfigVars( array( 'wgCommentsSortDescending' => $wgCommentsSortDescending ) );

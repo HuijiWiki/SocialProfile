@@ -575,7 +575,7 @@ $wgResourceModules['ext.socialprofile.admindashboard.css'] = array(
 	    			'../../UserUploadAvatar/main.css'
 				),
 	'dependencies' => array(
-	                'skins.bootstrapmediawiki.top'
+	                'skins.bootstrapmediawiki.top',
 	                ),
 	'localBasePath' => __DIR__ . '/AdminDashboard/css',
 	'remoteExtPath' => 'SocialProfile/AdminDashboard/css',
@@ -593,6 +593,9 @@ $wgResourceModules['ext.socialprofile.admindashboard.js'] = array(
         			'../../UserUploadAvatar/main.js',
         			'admin.js'
 				),
+	'dependencies' => array(
+					'ext.socialprofile.admindashboard.js',
+		),
 	'localBasePath' => __DIR__ . '/AdminDashboard/js',
 	'remoteExtPath' => 'SocialProfile/AdminDashboard/js',
 	'position' => 'bottom',
