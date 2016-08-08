@@ -38,8 +38,14 @@
     text-align: center;
     max-width: 510px;
 }
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 767px) {
     #wiki-body form .form-control{
         width: 100%;
+    }
+    .skin-BootstrapMediawiki .huiji-css-hook #mw-search-top-table > input.mw-ui-button.mw-ui-progressive {
+        width: 15%;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
     }
 }

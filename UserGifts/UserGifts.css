@@ -195,7 +195,7 @@
 .g-give-all {
   border: 1px solid #DCDCDC;
   cursor: pointer;
-  float: left;
+  display: inline-block;
   min-height: 110px;
   margin: 0px 10px 10px 0px;
   padding: 8px;

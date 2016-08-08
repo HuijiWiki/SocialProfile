@@ -71,7 +71,7 @@ class GiveGift extends SpecialPage {
 		} else {
 			$gift = new UserGifts( $user->getName() );
 			$giftInfo = Gifts::getGift( $request->getInt( 'gift_id' ) );
-			if ( $giftId > 0 && (!$giftInfo['repeat']) && $gift->doesUserOwnGiftOfTheSameGiftType($user->getID(), $giftId) ){
+			if ( $giftId > 0 && (!$giftInfo['repeat']) && $gift->doesUserHaveGiftOfTheSameGiftType($user->getID(), $giftId) ){
 				$out->setPageTitle( $this->msg( 'g-error-title' )->plain() );
 				$out->addHTML( $this->msg( 'g-error-already-owned-gift' )->plain() );				
 			}  elseif ( $giftId > 0 && !Gifts::isAllowedToSendGift( $user->getID(), $giftId ) ){
@@ -393,7 +393,7 @@ class GiveGift extends SpecialPage {
 			foreach ( $gifts as $gift ) {
 				$toUser = HuijiUser::newFromID($this->user_id_to);
 				$ug = new UserGifts( $toUser->getName() );
-				$res = $ug->doesUserOwnGiftOfTheSameGiftType( $this->user_id_to, $gift['id'] );
+				$res = $ug->doesUserHaveGiftOfTheSameGiftType( $this->user_id_to, $gift['id'] );
 				$fromUser = HuijiUser::newFromID( $wgUser->getID() );
 				$level = $fromUser->getLevel();
 				$gift_image = 
