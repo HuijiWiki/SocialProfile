@@ -122,6 +122,10 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		$settings['enable-voteny']['title'] = wfMessage('enable-voteny')->escaped();
 		$settings['enable-voteny']['description'] = wfMessage('enable-voteny-description')->escaped();
 		$settings['enable-voteny']['value'] = wfMessage('enable-disabled')->text();
+		$settings['enable-semantic-mediawiki']['title'] = wfMessage('enable-semantic-mediawiki')->escaped();
+		$settings['enable-semantic-mediawiki']['description'] =  wfMessage('enable-semantic-mediawiki-description')->escaped();
+		$settings['enable-semantic-mediawiki']['value'] =  wfMessage('enable-disabled')->text();
+		$settings['enable-semantic-mediawiki']['level'] =  'NA';
 		//$out->enableOOUI();
 // 		$btn = new OOUI\ButtonWidget( array(
 //     'label' => 'Click me!'
@@ -139,7 +143,10 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				foreach( $settings as $key => $value){
 					if ( $value['level'] == 'A'){
 						$enable = $site->getProperty($key);
-						$settings[$key]['value'] = wfMessage("admin-switch-$enable");
+						if ($enable == ''){
+							$enable = 0;
+						}
+						$settings[$key]['value'] = wfMessage("admin-switch-$enable")->text();
 					}
 				}
 				$gtA = true;	
@@ -150,7 +157,10 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				foreach( $settings as $key => $value){
 					if ($value['level'] == 'B'){
 						$enable = $site->getProperty($key);
-						$settings[$key]['value'] = wfMessage("admin-switch-$enable");
+						if ($enable == ''){
+							$enable = 0;
+						}
+						$settings[$key]['value'] = wfMessage("admin-switch-$enable")->text();
 					}
 				}
 				$gtB = true;
@@ -161,7 +171,10 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				foreach( $settings as $key => $value){
 					if ($value['level'] == 'C'){
 						$enable = $site->getProperty($key);
-						$settings[$key]['value'] = wfMessage("admin-switch-$enable");
+						if ($enable == ''){
+							$enable = 0;
+						}
+						$settings[$key]['value'] = wfMessage("admin-switch-$enable")->text();
 					}
 				}
 				$gtC = true;
@@ -172,7 +185,10 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				foreach( $settings as $key => $value){
 					if ($value['level'] == 'D'){
 						$enable = $site->getProperty($key);
-						$settings[$key]['value'] = wfMessage("admin-switch-$enable");
+						if ($enable == ''){
+							$enable = 0;
+						}
+						$settings[$key]['value'] = wfMessage("admin-switch-$enable")->text();
 					}
 				}
 				$gtD = true;
@@ -183,7 +199,10 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				foreach( $settings as $key => $value){
 					if ($value['level'] == 'E'){
 						$enable = $site->getProperty($key);
-						$settings[$key]['value'] = wfMessage("admin-switch-$enable");
+						if ($enable == ''){
+							$enable = 0;
+						}
+						$settings[$key]['value'] = wfMessage("admin-switch-$enable")->text();
 					}
 				}
 				if ($protip == ''){
@@ -193,7 +212,10 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				foreach( $settings as $key => $value){
 					if ($value['level'] == 'NA'){
 						$enable = $site->getProperty($key);
-						$settings[$key]['value'] = wfMessage("admin-switch-$enable");
+						if ($enable == ''){
+							$enable = 0;
+						}
+						$settings[$key]['value'] = wfMessage("admin-switch-$enable")->text();
 					}
 				}
 				if ($protip == ''){

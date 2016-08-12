@@ -73,10 +73,16 @@ var WikiUserFollow = {
 					$('.UserFollow_Self' + WikiUserFollow.userId).append('<div class="UserFollow_Self_left">' +
 						'<img src="http://av.huijiwiki.com/default_ml.gif" />' +
 						'</div>');
+					//add by zwy
+					var tDataStatus = '<div class="UserFollow_Self_right_dec">' + theData[i].status + '</div>';
+					if($(window).innerWidth()<=480 && theData[i].status.length === 0){
+						tDataStatus = "";
+					};
+					//end
 					$('.UserFollow_Self' + WikiUserFollow.userId).append('<div class="UserFollow_Self_right">' +
 						'<a class="mw-userlink UserFollow_Self_right_name" title="用户:' + theData[i].name + '" href="/wiki/User:' + encodeURIComponent(theData[i].name) + '">' + theData[i].name + '</a>' + '<span class="icon-lv' + theData[i].level + '"></span>' +
 						'<div class="UserFollow_Self_right_count">被关注:' + '<a href="/wiki/Special:ViewFollows&user='+encodeURIComponent(theData[i].name)+'&rel_type=2">' + theData[i].followercount + '</a>&nbsp;&nbsp;&nbsp;' + '|&nbsp;&nbsp;&nbsp;关注数:' + '<a href="/wiki/Special:ViewFollows&user='+encodeURIComponent(theData[i].name)+'&rel_type=1">' + theData[i].followingcount + '</a>&nbsp;&nbsp;&nbsp;' + ' |&nbsp;&nbsp;&nbsp;编辑:<a href="/wiki/Special:Contribution&target="'+encodeURIComponent(theData[i].name)+'&contribs=user">' + theData[i].stats.edits + '</a>&nbsp;&nbsp;&nbsp;</div>' +
-						'<div class="UserFollow_Self_right_dec">' + theData[i].status + '</div>' +
+						tDataStatus +
 						'</div>');
 					var button0 = new OO.ui.ButtonWidget({
 						label: '关注',
@@ -102,6 +108,13 @@ var WikiUserFollow = {
 					} else {
 						$('.UserFollowBtn_follow'+ WikiUserFollow.userId).show();
 					}
+					//add by zwy
+					if($(window).innerWidth()<=480){
+						$(".UserFollow_Self_right .UserFollowBtn_follow, .UserFollow_Self_right .UserFollowBtn_unfollow").css("position","static");
+						$(".UserFollow_Self_right .UserFollowBtn_gift").css("bottom","0");
+						$(".UserFollow_Self_right .UserFollowBtn_gift").css("top","auto");
+					}
+					//end
 					WikiUserFollow.userId++;
 
 				}

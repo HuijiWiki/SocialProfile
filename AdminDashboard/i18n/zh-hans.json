@@ -31,6 +31,7 @@
 	"doctor-category-advice":"我整理出了$2个[[:Category:$1|$1]]，请管理员大人过目。",
 	"inviteuser":"基友招募",
 	"doctor-hide-bots":"隐藏议会机器人",
-	"doctor-hide-bots-description":"在您掌握了维基的基本维护操作之后，可以在这里解散秘密议会中喋喋不休的机器人。(需要等待1-2天缓存失效）"
-
+	"doctor-hide-bots-description":"在您掌握了维基的基本维护操作之后，可以在这里解散秘密议会中喋喋不休的机器人。(需要等待1-2天缓存失效）",
+	"enable-semantic-mediawiki":"开启Semantic MediaWiki",
+	"enable-semantic-mediawiki-description":"请不要开启此选项，除非您已充分了解Semantic MediaWiki及其操作方法。灰机Wiki对于Semantic MediaWiki的支持还处于试验阶段。"
 }
