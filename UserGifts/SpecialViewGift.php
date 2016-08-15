@@ -99,7 +99,7 @@ class ViewGift extends UnlistedSpecialPage {
 						</a>";
 					}
 
-					$output .= '<div class="cleared"></div>
+					$output .= '<div class="clearfix"></div>
 					</div>';
 				}
 				$out->setPageTitle( $this->msg(
@@ -141,7 +141,7 @@ class ViewGift extends UnlistedSpecialPage {
 				if ( $gift['description'] ) {
 					$output .= '<div class="g-user-message">' . $out->parse($gift['description']) . '</div>';
 				}
-				$output .= '<div class="cleared"></div>
+				$output .= '<div class="clearfix"></div>
 						<div class="g-describe">' . $out->parse($message) . '</div>';
 				if( $inviteCode != null && $wgUser->getID() == $gift['user_id_to'] ){
 					$output .= '<div class="invite-code well well-sm">'.$inviteCode.'</div><small>(仅自己可见)</small>';
