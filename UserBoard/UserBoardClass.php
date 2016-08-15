@@ -627,7 +627,7 @@ class EchoBoardPresentationModel extends EchoEventPresentationModel {
 		if ($this->event->getExtraParam('mentioned-users')){
 
 			$msg = $this->getMessageWithAgent('notification-header-board-metioned');
-			$msg->param($this->event->getExtraParam('board-user'));
+			$msg->params($this->event->getExtraParam('board-user'));
 			return $msg;
 		}
 		$msg = parent::getHeaderMessage();
