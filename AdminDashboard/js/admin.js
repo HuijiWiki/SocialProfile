@@ -400,7 +400,13 @@ var admin = {
                 rsargs:[name,value]
             },
             success: function(data){
-                mw.notification.notify('设置成功',{tag:'toggle'});
+                data = JSON.parse(data);
+                if (data.result == 'success' ){
+                    mw.notification.notify('设置成功',{tag:'toggle'});
+                } else {
+                    mw.notification.notify(data.reason, {tag:'toggle'});
+                }
+                
             }
         })
     },

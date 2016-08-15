@@ -38,7 +38,7 @@ jQuery( document ).ready( function() {
                     name:'网站得分',
                     type:'line',
                     // stack: '总量',
-                    // color:'red',
+                    color:'red',
                     // line style
                     // itemStyle:{
                     //     normal:{
@@ -104,6 +104,7 @@ jQuery( document ).ready( function() {
                     option.xAxis[0].data=res.result.date;
                     option.series[0].data=res.result.FollowCount;
                     option.legend.data[0] = "关注人数";
+                    option.series[0].name = option.legend.data[0];
                     myChart2.setOption(option,false);
                 }
             }
@@ -118,6 +119,7 @@ jQuery( document ).ready( function() {
                 option.xAxis[0].data=data.result.date_array;
                 option.series[0].data=data.result.number_array;
                 option.legend.data[0] = "浏览次数";
+                option.series[0].name = option.legend.data[0];
                 myChart3.setOption(option,false);
             }
         }
@@ -132,6 +134,7 @@ jQuery( document ).ready( function() {
                     option.xAxis[0].data=data.result.date_array;
                     option.series[0].data=data.result.number_array;
                     option.legend.data[0] = "编辑次数";
+                    option.series[0].name = option.legend.data[0];
                     myChart4.setOption(option,false);
                 }
             }  

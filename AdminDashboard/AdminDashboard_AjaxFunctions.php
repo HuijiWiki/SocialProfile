@@ -176,7 +176,8 @@ function wfSetSiteProperty( $name, $value ){
 	}
 	$site = WikiSite::newFromPrefix( $wgHuijiPrefix );
 	$rating = $site->getRating();
-	if( RatingCompare::$$wgSiteSettings[$name]['level'] <= RatingCompare::$$rating ){
+	$requiredRating = $wgSiteSettings[$name]['level'];
+	if( RatingCompare::$$requiredRating <= RatingCompare::$$rating ){
 		$res = $site->setProperty( $name, $value );
 		$ret = array( 'result'=> 'success' );
 	} else {
