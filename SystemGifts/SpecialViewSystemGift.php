@@ -114,7 +114,7 @@ class ViewSystemGift extends UnlistedSpecialPage {
 					</a>";
 					}
 
-					$output .= '<div class="cleared"></div>
+					$output .= '<div class="clearfix"></div>
 					</div>'; // .ga-recent
 				}
 
@@ -132,7 +132,7 @@ class ViewSystemGift extends UnlistedSpecialPage {
 						<div class=\"ga-name\">{$value['name']}<br>{$title_name}"."{$value['designation']}</div>
 						<div class=\"ga-timestamp\">({$value['timestamp']})</div>
 						<div class=\"ga-description-message\">{$message}</div>";
-				$output .= '<div class="cleared"></div>
+				$output .= '<div class="clearfix"></div>
 					</div>';
 				$output .= '</div>';
 				$i++;
