@@ -10,7 +10,7 @@ class SpecialDesignation extends SpecialPage {
 	 * Constructor
 	 */
 	public function __construct() {
-		parent::__construct( 'Designation' );
+		parent::__construct( 'Designation', 'edit' );
 	}
 
 	/**
@@ -29,6 +29,8 @@ class SpecialDesignation extends SpecialPage {
 	 */
 	public function execute( $par ) {
 		global $wgUser, $wgUploadPath, $wgHuijiPrefix;
+		
+		$this->checkReadonly();		
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$user = $this->getUser();
@@ -45,7 +47,7 @@ class SpecialDesignation extends SpecialPage {
 	      $out->addHTML( $output );
 	      return false;
 	    }
-
+		$this->checkPermissions();
 		// Show a message if the database is in read-only mode
 		if ( wfReadOnly() ) {
 			$out->readOnlyPage();

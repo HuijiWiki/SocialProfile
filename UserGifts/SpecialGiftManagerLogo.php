@@ -56,6 +56,8 @@ class GiftManagerLogo extends UnlistedSpecialPage {
 	 * @param $par Mixed: parameter passed to the page or null
 	 */
 	public function execute( $par ) {
+		$this->checkPermissions();
+		$this->checkReadonly();	
 		$this->gift_id = $this->getRequest()->getInt( 'gift_id' );
 		$this->initLogo();
 		$this->executeLogo();

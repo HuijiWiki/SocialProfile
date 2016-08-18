@@ -28,7 +28,8 @@ class SpecialPopulateUserProfiles extends SpecialPage {
 	public function execute( $params ) {
 		$out = $this->getOutput();
 		$user = $this->getUser();
-
+		$this->checkPermissions();
+		$this->checkReadonly();	
 		// Check permissions
 		if ( !in_array( 'staff', $user->getEffectiveGroups() ) ) {
 			throw new ErrorPageError( 'error', 'badaccess' );

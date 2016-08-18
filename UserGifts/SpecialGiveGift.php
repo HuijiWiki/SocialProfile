@@ -31,7 +31,8 @@ class GiveGift extends SpecialPage {
 	 */
 	public function execute( $par ) {
 		global $wgMemc, $wgUploadPath;
-
+		$this->checkPermissions();
+		$this->checkReadonly();	
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$user = $this->getUser();

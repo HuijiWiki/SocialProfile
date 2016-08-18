@@ -24,7 +24,8 @@ class SpecialEditProfile extends SpecialUpdateProfile {
 	 */
 	public function execute( $par ) {
 		global $wgUpdateProfileInRecentChanges, $wgSupressPageTitle;
-
+		$this->checkPermissions();
+		$this->checkReadonly();	
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$user = $this->getUser();

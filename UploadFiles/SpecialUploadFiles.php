@@ -5,7 +5,7 @@
 class SpecialUploadFiles extends SpecialPage{
 	
 	function __construct(){
-		parent::__construct( 'UploadFiles' );
+		parent::__construct( 'UploadFiles', 'upload' );
 	}
 
 	function getGroupName() {
@@ -14,7 +14,9 @@ class SpecialUploadFiles extends SpecialPage{
 
 	public function execute( $params ) {
     global $wgFileExtensions, $wgUser;
+    $this->checkReadonly();   
     // Set the page title, robot policies, etc.
+  
     $this->setHeaders();
     $out = $this->getOutput();
     $output = '';
@@ -30,7 +32,8 @@ class SpecialUploadFiles extends SpecialPage{
       $out->addHTML( $output );
       return false;
     }
-		
+    $this->checkPermissions();
+	
     $title = wfMessage('uploadfiles-info-title')->parse();
     $subtitle = wfMessage('uploadfiles-info-can-be-modified')->parse();
     $line = wfMessage('uploadfiles-info')->parse();

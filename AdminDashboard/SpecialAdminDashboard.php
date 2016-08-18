@@ -22,6 +22,8 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 	 */
 	public function execute( $par ) {
 		global $wgUploadPath, $wgUser, $wgHuijiPrefix, $wgSiteSettings, $wgParser,$wgCommentsSortDescending;
+		$this->checkPermissions();
+		$this->checkReadonly();
 		$templateParser = new TemplateParser(  __DIR__ . '/pages' );
 		$out = $this->getOutput();
 		$user = $this->getUser();

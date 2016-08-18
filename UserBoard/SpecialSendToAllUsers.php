@@ -23,6 +23,10 @@ class SpecialsendToAllUsers extends UnlistedSpecialPage {
 	 * @param $params Mixed: parameter(s) passed to the page or null
 	 */
 	public function execute( $params ) {
+		
+		
+		$this->checkPermissions();
+		$this->checkReadonly();		
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$user = $this->getUser();

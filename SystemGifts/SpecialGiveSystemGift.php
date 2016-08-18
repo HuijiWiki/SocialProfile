@@ -27,6 +27,8 @@ class SpecialGiveSystemGift extends SpecialPage{
 	 */
 	public function execute($params){
 		global $wgUser, $wgHuijiPrefix;
+		$this->checkPermissions();
+		$this->checkReadonly();
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$this->setHeaders();

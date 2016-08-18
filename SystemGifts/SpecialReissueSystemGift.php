@@ -27,6 +27,8 @@ class SpecialReissueSystemGift extends SpecialPage{
 	 */
 	public function execute($params){
 		global $wgUser;
+		$this->checkPermissions();
+		$this->checkReadonly();
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$this->setHeaders();

@@ -25,7 +25,8 @@ class SystemGiftManager extends SpecialPage {
 	 * @param $par Mixed: parameter passed to the page or null
 	 */
 	public function execute( $par ) {
-		$out = $this->getOutput();
+		$this->checkPermissions();
+		$this->checkReadonly();		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$user = $this->getUser();
 

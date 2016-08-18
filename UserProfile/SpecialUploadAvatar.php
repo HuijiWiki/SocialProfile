@@ -50,7 +50,8 @@ class SpecialUploadAvatar extends SpecialUpload {
 	 */
 	public function execute( $params ) {
 		$out = $this->getOutput();
-
+		$this->checkPermissions();
+		$this->checkReadonly();	
 		// Add CSS
 		$out->addModuleStyles( 'ext.socialprofile.userprofile.css' );
 

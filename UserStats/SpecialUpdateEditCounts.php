@@ -21,7 +21,8 @@ class UpdateEditCounts extends UnlistedSpecialPage {
 	 */
 	function updateMainEditsCount() {
 		global $wgNamespacesForEditPoints;
-
+		$this->checkPermissions();
+		$this->checkReadonly();	
 		$out = $this->getOutput();
 
 		$whereConds = array();

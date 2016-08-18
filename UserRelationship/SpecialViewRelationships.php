@@ -39,7 +39,8 @@ class SpecialViewRelationships extends SpecialPage {
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$user = $this->getUser();
-
+		$this->checkPermissions();
+		$this->checkReadonly();	
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
 

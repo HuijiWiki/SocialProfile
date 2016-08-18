@@ -9,7 +9,7 @@ class QqSdk{
 	 private $redirect;
 
 	function __construct() { 
-	    require_once('/var/www/html/Confidential.php');
+	    // require_once('/var/www/html/Confidential.php');
 	    $app_id = Confidential::$qq_app_id; 
 		$app_secret = Confidential::$qq_app_secret; 
 		

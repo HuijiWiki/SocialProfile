@@ -15,6 +15,8 @@ class SpecialVideos extends SpecialPage{
     public function execute( $params ) {
         global $wgUser, $wgLocalFileRepo, $wgContLang;
         // Set the page title, robot policies, etc.
+        $this->checkPermissions();
+        $this->checkReadonly(); 
         $this->setHeaders();
         $out = $this->getOutput();
         $output = '';

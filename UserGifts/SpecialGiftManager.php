@@ -28,6 +28,8 @@ class GiftManager extends SpecialPage {
 	 * @param $par Mixed: parameter passed to the page or null
 	 */
 	public function execute( $par ) {
+		$this->checkPermissions();
+		$this->checkReadonly();	
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$user = $this->getUser();

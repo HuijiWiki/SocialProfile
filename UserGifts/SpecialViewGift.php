@@ -25,7 +25,8 @@ class ViewGift extends UnlistedSpecialPage {
 	 */
 	public function execute( $par ) {
 		global $wgUploadPath, $wgUser;
-
+		$this->checkPermissions();
+		$this->checkReadonly();	
 		$out = $this->getOutput();
 		$user = $this->getUser();
 

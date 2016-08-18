@@ -31,7 +31,8 @@ class GenerateTopUsersReport extends UnlistedSpecialPage {
 	public function execute( $period ) {
 		global $wgContLang, $wgUser;
 		global $wgUserStatsPointValues;
-
+		$this->checkPermissions();
+		$this->checkReadonly();	
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$user = $this->getUser();

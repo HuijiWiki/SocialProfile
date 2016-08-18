@@ -28,7 +28,8 @@ class SpecialUpdateProfile extends UnlistedSpecialPage {
 		if ( is_null( $user ) ) {
 			$user = $this->getUser();
 		}
-
+		$this->checkPermissions();
+		$this->checkReadonly();	
 		$dbw = wfGetDB( DB_MASTER );
 		$s = $dbw->selectRow(
 			'user_profile',

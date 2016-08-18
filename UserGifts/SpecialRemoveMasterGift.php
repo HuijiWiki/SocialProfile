@@ -84,7 +84,8 @@ class RemoveMasterGift extends UnlistedSpecialPage {
 	public function execute( $par ) {
 		$out = $this->getOutput();
 		$request = $this->getRequest();
-
+		$this->checkPermissions();
+		$this->checkReadonly();	
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
 

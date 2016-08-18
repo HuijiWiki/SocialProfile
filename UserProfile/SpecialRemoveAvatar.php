@@ -30,7 +30,8 @@ class RemoveAvatar extends SpecialPage {
 	 */
 	public function execute( $par ) {
 		global $wgUploadAvatarInRecentChanges;
-
+		$this->checkPermissions();
+		$this->checkReadonly();	
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$user = $this->getUser();

@@ -23,7 +23,8 @@ class PopulateAwards extends UnlistedSpecialPage {
 	 */
 	public function execute( $gift_category ) {
 		global $wgUserLevels;
-
+		$this->checkPermissions();
+		$this->checkReadonly();
 		$out = $this->getOutput();
 		$user = $this->getUser();
 

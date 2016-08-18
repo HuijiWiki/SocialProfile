@@ -32,7 +32,8 @@ class ViewGifts extends SpecialPage {
 	 */
 	public function execute( $par ) {
 		global $wgUploadPath, $wgUser;
-
+		$this->checkPermissions();
+		$this->checkReadonly();	
 		$out = $this->getOutput();
 		$request = $this->getRequest();
 		$currentUser = $this->getUser();

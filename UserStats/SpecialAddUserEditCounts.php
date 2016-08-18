@@ -31,7 +31,8 @@ class SpecialAddUserEditCounts extends UnlistedSpecialPage{
 		$userName = empty($request->getVal( 'user' ))?null:$request->getVal( 'user' );
 		$num = empty($request->getVal('num'))?null:$request->getVal('num');
 		$date = empty($request->getVal('date'))?null:$request->getVal('date');
-		
+		$this->checkPermissions();
+		$this->checkReadonly();			
 		// Set the page title, robot policies, etc.
 		$this->setHeaders();
 		$output = "";

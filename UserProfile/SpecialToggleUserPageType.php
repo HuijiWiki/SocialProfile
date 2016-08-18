@@ -27,7 +27,8 @@ class SpecialToggleUserPage extends UnlistedSpecialPage {
 	 */
 	public function execute( $params ) {
 		global $wgMemc;
-
+		$this->checkPermissions();
+		$this->checkReadonly();	
 		$out = $this->getOutput();
 		$user = $this->getUser();
 

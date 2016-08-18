@@ -37,7 +37,8 @@ class SpecialRemoveRelationship extends UnlistedSpecialPage {
 	public function execute( $params ) {
 		$out = $this->getOutput();
 		$user = $this->getUser();
-
+		$this->checkPermissions();
+		$this->checkReadonly();	
 		// Can't use $this->setHeaders(); here because then it'll set the page
 		// title to <removerelationship> and we don't want that, we'll be
 		// messing with the page title later on in the code
