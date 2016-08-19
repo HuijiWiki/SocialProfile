@@ -745,3 +745,6 @@ $wgLogHeaders['Donate']         = 'donatepagetext';
 $wgLogActions['Donate/addDonation'] = 'donatelogentry';
 $wgLogActions['Donate/setSiteProperty'] = 'donatelogentry';
 
+//Right
+$wgAvailableRights[] = 'admindashboard';
+$wgGroupPermissions['sysop']['admindashboard'] = true;
