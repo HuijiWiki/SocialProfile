@@ -156,7 +156,7 @@ class UserStatsTrack {
 	 */
 	function incStatField( $field, $val = 1 ) {
 		global $wgMemc, $wgSystemGifts, $wgUserStatsTrackWeekly, $wgUserStatsTrackMonthly;
-		if ( HuijiFunctions::addLock('incStatField-'.$this->statsUser->getId(), 1) ){
+		// if ( HuijiFunctions::addLock('incStatField-'.$this->statsUser->getId(), 1) ){
 			if ( !$this->statsUser->isAllowed( 'bot' ) && !$this->statsUser->isAnon() && $this->stats_fields[$field] ) {
 				$dbw = wfGetDB( DB_MASTER );
 				$dbw->update(
@@ -211,7 +211,7 @@ class UserStatsTrack {
 				}
 			}
 			HuijiFunctions::releaseLock('incStatField-'.$this->statsUser->getId());
-		}
+		// }
 	}
 
 	/**
