@@ -172,10 +172,12 @@ class UserStatsTrack {
 				// update weekly/monthly points
 				if ( isset( $this->point_values[$field] ) && !empty( $this->point_values[$field] ) ) {
 					if ( $wgUserStatsTrackWeekly ) {
-						$this->updateWeeklyPoints( $this->point_values[$field] );
+						$truePoints = $this->fatigueReduction( $field, $this->statUser->getId,  $this->point_values[$field]);
+						$this->updateWeeklyPoints( $truePoints );
 					}
 					if ( $wgUserStatsTrackMonthly ) {
-						$this->updateMonthlyPoints( $this->point_values[$field] );
+						$truePoints = $this->fatigueReduction( $field, $this->statUser->getId,  $this->point_values[$field]);
+						$this->updateMonthlyPoints( $truePoints );
 					}
 				}
 	
@@ -536,6 +538,36 @@ class UserStatsTrack {
 				__METHOD__
 			);
 		}
+	}
+	/**
+	 * Reduce points received for excessive editors.
+	 * @param $field 'edit' or 'comment', etc.
+	 * @param $userId who
+	 * @param $points raw points
+	 */
+	public function fatigueReduction( $field, $userId, $points){
+		if ($field == 'edit'){
+			$num = UserEditBox::getTodayEdit($userId);
+			if ( $num > 500 ){
+				return 0;
+			} elseif ( $num > 200 ) {
+				return round( 0.2 * $points );
+			} elseif ( $num > 50 ){
+				return round( 0.5 * $points );
+			}
+		} else {
+			$us = new UserStats($userId);
+			$stats = $us->getUserStats();
+			if ( $stats[$field] > 500 ){
+				return 0;
+			} elseif( $num > 200 ) {
+				return round(0.2 * $points); 
+			} elseif( $num > 50 ) {
+				return round(0.5 * $points);
+			}
+
+		}
+
 	}
 
 	/**
