@@ -554,6 +554,8 @@ class UserStatsTrack {
 				return round( 0.2 * $points );
 			} elseif ( $num > 50 ){
 				return round( 0.5 * $points );
+			} else {
+				return $points;
 			}
 		} else {
 			$us = new UserStats($userId);
@@ -564,6 +566,8 @@ class UserStatsTrack {
 				return round(0.2 * $points); 
 			} elseif( $num > 50 ) {
 				return round(0.5 * $points);
+			} else {
+				return $points;
 			}
 
 		}
