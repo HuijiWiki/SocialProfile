@@ -172,11 +172,11 @@ class UserStatsTrack {
 				// update weekly/monthly points
 				if ( isset( $this->point_values[$field] ) && !empty( $this->point_values[$field] ) ) {
 					if ( $wgUserStatsTrackWeekly ) {
-						$truePoints = $this->fatigueReduction( $field, $this->statUser->getId,  $this->point_values[$field]);
+						$truePoints = $this->fatigueReduction( $field, $this->statsUser->getId(),  $this->point_values[$field]);
 						$this->updateWeeklyPoints( $truePoints );
 					}
 					if ( $wgUserStatsTrackMonthly ) {
-						$truePoints = $this->fatigueReduction( $field, $this->statUser->getId,  $this->point_values[$field]);
+						$truePoints = $this->fatigueReduction( $field, $this->statsUser->getId(),  $this->point_values[$field]);
 						$this->updateMonthlyPoints( $truePoints );
 					}
 				}
