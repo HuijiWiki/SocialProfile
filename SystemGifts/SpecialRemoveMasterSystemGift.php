@@ -107,6 +107,13 @@ class RemoveMasterSystemGift extends UnlistedSpecialPage {
 				array( 'sg_gift_id' => $this->gift_id ),
 				__METHOD__
 			);
+			$dbw->delete(
+				'user_title',
+				array('gift_id' => $this->gift_id, 
+					'title_from' => 'system_gift'
+				),
+				__METHOD__
+			);
 
 			$this->deleteImage( $this->gift_id, 's' );
 			$this->deleteImage( $this->gift_id, 'm' );
