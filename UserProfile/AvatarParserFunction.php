@@ -63,7 +63,7 @@ class AvatarParserFunction {
 		} else {
 			// Fallback for the case where an invalid (nonexistent) user name
 			// was supplied...
-			$avatar = new wAvatar( -1 , 'm' ); // not very nice, but -1 will get the default avatar
+			$avatar = new wAvatar( -1 , $size ); // not very nice, but -1 will get the default avatar
 		}
 
 		if ( $px ) { // if px value needed, set height to it
@@ -123,7 +123,7 @@ class AvatarParserFunction {
 		} else {
 			// Fallback for the case where an invalid (nonexistent) user name
 			// was supplied...
-			$avatar = new wSiteAvatar( -1 , 'm' ); // not very nice, but -1 will get the default avatar
+			$avatar = new wSiteAvatar( -1 , $size ); // not very nice, but -1 will get the default avatar
 		}
 
 		if ( $px ) { // if px value needed, set height to it
