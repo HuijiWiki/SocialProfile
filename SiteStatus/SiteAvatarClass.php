@@ -59,7 +59,7 @@ class wSiteAvatar extends wAvatar{
 			}
 			$files = glob( $wgUploadDirectory . '/avatars/' . $wgSiteAvatarKey . '_' . $this->user_id .  '_' . $this->avatar_size . "*" );
 			if ( !isset( $files[0] ) || !$files[0] ) {
-				$avatar_filename = 'site_default_' . $this->avatar_size . '.png';
+				$avatar_filename = 'site_default_' . $this->avatar_size . '.gif';
 			} else {
 				$avatar_filename = basename( $files[0] ) . '?r=' . filemtime( $files[0] );
 			}

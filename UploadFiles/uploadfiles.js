@@ -42,7 +42,7 @@ var uploadfiles = {
             if (file == undefined)
                 return;
             if(self.type.indexOf(file.name.substr(file.name.lastIndexOf(".")+1).toLowerCase()) < 0){
-                mw.notification.notify("您拖的文件不符合类型！");
+                mw.notification.notify("您选择的文件类型不符合要求");
                 return false;
             }
             $('#drag-area').before(content);
@@ -118,7 +118,7 @@ var uploadfiles = {
                         selector.removeClass('default').find('img').attr('data-filekey',data.error.filekey);
                     }
                     else{
-                        selector.find('.prompt').text('文件不可用').attr('data-error',data.error.code);
+                        selector.find('.prompt').text('未知错误').attr('data-error',data.error.code);
                     }
                 }
             }
