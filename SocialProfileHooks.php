@@ -249,14 +249,14 @@ class SocialProfileHooks {
         if ($target->getNamespace() == NS_USER){
         	$text = $target->getRootText();
         	$prefix = $suffix = '';
-        	if ($text == $html && class_exists("HuijiUser") && !in_array('no-designation', $options)){
+        	if ($text === $html && class_exists("HuijiUser") && !in_array('no-designation', $options)){
         		$user = HuijiUser::newFromName( $target->getRootText() );
         		MediaWiki\suppressWarnings();
-			if (isset($user)){
-        			list($prefix, $suffix) = $user->getDesignation(true);
-			} else {
-				list($prefix, $suffix) = array( '', '');
-			}
+				if (isset($user)){
+	        			list($prefix, $suffix) = $user->getDesignation(true);
+				} else {
+					list($prefix, $suffix) = array( '', '');
+				}
         		MediaWiki\restoreWarnings();
         		$ret = $prefix.$suffix."<a class='mw-userlink' rel='nofollow' title='{$text}' href='".$target->getFullUrl()."'>{$target->getRootText()}</a>";
         		return false;
