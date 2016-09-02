@@ -7,16 +7,16 @@ jQuery( document ).ready( function() {
                 trigger: 'axis'
             },
             legend: {
-                data:['网站得分']
+                data:['站点评分']
             },
             toolbox: {
                 show : true,
                 feature : {
                     mark : {show: false},
                     dataView : {show: true, readOnly: true},
-                    magicType : {show: true, type: ['line', 'bar']},
+                    magicType : {show: true, type: ['bar', 'line']},
                     // magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
-                    restore : {show: true},
+                    restore : {show: false},
                     saveAsImage : {show: true}
                 }
             },
@@ -33,12 +33,15 @@ jQuery( document ).ready( function() {
                     type : 'value'
                 }
             ],
+            color: [
+                mw.config.get('wgPrimaryColor')
+            ],
             series : [
                 {
-                    name:'网站得分',
-                    type:'line',
+                    name:'站点评分',
+                    type:'bar',
                     // stack: '总量',
-                    color:'red',
+                    color:'#333333',
                     // line style
                     // itemStyle:{
                     //     normal:{
@@ -82,7 +85,8 @@ jQuery( document ).ready( function() {
                 if ( res.success ){
                     option.xAxis[0].data=res.result.date;
                     option.series[0].data=res.result.rank;
-                    option.legend.data[0] = "网站得分";
+                    option.legend.data[0] = "站点评分";
+                    option.series[0].name = option.legend.data[0];
                     myChart.setOption(option,false);
                 }
             }

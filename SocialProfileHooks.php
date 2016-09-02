@@ -171,6 +171,13 @@ class SocialProfileHooks {
 	    $vars['wgHuijiId'] = $wgHuijiId;
 	    $vars['wgHuijiSuffix'] = $wgHuijiSuffix;
 	    $vars['wgCentralServer'] = $wgCentralServer;
+        $lessCon = CommonStyle::getLessVars();
+        
+	    $vars['wgPrimaryColor'] = $lessCon['brand-primary'];
+	    $vars['wgSuccessColor'] = $lessCon['brand-success'];
+	    $vars['wgInfoColor'] = $lessCon['brand-info'];
+	    $vars['wgWarningColor'] = $lessCon['brand-warning'];
+	    $vars['wgDangerColor'] = $lessCon['brand-danger'];
 	    return true;
 	}
 
