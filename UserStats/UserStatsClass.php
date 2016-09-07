@@ -1097,7 +1097,7 @@ class UserStats {
 		global $wgMemc;
 		$key = wfGlobalCacheKey('UserStats', 'getUserRank', $count, $table);
 		$data = $wgMemc->get($key);
-		if ($data !== null){
+		if ($data != ''){
 			return $data;
 		} else {
 			if($table == 'total'){
