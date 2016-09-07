@@ -221,7 +221,7 @@ class wAvatar {
 				'title' => wfMessage('group-sysop')->text()
 			);
 
-			$html .= Html::rawElement('span', $param, Html::element('span', ['class' => 'icon-handbag'], '') );			
+			$html .= Html::rawElement('span', $param, Html::element('span', ['class' => 'icon-support'], '') );			
 		}
 		elseif(in_array('bot', $groups)){
 			$param = array(
