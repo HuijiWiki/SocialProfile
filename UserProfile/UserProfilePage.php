@@ -2155,8 +2155,8 @@ class UserProfilePage extends Article {
 					</div>';
 			} else {
 				$login_link = SpecialPage::getTitleFor( 'Userlogin' );
-				$output .= '<div class="user-page-message-form">' .
-					wfMessage( 'user-board-login-message', $login_link->getFullURL() )->escaped() .
+				$output .= '<div class="user-page-message-form empty-message-small">' .
+					wfMessage( 'user-board-login-message', $login_link->getFullURL() )->text() .
 				'</div>';
 			}
 		}

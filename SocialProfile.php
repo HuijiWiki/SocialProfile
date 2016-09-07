@@ -351,6 +351,7 @@ $wgHooks['UserGroupsChanged'][] = 'SocialProfileHooks::onUserGroupsChanged';
 $wgHooks['LinkBegin'][] = 'SocialProfileHooks::UserLinkBegin';
 // $wgHooks['SkinGetPageLink'][] = 'SocialProfileHooks::onSkinGetPageLink';
 $wgHooks['ArticleFromTitle'][] = 'SocialProfileHooks::onArticleFromTitle';
+$wgHooks['AutopromoteCondition'][] = 'SocialProfileHooks::onAutopromoteCondition';
 
 // ResourceLoader module definitions for certain components which do not have
 // their own loader file
@@ -712,6 +713,12 @@ if( !defined( 'NS_USER_PROFILE' ) ) {
 if( !defined( 'NS_USER_PROFILE_TALK' ) ) {
 	define( 'NS_USER_PROFILE_TALK', 203 );
 }
+if ( !defined( 'WEEKLY_CHAMPIONS') ) {
+	define( 'WEEKLY_CHAMPIONS', 100 );
+}
+if ( !defined( 'MONTHLY_CHAMPIONS') ) {
+	define( 'MONTHLY_CHAMPIONS', 101 );
+}
 
 //API
 $wgAutoloadClasses['ApiAvatarSubmit'] = __DIR__ . '/UserProfile/api/AvatarSubmit.api.php';
@@ -748,3 +755,19 @@ $wgLogActions['Donate/setSiteProperty'] = 'donatelogentry';
 //Right
 $wgAvailableRights[] = 'admindashboard';
 $wgGroupPermissions['sysop']['admindashboard'] = true;
+
+//Champion groups
+$wgAutopromote['weekly_champions'] = array( 
+	"&",
+	WEEKLY_CHAMPIONS,
+	'!',
+	APCOND_ISBOT,
+);
+$wgAutopromote['monthly_champions'] = array( 
+	"&",
+	MONTHLY_CHAMPIONS,
+	'!',
+	APCOND_ISBOT,
+);
+$wgImplicitGroups[] = 'weekly_champions';
+$wgImplicitGroups[] = 'monthly_champions';

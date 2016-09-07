@@ -99,7 +99,8 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		$replaceText = SpecialPage::getTitleFor( '替换文本' )->getFullURL();
 		$siteRankPage = SpecialPage::getTitleFor( 'SiteRank' )->getFullURL();
 		$allSpecial = SpecialPage::getTitleFor( '特殊页面' )->getFullURL();
-		$addEmote = Message::newFromKey('comments-add-emoji-emote')->getTitle()->getFullURL();
+		$translatePairs = Message::newFromKey('huiji-translation-pairs')->getTitle()->getFullURL();
+		$licenses = Message::newFromKey('licenses')->getTitle()->getFullURL();
 		$changePageTitle = Message::newFromKey('Pagetitle')->getTitle()->getFullURL();
 		$changeMainpageTitle = Message::newFromKey('Pagetitle-view-mainpage')->getTitle()->getFullURL();
 		$noarticletext = Message::newFromKey('noarticletext')->getTitle()->getFullURL();
@@ -357,7 +358,8 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				        'siteRankPage' =>$siteRankPage,
 				        'allSpecial' =>$allSpecial,
 				        'siteAvatar' =>$siteAvatar,
-				        'addEmote' => $addEmote,
+				        'translatePairs' => $translatePairs,
+				        'licenses' => $licenses,
 				        'changePageTitle' => $changePageTitle,
 				        'changeMainpageTitle' => $changeMainpageTitle,
 				        'quickInsert' => $quickInsert,

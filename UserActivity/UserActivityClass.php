@@ -6,6 +6,7 @@ use Flow\Collection\PostCollection;
 //1.27
 //use Flow\Conversion\Utils;
 use Flow\Model\PostRevision;
+use Flow\Conversion\Utils;
 /**
  * UserActivity class
  * step1: determine where clasue.
@@ -2159,13 +2160,13 @@ class UserActivity {
 				$id = UUID::create(strtolower( $strid ));
 				$pc = PostCollection::newFromId($id);
 				$pcr = $pc->getRoot()->getLastRevision();
-				$topicDisplayText = Container::get( 'templating' )->getContent( $pcr, 'wikitext' );
+				// $topicDisplayText = Container::get( 'templating' )->getContent( $pcr, 'wikitext' );
 				// 1.27 
-				// $topicDisplayText = Utils::htmlToPlaintext(
-				// 	Container::get( 'templating' )->getContent( $pcr, 'topic-title-html' )
-				// );
+				$topicDisplayText = Utils::htmlToPlaintext(
+					Container::get( 'templating' )->getContent( $pcr, 'topic-title-html' )
+				);
 				// $wgFlowDefaultWikiDb = $oldDB;
-				// Container::reset();
+				Container::reset();
 				return Linker::link($page_title, $topicDisplayText);
 			}else {
 				return Linker::link($page_title, $page_title->getText());

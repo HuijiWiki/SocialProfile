@@ -167,17 +167,20 @@ class SpecialViewUserBoard extends SpecialPage {
 		$numofpages = $total / $per_page;
 
 		if ( $numofpages > 1 ) {
-			$output .= '<div class="page-nav">';
+			$output .= '<div class="hj-media-pager-wrapper"><ul class="hj-media-pager pagination">';
 			if ( $page > 1 ) {
-				$output .= Linker::link(
+				$output .= '<li class="hj-media-pager-item hj-media-pager-previous">'.Linker::link(
 					$this->getPageTitle(),
-					$this->msg( 'userboard_prevpage' )->plain(),
-					array(),
+					'<span aria-hidden="true">&laquo;</span>',
+					array( 
+						"aria-label" => $this->msg( 'userboard_prevpage' )->plain(),
+						"class" => "hj-media-pager-link"
+					),
 					array(
 						'user' => $user_name,
 						'page' => ( $page - 1 )
 					) + $qs
-				);
+				).'</li>';
 			}
 
 			if ( ( $total % $per_page ) != 0 ) {
@@ -192,31 +195,36 @@ class SpecialViewUserBoard extends SpecialPage {
 
 			for ( $i = 1; $i <= $numofpages; $i++ ) {
 				if ( $i == $page ) {
-					$output .= ( $i . ' ' );
+					$output .= ( "<li class='hj-media-pager-item hj-media-pager-current active'><a>".$i."</a></li>" );
 				} else {
-					$output .= Linker::link(
+					$output .= '<li class="hj-media-pager-item">'.Linker::link(
 						$this->getPageTitle(),
 						$i,
-						array(),
+						array(
+							"class" => "hj-media-pager-link"
+						),
 						array(
 							'user' => $user_name,
 							'page' => $i
 						) + $qs
-					) . $this->msg( 'word-separator' )->plain();
+					) . '</li>';
 				}
 			}
 
 			if ( ( $total - ( $per_page * $page ) ) > 0 ) {
-				$output .= $this->msg( 'word-separator' )->plain() .
+				$output .= "<li class='hj-media-pager-item hj-media-pager-next'>".
 					Linker::link(
 					$this->getPageTitle(),
-					$this->msg( 'userboard_nextpage' )->plain(),
-					array(),
+					'<span aria-hidden="true">&raquo;</span>',
+					array(
+						"aria-hidden" => $this->msg( 'userboard_nextpage' )->plain(),
+						"class" => "hj-media-pager-link"
+					),
 					array(
 						'user' => $user_name,
 						'page' => ( $page + 1 )
 					) + $qs
-				);
+				)."</li>";
 			}
 			$output .= '</div><p>';
 		}
@@ -264,7 +272,7 @@ class SpecialViewUserBoard extends SpecialPage {
 
 				</div>';
 			} else {
-				$output .= '<div class="user-page-message-form">'
+				$output .= '<div class="user-page-message-form empty-message-small">'
 					. $this->msg( 'userboard_loggedout' )->parse() .
 				'</div>';
 			}
@@ -274,7 +282,7 @@ class SpecialViewUserBoard extends SpecialPage {
 		if ( $ub_messages ) {
 			foreach ( $ub_messages as $ub_message ) {
 				$user = Title::makeTitle( NS_USER, $ub_message['user_name_from'] );
-				$avatar = new wAvatar( $ub_message['user_id_from'], 'm' );
+				$avatar = new wAvatar( $ub_message['user_id_from'], 'ml' );
 
 				$board_to_board = '';
 				$board_link = '';
@@ -282,12 +290,12 @@ class SpecialViewUserBoard extends SpecialPage {
 				$delete_link = '';
 
 				if ( $currentUser->getName() != $ub_message['user_name_from'] ) {
-					$board_to_board = '<a href="' . UserBoard::getUserBoardToBoardURL( $user_name, $ub_message['user_name_from'] ) . '">' .
+					$board_to_board = '<a data-toggle="tooltip" data-placement="top" title="查看对话" href="' . UserBoard::getUserBoardToBoardURL( $user_name, $ub_message['user_name_from'] ) . '">' .
 						"<span class='icon-users'></span>" . '</a>';
-					$board_link = '<a href="' . UserBoard::getUserBoardURL( $ub_message['user_name_from'] ) . '">' .
+					$board_link = '<a data-toggle="tooltip" data-placement="top" title="查看对方的留言板" href="' . UserBoard::getUserBoardURL( $ub_message['user_name_from'] ) . '">' .
 						"<span class='icon-bubble'></span>" . '</a>';
 				} else {
-					$board_link = '<a href="' . UserBoard::getUserBoardURL( $ub_message['user_name_from'] ) . '">' .
+					$board_link = '<a data-toggle="tooltip" data-placement="top" title="查看对方的留言板" href="' . UserBoard::getUserBoardURL( $ub_message['user_name_from'] ) . '">' .
 						"<span class='icon-user'></span>" . '</a>';
 				}
 
@@ -299,7 +307,7 @@ class SpecialViewUserBoard extends SpecialPage {
 				)
 				{
 					$delete_link = "<span class=\"user-board-red\">
-						<a href=\"javascript:void(0);\" data-message-id=\"{$ub_message['id']}\">" .
+						<a data-toggle=\"tooltip\" data-placement=\"top\" title=\"删除\" href=\"javascript:void(0);\" data-message-id=\"{$ub_message['id']}\">" .
 							"<span class='icon-trash'></span>" . '</a>
 					</span>';
 				}
@@ -319,25 +327,25 @@ class SpecialViewUserBoard extends SpecialPage {
 				);
 
 				$userPageURL = htmlspecialchars( $user->getFullURL() );
-				$output .= "<div class=\"user-board-message\">
-					<div class=\"user-board-message-content\">
-						<div class=\"user-board-message-image\">
-							<a href=\"{$userPageURL}\" title=\"{$ub_message['user_name_from']}\">{$avatar->getAvatarURL()}</a>
+				$output .= "<div class=\"huiji-media full well\">
+						<div class=\"hj-media-avatar\">
+							".$avatar->getAvatarAnchor()."
 						</div>
-						<a href=\"{$userPageURL}\" title=\"{$ub_message['user_name_from']}}\">{$ub_message['user_name_from']} </a> {$ub_message_type_label}
+						<div class=\"hj-media-body\">
+						<a href=\"{$userPageURL}\" title=\"{$ub_message['user_name_from']}\">{$ub_message['user_name_from']} </a> {$ub_message_type_label}
 						<div class=\"user-board-message-time\">"
                             . $this->msg( 'userboard_posted_ago', $b->getTimeAgo( $ub_message['timestamp'] ) )->parse() .
                         "</div>
-						<div class=\"user-board-message-body\">
+						<div class=\"hj-media-comment\">
 							{$ub_message_text}
 						</div>
-						<div class=\"cleared\"></div>
+						<div class=\"hj-media-actions\">
+							{$board_link}
+							{$board_to_board}
+							{$delete_link}
+						</div>
 					</div>
-					<div class=\"user-board-message-links\">
-						{$board_link}
-						{$board_to_board}
-						{$delete_link}
-					</div>
+
 				</div>";
 			}
 		} else {

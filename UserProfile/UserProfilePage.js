@@ -293,6 +293,6 @@ jQuery( document ).ready( function() {
             }
         );
     });
-    // $('svg .day').tooltip({title:"tooltip - title", container:"body"});
+    $('svg .day').tooltip({title:"tooltip - title", container:"body"});
 });
 

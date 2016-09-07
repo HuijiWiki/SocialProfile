@@ -427,13 +427,13 @@ class UserBoard {
 				$delete_link = '';
 
 				if ( $wgUser->getName() != $message['user_name_from'] ) {
-					$board_to_board = '<a href="' . UserBoard::getUserBoardToBoardURL( $message['user_name'], $message['user_name_from'] ) . '">' .
+					$board_to_board = '<a data-toggle="tooltip" data-placement="top" title="查看对话" href="' . UserBoard::getUserBoardToBoardURL( $message['user_name'], $message['user_name_from'] ) . '">' .
 						'<span class="icon-users">'. '</a>';
-					$board_link = '<a href="' . UserBoard::getUserBoardURL( $message['user_name_from'] ) . '">' .
+					$board_link = '<a data-toggle="tooltip" data-placement="top" title="查看对方的留言板" href="' . UserBoard::getUserBoardURL( $message['user_name_from'] ) . '">' .
 						'<span class="icon-bubble">' . '</a>';
 				}
 				if ( $wgUser->getName() == $message['user_name'] || $wgUser->isAllowed( 'userboard-delete' ) ) {
-					$delete_link = "<span class=\"user-board-red\">
+					$delete_link = "<span class=\"user-board-red\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"删除\">
 							<a href=\"javascript:void(0);\" data-message-id=\"{$message['id']}\">" .
 								'<span class="icon-trash">'. '</a>
 						</span>';
@@ -451,26 +451,27 @@ class UserBoard {
 				# $message_text = preg_replace_callback( "/(<a[^>]*>)(.*?)(<\/a>)/i", 'cut_link_text', $message['message_text'] );
 
 				$sender = htmlspecialchars( $user->getFullURL() );
-				$output .= "<div class=\"user-board-message\">
-					<div class=\"user-board-message-content\">
-						<div class=\"user-board-message-image\">
-							<a href=\"{$sender}\" title=\"{$message['user_name_from']}\">{$avatar->getAvatarURL()}</a>
-						</div>".
+				$output .= "<div class=\"hj-media full\">
+						<div class=\"hj-media-avatar\">
+							".$avatar->getAvatarAnchor()."
+						</div>
+						<div class=\"hj-media-body\">
+						".
 						Linker::link($user,$message['user_name_from'],array(),array(),array())."
 						 {$message_type_label}
 						<div class=\"user-board-message-time secondary\">" .
                             wfMessage( 'userboard_posted_ago', $this->getTimeAgo( $message['timestamp'] ) )->parse() .
                         "</div>
-						<div class=\"cleared\"></div>
+						<div class=\"hj-media-comment\">
+						    {$message_text}
+						</div>
+						<div class=\"hj-media-actions\">
+							{$board_link}
+							{$board_to_board}
+							{$delete_link}
+						</div>
 					</div>
-					<div class=\"user-board-message-body\">
-					    {$message_text}
-					</div>
-					<div class=\"user-board-message-links\">
-						{$board_link}
-						{$board_to_board}
-						{$delete_link}
-					</div>
+
 				</div>";
 			}
 		} elseif ( $wgUser->getName() == $wgTitle->getText() ) {

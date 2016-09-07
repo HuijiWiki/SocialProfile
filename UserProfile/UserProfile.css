@@ -282,7 +282,7 @@
 
 .user-board-message-time {
 	font-size: 11px;
-	margin: 2px 0px 0px 5px;
+	margin: 2px 0px 0px 0px;
 }
 
 .user-board-message-image {
@@ -1041,9 +1041,6 @@ span.span-color{
 .user-board-message-content{
     height: 60px;
     margin-top: 10px;
-}
-.user-board-message-time{
-    margin-top: 15px;
 }
 .user-board-message{
     /*border: none;*/

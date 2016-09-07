@@ -68,7 +68,7 @@
 .user-board-message-time {
 	font-size: 11px;
 	color: #797979;
-	margin: 2px 0px 0px 5px;
+	margin: 2px 0px 0px 0px;
 }
 
 .user-board-message-image {
@@ -148,9 +148,6 @@ select#message_type {
 }
 .user-board-message-body{
     margin-left: 5px;
-}
-.user-board-message-time{
-    margin-top: 15px;
 }
 .user-board-message{
     border: none;

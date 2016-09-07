@@ -302,7 +302,38 @@ class SocialProfileHooks {
 			}
 		}
 		return true;
-
+	}
+	public static function onAutopromoteCondition( $type, $args, $user, &$result ) {
+		if ( $type == WEEKLY_CHAMPIONS ){
+			$champions = UserStats::getUserRank(10, 'week');
+			if ($champions == null){
+				$result = false;
+				return true;
+			}
+			foreach( $champions as $champion ){
+				if ( $champion['user_name'] == $user->getName()){
+					$result = true;
+					return true;
+				}
+			}
+			$result = false;
+			return true;
+		}
+		if ( $type == MONTHLY_CHAMPIONS ){
+			$champions = UserStats::getUserRank(10, 'month');
+			if ($champions == null){
+				$result = false;
+				return true;
+			}
+			foreach( $champions as $champion ){
+				if ( $champion['user_name'] == $user->getName()){
+					$result = true;
+					return true;
+				}
+			}
+			$result = false;
+			return true;
+		}
 	}
 }
 class ThemeDesigner extends Article{

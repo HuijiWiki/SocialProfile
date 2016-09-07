@@ -167,9 +167,72 @@ class wAvatar {
 		if ($wgUseOss){
 			$defaultParams['src'] =  "{$wgOssAvatarPath}/{$this->getAvatarImage()}";
 		}
-		$params = array_merge( $extraParams, $defaultParams );
+		$groups = $user->getEffectiveGroups();
 
-		$linker = Linker::LinkKnown($user->getUserPage(), Html::element( 'img', $params, '' ));
+		$params = array_merge( $extraParams, $defaultParams );
+		$html = Html::element( 'img', $params, '' );
+		if ($this->avatar_size == 's'){
+			$linker = Linker::LinkKnown($user->getUserPage(), $html, ['style' => 'position: relative']);
+			return $linker;			
+		}
+		if (in_array('weekly_champions', $groups)){
+			$param = array(
+				'class' => 'badge user-group-icon-left btn-success',
+				'data-toggle' => 'tooltip',
+				'data-placement' => 'top',
+				'title' => wfMessage('group-weekly-champions')->text()
+			);
+			$html .= Html::rawElement('span', $param, Html::element('span', ['class' => 'icon-star'], '') );
+		}
+		elseif (in_array('monthly_champions', $groups)){
+			$param = array(
+				'class' => 'badge user-group-icon-left btn-success',
+				'data-toggle' => 'tooltip',
+				'data-placement' => 'top',
+				'title' => wfMessage('group-monthly-champions')->text()
+			);
+			$html .= Html::rawElement('span', $param, Html::element('span', ['class' => 'icon-badge'], '') );
+		}
+		if (in_array('staff', $groups)){
+			$param = array(
+				'class' => 'badge user-group-icon btn-info',
+				'data-toggle' => 'tooltip',
+				'data-placement' => 'top',
+				'title' => wfMessage('group-staff')->text()
+			);
+
+			$html .= Html::rawElement('span', $param, Html::element('span', ['class' => 'icon-huiji'], '') );
+		}
+		elseif (in_array('bureaucrat', $groups)){
+			$param = array(
+				'class' => 'badge user-group-icon btn-primary',
+				'data-toggle' => 'tooltip',
+				'data-placement' => 'top',
+				'title' => wfMessage('group-bureaucrat')->text()
+			);
+
+			$html .= Html::rawElement('span', $param, Html::element('span', ['class' => 'icon-briefcase'], '') );
+		}
+		elseif(in_array('sysop', $groups)){
+			$param = array(
+				'class' => 'badge user-group-icon btn-primary',
+				'data-toggle' => 'tooltip',
+				'data-placement' => 'top',
+				'title' => wfMessage('group-sysop')->text()
+			);
+
+			$html .= Html::rawElement('span', $param, Html::element('span', ['class' => 'icon-handbag'], '') );			
+		}
+		elseif(in_array('bot', $groups)){
+			$param = array(
+				'class' => 'badge user-group-icon btn-warning',
+				'data-toggle' => 'tooltip',
+				'data-placement' => 'top',
+				'title' => wfMessage('group-bot')->text()
+			);
+			$html .= Html::rawElement('span', $param, Html::element('span', ['class' => 'icon-wrench'], '') );				
+		}
+		$linker = Linker::LinkKnown($user->getUserPage(), $html, ['style' => 'position: relative']);
 		
 		return $linker;
 	}	

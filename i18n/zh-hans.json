@@ -60,5 +60,8 @@
 	"commonstyle":"自定义主题",
 	"specialpages-group-trans":"翻译",
 	"removecredentials":"删除证书",
-	"changecredentials":"修改证书"
+	"changecredentials":"修改证书",
+	"group-staff":"职员",
+	"group-weekly-champions":"周十佳",
+	"group-monthly-champions":"月十佳"
 }
