@@ -758,16 +758,10 @@ $wgGroupPermissions['sysop']['admindashboard'] = true;
 
 //Champion groups
 $wgAutopromote['weekly_champions'] = array( 
-	"&",
 	WEEKLY_CHAMPIONS,
-	'!',
-	APCOND_ISBOT,
 );
 $wgAutopromote['monthly_champions'] = array( 
-	"&",
 	MONTHLY_CHAMPIONS,
-	'!',
-	APCOND_ISBOT,
 );
 $wgImplicitGroups[] = 'weekly_champions';
 $wgImplicitGroups[] = 'monthly_champions';

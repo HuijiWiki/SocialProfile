@@ -1096,7 +1096,7 @@ class UserStats {
 	static function getUserRank( $count, $table ){
 		global $wgMemc;
 		$key = wfForeignMemcKey('huiji', '', 'UserStats', 'getUserRank', $count, $table);
-		$data = $wgMemc->get($key);
+		// $data = $wgMemc->get($key);
 		if ($data != ''){
 			return $data;
 		} else {
@@ -1125,30 +1125,25 @@ class UserStats {
 	            __METHOD__,
 	            $params
 	        );
-	        $user_list_total = $res;
-	        // foreach ( $res as $row ) {
-	        // 	if($table == 'total'){
-	        // 		$userObj = User::newFromId( $row->stats_user_id );
-		       //      $user_group = $userObj->getEffectiveGroups();
-		       //      if ( !in_array('bot', $user_group) && !in_array('bot-global',$user_group)  ) {
-		       //          $user_list_total[] = array(
-		       //              'user_id' => $row->stats_user_id,
-		       //              'user_name' => $row->stats_user_name,
-		       //              'points' => $row->stats_total_points
-		       //          );
-		       //      }
-	        // 	}else{
-	        // 		$userObj = User::newFromId( $row->up_user_id );
-		       //      $user_group = $userObj->getEffectiveGroups();
-		       //      if ( !in_array('bot', $user_group) && !in_array('bot-global',$user_group)  ) {
-		       //          $user_list_total[] = array(
-		       //              'user_id' => $row->up_user_id,
-		       //              'user_name' => $row->up_user_name,
-		       //              'points' => $row->up_points
-		       //          );
-		       //      }
-	        // 	}
-	        // }
+	        $user_list_total = array();
+	        foreach ( $res as $row ) {
+	        	if($table == 'total'){
+
+	                $user_list_total[] = array(
+	                    'user_id' => $row->stats_user_id,
+	                    'user_name' => $row->stats_user_name,
+	                    'points' => $row->stats_total_points
+	                );
+		            
+	        	}else{
+	                $user_list_total[] = array(
+	                    'user_id' => $row->up_user_id,
+	                    'user_name' => $row->up_user_name,
+	                    'points' => $row->up_points
+	                );
+		            
+	        	}
+	        }
 	        $z = 1;
 	        $resdata = $result = array();
 	        $user_list_total = array_slice($user_list_total, 0, 10);  
@@ -1165,6 +1160,7 @@ class UserStats {
 	                $result[] = $resdata;
 	                $z++;
 	        }
+	
 	        $wgMemc->set($key, $result, 60 * 60 );
 	        return $result;			
 		}
