@@ -1096,7 +1096,7 @@ class UserStats {
 	static function getUserRank( $count, $table ){
 		global $wgMemc;
 		$key = wfForeignMemcKey('huiji', '', 'UserStats', 'getUserRank', $count, $table);
-		// $data = $wgMemc->get($key);
+		$data = $wgMemc->get($key);
 		if ($data != ''){
 			return $data;
 		} else {
