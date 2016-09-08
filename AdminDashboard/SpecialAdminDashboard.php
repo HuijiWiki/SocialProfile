@@ -142,7 +142,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		// echo $widget->toString();
 		$protip = $gtA = $gtB = $gtC = $gtD = false;
 		switch ($rating) {
-			case 'NA':
+			case 'S':
 			case 'A':
 				foreach( $settings as $key => $value){
 					if ( $value['level'] == 'A'){
