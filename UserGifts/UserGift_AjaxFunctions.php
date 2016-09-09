@@ -4,7 +4,7 @@
  */
 $wgAjaxExportList[] = 'wfCheckUserIsHaveGift';
 $wgAjaxExportList[] = 'wfChangeGiftTitleStatus';
-$wgAjaxExportList[] = 'wfChangeGiftTitleStatusOff';
+// $wgAjaxExportList[] = 'wfChangeGiftTitleStatusOff';
 function wfCheckUserIsHaveGift( $user_id, $gift_id ) {
 	// global $wgUser;
 	// if ( $wgUser->isBlocked() || wfReadOnly() ) {
@@ -21,9 +21,9 @@ function wfCheckUserIsHaveGift( $user_id, $gift_id ) {
 }
 
 function wfChangeGiftTitleStatus( $userTitleId, $status, $from ){
-	global $wgUser;
+	global $wgUser, $wgMemc;
 	if ( $status == 2 ) {
-		UserGifts::cleraAllGiftTitle( $from, $wgUser->getId() );
+		UserGifts::clearAllGiftTitle( $from, $wgUser->getId() );
 	}
 	$dbw = wfGetDB( DB_MASTER );
 	$dbw -> update(
@@ -33,26 +33,32 @@ function wfChangeGiftTitleStatus( $userTitleId, $status, $from ){
 			),
 			array(
 				'ut_id' => $userTitleId,
+				'title_from' => $from
 			),
 			__METHOD__
 		);
+	$key = wfForeignMemcKey('huiji', '', 'user_title', $from, $wgUser->getId());
+	$wgMemc->delete($key);
 	return 'success';
 }
 
-function wfChangeGiftTitleStatusOff( $gift_id, $user_to_id, $title_from ){
-	$dbw = wfGetDB( DB_MASTER );
-	$dbw -> update(
-			'user_title',
-			array(
-				'is_open' => 1
-			),
-			array(
-				'gift_id' => $gift_id,
-				'user_to_id' => $user_to_id,
-				'title_from' => $title_from
-			),
-			__METHOD__
-		);
-	return 'success';
-}
+// function wfChangeGiftTitleStatusOff( $gift_id, $user_to_id, $title_from ){
+// 	global $wgMemc, $wgUser;
+// 	$dbw = wfGetDB( DB_MASTER );
+// 	$dbw -> update(
+// 			'user_title',
+// 			array(
+// 				'is_open' => 1
+// 			),
+// 			array(
+// 				'gift_id' => $gift_id,
+// 				'user_to_id' => $user_to_id,
+// 				'title_from' => $title_from
+// 			),
+// 			__METHOD__
+// 		);
+// 	$key = wfForeignMemcKey('huiji', '', 'user_title', $title_from, $wgUser->getName());
+// 	$wgMemc->delete($key);
+// 	return 'success';
+// }
 

@@ -702,7 +702,8 @@ class UserGifts {
 	 * @param  string $title_from  giftTitle or systemGiftTitle
 	 * @return boolen 
 	 */
-	static function cleraAllGiftTitle( $title_from, $user_to_id ){
+	static function clearAllGiftTitle( $title_from, $user_to_id ){
+		global $wgMemc;
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->update(
 			'user_title',
@@ -715,6 +716,9 @@ class UserGifts {
 			),
 			__METHOD__
 		);
+
+		$key = wfForeignMemcKey('huiji', '', 'user_title', $title_from, $user_to_id);
+		$wgMemc->delete($key);
 	}
 
 }
