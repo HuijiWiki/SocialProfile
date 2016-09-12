@@ -133,7 +133,7 @@ jQuery(document).ready(function() {
 		}
 
 		if (mw.config.get('wgUserName') == null) {
-			$('.user-login').modal();
+			window.location.href="/wiki/Special:Login?returnto="+window.location.href;
 			return;
 		}
 		alreadySubmittedUserUserFollow = true;
@@ -153,7 +153,7 @@ jQuery(document).ready(function() {
 		}
 
 		if (mw.config.get('wgUserName') == null) {
-			$('.user-login').modal();
+			window.location.href="/wiki/Special:Login?returnto="+window.location.href;
 			return;
 		}
 		alreadySubmittedUserUserFollow = true;
