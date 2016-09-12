@@ -127,7 +127,7 @@ jQuery( document ).ready( function() {
 
 		//TODO: Check if user is logged in, if not prompt login form.
 		if (mw.config.get('wgUserName') == null){
-			window.location.href="/wiki/Special:Login?returnto="+window.location.href;
+			window.location.href="http://".mw.config.get('wgHuijiPrefix').".huiji.wiki/wiki/Special:Login?returnto="+encodeURIComponent(window.location.href);
 			return;
 		}
 		userSiteFollows.submitted = true;
@@ -149,7 +149,7 @@ jQuery( document ).ready( function() {
 		}
 		//Check if user is logged in, if not prompt login form.
 		if (mw.config.get('wgUserName') == null){
-			window.location.href="/wiki/Special:Login?returnto="+window.location.href;
+			window.location.href="http://".mw.config.get('wgHuijiPrefix').".huiji.wiki/wiki/Special:Login?returnto="+encodeURIComponent(window.location.href);
 			return;
 		}
 		userSiteFollows.submitted = true;
