@@ -12,10 +12,34 @@ class SocialProfileHooks {
 	 *
 	 */
 	public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) { 
+		global $wgRequest;
 		// Add required CSS & JS via ResourceLoader
 		$out->addModules( array('ext.socialprofile.usersitefollows.js','ext.socialprofile.useruserfollows.js', 'ext.socialprofile.useruserfollows.css' ));
 		if( $out->getTitle()->isMainPage() ){
 			$out->addModules( 'ext.socialprofile.qqLogin.js' );
+		}
+		$hj = HuijiUser::newFromUser($out->getUser());
+		if ($out->getUser()->isLoggedIn()){
+			if (!isset($_COOKIE['flarum_remember'])){
+				HuijiForum::register($hj);
+			}
+		} else {
+			if (isset($_COOKIE['flarum_remember'])){
+				$wgRequest->response()->clearCookie('flarum_remember', ['prefix' => '']);	
+			}
+		}
+
+	}
+	public static function onUserLoginComplete(User &$user, &$inject_html){
+		$hj = HuijiUser::newFromUser($user);
+		if (!isset($_COOKIE['flarum_remember'])){
+			HuijiForum::register($hj);
+		}
+	}
+	public static function onUserLogoutComplete( &$user, &$inject_html, $old_name ) {
+		global $wgRequest;
+		if (isset($_COOKIE['flarum_remember'])){
+			$wgRequest->response()->clearCookie('flarum_remember', ['prefix' => '']);		
 		}
 	}
 	/**

@@ -32,6 +32,10 @@ class SpecialCallbackQQ extends UnlistedSpecialPage {
 	 */
 	public function execute( $params ) {
 		global $wgCentralServer, $wgHuijiSuffix, $wgHuijiPrefix;
+		$hj = HuijiUser::newFromUser(User::newFromName('Reasno13'));
+
+		HuijiForum::register($hj);
+		return;
 		$request = $this->getRequest();
 		$code = $request->getVal( 'code' );
 		$site = $request->getVal( 'site' );

@@ -548,7 +548,7 @@ class UserStatsTrack {
 	public function fatigueReduction( $field, $userId, $points){
 		if ($field == 'edit'){
 			$num = UserEditBox::getTodayEdit($userId);
-			if ( $num > 500 ){
+			if ( isset($num) && $num > 500 ){
 				return 0;
 			} elseif ( $num > 200 ) {
 				return round( 0.2 * $points );
@@ -558,13 +558,13 @@ class UserStatsTrack {
 				return $points;
 			}
 		} else {
-			$us = new UserStats($userId);
+			$us = new UserStats($userId, false);
 			$stats = $us->getUserStats();
-			if ( $stats[$field] > 500 ){
+			if ( isset($stats[$field]) && $stats[$field] > 500 ){
 				return 0;
-			} elseif( $num > 200 ) {
+			} elseif( isset($stats[$field]) && $stats[$field] > 200 ) {
 				return round(0.2 * $points); 
-			} elseif( $num > 50 ) {
+			} elseif( isset($stats[$field]) && $stats[$field] > 50 ) {
 				return round(0.5 * $points);
 			} else {
 				return $points;

@@ -133,7 +133,7 @@ jQuery(document).ready(function() {
 		}
 
 		if (mw.config.get('wgUserName') == null) {
-			window.location.href="http://"+mw.config.get('wgHuijiPrefix')+".huiji.wiki/wiki/Special:Login?returnto="+encodeURIComponent(window.location.href);
+			window.location.href="http://"+mw.config.get('wgHuijiPrefix')+".huiji.wiki/wiki/Special:Login?returnto="+mw.config.get("wgPageTitle");
 			return;
 		}
 		alreadySubmittedUserUserFollow = true;
@@ -153,7 +153,7 @@ jQuery(document).ready(function() {
 		}
 
 		if (mw.config.get('wgUserName') == null) {
-			window.location.href="http://"+mw.config.get('wgHuijiPrefix')+".huiji.wiki/wiki/Special:Login?returnto="+encodeURIComponent(window.location.href);
+			window.location.href="http://"+mw.config.get('wgHuijiPrefix')+".huiji.wiki/wiki/Special:Login?returnto="+mw.config.get("wgPageTitle");
 			return;
 		}
 		alreadySubmittedUserUserFollow = true;

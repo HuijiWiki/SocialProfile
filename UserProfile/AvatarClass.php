@@ -64,19 +64,19 @@ class wAvatar {
                 $avatar_filename = $wgAvatarKey . '_' . $this->user_id .  '_' . $this->avatar_size ;
                 $jpgDoesExist = $this->ossClient->doesObjectExist($bucket, $avatar_filename . ".jpg");
                 if ($jpgDoesExist){
-                	$avatar_filename .= ".jpg" . '?r=' . microtime();
+                	$avatar_filename .= ".jpg" . '?r=' . time();
                 	$wgMemc->set( $key, $avatar_filename, 60 * 60 * 24 * 365 ); // cache for 365 day
                 	return $avatar_filename;
                 }
                 $pngDoesExist = $this->ossClient->doesObjectExist($bucket, $avatar_filename . ".png");
                 if ($pngDoesExist){
-                	$avatar_filename .= ".png" . '?r=' . microtime();
+                	$avatar_filename .= ".png" . '?r=' . time();
                 	$wgMemc->set( $key, $avatar_filename, 60 * 60 * 24 * 365); // cache for 365 day
                 	return $avatar_filename;
                 }
 				$gifDoesExist = $this->ossClient->doesObjectExist($bucket, $avatar_filename . ".gif");  
 				if ($gifDoesExist){
-                	$avatar_filename .= ".gif" . '?r=' . microtime();
+                	$avatar_filename .= ".gif" . '?r=' . time();
                 	$wgMemc->set( $key, $avatar_filename, 60 * 60 * 24 * 365); // cache for 365 day
                 	return $avatar_filename;
 				} 

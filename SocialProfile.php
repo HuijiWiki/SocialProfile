@@ -123,6 +123,7 @@ $wgAutoloadClasses['SpecialDonate'] = __DIR__ . '/Donate/SpecialDonate.php';
 $wgAutoloadClasses['UserDonation'] = __DIR__ . '/Donate/UserDonationClass.php';
 $wgAutoloadClasses['SpecialReturnUrl'] = __DIR__ . '/Donate/SpecialReturnUrl.php';
 $wgAutoloadClasses['SpecialNotifyUrl'] = __DIR__ . '/Donate/SpecialNotifyUrl.php';
+$wgAutoloadClasses['HuijiForum'] = __DIR__.'/HuijiForum/HuijiForumClass.php';
 // $wgAutoloadClasses['SpecialDynamicLess'] = __DIR__ . '/CommonStyle/SpecialDynamicLess.php';
 // $wgAutoloadClasses['ApiCommonStyle'] = __DIR__ . '/CommonStyle/api/ApiCommonStyle.php';
 // New special pages
@@ -352,6 +353,8 @@ $wgHooks['LinkBegin'][] = 'SocialProfileHooks::UserLinkBegin';
 // $wgHooks['SkinGetPageLink'][] = 'SocialProfileHooks::onSkinGetPageLink';
 $wgHooks['ArticleFromTitle'][] = 'SocialProfileHooks::onArticleFromTitle';
 $wgHooks['AutopromoteCondition'][] = 'SocialProfileHooks::onAutopromoteCondition';
+$wgHooks['onUserLoginComplete'][] = 'SocialProfileHooks::onUserLoginComplete';
+$wgHooks['onUserLogoutComplete'][] = 'SocialProfileHooks::onUserLogoutComplete';
 
 // ResourceLoader module definitions for certain components which do not have
 // their own loader file
