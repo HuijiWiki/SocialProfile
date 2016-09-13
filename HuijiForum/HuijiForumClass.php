@@ -31,7 +31,6 @@ class HuijiForum{
 		if ( isset($ret->errors) ){
 			foreach($ret->errors as $error) {
 				if ($error->source->pointer == "/data/attributes/email"){
-					print_r($error);
 					self::login($huijiUser);
 					return;
 				}
@@ -66,7 +65,6 @@ class HuijiForum{
 			'lifetime' => self::$lifetime
 		));	
 		$userToken = self::curlPost('token', $userData);
-		print_r($userToken);
 		// die();
 		$wgRequest->response()->setCookie( 'flarum_remember', $userToken->token,  time()+self::$lifetime, ['prefix' => ''] );
 		return true;
