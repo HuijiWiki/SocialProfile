@@ -104,6 +104,7 @@ $wgAutoloadClasses['SpecialVideosList'] = __DIR__ . '/Videos/SpecialVideosList.p
 $wgAutoloadClasses['SpecialAddUserEditCounts'] = __DIR__ . '/UserStats/SpecialAddUserEditCounts.php';
 $wgAutoloadClasses['SpecialAddFestivalGift'] = __DIR__ . '/SystemGifts/SpecialAddFestivalGift.php';
 $wgAutoloadClasses['SpecialSendHiddenGift'] = __DIR__ . '/SystemGifts/SpecialSendHiddenGift.php';
+$wgAutoloadClasses['SpecialRedirectToForum'] = __DIR__. '/SpecialRedirectToForum.php';
 // $wgAutoloadClasses['SpecialFamilyTree'] = __DIR__ . '/FamilyTree/SpecialFamilyTree.php';
 $wgAutoloadClasses['QueryInterface'] = __DIR__ . '/QueryInterface.php';
 $wgAutoloadClasses['TemplateFork'] = __DIR__ . '/TemplateFork/TemplateForkClass.php';
@@ -173,6 +174,7 @@ $wgSpecialPages['Donate'] = 'SpecialDonate';
 $wgSpecialPages['ReturnUrl'] = 'SpecialReturnUrl';
 $wgSpecialPages['NotifyUrl'] = 'SpecialNotifyUrl';
 $wgSpecialPages['DynamicLess'] = 'SpecialDynamicLess';
+$wgSpecialPages['RedirectToForum'] = 'SpecialRedirectToForum';
 
 
 // Necessary AJAX functions
