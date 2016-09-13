@@ -22,7 +22,8 @@ class HuijiForum{
 							'username' => $huijiUser->getName(),
 							'email' => $email,
 							'password' => Confidential::$forumCommonPassword,
-							'avatarUrl' => $url
+							'avatarUrl' => $url,
+							'bio' => $huijiUser->getProfile()['status']
 						)
 				)
 			));
