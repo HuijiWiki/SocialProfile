@@ -37,6 +37,7 @@ class HuijiForum{
 			}
 			// print_r($ret->errors);
 			// die();灰机wiki
+			$wgRequest->response()->setCookie('flarum_remember', 'undefined', $time+self::$lifetime, ['prefix'=> '']);
 			return;
 			//Name not legal. please sign up manually
 		}
@@ -65,7 +66,7 @@ class HuijiForum{
 			'lifetime' => self::$lifetime
 		));	
 		$userToken = self::curlPost('token', $userData);
-		$wgRequest->response()->setCookie( 'flarum_remember', $userToken->token,  time()+self::$lifetime, ['prefix' => ''] );
+		$wgRequest->response()->setCookie( 'flarum_remember', $userToken->token?$userToken->token:'undefined',  time()+self::$lifetime, ['prefix' => ''] );
 		return true;
 	}
 	private static function curlPost($apiEndpoint, $dataString, $auth = null){
