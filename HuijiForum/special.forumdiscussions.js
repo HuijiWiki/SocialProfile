@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	mw.loader.using('ext.socialprofile.forumlist').done(function(){
 		$(".forumlist-container").each(function(){
-			$this = $(this);
+			var $this = $(this);
 			mw.forumlist(
 				{
 					count: $this.data('count'),
