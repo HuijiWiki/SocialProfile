@@ -74,6 +74,10 @@ mw.forumlist = function ( option, callback ){
 						timestamp: displayDate.toLocaleString(),
 						content: displayContent
 					});	
+
+					if (pipe >= count - 1){
+						break;
+					}
 									
 				}
 				$html = myTemplate.render({discussions: alteredDiscussion});
