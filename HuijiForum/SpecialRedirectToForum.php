@@ -18,6 +18,6 @@ class SpecialRedirectToForum extends SpecialPage {
 		$this->getOutput()->redirect( 'http://forum.huiji.wiki' );
 	}
 	function getGroupName() {
-    		return 'redirects';
+    		return 'forum';
 	}
 }
