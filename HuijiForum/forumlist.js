@@ -59,7 +59,7 @@ mw.forumlist = function ( option, callback ){
 					} else {
 						var displayContent = '';
 					}
-					if (lookup( discussions[pipe].relationships.startUser.data ).avatarUrl == ''){
+					if (lookup( discussions[pipe].relationships.startUser.data ).avatarUrl !== null){
 						var displayAvatar = lookup( discussions[pipe].relationships.startUser.data ).avatarUrl;
 					} else {
 						var displayAvatar = "http://av.huijiwiki.com/default_ml.gif";
