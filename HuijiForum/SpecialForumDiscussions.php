@@ -1,5 +1,5 @@
 <?php 
-class SpecialForumDiscussions extends SpecialPage{
+class SpecialForumDiscussions extends IncludableSpecialPage{
 	/**
 	 * Constructor -- set up the new special page
 	 */
