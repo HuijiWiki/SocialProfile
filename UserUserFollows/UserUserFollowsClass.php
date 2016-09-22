@@ -55,6 +55,7 @@ class UserUserFollow{
 			'agent' => $follower,
 			'title' => $followee->getUserPage()
 		));
+		Hooks::run("SocialProfile::followUser", [$follower, $followee]);
 		return $followId;
 
 	}
@@ -82,6 +83,7 @@ class UserUserFollow{
 		$stats->decStatField( 'friend' ); //use friend record to count the number of people followed.
 		$stats = new UserStatsTrack( $followee->getId(), $followee->getName() );
 		$stats->decStatField( 'foe' ); // use foe record to count the number of people following.
+		Hooks::run("SocialProfile::unfollowUser", [$follower, $followee]);
 		return true;
 
 	}

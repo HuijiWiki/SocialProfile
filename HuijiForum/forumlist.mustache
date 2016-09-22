@@ -1,0 +1,18 @@
+<div class="forumlist">
+{{#discussions}}
+<div class="media">
+  <div class="media-left">
+    <a href="{{{url}}}">
+      <img class="headimg media-object" src="{{{image}}}" alt="{{imageAlt}}">
+    </a>
+  </div>
+  <div class="media-body">
+    <h4 class="media-heading">
+		<a href="{{{url}}}">{{heading}}</a>
+	 </h4>
+	<p class="secondary">{{author}} {{timestamp}}</p> 
+    {{{content}}}
+  </div>
+</div>
+{{/discussions}}
+</div>

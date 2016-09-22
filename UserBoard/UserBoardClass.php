@@ -67,6 +67,8 @@ class UserBoard {
 		$stats = new UserStatsTrack( $user_id_from, $user_name_from );
 		$stats->incStatField( 'user_board_sent' );
 
+		Hooks::run('SocialProfile::messageReceived', [$user_id_from, $user_id_to, $message]);
+
 		return $dbw->insertId();
 	}
 	/**

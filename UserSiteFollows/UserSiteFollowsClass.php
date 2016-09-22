@@ -38,6 +38,7 @@ class UserSiteFollow{
 			$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'check_follow', $user->getName(), $huijiPrefix );
 			$wgMemc->set($key, true);			
 		}
+		Hooks::run('SocialProfile::followSite', [$user, $huijiPrefix]);
 		// Notify Siteadmin maybe?
 		return $followId;
 
@@ -65,6 +66,7 @@ class UserSiteFollow{
 		//store result in cache
 		$key = wfForeignMemcKey('huiji','', 'user_site_follow', 'check_follow', $user->getName(), $huijiPrefix );
 		$wgMemc->set($key, false);
+		Hooks::run('SocialProfile::unfollowSite', [$user, $huijiPrefix]);
 		return true;
 
 	}

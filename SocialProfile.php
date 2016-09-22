@@ -104,7 +104,7 @@ $wgAutoloadClasses['SpecialVideosList'] = __DIR__ . '/Videos/SpecialVideosList.p
 $wgAutoloadClasses['SpecialAddUserEditCounts'] = __DIR__ . '/UserStats/SpecialAddUserEditCounts.php';
 $wgAutoloadClasses['SpecialAddFestivalGift'] = __DIR__ . '/SystemGifts/SpecialAddFestivalGift.php';
 $wgAutoloadClasses['SpecialSendHiddenGift'] = __DIR__ . '/SystemGifts/SpecialSendHiddenGift.php';
-$wgAutoloadClasses['SpecialRedirectToForum'] = __DIR__. '/SpecialRedirectToForum.php';
+$wgAutoloadClasses['SpecialRedirectToForum'] = __DIR__. '/HuijiForum/SpecialRedirectToForum.php';
 // $wgAutoloadClasses['SpecialFamilyTree'] = __DIR__ . '/FamilyTree/SpecialFamilyTree.php';
 $wgAutoloadClasses['QueryInterface'] = __DIR__ . '/QueryInterface.php';
 $wgAutoloadClasses['TemplateFork'] = __DIR__ . '/TemplateFork/TemplateForkClass.php';
@@ -125,6 +125,7 @@ $wgAutoloadClasses['UserDonation'] = __DIR__ . '/Donate/UserDonationClass.php';
 $wgAutoloadClasses['SpecialReturnUrl'] = __DIR__ . '/Donate/SpecialReturnUrl.php';
 $wgAutoloadClasses['SpecialNotifyUrl'] = __DIR__ . '/Donate/SpecialNotifyUrl.php';
 $wgAutoloadClasses['HuijiForum'] = __DIR__.'/HuijiForum/HuijiForumClass.php';
+$wgAutoloadClasses['SpecialForumDiscussions'] = __DIR__.'/HuijiForum/SpecialForumDiscussions.php';
 // $wgAutoloadClasses['SpecialDynamicLess'] = __DIR__ . '/CommonStyle/SpecialDynamicLess.php';
 // $wgAutoloadClasses['ApiCommonStyle'] = __DIR__ . '/CommonStyle/api/ApiCommonStyle.php';
 // New special pages
@@ -175,6 +176,7 @@ $wgSpecialPages['ReturnUrl'] = 'SpecialReturnUrl';
 $wgSpecialPages['NotifyUrl'] = 'SpecialNotifyUrl';
 $wgSpecialPages['DynamicLess'] = 'SpecialDynamicLess';
 $wgSpecialPages['RedirectToForum'] = 'SpecialRedirectToForum';
+$wgSpecialPages['ForumDiscussions'] = 'SpecialForumDiscussions';
 
 
 // Necessary AJAX functions
@@ -700,6 +702,25 @@ $wgResourceModules['ext.socialprofile.steamachievement'] = array(
 	'localBasePath' => __DIR__ . '/SteamAchievement',
 	'remoteExtPath' => 'SocialProfile/SteamAchievement',
 	'position' => 'bottom',
+);
+$wgResourceModules['ext.socialprofile.forumlist'] = array(
+	'scripts' => array(
+			'forumlist.js',
+		),
+	'templates' => array(
+			'forumlist.mustache' => 'forumlist.mustache',
+		),
+	'localBasePath' => __DIR__ . '/HuijiForum',
+	'remoteExtPath' => 'SocialProfile/HuijiForum',
+	'position' => 'bottom',	
+);
+$wgResourceModules['ext.socialprofile.special.forumdiscussions'] = array(
+	'scripts' => array(
+			'special.forumdiscussions.js',
+		),
+	'localBasePath' => __DIR__ . '/HuijiForum',
+	'remoteExtPath' => 'SocialProfile/HuijiForum',
+	'position' => 'bottom',	
 );
 // End ResourceLoader stuff
 

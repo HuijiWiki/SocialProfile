@@ -56,6 +56,7 @@ class UserGifts {
 
 		$stats = new UserStatsTrack( $this->user_id, $this->user_name );
 		$stats->incStatField( 'gift_sent' );
+		Hooks::run('SocialProfile::giftSend', [$this->user_id_to, $this->user_id, $gift_id, $ug_id, $message]);
 		return $ug_id;
 	}
 
