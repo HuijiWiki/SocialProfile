@@ -21,7 +21,7 @@ mw.forumlist = function ( option, callback ){
 			var discussions = res.data;
 
 			if ( discussions.length == 0 ){
-				var nodiscussions = '<ul class="bloglist"><li><a class="empty-message">最近没有人发过贴呦~<a></li></ul>';
+				var nodiscussions = '<ul class="forumlist"><a class="empty-message">最近没有人发过贴呦~<a></ul>';
 				callback($(nodiscussions));
 				return;
 			}
@@ -48,7 +48,6 @@ mw.forumlist = function ( option, callback ){
 					}
 				}
 				var alteredDiscussion = [];
-				
 				for (var pipe in discussions){
 					if (discussions[pipe].attributes.commentsCount === 1){
 						var displayAuthor = lookup( discussions[pipe].relationships.startUser.data ).username + '发布于';
