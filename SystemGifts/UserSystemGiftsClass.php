@@ -68,7 +68,7 @@ class UserSystemGifts {
 				$this->sendGiftNotificationEmail( $this->user_id, $gift_id, $gift_info['gift_description'] );
 			}
 			$wgMemc->delete( wfForeignMemcKey( 'huiji', '', 'user', 'profile', 'system_gifts', $this->user_id ) );
-			Hooks::run('SocialProfile::achievementSend',[$this->user_id, $gift_id, $sg_gift_id, $gift_info['gift_description'] ]);
+			Hooks::run('SocialProfile::achievementSend',[$this->user_id, (int)$gift_id, (int)$sg_gift_id, $gift_info['gift_description'] ]);
 			return $sg_gift_id;
 		}else{
 			return '';

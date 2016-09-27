@@ -104,11 +104,14 @@ class UserSystemMessage {
 	 * @param $level Mixed: name of the level that the user advanced to
 	 */
 	public function sendAdvancementNotificationEmail( $userIdTo, $level ) {
+		global $wgOut;
 		$user = User::newFromId( $userIdTo );
 		$user->loadFromDatabase();
 
 		// send echo notification
 		$userpage = $user->getUserPage();
+		Hooks::run('SocialProfile::advancement',[$userIdTo, $level ]);
+
 		EchoEvent::create( array(
 		     'type' => 'advancement',
 		     'extra' => array(

@@ -304,7 +304,6 @@ class SocialProfileHooks {
         return true;
     }
 
-
 	/**
 	 * Called by ArticleFromTitle hook
 	 * Calls UserProfilePage instead of standard article
