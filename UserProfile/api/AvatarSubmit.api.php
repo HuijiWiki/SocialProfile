@@ -13,9 +13,9 @@ class ApiAvatarSubmit extends ApiBase {
     // forgeries (CSRF)
     if ( !$this->getRequest()->wasPosted() ){
          $responseBody = array(
-          'state'  => 200,
+          'state'  => 403,
           'message' => '请使用Post方式发送HTTP请求',
-          'result' => $avatar->getResult(),
+          'result' => '',
         );
         $result = $this->getResult();
         $result->addValue($this->getModuleName(),'res', $responseBody);   
@@ -25,27 +25,18 @@ class ApiAvatarSubmit extends ApiBase {
         wfReadOnly()
     ) {
          $responseBody = array(
-          'state'  => 200,
+          'state'  => 403,
           'message' => '本维基处于只读状态。',
-          'result' => $avatar->getResult(),
+          'result' => '',
         );
         $result = $this->getResult();
         $result->addValue($this->getModuleName(),'res', $responseBody);   
         return true;      
-    } elseif (!$user->isAllowed( 'upload' ) ){
-         $responseBody = array(
-          'state'  => 200,
-          'message' => '您没有上传头像的权限。您是否未验证邮箱？',
-          'result' => $avatar->getResult(),
-        );
-        $result = $this->getResult();
-        $result->addValue($this->getModuleName(),'res', $responseBody);   
-        return true;        
     } elseif ($user->isBlocked()){
          $responseBody = array(
-          'state'  => 200,
+          'state'  => 403,
           'message' => '您已被封禁。',
-          'result' => $avatar->getResult(),
+          'result' => '',
         );
         $result = $this->getResult();
         $result->addValue($this->getModuleName(),'res', $responseBody);   
