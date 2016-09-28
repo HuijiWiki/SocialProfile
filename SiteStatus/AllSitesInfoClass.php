@@ -362,36 +362,45 @@ class AllSitesInfo{
 	//get one page info edit/artical/totalpage/followee
 	
 	static function getPageInfoByPrefix( $prefix ){
-		global $isProduction, $wgLang;
+		global $isProduction, $wgLang, $wgMemc;
 		$prefix = WikiSite::DbIdFromPrefix($prefix);
-		try{
-			$resArr = array();
-			$dbr = wfGetDB( DB_SLAVE,$groups = array(),$wiki = $prefix );
-			$res = $dbr->select(
-				'site_stats',
-				array(
-					'ss_total_edits',
-					'ss_good_articles',
-					'ss_total_pages',
-					'ss_users',
-					'ss_images',
-				 ),
-				array('1'),
-				__METHOD__
-			);
-			if($res){
-				foreach ($res as $value) {
-					$resArr['totalEdits']  = $value->ss_total_edits;
-					$resArr['totalArticles']  = $value->ss_good_articles;
-					$resArr['totalPages']  = $value->ss_total_pages;
-					$resArr['totalUsers']  = $value->ss_users;
-					$resArr['totalImages'] = $value->ss_images;
+		$key = wfForeignMemcKey('huiji', '', 'AllSitesInfo', 'getPageInfoByPrefix', $prefix);
+		$data = $wgMemc->get($key);
+		if ($data == ''){
+			try{
+				$resArr = array();
+				$dbr = wfGetDB( DB_SLAVE,$groups = array(),$wiki = $prefix );
+				$res = $dbr->select(
+					'site_stats',
+					array(
+						'ss_total_edits',
+						'ss_good_articles',
+						'ss_total_pages',
+						'ss_users',
+						'ss_images',
+					 ),
+					array('1'),
+					__METHOD__
+				);
+				if($res){
+					foreach ($res as $value) {
+						$resArr['totalEdits']  = $value->ss_total_edits;
+						$resArr['totalArticles']  = $value->ss_good_articles;
+						$resArr['totalPages']  = $value->ss_total_pages;
+						$resArr['totalUsers']  = $value->ss_users;
+						$resArr['totalImages'] = $value->ss_images;
+					}
 				}
-			}
-		}catch(Exception $e){
-			return '';
+			}catch(Exception $e){
+				return '';
+			}	
+			$wgMemc->set($key, $resArr, 60);
+			return $resArr;			
+		} else {
+			return $data;
 		}
-		return $resArr;	
+		
+		
 	}
 
 }
