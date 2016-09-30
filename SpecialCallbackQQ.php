@@ -49,6 +49,7 @@ class SpecialCallbackQQ extends UnlistedSpecialPage {
 
 
 		$session = MediaWiki\Session\SessionManager::singleton()->getSessionById($sessionId, false, $request);
+		//TODO : validate session. It can be null in some cases
 		$session->sessionWithRequest($request);
 		$session->persist();
 		$request->setSessionId(new SessionId($sessionId));

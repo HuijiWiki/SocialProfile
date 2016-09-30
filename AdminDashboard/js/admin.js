@@ -89,29 +89,23 @@ var admin = {
     },
     getTokens: function(li,rights,base,method){
         var base = this;
-        base.token = li.attr('token');
-        if(!base.token){
-            $.ajax({
-                url:'/api.php',
-                data:{
-                    action:'query',
-                    list:'users',
-                    meta:'tokens',
-                    ususers:'Volvo',
-                    type:'userrights',
-                    format:'json'
-                },
-                type:'post',
-                success: function(data){
-                    li.attr('token',data.query.tokens.userrightstoken);
-                    base.token = data.query.tokens.userrightstoken;
-                    method(li,rights,base,base.token);
-                }
-            })
-        }
-        else{
-            method(li,rights,base.token);
-        }
+        $.ajax({
+            url:'/api.php',
+            data:{
+                action:'query',
+                // list:'users',
+                meta:'tokens',
+                // ususers:'Volvo',
+                type:'userrights',
+                format:'json'
+            },
+            type:'post',
+            success: function(data){
+                li.attr('token',data.query.tokens.userrightstoken);
+                base.token = data.query.tokens.userrightstoken;
+                method(li,rights,base,base.token);
+            }
+        })
     },
     changeRights:function(li,rights,classname,text){
         var base = this;
@@ -127,6 +121,10 @@ var admin = {
             },
             type:'post',
             success:function(data){
+                if (data.error.code == 'badtoken'){
+                    base.getTokens(li, rights, classname, base.changeRights)
+                    return;
+                }
                 if(data.userrights.added.length>0) {
                     li.find('.a-tag').append('<span class="' + classname + '" rights="' + rights + '"><i class="icon-close"></i>' + text + '</span>');
                     for(var i=0,j=li.find('input');i< j.length;i++){
