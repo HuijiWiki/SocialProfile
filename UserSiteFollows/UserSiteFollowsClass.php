@@ -120,7 +120,7 @@ class UserSiteFollow{
 			$siteCount = $s->count;
 		}
 
-		$wgMemc->set( $key, $siteCount );
+		$wgMemc->set( $key, $siteCount, 3600 );
 		return $siteCount;
 	}
 
@@ -190,7 +190,7 @@ class UserSiteFollow{
 			$userCount = $s->count;
 		}
 
-		$wgMemc->set( $key, $userCount );
+		$wgMemc->set( $key, $userCount, 3600 );
 		return $userCount;
 	}
 
