@@ -2042,7 +2042,7 @@ class UserActivity {
 	 * @return array
 	 */
 	private function streamlineForeignDBRepo( $prefix ){
-		global $wgDBtype, $wgDBserver, $wgDBuser, $wgDBpassword, $isProduction, $wgSharedThumbnailScriptPath, $wgGenerateThumbnailOnParse, $wgHuijiSuffix, $wgCdnScriptPath;
+		global $wgDBtype, $wgDBserver, $wgDBuser, $wgDBpassword, $isProduction, $wgSharedThumbnailScriptPath, $wgGenerateThumbnailOnParse, $wgHuijiSuffix, $wgCdnScriptPath, $wgOssPath;
 		$lowDashPrefix = WikiSite::tableNameFromPrefix($prefix);
 		$dotPrefix = str_replace('_', '.', $prefix);
 		
@@ -2050,8 +2050,8 @@ class UserActivity {
 			return array(
 			    'class' => 'ForeignDBRepo',
 			    'name' => $dotPrefix,
-			    'url' => "http://cdn.huijiwiki.com/{$dotPrefix}/uploads",
-			    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
+			    'url' => 'http://huiji-public.'.$wgOssPath.'/'.$wgHuijiPrefix.'/uploads',
+			    'directory' => $wgHuijiPrefix.'/uploads/',
 			    'hashLevels' => 2, // This must be the same for the other family member
 			    'thumbScriptUrl' => "http://cdn.huijiwiki.com/{$dotPrefix}/thumb.php",
 			    'transformVia404' => !$wgGenerateThumbnailOnParse,
@@ -2065,14 +2065,14 @@ class UserActivity {
 			    'hasSharedCache' => false,
 			    'descBaseUrl' => "http://{$dotPrefix}{$wgHuijiSuffix}/wiki/File:",
 			    'fetchDescription' => false,
-			    'backend' => 'local-backend'				
+			    'backend' => 'localOss'				
 			);
 		} else {
 			return array(
 			    'class' => 'ForeignDBRepo',
 			    'name' => $dotPrefix,
-			    'url' => "http://cdn.huijiwiki.com/{$dotPrefix}/uploads",
-			    'directory' => '/var/www/virutal/{$dotPrefix}/uploads',
+			    'url' => 'http://huiji-public.'.$wgOssPath.'/'.$wgHuijiPrefix.'/uploads',
+			    'directory' => $wgHuijiPrefix.'/uploads/',
 			    'hashLevels' => 2, // This must be the same for the other family member
 			    'thumbScriptUrl' => "http://cdn.huijiwiki.com/{$dotPrefix}/thumb.php",
 			    'transformVia404' => !$wgGenerateThumbnailOnParse,
@@ -2086,7 +2086,7 @@ class UserActivity {
 			    'hasSharedCache' => false,
 			    'descBaseUrl' => "http://{$dotPrefix}{$wgHuijiSuffix}/wiki/File:",
 			    'fetchDescription' => false,
-			    'backend' => 'local-backend'				
+			    'backend' => 'localOss'				
 			);
 		}
 	}

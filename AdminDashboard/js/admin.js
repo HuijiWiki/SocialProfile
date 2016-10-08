@@ -87,7 +87,7 @@ var admin = {
 
         }
     },
-    getTokens: function(li,rights,base,method){
+    getTokens: function(li,rights,base,method, text){
         var base = this;
         $.ajax({
             url:'/api.php',
@@ -103,7 +103,8 @@ var admin = {
             success: function(data){
                 li.attr('token',data.query.tokens.userrightstoken);
                 base.token = data.query.tokens.userrightstoken;
-                method(li,rights,base,base.token);
+                console.log(base.token);
+                method(li,rights,base, text);
             }
         })
     },
@@ -121,8 +122,9 @@ var admin = {
             },
             type:'post',
             success:function(data){
-                if (data.error.code == 'badtoken'){
-                    base.getTokens(li, rights, classname, base.changeRights)
+                if (data.error && data.error.code == 'badtoken'){
+                    console.log(base.token);
+                    base.getTokens(li, rights, classname, base.changeRights, text)
                     return;
                 }
                 if(data.userrights.added.length>0) {
