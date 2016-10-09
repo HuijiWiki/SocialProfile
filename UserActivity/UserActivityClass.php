@@ -2050,8 +2050,8 @@ class UserActivity {
 			return array(
 			    'class' => 'ForeignDBRepo',
 			    'name' => $dotPrefix,
-			    'url' => 'http://huiji-public.'.$wgOssPath.'/'.$wgHuijiPrefix.'/uploads',
-			    'directory' => $wgHuijiPrefix.'/uploads/',
+			    'url' => 'http://huiji-public.'.$wgOssPath.'/'.$prefix.'/uploads',
+			    'directory' => $prefix.'/uploads/',
 			    'hashLevels' => 2, // This must be the same for the other family member
 			    'thumbScriptUrl' => "http://cdn.huijiwiki.com/{$dotPrefix}/thumb.php",
 			    'transformVia404' => !$wgGenerateThumbnailOnParse,
@@ -2071,8 +2071,8 @@ class UserActivity {
 			return array(
 			    'class' => 'ForeignDBRepo',
 			    'name' => $dotPrefix,
-			    'url' => 'http://huiji-public.'.$wgOssPath.'/'.$wgHuijiPrefix.'/uploads',
-			    'directory' => $wgHuijiPrefix.'/uploads/',
+			    'url' => 'http://huiji-public.'.$wgOssPath.'/'.$prefix.'/uploads',
+			    'directory' => $prefix.'/uploads/',
 			    'hashLevels' => 2, // This must be the same for the other family member
 			    'thumbScriptUrl' => "http://cdn.huijiwiki.com/{$dotPrefix}/thumb.php",
 			    'transformVia404' => !$wgGenerateThumbnailOnParse,
