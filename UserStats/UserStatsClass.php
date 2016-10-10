@@ -546,7 +546,7 @@ class UserStatsTrack {
 	 * @param $points raw points
 	 */
 	public function fatigueReduction( $field, $userId, $points){
-		if ($field == 'edits'){
+		if ($field == 'edit'){
 			$num = UserEditBox::getTodayEdit($userId);
 			if ( isset($num) && $num > 500 ){
 				return 0;
