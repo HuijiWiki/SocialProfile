@@ -373,22 +373,21 @@ class SocialProfileHooks {
 			"padding_char" => " ",
 			"first_letter" => "none",
 		];
-		$config['tokenizer']['pinyin_tokenizer'] = [
-			"type" => "pinyin",
-			"first_letter" => "prefix",
-			"padding_char" => " "
+		$config['tokenizer']['ik_tokenizer'] = [
+			"type" => 'ik',
+			"use_smart" => true,
 		];
 		$pinyin_analyzer = [
 			"type" => "custom",
 			"filter" => "pinyin_filter",
-			"tokenizer" => "ik",
+			"tokenizer" => "ik_tokenizer",
 		];
 		$config['analyzer']['text'] = $pinyin_analyzer;
 		$config['analyzer']['text_search'] = $pinyin_analyzer;
 		$config['analyzer']['plain'] = $pinyin_analyzer;
 		$config['analyzer']['plain_search'] = $pinyin_analyzer;
-		$config['analyzer']['suggest']['tokenizer'] = 'pinyin_tokenizer';
-		$config['analyzer']['suggest']['filter'][] = ["word_delimiter","nGram", 'lowercase', 'suggest_shingle'];
+		$config['analyzer']['suggest']['tokenizer'] = 'ik_tokenizer';
+		$config['analyzer']['suggest']['filter'] = ["word_delimiter","nGram", 'lowercase', 'suggest_shingle', 'pinyin_filter'];
 		$config['analyzer']['near_match']['filter'][] = "pinyin_filter";
 
 	}
