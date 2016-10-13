@@ -24,7 +24,7 @@ class AllSitesInfo{
 
 	static function getAllSitesRankFromCache( $prefix, $yesterday ){
 
-		global $wgMemc;
+		$wgMemc = wfGetCache(CACHE_ANYTHING);
 		$key = wfForeignMemcKey('huiji','', 'site_rank', 'all_site_rank', $prefix, $yesterday );
 		$data = $wgMemc->get( $key );
 		if ( $data != '' ) {
@@ -36,7 +36,7 @@ class AllSitesInfo{
 
 	static function getAllSitesRankFromDB( $prefix, $yesterday ){
 
-		global $wgMemc;
+		$wgMemc = wfGetCache(CACHE_ANYTHING);
 		// wfDebug( "Got site rank ( site = {$prefix},data = {$yesterday} ) from DB\n" );
 		$key = wfForeignMemcKey('huiji','', 'site_rank', 'all_site_rank', $prefix, $yesterday );
 		$allSiteRank = array();

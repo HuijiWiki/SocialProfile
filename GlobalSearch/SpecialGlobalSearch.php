@@ -67,9 +67,9 @@ class SpecialGlobalSearch extends SpecialPage {
 					$redCount = count($value->redirects);
 					if( $redCount > 0 ){
 						$maxNum = ($redCount >= 5)?5:$redCount;
-						$output .= '[';
+						$output .= '&nbsp;[';
 						for ($i=0; $i<$maxNum ; $i++) { 
-							$output .= "<span style='color:#c9c9c9; font-size: 10px;'>&nbsp&nbsp".$value->redirects[$i]."</span>";
+							$output .= "<span class='secondary'>&nbsp;&nbsp;".$value->redirects[$i]."</span>";
 						}
 						if ( $redCount > 5 ) {
 							$output .= "…";
@@ -91,7 +91,7 @@ class SpecialGlobalSearch extends SpecialPage {
 							$output .= "<b>…</b>";
 						}
 					}
-					$output .= "<div class=\"mw-search-result-data\">".date("Y年m月d日 h:i:s", $d)."
+					$output .= "<div class=\"mw-search-result-data hidden-xs\">".date("Y年m月d日 h:i:s", $d)."
 								</div>
 								</li>";
 				}

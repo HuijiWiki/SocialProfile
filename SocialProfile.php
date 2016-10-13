@@ -359,7 +359,8 @@ $wgHooks['ArticleFromTitle'][] = 'SocialProfileHooks::onArticleFromTitle';
 $wgHooks['AutopromoteCondition'][] = 'SocialProfileHooks::onAutopromoteCondition';
 $wgHooks['onUserLoginComplete'][] = 'SocialProfileHooks::onUserLoginComplete';
 $wgHooks['onUserLogoutComplete'][] = 'SocialProfileHooks::onUserLogoutComplete';
-
+$wgHooks['SpecialSearchResultsAppend'][] = 'SocialProfileHooks::onSpecialSearchResultsAppend';
+$wgHooks['CirrusSearchAnalysisConfig'][] = 'SocialProfileHooks::onCirrusSearchAnalysisConfig';
 // ResourceLoader module definitions for certain components which do not have
 // their own loader file
 // General

@@ -6,6 +6,7 @@
  *
  * @file
  */
+use MediaWiki\Logger\LoggerFactory;
 class SocialProfileHooks {
 	/** 
 	 * Enable follow user/site on every page
@@ -28,7 +29,6 @@ class SocialProfileHooks {
 				$wgRequest->response()->clearCookie('flarum_remember', ['prefix' => '']);	
 			}
 		}
-
 	}
 	public static function onUserLoginComplete(User &$user, &$inject_html){
 		$hj = HuijiUser::newFromUser($user);
@@ -357,6 +357,40 @@ class SocialProfileHooks {
 			$result = false;
 			return true;
 		}
+	}
+	public static function onSpecialSearchResultsAppend( $specialSearch, $output, $term ) {
+		global $wgServer, $wgSitename;
+		$globalSearch = SpecialPage::getTitleFor('GlobalSearch');
+		$url = htmlspecialchars( $globalSearch->getFullURL("key={$term}") ); 
+		$link = "<a href=\"{$url}\">".wfMessage('global-search-link')->params($term)->text()."</a>";
+		$globalSearchNotice = wfMessage('global-search-notice')->params( $wgSitename, $link )->text();
+		$output->addHtml('<p class="global-search-notice">'.$globalSearchNotice.'</p>');
+		return true;		
+	}
+	public static function onCirrusSearchAnalysisConfig( &$config ){
+		$config['filter']['pinyin_filter'] = [
+			"type" => "pinyin",
+			"padding_char" => " ",
+			"first_letter" => "none",
+		];
+		$config['tokenizer']['pinyin_tokenizer'] = [
+			"type" => "pinyin",
+			"first_letter" => "prefix",
+			"padding_char" => " "
+		];
+		$pinyin_analyzer = [
+			"type" => "custom",
+			"filter" => "pinyin_filter",
+			"tokenizer" => "ik",
+		];
+		$config['analyzer']['text'] = $pinyin_analyzer;
+		$config['analyzer']['text_search'] = $pinyin_analyzer;
+		$config['analyzer']['plain'] = $pinyin_analyzer;
+		$config['analyzer']['plain_search'] = $pinyin_analyzer;
+		$config['analyzer']['suggest']['tokenizer'] = 'pinyin_tokenizer';
+		$config['analyzer']['suggest']['filter'][] = ["word_delimiter","nGram", 'lowercase', 'suggest_shingle'];
+		$config['analyzer']['near_match']['filter'][] = "pinyin_filter";
+
 	}
 }
 class ThemeDesigner extends Article{

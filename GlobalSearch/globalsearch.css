@@ -1,5 +1,6 @@
 .mw-search-results{
     padding-left: 0;
+    max-width: 1080px !important;
 }
 .results-info{
     max-width: 510px;
