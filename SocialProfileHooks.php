@@ -392,7 +392,6 @@ class SocialProfileHooks {
 		$config['analyzer']['plain'] = $pinyin_analyzer;
 		$config['analyzer']['plain_search'] = $pinyin_analyzer;
 		$config['analyzer']['suggest']['tokenizer'] = 'whitespace';
-		//$config['analyzer']['suggest']['filter'] = ["pinyin_narrow", 'lowercase', 'cjk_width'];
 		$config['analyzer']['near_match']['filter'][] = "pinyin_filter";
 
 	}

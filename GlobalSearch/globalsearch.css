@@ -1,3 +1,22 @@
+.mw-special-Search #powerSearchText {
+    display: inline-block;
+    width: 100%;
+    font-size: 14px;
+    border-radius: 3px 0 0 3px;
+    max-width: 500px;
+    padding: 7px;
+    border: 1px solid #ccc;
+    box-shadow: none;
+}
+#wiki-body #mw-searchoptions{
+    border:none!important;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 20px!important;
+}
+#wiki-body #mw-searchoptions div.divider{
+    border-bottom: none;
+}
 .mw-search-results{
     padding-left: 0;
     max-width: 1080px !important;
@@ -33,6 +52,9 @@
     left: 0;
     color: #999;
     font-size: 12px;
+}
+#mw-search-interwiki{
+    width: auto;
 }
 .page-nav-wrapper {
     text-align: center;
