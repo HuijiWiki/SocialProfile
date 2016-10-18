@@ -46,7 +46,7 @@ class SpecialUploadFiles extends SpecialPage{
 		                <input type='file' id='file' name='file' multiple='multiple'>
 		                <div id='drag-area'>
                             <p>把要上传的文件拖动到此处<b>或</b></p>
-                            <span class='file-btn btn btn-primary'>选择电脑上的文件</span>
+                            <span class='file-btn'>选择电脑上的文件</span>
 		                </div>
 		          </form><div class='clearfix'></div>";
     if ($this->getUser()->isAllowed('reupload')){

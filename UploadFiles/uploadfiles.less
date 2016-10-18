@@ -14,30 +14,30 @@
   @main-lighter:lighten(@main-base, 0.75*(100 - lightness(@main-base)));
 }
 .a();
-// .bg(@n) when(iscolor(@n)){
-//   background-color: @n;
-// }
-// .bg-compute-text(@n) when(iscolor(@n)){
-//   .bg(@n);
-//   .compute-text(@n);
-// }
-// .compute-text(@n) when (iscolor(@n)) {
-//   p {
-//     a {
-//       color: @a;
-//     }
-//   }
-//   & when (lightness(@n) <= 50%) {
-//     color: #fff;
-//   }
-//   & when (lightness(@n) > 50%) {
-//     color: #333;
-//   }
-//   textarea, input, [contenteditable]{
-//     background-color: #fff;
-//     color: #333;
-//   }  
-// }
+.bg(@n) when(iscolor(@n)){
+  background-color: @n;
+}
+.bg-compute-text(@n) when(iscolor(@n)){
+  .bg(@n);
+  .compute-text(@n);
+}
+.compute-text(@n) when (iscolor(@n)) {
+  p {
+    a {
+      color: @a;
+    }
+  }
+  & when (lightness(@n) <= 50%) {
+    color: #fff;
+  }
+  & when (lightness(@n) > 50%) {
+    color: #333;
+  }
+  textarea, input, [contenteditable]{
+    background-color: #fff;
+    color: #333;
+  }  
+}
 #uploadfiles img{
     height: 120px;
     cursor: pointer;
@@ -88,6 +88,7 @@ span.gray{
 .file-btn{
     padding: 5px 8px;
     cursor: pointer;
+    .bg-compute-text(@brand-primary);
 }
 .file-wrap{
     float: left;

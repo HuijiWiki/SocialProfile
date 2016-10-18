@@ -64,6 +64,9 @@ class CropAvatar {
             $avatar = new wSiteAvatar( $uid, 'l' );
         } else {
             $uid = $wgUser->getId();
+            if ($uid == 0){
+                return;
+            }
             $avatarKey = $wgAvatarKey;
             $avatar = new wAvatar( $uid, 'l' );
         }
