@@ -46,10 +46,13 @@ class SpecialUploadFiles extends SpecialPage{
 		                <input type='file' id='file' name='file' multiple='multiple'>
 		                <div id='drag-area'>
                             <p>把要上传的文件拖动到此处<b>或</b></p>
-                            <span class='file-btn'>选择电脑上的文件</span>
+                            <span class='file-btn btn btn-primary'>选择电脑上的文件</span>
 		                </div>
-		          </form>
-		          <div class='clear'><button class='btn mw-ui-button mw-ui-constructive' id='upload-btn' data-loading-text='上传中...'>上传</button></div>";
+		          </form><div class='clearfix'></div>";
+    if ($this->getUser()->isAllowed('reupload')){
+      $output .= "<div class=\"mw-ui-checkbox\"></div>";
+    }
+		$output .= "<button class='btn mw-ui-button mw-ui-constructive' id='upload-btn' data-loading-text='上传中...'>上传</button>";
 		$output .= '<div class="modal fade img-description" tabindex="-1" role="dialog" aria-labelledby="imgDescriptionModalLabel" aria-hidden="true">
                        <div class="modal-dialog">
                            <div class="modal-content">
@@ -94,7 +97,7 @@ class SpecialUploadFiles extends SpecialPage{
                            </div>';
 		$out->addHTML( $output );
     $out->addModuleStyles('ext.socialprofile.uploadfiles.css');
-    $out->addModules( 'ext.socialprofile.uploadfiles.js' );
+    $out->addModules( ['oojs-ui','ext.socialprofile.uploadfiles.js'] );
 	}
 
 

@@ -7,6 +7,7 @@ var uploadfiles = {
     fileInput: $('#file').get(0),
     dragArea: $('#drag-area').get(0),
     submitBtn: $('#upload-btn').get(0),
+    toggle: $('#huijiIgnoreWarning').get(0),
     token: mw.user.tokens.get('editToken'),
     url: '/api.php',
     type:'png，jpg，jpeg，ogg，doc，xls，ppt，sxc，pdf，gif，ass，svg，ogg，ogv，oga，flac，wav，webm，ttf',
@@ -99,15 +100,21 @@ var uploadfiles = {
                 selector.removeClass('default').find('img').attr('data-filekey',data.upload.filekey);
                 if (data.upload && data.upload.result == "Warning") {
                     if (data.upload.warnings.exists) {
-                        selector.find('.prompt').text('已存在相同名称，请点名称重新命名');
-                        selector.addClass('warning');
+                        if ( uploadfiles.toggle.isSelected() ){
+                            selector.find('.prompt').text('存在同名文件');
+                            selector.addClass('suggest supressable');
+                        } else {
+                            selector.find('.prompt').text('存在同名文件');
+                            selector.addClass('warnings supressable');
+                        }
+                        
                     } else if (data.upload.warnings.duplicate) {
-                        selector.find('.prompt').text('已存在相同内容，建议删除本文件');
-                        selector.addClass('suggest');
+                        selector.find('.prompt').text('已存在相同内容');
+                        selector.addClass('suggest supressable');
                     } else {
                         for(var a in data.upload.warnings)
                         selector.find('.prompt').text(a);
-                        selector.addClass('suggest');
+                        selector.addClass('suggest supressable');
                     }
                 }else if(data.error){
                     selector.addClass('warning');
@@ -118,7 +125,7 @@ var uploadfiles = {
                         selector.removeClass('default').find('img').attr('data-filekey',data.error.filekey);
                     }
                     else{
-                        selector.find('.prompt').text('未知错误').attr('data-error',data.error.code);
+                        selector.find('.prompt').text(data.error.code).attr('data-error',data.error.code);
                     }
                 }
             }
@@ -179,18 +186,22 @@ var uploadfiles = {
                         }else if(data.upload && data.upload.result == "Warning"){
                             console.log('warning');
                             if(data.upload.warnings.exists){
-                                that.parents('.file-wrap').removeClass('suggest').addClass('warning');
-                                that.siblings('.prompt').text('已存在相同名称，请点名称重新命名');
+                                if ( uploadfiles.toggle.isSelected() ){
+                                    that.siblings('.prompt').text('存在同名文件');
+                                    that.parents('.file-wrap').removeClass('warning').addClass('suggest');
+                                } else {
+                                    that.siblings('.prompt').text('存在同名文件');
+                                    sthat.parents('.file-wrap').removeClass('suggest').addClass('warning');
+                                }
                             }else if(data.upload.warnings.duplicate){
                                 that.parents('.file-wrap').removeClass('warning').addClass('suggest');
-                                that.siblings('.prompt').text('已存在相同内容，建议删除本文件');
+                                that.siblings('.prompt').text('已存在相同内容');
                             }else{
                                 for(var a in data.upload.warnings)
                                 that.siblings('.prompt').text(a);
                                 that.parents('.file-wrap').removeClass('warning').addClass('suggest');
                             }
                         }else{
-                            console.log('sdas');
                             that.parents('.file-wrap').removeClass('suggest').addClass('warning');
                             that.parents('.file-wrap').find('.prompt').text(data.error.code);
                         }
@@ -264,6 +275,18 @@ var uploadfiles = {
             window.open('/wiki/文件:'+$(this).attr('data-name'));
         });
     },
+    funIgnoreWarnings: function(){
+        this.toggle.on('change', function(){
+            console.log(uploadfiles.toggle.isSelected() );
+            if ( uploadfiles.toggle.isSelected() ){
+                $('.warning.supressable').removeClass('warning').addClass('suggest');
+            } else {
+                $('.suggest.supressable').removeClass('suggest').addClass('warning');
+            }
+        });
+
+       
+    },
     funUpload: function(e){
         var self = this;
         var len = $('.file-wrap:not(".warning") .file-source.wait').length;
@@ -285,7 +308,7 @@ var uploadfiles = {
                 formData.append('action', 'upload');
                 formData.append('filename', that.attr('data-name'));
                 formData.append('filekey', that.attr('data-filekey'));
-                formData.append('ignorewarnings','true');
+                formData.append('ignorewarnings', $('#huijiIgnoreWarning').attr('checked') ==="checked" );
                 formData.append('comment','upload');
                 formData.append('text',that.attr('data-description')+cate);
                 formData.append('token', self.token);
@@ -311,7 +334,7 @@ var uploadfiles = {
                         $('#upload-btn').text('继续上传').button('reset');
                         $('#des-btn').remove();
                     }
-                    that.parents('.file-wrap').removeClass('suggest');
+                    that.parents('.file-wrap').removeClass('suggest').removeClass('supressable');
                     that.removeClass('wait');
                 }
             });
@@ -337,9 +360,21 @@ var uploadfiles = {
         this.funGlobalDescription();
         this.funSelfDescription();
         this.funHref();
+        this.funIgnoreWarnings();
     },
     init: function(){
         var self = this;
+        var checkbox1 = new OO.ui.CheckboxInputWidget( {
+          value: 'a',
+          selected: true
+        } );
+        var fieldset = new OO.ui.FieldsetLayout( { 
+        } );
+        fieldset.addItems( [
+            new OO.ui.FieldLayout( checkbox1, { label: '覆盖已有文件', align: 'inline' } ),
+        ] );
+        $( '.mw-ui-checkbox' ).append( fieldset.$element );
+        this.toggle = checkbox1;
         if(this.dragArea){
             this.dragArea.addEventListener("dragover", function(e) { self.funDrag(e); }, false);
             this.dragArea.addEventListener("dragleave", function(e) { self.funDrag(e); }, false);
@@ -359,6 +394,7 @@ var uploadfiles = {
             this.submitBtn.addEventListener("click", function(e) { self.funUpload(e); }, false);
         }
         this.funAddEvent();
+        
     }
 };
 var mobile = {

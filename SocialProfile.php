@@ -443,7 +443,7 @@ $wgResourceModules['ext.socialprofile.userboard.boardblast.js'] = array(
 
 //uploadfiles
 $wgResourceModules['ext.socialprofile.uploadfiles.css'] = array(
-	'styles' => 'uploadfiles.css',
+	'styles' => 'uploadfiles.less',
 	'localBasePath' => __DIR__ . '/UploadFiles',
 	'remoteExtPath' => 'SocialProfile/UploadFiles',
 	'position' => 'top',
@@ -451,7 +451,7 @@ $wgResourceModules['ext.socialprofile.uploadfiles.css'] = array(
 
 $wgResourceModules['ext.socialprofile.uploadfiles.js'] = array(
 	'scripts' => 'uploadfiles.js',
-	'dependencies' => 'mediawiki.notification',
+	'dependencies' => ['mediawiki.notification', 'oojs-ui'],
 	'localBasePath' => __DIR__ . '/UploadFiles',
 	'remoteExtPath' => 'SocialProfile/UploadFiles',
 	'position' => 'top',
