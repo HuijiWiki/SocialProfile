@@ -1,0 +1,212 @@
+//高级设置颜色调用方法
+.a() when (lightness(@main-base)>50%){
+  @main-darker:darken(@main-base, 0.135*lightness(@main-base));
+  @main-dark:darken(@main-base, 0.2*lightness(@main-base));
+  @main-middle:darken(@main-base, 0.335*lightness(@main-base));
+  @main-light:darken(@main-base, 0.467*lightness(@main-base));
+  @main-lighter:darken(@main-base, 0.75*lightness(@main-base));
+}
+.a() when (lightness(@main-base)=<50%){
+  @main-darker:lighten(@main-base, 0.135*(100 - lightness(@main-base)));
+  @main-dark:lighten(@main-base, 0.2*(100 - lightness(@main-base)));
+  @main-middle:lighten(@main-base, 0.335*(100 - lightness(@main-base)));
+  @main-light:lighten(@main-base, 0.467*(100 - lightness(@main-base)));
+  @main-lighter:lighten(@main-base, 0.75*(100 - lightness(@main-base)));
+}
+.a();
+// .bg(@n) when(iscolor(@n)){
+//   background-color: @n;
+// }
+// .bg-compute-text(@n) when(iscolor(@n)){
+//   .bg(@n);
+//   .compute-text(@n);
+// }
+// .compute-text(@n) when (iscolor(@n)) {
+//   p {
+//     a {
+//       color: @a;
+//     }
+//   }
+//   & when (lightness(@n) <= 50%) {
+//     color: #fff;
+//   }
+//   & when (lightness(@n) > 50%) {
+//     color: #333;
+//   }
+//   textarea, input, [contenteditable]{
+//     background-color: #fff;
+//     color: #333;
+//   }  
+// }
+#uploadfiles img{
+    height: 120px;
+    cursor: pointer;
+}
+p{
+    margin-bottom: 0;
+}
+h4{
+    margin-bottom: 0;
+}
+#wiki-body li{
+    margin-bottom: 0;
+    line-height: 1.2;
+}
+.gray{
+    color: @main-lighter;
+}
+span.gray{
+    margin-bottom: 20px;
+    display: block;
+}
+#file{
+    display: none;
+}
+#drag-area{
+    text-align: center;
+    border: 2px dashed @main-lighter;
+    padding: 100px;
+    width: 500px;
+    margin: 20px auto;
+    -webkit-user-select: none;/*禁用手机浏览器的用户选择功能 */
+	-moz-user-select: none;
+}
+@media (max-width: 540px){
+	#drag-area{
+	width: 290px;
+	padding: 40px;
+}
+}
+#wiki-body #drag-area p{
+    color: @main-lighter;
+    line-height: 1.2;
+    margin-bottom: 10px;
+}
+#drag-area b{
+    display: block;
+}
+.file-btn{
+    padding: 5px 8px;
+    cursor: pointer;
+}
+.file-wrap{
+    float: left;
+    margin-right: 10px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid @main-lighter;
+    height: 150px;
+    margin-bottom: 20px;
+}
+.continue{
+    border: 1px solid @main-lighter;
+    padding: 20px;
+    margin-top: 20px;
+}
+.continue #drag-area{
+    width: 120px;
+    height: 120px;
+    padding: 0;
+    margin: 0;
+    float: left;
+    position: relative;
+}
+.continue #drag-area p{
+    display: none;
+}
+.continue .file-btn:before{
+    content: '+';
+    display: block;
+    font-size: 36px;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+.continue .file-btn{
+    background: @bg-inner;
+    cursor: pointer;
+    color: @main-lighter;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    line-height: 1;
+    font-family: 'icomoon';
+}
+.opacity{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 120px;
+    background: rgba(225,225,225,.5);
+}
+.default i{
+    margin-top: 50px;
+    font-size: 24px;
+}
+.file-delete{
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    background-color: @brand-danger;
+    cursor: pointer;
+}
+.default{
+    width: 120px;
+    height: 150px;
+    text-align: center;
+}
+.file-name{
+    color: @brand-primary;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    position: absolute;
+    top: 120px;
+}
+.new-file-name{
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    height:25px;
+    width: 100%;
+}
+.warning{
+    border: 5px solid @brand-danger;
+    text-align: center;
+    font-size: 14px;
+}
+.prompt{
+    font-size: 14px;
+    position: absolute;
+    top: 20px;
+    color: @brand-danger;
+    padding: 5px;
+}
+.suggest{
+    border: 5px solid @brand-warning;
+    text-align: center;
+}
+.suggest .prompt{
+    color: @brand-warning;
+}
+.mw-ui-checkbox{
+    margin-top: 10px;
+}
+#upload-btn, .mw-ui-checkbox{
+    float: right;
+    clear: right;
+}
+#des-btn{
+    float: right;
+    margin-right: 10px;
+}
+.upload-progress{
+    position: absolute;
+    bottom: 28px;
+    height: 3px;
+    background: @brand-success;
+    width: 0;
+    transition: width .5s;
+}
