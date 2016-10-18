@@ -43,7 +43,7 @@ class SpecialGlobalSearch extends SpecialPage {
 		$out->addModuleScripts('skins.bootstrapmediawiki.search');
 		$output = "";
 		$output .= "<form method='get' class='form-inline' action='/wiki/special:globalsearch' >
-			<div id='mw-search-top-table'><input type='text' class='form-control' name='key' value='".$key."' >
+			<div id='mw-search-top-table'><input type='text' class='form-control' name='key' value='".htmlspecialchars($key)."' >
 			<input class='mw-ui-button mw-ui-progressive' type='submit' value='搜索'>";
 		if ( !is_null($key) ) {
 			$resJson = QueryInterface::pageSearch($key, $per_page, $star_page);
