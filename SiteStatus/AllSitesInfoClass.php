@@ -66,7 +66,9 @@ class AllSitesInfo{
 					$allSiteRank[] = $result;
 				}
 			}
-			$wgMemc->set( $key, $allSiteRank );
+			if (count($res) > 50 ){
+				$wgMemc->set( $key, $allSiteRank, 60*60*24 );
+			}
 			return $allSiteRank;
 		}else{
 			$dbr = wfGetDB( DB_SLAVE );
