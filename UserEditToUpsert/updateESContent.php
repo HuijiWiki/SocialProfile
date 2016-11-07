@@ -48,54 +48,17 @@ function movePage($oldTitle, $newTitle, $user, $oldId, $newId, $reason,$rev=null
 
 
 function unDeletePage($title, $revision, $oldPageId){
-	global $wgHuijiPrefix, $wgSitename,$wgIsProduction;
-	$logger = MediaWiki\Logger\LoggerFactory::getInstance( 'updateESContent' );
-	if($wgIsProduction == false) return;	
-	//title
-	if($title == null || $title->getNamespace() !== 0) return;
-	$titleT = ($title->getText() == "首页") ? $wgSitename : $title->getText();
-	// new_content ,   new_redirect 
-	if(($new_content = $revision->getContent(Revision::RAW)) != null) $new_redirect = $new_content->getRedirectTarget();
-	//redirectPageTitle
-	$redirectPageTitle = $new_redirect != null ? $new_redirect->getText():null;
-	//new_redirectId
-	if($new_redirect != null){
-		$new_redirectId = $new_redirect->getArticleID();
-	}else{
-		$new_redirectId = -1;
-	}
-
-	//category
-	$logger->debug('parser begins at '.time(), [$title, $revision]);
-	$options = $new_content->getContentHandler()->makeParserOptions( 'canonical' );
-       	$output = $new_content->getParserOutput( $title, $revision->getId(), $options,true);
-       	$category = array_map( 'strval', array_keys( $output->getCategories() ) );
-
-    $logger->debug('parser ends at '.time(), [$title, $revision]);
-	$post_data = array(
-		'timestamp' => $revision->getTimestamp(),
-		'content' => $output->getText(),
-		'sitePrefix' => $wgHuijiPrefix,
-		'siteName' => $wgSitename,
-		'id' => $title->getArticleID(),
-		'title' => $titleT,
-		'preTitle' => null,
-		'preRedirectPageId' => -1,
-		'redirectPageId' => $new_redirectId,
-		'category' => $category,
-		'redirectPageTitle' => $redirectPageTitle,
-		
-	);
-	$post_data_string = json_encode($post_data);
-//	wfErrorLog($post_data_string,"/var/log/mediawiki/SocialProfile.log");
-	curl_post_json('upsert',$post_data_string);
-
+	$params = ['es_undeletepage', $title, $revision, $oldPageId];
+	$job = new AsyncEventJob( $article->getTitle(), $params);
+	JobQueueGroup::singleton()->push( $job ); // mediawiki >= 1.21	
 }
-
 
 function savePage($article, $user, $content, $summary, $isMinor, $isWatch, $section, $flags, $revision, $status, $baseRevId){
 	if($article == null || $revision == null || $article->getTitle() == null) return;
-	upsertPage($article->getTitle(), $revision);
+	$params = ['es_upsertpage', $article->getTitle(), $revision];
+	$job = new AsyncEventJob( $article->getTitle(), $params);
+	JobQueueGroup::singleton()->push( $job ); // mediawiki >= 1.21
+	//upsertPage($article->getTitle(), $revision);
 }
 function upsertPage($title, $rev){
 	global $wgHuijiPrefix, $wgSitename,$wgIsProduction;
@@ -125,13 +88,13 @@ function upsertPage($title, $rev){
 	}else{
 		$new_redirectId = -1;
 	}
-	$logger->debug('parser begins at '.time(), [$article, $content]);
+	$logger->debug('parser begins at '.time(), [$title, $rev]);
 	//category
 	$options = $new_content->getContentHandler()->makeParserOptions( 'canonical' );
     $output = $new_content->getParserOutput( $title, $rev->getId(), $options,true);
     $category = array_map( 'strval', array_keys( $output->getCategories() ) );
 
-    $logger->debug('parser ends at '.time(), [$article, $content]);
+    $logger->debug('parser ends at '.time(), [$title, $rev]);
 
 	$titleName = ($title->getText() == "首页") ? $wgSitename : $title->getText();
 	$preTitle = $old_rev != null ? $old_rev->getTitle()->getText():null;

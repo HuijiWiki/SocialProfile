@@ -126,6 +126,7 @@ $wgAutoloadClasses['SpecialReturnUrl'] = __DIR__ . '/Donate/SpecialReturnUrl.php
 $wgAutoloadClasses['SpecialNotifyUrl'] = __DIR__ . '/Donate/SpecialNotifyUrl.php';
 $wgAutoloadClasses['HuijiForum'] = __DIR__.'/HuijiForum/HuijiForumClass.php';
 $wgAutoloadClasses['SpecialForumDiscussions'] = __DIR__.'/HuijiForum/SpecialForumDiscussions.php';
+$wgAutoloadClasses['AsyncEventJob'] = __DIR__.'/UserEditToUpsert/AsyncEventJob.php';
 // $wgAutoloadClasses['SpecialDynamicLess'] = __DIR__ . '/CommonStyle/SpecialDynamicLess.php';
 // $wgAutoloadClasses['ApiCommonStyle'] = __DIR__ . '/CommonStyle/api/ApiCommonStyle.php';
 // New special pages
@@ -792,3 +793,5 @@ $wgAutopromote['monthly_champions'] = array(
 );
 $wgImplicitGroups[] = 'weekly_champions';
 $wgImplicitGroups[] = 'monthly_champions';
+
+$wgJobClasses['asyncEventJob'] = 'AsyncEventJob';
