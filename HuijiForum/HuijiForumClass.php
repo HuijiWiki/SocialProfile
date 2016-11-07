@@ -37,6 +37,7 @@ class HuijiForum{
 			}
 			// print_r($ret->errors);
 			// die();灰机wiki
+			$time = time();
 			$wgRequest->response()->setCookie('flarum_remember', 'undefined', $time+self::$lifetime, ['prefix'=> '']);
 			return;
 			//Name not legal. please sign up manually
