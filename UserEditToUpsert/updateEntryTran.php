@@ -10,15 +10,18 @@ $wgHooks['ArticleDeleteComplete'][] = 'deleteEntryTran';
 $wgHooks['ArticleRevisionUndeleted'][] = 'unDeleteEntryTran';
 $wgHooks['TitleMoveComplete'][] = 'moveEntryTran';
 
-
 function saveEntryTran($article, $user, $content, $summary, $isMinor, $isWatch, $section, $flags, $revision, $status, $baseRevId){
-        if($article == null || $revision == null || $article->getTitle() == null) return;
+    if($article == null || $revision == null || $article->getTitle() == null) return;
+    
+	$logger = MediaWiki\Logger\LoggerFactory::getInstance( 'updateEntryTran' );
+    $logger->debug( "parsing begins at ".time(), [$article, $content] );
 	$links= [];
 	try{
-		 $parserOutput = $content->getParserOutput($article->getTitle());
-		 $links = $parserOutput->getLanguageLinks();
+		$parserOutput = $content->getParserOutput($article->getTitle());
+		$links = $parserOutput->getLanguageLinks();
+		$logger->debug( "parsing ends at ".time(), [$article, $content] );
 	} catch(Exception $e){
-		wfErrorLog($e->getMessage(),"/var/log/mediawiki/updateEntryTran.log");
+		$logger->error($e->getMessage());
 		exit();
 	}
 	if(count($links) == 0){
@@ -40,7 +43,7 @@ function saveEntryTran($article, $user, $content, $summary, $isMinor, $isWatch, 
 			$parserOutput = $content->getParserOutput($article->getTitle());
 			$preLinks = $parserOutput->getLanguageLinks();
 		} catch(Exception $e){
-			wfErrorLog($e->getMessage(),"/var/log/mediawiki/updateEntryTran.log");
+			$logger->error($e->getMessage());
 			exit();
 		}
 
@@ -79,15 +82,18 @@ function moveEntryTran($oldTitle, $newTitle, $user, $oldId, $newId, $reason,$rev
 
 function unDeleteEntryTran($title, $revision, $oldPageId){
 	if($title == null || $title->getNamespace() !== 0) return;	
+	$logger = MediaWiki\Logger\LoggerFactory::getInstance( 'updateEntryTran' );
 	$links= [];
 	try{
 		$content = $revision->getContent(Revision::RAW);
 		$redirectTitleObject = $content->getRedirectTarget(); 
 		$toTitle = $redirectTitleObject != null ? $redirectTitleObject->getText():$title->getText();
+		$logger->debug( "parsing begins at ".time(), [$article, $content] );
 		$parserOutput = $content->getParserOutput($title);
+		$logger->debug( "parsing ends at ".time(), [$article, $content] );
 		$links = $parserOutput->getLanguageLinks();
 	} catch(Exception $e){
-		wfErrorLog($e->getMessage(),"/var/log/mediawiki/updateEntryTran.log");
+		$logger->error($e->getMessage());
 		exit();
 	}
 	if(count($links) >0 ){

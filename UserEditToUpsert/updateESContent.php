@@ -49,6 +49,7 @@ function movePage($oldTitle, $newTitle, $user, $oldId, $newId, $reason,$rev=null
 
 function unDeletePage($title, $revision, $oldPageId){
 	global $wgHuijiPrefix, $wgSitename,$wgIsProduction;
+	$logger = MediaWiki\Logger\LoggerFactory::getInstance( 'updateESContent' );
 	if($wgIsProduction == false) return;	
 	//title
 	if($title == null || $title->getNamespace() !== 0) return;
@@ -65,11 +66,12 @@ function unDeletePage($title, $revision, $oldPageId){
 	}
 
 	//category
+	$logger->debug('parser begins at '.time(), [$title, $revision]);
 	$options = $new_content->getContentHandler()->makeParserOptions( 'canonical' );
        	$output = $new_content->getParserOutput( $title, $revision->getId(), $options,true);
        	$category = array_map( 'strval', array_keys( $output->getCategories() ) );
 
-
+    $logger->debug('parser ends at '.time(), [$title, $revision]);
 	$post_data = array(
 		'timestamp' => $revision->getTimestamp(),
 		'content' => $output->getText(),
@@ -97,6 +99,7 @@ function savePage($article, $user, $content, $summary, $isMinor, $isWatch, $sect
 }
 function upsertPage($title, $rev){
 	global $wgHuijiPrefix, $wgSitename,$wgIsProduction;
+	$logger = MediaWiki\Logger\LoggerFactory::getInstance( 'updateESContent' );
 	if($wgIsProduction == false) return;
 	if($rev == null || $title == null || $title->getNamespace() !== 0) return;
 	$old_rev = $rev->getPrevious();
@@ -122,11 +125,13 @@ function upsertPage($title, $rev){
 	}else{
 		$new_redirectId = -1;
 	}
-
+	$logger->debug('parser begins at '.time(), [$article, $content]);
 	//category
 	$options = $new_content->getContentHandler()->makeParserOptions( 'canonical' );
-       	$output = $new_content->getParserOutput( $title, $rev->getId(), $options,true);
-       	$category = array_map( 'strval', array_keys( $output->getCategories() ) );
+    $output = $new_content->getParserOutput( $title, $rev->getId(), $options,true);
+    $category = array_map( 'strval', array_keys( $output->getCategories() ) );
+
+    $logger->debug('parser ends at '.time(), [$article, $content]);
 
 	$titleName = ($title->getText() == "首页") ? $wgSitename : $title->getText();
 	$preTitle = $old_rev != null ? $old_rev->getTitle()->getText():null;
