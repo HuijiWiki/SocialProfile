@@ -118,12 +118,12 @@
     height: 10px;
 }
 #honorific-level {
-	display: inline-block;
+	display: block;
 	font-size: 20px;
     padding:0;
     vertical-align: top;
     width: 50px;
-    position: absolute;
+    position: relative;
     left: 25px;
 }
 #honorific-level .primary{
@@ -955,6 +955,19 @@ span.span-color{
     #points-level{
         width: 240px;
     }
+    #profile-title-container{
+    	width: 90%;
+    	text-align: center
+    }
+    #profile-title,#honorific-level{
+    	margin-left: auto;
+    	margin-right: auto;
+    	right:15px;
+    	left:inherit;
+    }
+    #profile-image{
+    	display: inherit;
+    }
 }
 @media screen and (min-width:320px) and (max-width:461px){
     .user-follow-msg span{
@@ -962,9 +975,6 @@ span.span-color{
     }
     .user-follow-msg li{
         margin-right:4px;
-    }
-    #profile-image,#profile-image .upload-tool{
-        margin-right: 0;
     }
     span.span-color{
         margin-right: 15px;

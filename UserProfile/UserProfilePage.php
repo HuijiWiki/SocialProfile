@@ -1223,7 +1223,7 @@ class UserProfilePage extends Article {
 
 				</h1>
                <div id="honorific-level" class="label">
-                    <a href="' . htmlspecialchars( $level_link->getFullURL() ) . '" rel="nofollow">' . $user_level->getLevelName() . '</a>
+                    <a href="' . htmlspecialchars( $level_link->getFullURL() ) . '" rel="nofollow"><span class="secondary">' . $user_level->getLevelName() . '</span></a>
                 </div></div>';
         $output .='<div class="modal fade watch-url" tabindex="-1" role="dialog" aria-labelledby="mySmModalLabel" aria-hidden="true">
                       <div class="modal-dialog modal-sm">
