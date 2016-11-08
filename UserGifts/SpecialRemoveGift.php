@@ -54,7 +54,7 @@ class RemoveGift extends UnlistedSpecialPage {
 			return false;
 		}
 
-		$gift = $rel->getUserGift( $this->gift_id );
+		$gift = $rel->getMyGift( $this->gift_id );
 		if ( $request->wasPosted() && $_SESSION['alreadysubmitted'] == false ) {
 			$_SESSION['alreadysubmitted'] = true;
 
@@ -82,10 +82,10 @@ class RemoveGift extends UnlistedSpecialPage {
 				<input type="button" class="site-button" value="' . $this->msg( 'g-your-profile' )->plain() . '" size="20" onclick="window.location=\'' . htmlspecialchars( $user_page_link->getFullURL() ) . '\'" />
 			</div>';
 
-			$out->addHTML( $out );
+			$this->getOutput()->addHTML( $out );
 		} else {
 			$_SESSION['alreadysubmitted'] = false;
-			$out->addHTML( $this->displayForm() );
+			$this->getOutput()->addHTML( $this->displayForm() );
 		}
 	}
 
@@ -98,11 +98,10 @@ class RemoveGift extends UnlistedSpecialPage {
 
 		$currentUser = $this->getUser();
 		$rel = new UserGifts( $currentUser->getName() );
-		$gift = $rel->getUserGift( $this->gift_id );
-		$user = Title::makeTitle( NS_USER, $gift['user_name_from'] );
+		$gift = $rel->getMyGift( $this->gift_id );
 		$gift_image = Gifts::getGiftImageTag( $gift['gift_id'], 'l' );
 
-		$this->getOutput()->setPageTitle( $this->msg( 'g-remove-title', $gift['name'] )->parse() );
+		$this->getOutput()->setPageTitle( $this->msg( 'g-remove-title', $gift['name'] )->text() );
 
 		$output = '<div class="back-links">
 			<a href="' . htmlspecialchars( $currentUser->getUserPage()->getFullURL() ) . '">' .
@@ -118,9 +117,8 @@ class RemoveGift extends UnlistedSpecialPage {
 				<div class="g-from">' .
 					$this->msg(
 						'g-from',
-						htmlspecialchars( $user->getFullURL() ),
-						$gift['user_name_from']
-					)->parse() . '</div>';
+						Linker::userLink( User::idFromName($gift['user_name_from']),  $gift['user_name_from'] )
+					)->text() . '</div>';
 		if ( $gift['message'] ) {
 			$output .= '<div class="g-user-message">' .
 				$gift['message'] . '</div>';

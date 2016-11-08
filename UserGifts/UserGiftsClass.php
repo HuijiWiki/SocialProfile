@@ -185,6 +185,40 @@ class UserGifts {
 		return false;		
 
 	}
+	public function getMyGift( $ug_id ){
+		$dbr = wfGetDB( DB_SLAVE );
+		$res = $dbr->select(
+			array( 'user_gift', 'gift' ),
+			array(
+				'ug_id', 'ug_user_id_from', 'ug_user_name_from',
+				'ug_user_id_to', 'ug_user_name_to', 'ug_message', 'gift_id',
+				'ug_date', 'ug_status', 'gift_name', 'gift_description',
+				'gift_given_count','designation'
+			),
+			array( "ug_id = {$ug_id} AND ug_user_name_to='$this->user_name'" ),
+			__METHOD__,
+			$params,
+			array( 'gift' => array( 'INNER JOIN', 'ug_gift_id = gift_id' ) )
+		);
+		if ( $res ) {
+			foreach ($res as $value) {
+				$gift['id'] = $value->ug_id;
+				$gift['user_id_from'] = $value->ug_user_id_from;
+				$gift['user_name_from'] = $value->ug_user_name_from;
+				$gift['user_id_to'] = $value->ug_user_id_to;
+				$gift['user_name_to'] = $value->ug_user_name_to;
+				$gift['message'] = $value->ug_message;
+				$gift['gift_count'] = $value->gift_given_count;
+				$gift['timestamp'] = $value->ug_date;
+				$gift['gift_id'] = $value->gift_id;
+				$gift['name'] = $value->gift_name;
+				$gift['description'] = $value->gift_description;
+				$gift['status'] = $value->ug_status;
+				$gift['designation'] = $value->designation;
+			}
+			return $gift;
+		}		
+	}
 
 	/**
 	 * Deletes a gift from the user_gift table.
@@ -193,7 +227,16 @@ class UserGifts {
 	 */
 	static function deleteGift( $ug_id ) {
 		$dbw = wfGetDB( DB_MASTER );
+		$id = $dbw->selectField( 'user_gift', 'ug_gift_id', array( 'ug_id' => $ug_id ), __METHOD__ );
+		$count = $dbw->selectField( 'user_gift', 'COUNT(*)', array( 'ug_gift_id' => $id ), __METHOD__ );
 		$dbw->delete( 'user_gift', array( 'ug_id' => $ug_id ), __METHOD__ );
+		if ($count == 1){
+			$dbw->delete(
+				'user_title',
+				array('gift_id' => $id),
+				__METHOD__
+			);			
+		}
 	}
 
 	/**
@@ -624,11 +667,11 @@ class UserGifts {
 	}
 
 	/**
-	 * check user_gift_id is in ug_invite
+	 * if this gift comes with an invitation code, return the code
 	 * @param $ug_id int user_gift_id
-	 * @return string invitationCode
+	 * @return string invitationCode or empty string
  	 */
-	public static function checkIsInviteGift( $user_gift_id ){
+	public static function fetchInvitationCode( $user_gift_id ){
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select(
 				'ug_invite',
@@ -671,28 +714,27 @@ class UserGifts {
 	}
 
 	/**
-	 * check the gift is title gift
+	 * get designation based on gift id
 	 * @param  int $gift_id    gift id from gift table
 	 * @param  int $user_to_id user who get the gift
-	 * @return [type]             [description]
+	 * @return string designation
 	 */
-	static function checkIsTitleGift( $gift_id, $user_to_id ){
+	static function getGiftDesignation( $gift_id){
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select(
-				'user_title',
+				'gift',
 				array(
-					'title_content'
+					'designation'
 				),
 				array(
-					'gift_id' => $gift_id,
-					'user_to_id' => $user_to_id,
+					'gift_id' => $gift_id
 				),
 				__METHOD__
 			);
 		$user_title = '';
 		if ($res) {
 			foreach ($res as $key => $value) {
-				$user_title = $value->title_content;
+				$user_title = $value->designation;
 			}
 		}
 		return $user_title;

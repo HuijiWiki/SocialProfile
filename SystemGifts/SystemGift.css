@@ -41,18 +41,16 @@
 .ga-name {
 	font-size: 16px;
 	font-weight: bold;
-	margin: 0px 0px 2px;
+	margin: 0px 0px 5px;
 }
-
+.secondary{
+	font-size: 14px;
+}
 .ga-timestamp {
-	font-size: 9px;
-	color: #999;
 	margin: 0px 0px 5px 0px;
 }
 
 .ga-description-message {
-	margin: 0px 0px 5px 0px;
-	color: #666;
 	font-weight: bold;
 }
 

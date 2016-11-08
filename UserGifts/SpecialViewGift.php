@@ -60,8 +60,8 @@ class ViewGift extends UnlistedSpecialPage {
 				if ( $gift['status'] == 1 ) {
 					if ( $gift['user_name_to'] == $user->getName() ) {
 						$g = new UserGifts( $gift['user_name_to'] );
-						$g->clearUserGiftStatus( $gift['id'] );
-						$g->decNewGiftCount( $user->getID() );
+						// $g->clearUserGiftStatus( $gift['id'] );
+						// $g->decNewGiftCount( $user->getID() );
 					}
 				}
 
@@ -109,19 +109,17 @@ class ViewGift extends UnlistedSpecialPage {
 					$gift['name']
 				)->parse() );
 
-				
-
 				$sender = Title::makeTitle( NS_USER, $gift['user_name_from'] );
 				$removeGiftLink = SpecialPage::getTitleFor( 'RemoveGift' );
-				$giveGiftLink = SpecialPage::getTitleFor( 'GiveGift' );
+				//$giveGiftLink = SpecialPage::getTitleFor( 'GiveGift' );
 
 				$giftImage = Gifts::getGiftImageTag( $gift['gift_id'], 'l' );
 
 				$message = $out->parse( trim( $gift['message'] ), false );
-				$inviteCode = UserGifts::checkIsInviteGift($gift['id']);
-				$userTitle = UserGifts::checkIsTitleGift($gift['gift_id'], $gift['user_id_to']);
+				$inviteCode = UserGifts::fetchInvitationCode($gift['id']);
+				$userTitle = UserGifts::getGiftDesignation($gift['gift_id']);
 				if ( $userTitle != null ) {
-					$title_name = '【称号】';
+					$title_name = '【称号后缀】';
 				}else{
 					$title_name = '';
 				}
@@ -130,22 +128,31 @@ class ViewGift extends UnlistedSpecialPage {
 				$output .= '<div class="g-description">' .
 						$giftImage .
 						'<div class="g-name">' . $gift['name'] . '</div>';
+				//secondary infomation begin
+				$output .='<div class="secondary">';
+				if ( $userTitle != null ) {
+					$output .= '<div class="g-designation">'.
+							"【称号后缀】 ".$userTitle .	
+							'</div>';				
+				}
+
 				// if ( $userTitle != null && $wgUser->getID() == $gift['user_id_to'] ) {
 				// 	$output .= '<span>'.$title_name.$gift['designation'].'<br>开关</span>';
 				// }
 				$output .= '<div class="g-timestamp">(' . $gift['timestamp'] . ')</div>
 						<div class="g-from">' . $this->msg(
 							'g-from',
-							htmlspecialchars( $sender->getFullURL() ),
-							$gift['user_name_from']
+							Linker::userLink( User::idFromName($gift['user_name_from']),  $gift['user_name_from'] )
 						)->text() . '</div>';
 				if ( $gift['description'] ) {
 					$output .= '<div class="g-user-message">' . $out->parse($gift['description']) . '</div>';
 				}
-				$output .= '<div class="clearfix"></div>
-						<div class="g-describe">' . $out->parse($message) . '</div>';
-				if( $inviteCode != null && $wgUser->getID() == $gift['user_id_to'] ){
-					$output .= '<div class="invite-code well well-sm">'.$inviteCode.'</div><small>(仅自己可见)</small>';
+				$output .= '
+						<div class="g-describe">' . $out->parse($message) . 
+						'</div><div class="clearfix"></div></div>'; //end of secondary class
+
+				if( $inviteCode != null && $user->getID() == $gift['user_id_to'] ){
+					$output .= '<div class="invite-code well well-sm">'.$inviteCode.'</div>';
 				}
 				$output .= '<div class="g-actions">';
 				if ( $gift['user_name_to'] == $user->getName() ) {

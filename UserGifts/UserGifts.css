@@ -37,11 +37,6 @@
 	margin: 0px 0px 8px 0px;
 }
 
-.g-from {
-	font-weight: bold;
-	font-size: 11px;
-}
-
 .g-actions {
 	font-size: 10px;
 }
@@ -57,7 +52,7 @@
 .page-nav a {
 	font-weight: bold;
 }
-
+/*
 .g-new {
 	background-color: #FFFB9B;
 	border: 1px solid #FDC745;
@@ -65,22 +60,22 @@
 	padding: 0px 5px;
 	font-size: 12px;
 	margin: 0px 0px 0px 10px;
+}*/
+.secondary{
+	font-size: 14px;
 }
-
 .g-name {
 	font-size: 16px;
 	font-weight: bold;
-	margin: 0px 0px 2px;
+	margin: 0px 0px 5px;
 }
 
 .g-timestamp {
 	font-size: 9px;
-	color: #999;
 }
 
 .g-user-message {
 	margin: 0.25em 0 0 0;
-	color: #666;
 	font-weight: bold;
 }
 
@@ -187,8 +182,6 @@
 }
 
 .g-describe {
-	font-size: 11px;
-	line-height: 12px !important;
 	margin: 0.5em 0.5em 0.75em 0.5em;
 }
 

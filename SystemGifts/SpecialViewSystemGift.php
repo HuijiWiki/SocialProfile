@@ -64,8 +64,8 @@ class ViewSystemGift extends UnlistedSpecialPage {
 				if ( $value['status'] == 1 ) {
 					if ( $value['user_name'] == $user->getName() ) {
 						$g = new UserSystemGifts( $value['user_name'] );
-						$g->clearUserGiftStatus( $value['id'] );
-						$g->decNewSystemGiftCount( $user->getID() );
+						// $g->clearUserGiftStatus( $value['id'] );
+						// $g->decNewSystemGiftCount( $user->getID() );
 					}
 				}
 				// DB stuff
@@ -123,16 +123,18 @@ class ViewSystemGift extends UnlistedSpecialPage {
 
 				$giftImage = SystemGifts::getGiftImageTag( $giftId, 'l');
 				if ( !empty($value['designation']) ) {
-					$title_name = '【称号】';
+					$title_name = '【称号前缀】 ';
 				}else{
 					$title_name = '';
 				}
 				$output .= "<div class=\"ga-description\">
 						{$giftImage}
-						<div class=\"ga-name\">{$value['name']}<br>{$title_name}"."{$value['designation']}</div>
+						<div class=\"ga-name\">{$value['name']}</div>
+						<div class=\"secondary\">
+						<div class=\"ga-designation\">{$title_name}{$value['designation']}</div>
 						<div class=\"ga-timestamp\">({$value['timestamp']})</div>
 						<div class=\"ga-description-message\">{$message}</div>";
-				$output .= '<div class="clearfix"></div>
+				$output .= '<div class="clearfix"></div></div> 
 					</div>';
 				$output .= '</div>';
 				$i++;
