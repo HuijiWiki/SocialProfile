@@ -129,7 +129,7 @@ class Gifts {
 	            	$avatar_filename .= ".gif";
 	            	return $avatar_filename;
 				} 
-			} catch (Oss\OssException $e) {
+			} catch (Oss\Core\OssException $e) {
                 $logger->error($e->getMessage());
             }
 			$avatar_filename = 'default_' . $size . '.gif';
