@@ -325,7 +325,7 @@ class SystemGifts {
 	            	$avatar_filename .= ".gif";
 	            	return $avatar_filename;
 				} 
-            } catch (OSS\OssException $e) {
+            } catch (OSS\Core\OssException $e) {
                 $logger->error($e->getMessage());
             }
 			$avatar_filename = 'sg_default_' . $size . '.gif';
