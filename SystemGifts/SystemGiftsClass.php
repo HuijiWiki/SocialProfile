@@ -302,32 +302,32 @@ class SystemGifts {
 	static function getGiftImage( $id, $size ) {
 		global $wgUploadDirectory, $wgUseOss, $wgOssEndpoint;
 		if($wgUseOss){
+			$logger = MediaWiki\Logger\LoggerFactory::getInstance( 'filesystem' );
             $accessKeyId = Confidential::$aliyunKey;
             $accessKeySecret = Confidential::$aliyunSecret;
             $endpoint = $wgOssEndpoint;
             try {
-                $ossClient = new OSS\OssClient($accessKeyId, $accessKeySecret, $endpoint);
-            } catch (OssException $e) {
-                // print $e->getMessage();
+                $ossClient = new OSS\OssClient($accessKeyId, $accessKeySecret, $endpoint);			
+	            $bucket = Gifts::GIFT_BUCKET;
+	            $avatar_filename = 'sg_'.$id .  '_' . $size  ;
+	            $jpgDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".jpg");
+	            if ($jpgDoesExist){
+	            	$avatar_filename .= ".jpg";
+	            	return $avatar_filename;
+	            }
+	            $pngDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".png");
+	            if ($pngDoesExist){
+	            	$avatar_filename .= ".png";
+	            	return $avatar_filename;
+	            }
+				$gifDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".gif");  
+				if ($gifDoesExist){
+	            	$avatar_filename .= ".gif";
+	            	return $avatar_filename;
+				} 
+            } catch (OSS\OssException $e) {
+                $logger->error($e->getMessage());
             }
-				
-            $bucket = Gifts::GIFT_BUCKET;
-            $avatar_filename = 'sg_'.$id .  '_' . $size  ;
-            $jpgDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".jpg");
-            if ($jpgDoesExist){
-            	$avatar_filename .= ".jpg";
-            	return $avatar_filename;
-            }
-            $pngDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".png");
-            if ($pngDoesExist){
-            	$avatar_filename .= ".png";
-            	return $avatar_filename;
-            }
-			$gifDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".gif");  
-			if ($gifDoesExist){
-            	$avatar_filename .= ".gif";
-            	return $avatar_filename;
-			} 
 			$avatar_filename = 'sg_default_' . $size . '.gif';
 			return $avatar_filename;
 		}

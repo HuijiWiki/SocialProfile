@@ -104,32 +104,34 @@ class Gifts {
 	static function getGiftImage( $id, $size ) {
 		global $wgUploadDirectory, $wgUseOss, $wgOssEndpoint;
 		if($wgUseOss){
+
+			$logger = MediaWiki\Logger\LoggerFactory::getInstance( 'filesystem' );
             $accessKeyId = Confidential::$aliyunKey;
             $accessKeySecret = Confidential::$aliyunSecret;
             $endpoint = $wgOssEndpoint;
             try {
                 $ossClient = new OSS\OssClient($accessKeyId, $accessKeySecret, $endpoint);
-            } catch (OssException $e) {
-                // print $e->getMessage();
-            }
 				
-            $bucket = self::GIFT_BUCKET;
-            $avatar_filename = $id .  '_' . $size  ;
-            $jpgDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".jpg");
-            if ($jpgDoesExist){
-            	$avatar_filename .= ".jpg";
-            	return $avatar_filename;
+	            $bucket = self::GIFT_BUCKET;
+	            $avatar_filename = $id .  '_' . $size  ;
+	            $jpgDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".jpg");
+	            if ($jpgDoesExist){
+	            	$avatar_filename .= ".jpg";
+	            	return $avatar_filename;
+	            }
+	            $pngDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".png");
+	            if ($pngDoesExist){
+	            	$avatar_filename .= ".png";
+	            	return $avatar_filename;
+	            }
+				$gifDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".gif");  
+				if ($gifDoesExist){
+	            	$avatar_filename .= ".gif";
+	            	return $avatar_filename;
+				} 
+			} catch (Oss\OssException $e) {
+                $logger->error($e->getMessage());
             }
-            $pngDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".png");
-            if ($pngDoesExist){
-            	$avatar_filename .= ".png";
-            	return $avatar_filename;
-            }
-			$gifDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".gif");  
-			if ($gifDoesExist){
-            	$avatar_filename .= ".gif";
-            	return $avatar_filename;
-			} 
 			$avatar_filename = 'default_' . $size . '.gif';
 			return $avatar_filename;
 		}
