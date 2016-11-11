@@ -49,7 +49,7 @@ function movePage($oldTitle, $newTitle, $user, $oldId, $newId, $reason,$rev=null
 
 function unDeletePage($title, $revision, $oldPageId){
 	$params = ['es_undeletepage', $title, $revision, $oldPageId];
-	$job = new AsyncEventJob( $article->getTitle(), $params);
+	$job = new AsyncEventJob( $title, $params);
 	JobQueueGroup::singleton()->push( $job ); // mediawiki >= 1.21	
 }
 
