@@ -64,21 +64,10 @@ class SpecialGlobalSearch extends SpecialPage {
 					$d = strtotime($value->timestamp);
 					$output .= "<li><div class=\"mw-search-result-heading\">
 									<a href=\"".$value->address."\">".$value->title."</a>";
-					$redCount = count($value->redirects);
-					if( $redCount > 0 ){
-						$maxNum = ($redCount >= 5)?5:$redCount;
-						$output .= '&nbsp;[';
-						for ($i=0; $i<$maxNum ; $i++) { 
-							$output .= "<span class='secondary'>&nbsp;&nbsp;".$value->redirects[$i]."</span>";
-						}
-						if ( $redCount > 5 ) {
-							$output .= "…";
-						}
-						$output .= "  ]";
-					}
+					
 					$output .="<a href=\"http://".$value->sitePrefix.$wgHuijiSuffix."\">".$value->siteName."</a>
 								</div>
-								<div class=\"searchresult\">".$value->content."
+								<div class=\"searchresult secondary\">".$value->content."
 								</div>";
 					$cateCount = count($value->category);
 					if( $cateCount > 0 ){
@@ -91,12 +80,38 @@ class SpecialGlobalSearch extends SpecialPage {
 							$output .= "<b>…</b>";
 						}
 					}
+					$redCount = count($value->redirects);
+					if( $redCount > 0 ){
+						$maxNum = ($redCount >= 5)?5:$redCount;
+						$output .= '<br><b>别名:</b>';
+						for ($i=0; $i<$maxNum ; $i++) { 
+							$output .= "<span>&nbsp;&nbsp;".$value->redirects[$i]."</span>";
+						}
+						if ( $redCount > 5 ) {
+							$output .= "<b>…</b>";
+						}
+					}
 					$output .= "<div class=\"mw-search-result-data hidden-xs\">".date("Y年m月d日 h:i:s", $d)."
 								</div>
 								</li>";
 				}
-				$output .= '</ul></div>';
+				$output .= '</ul>';
 			}
+			/**
+			 * Related Search terms
+			 */
+			$this->templateParser = new TemplateParser(  __DIR__  );
+			$result = json_decode(EntryTran::getTran( $key, 'en', '' , 1 , 10 ));
+			$rarr = [];
+			foreach ($result->result->objects as $key => $value){
+				$rarr['r'.($key+1)] = $value->entry;
+			}
+			$html = $this->templateParser->processTemplate(
+				'related',
+				$rarr
+			);
+			$output .= $html.'</div>';//end of .search-result
+
 			/**
 			 * Build next/prev navigation links
 			 */

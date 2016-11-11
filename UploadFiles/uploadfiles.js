@@ -175,6 +175,7 @@ var uploadfiles = {
                         stash: 1,
                         filename: val,
                         filekey: filekey,
+                        comment: "使用侧边栏新版上传页面上传。"
                         token: self.token,
                         format: 'json'
                     },
