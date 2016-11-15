@@ -6,6 +6,7 @@ class AsyncEventJob extends Job {
 	public function __construct( $title, $params ) {
 		// Replace synchroniseThreadArticleData with an identifier for your job.
 		parent::__construct( 'asyncEventJob', $title, $params );
+		$this->removeDuplicates = true;
 	}
 
 	/**
@@ -30,13 +31,43 @@ class AsyncEventJob extends Job {
 		 	case 'es_undeletepage':
 		 		list($type, $title, $revision, $oldPageId ) = $this->params;
 		 		return $this->unDeletePage($title, $revision, $oldPageId);
+		 	case 'baidu_push_update':
+		 		return $this->baiduPush('update', $this->title);
+		 	case 'baidu_push_new':
+		 		return $this->baiduPush('new', $this->$title);
+			case 'baidu_push_delete':
+		 		return $this->baiduPush('delete', $this->title);
 		 	default:
-		 		# code...
 		 		break;
 		 } 
 	
 
 		return true;
+	}
+	public function baiduPush($type, $title){
+		global $wgHuijiPrefix;
+		$urls = array();
+		$urls[] = $title->getFullURL();
+		if ($type == "new"){
+			$api = "http://data.zz.baidu.com/urls?site=".$wgHuijiPrefix.".huiji.wiki&token=xKFVf8HO8LPnvdf3&type=original";
+		} elseif ($type == "update") {
+			$api = "http://data.zz.baidu.com/update?site=".$wgHuijiPrefix.".huiji.wiki&token=xKFVf8HO8LPnvdf3";
+		} else {
+			$api = "http://data.zz.baidu.com/del?site=".$wgHuijiPrefix.".huiji.wiki&token=xKFVf8HO8LPnvdf3";
+		}
+		
+		$ch = curl_init();
+		$options =  array(
+		    CURLOPT_URL => $api,
+		    CURLOPT_POST => true,
+		    CURLOPT_RETURNTRANSFER => true,
+		    CURLOPT_POSTFIELDS => implode("\n", $urls),
+		    CURLOPT_HTTPHEADER => array('Content-Type: text/plain'),
+		);
+		curl_setopt_array($ch, $options);
+		$result = curl_exec($ch); 
+		$logger = MediaWiki\Logger\LoggerFactory::getInstance( 'baidu' );
+		$logger->debug('BAIDU PUSH COMPLETE', ['result'  => $result ]);
 	}
 	public function saveEntryTran($article, $user, $content, $summary, $isMinor, $isWatch, $section, $flags, $revision, $status, $baseRevId){
 	    if($article == null || $revision == null || $article->getTitle() == null) return true;
