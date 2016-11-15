@@ -54,11 +54,11 @@ class AsyncEventJob extends Job {
 		$urls = array();
 		$urls[] = $title->getFullURL();
 		if ($type == "new"){
-			$api = "http://data.zz.baidu.com/urls?site=".$wgHuijiPrefix.".huiji.wiki&token=xKFVf8HO8LPnvdf3&type=original";
+			$api = "http://data.zz.baidu.com/urls?site=".$wgHuijiPrefix.".huiji.wiki&token=".Confidential::$baidu_push_key."&type=original";
 		} elseif ($type == "update") {
-			$api = "http://data.zz.baidu.com/update?site=".$wgHuijiPrefix.".huiji.wiki&token=xKFVf8HO8LPnvdf3";
+			$api = "http://data.zz.baidu.com/update?site=".$wgHuijiPrefix.".huiji.wiki&token=".Confidential::$baidu_push_key;
 		} else {
-			$api = "http://data.zz.baidu.com/del?site=".$wgHuijiPrefix.".huiji.wiki&token=xKFVf8HO8LPnvdf3";
+			$api = "http://data.zz.baidu.com/del?site=".$wgHuijiPrefix.".huiji.wiki&token=".Confidential::$baidu_push_key;
 		}
 		
 		$ch = curl_init();
