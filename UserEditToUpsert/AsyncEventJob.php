@@ -72,7 +72,7 @@ class AsyncEventJob extends Job {
 		curl_setopt_array($ch, $options);
 		$result = curl_exec($ch); 
 		$logger = MediaWiki\Logger\LoggerFactory::getInstance( 'baidu' );
-		$logger->debug('BAIDU PUSH COMPLETE', ['result'  => $result ]);
+		$logger->debug('BAIDU PUSH COMPLETE', ['result'  => $result, 'title' => $title->getPrefixedText() ]);
 	}
 	public function saveEntryTran($article, $user, $content, $summary, $isMinor, $isWatch, $section, $flags, $revision, $status, $baseRevId){
 	    if($article == null || $revision == null || $article->getTitle() == null) return true;
