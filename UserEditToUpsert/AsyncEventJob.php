@@ -45,7 +45,12 @@ class AsyncEventJob extends Job {
 		return true;
 	}
 	public function baiduPush($type, $title){
-		global $wgHuijiPrefix;
+		global $wgHuijiPrefix, $wgRequest;
+		$pi = new HuijiPageInfo($title->getArticleID(), RequestContext::getMain());
+		$score = $pi->pageScore();
+		if ($score < 60){
+			return;
+		}
 		$urls = array();
 		$urls[] = $title->getFullURL();
 		if ($type == "new"){
