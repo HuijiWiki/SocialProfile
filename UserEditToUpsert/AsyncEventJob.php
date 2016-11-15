@@ -34,7 +34,7 @@ class AsyncEventJob extends Job {
 		 	case 'baidu_push_update':
 		 		return $this->baiduPush('update', $this->title);
 		 	case 'baidu_push_new':
-		 		return $this->baiduPush('new', $this->$title);
+		 		return $this->baiduPush('new', $this->title);
 			case 'baidu_push_delete':
 		 		return $this->baiduPush('delete', $this->title);
 		 	default:
