@@ -137,9 +137,9 @@ class AsyncEventJob extends Job {
 			$content = $revision->getContent(Revision::RAW);
 			$redirectTitleObject = $content->getRedirectTarget(); 
 			$toTitle = $redirectTitleObject != null ? $redirectTitleObject->getText():$title->getText();
-			$logger->debug( "parsing begins at ".time(), [$article, $content] );
+			//$logger->debug( "parsing begins at ".time(), [$article, $content] );
 			$parserOutput = $content->getParserOutput($title);
-			$logger->debug( "parsing ends at ".time(), [$article, $content] );
+			//$logger->debug( "parsing ends at ".time(), [$article, $content] );
 			$links = $parserOutput->getLanguageLinks();
 		} catch(Exception $e){
 			$logger->error($e->getMessage());
