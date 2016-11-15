@@ -48,7 +48,7 @@ class AsyncEventJob extends Job {
 		global $wgHuijiPrefix, $wgRequest;
 		$pi = new HuijiPageInfo($title->getArticleID(), RequestContext::getMain());
 		$score = $pi->pageScore();
-		if ($score < 40){
+		if ($score < 40 && $type != 'new'){
 			return;
 		}
 		$urls = array();
