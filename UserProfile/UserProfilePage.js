@@ -10,7 +10,7 @@ var UserProfilePage = {
 
 	sendMessage: function() {
 		var userTo = decodeURIComponent( mw.config.get( 'wgTitle' ) ), //document.getElementById( 'user_name_to' ).value;
-			encMsg = encodeURIComponent( document.getElementById( 'message' ).value|| document.getElementById( 'message' ).textContent ),
+			encMsg = $('.emoji-wysiwyg-editor').html(),
 			msgType = document.getElementById( 'message_type' ).value;
 		if ( document.getElementById( 'message' ).value|| document.getElementById( 'message' ).textContent  && !UserProfilePage.posted ) {
 			UserProfilePage.posted = 1;

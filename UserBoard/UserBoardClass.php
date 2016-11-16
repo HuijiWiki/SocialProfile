@@ -353,8 +353,17 @@ class UserBoard {
 
 		foreach ( $res as $row ) {
 			$parser = new Parser();
-			$message_text = $parser->parse( $row->ub_message, $wgTitle, $wgOut->parserOptions(), true );
+			//Strip emoji
+			$text = preg_replace("#(<img .*?src=\"http:\/\/cdn\.huijiwiki\.com\/.*?>)#i", "<nowiki>$1</nowiki>", $row->ub_message);
+			$message_text = $parser->parse( $text, $wgTitle, $wgOut->parserOptions(), true );
 			$message_text = $message_text->getText();
+			$message_text = preg_replace_callback("#(&lt;img .*?src=\"http:\/\/cdn\.huijiwiki\.com\/.*?&gt;)#i", 
+				function(array $img){
+					return htmlspecialchars_decode($img[0]);
+				},
+				$message_text
+			);	
+			
 			// make sure link text is not too long (will overflow)
 			// this function changes too long links to <a href=#>http://www.abc....xyz.html</a>
 			$message_text = preg_replace_callback(
@@ -445,11 +454,11 @@ class UserBoard {
 				}
 
 				$message_text = $message['message_text'];
-				$message_text = preg_replace_callback(
-					"/(<a[^>]*>)(.*?)(<\/a>)/i",
-					array( 'HuijiFunctions', 'cutCommentLinkText' ),
-					$message_text
-				);
+				// $message_text = preg_replace_callback(
+				// 	"/(<a[^>]*>)(.*?)(<\/a>)/i",
+				// 	array( 'HuijiFunctions', 'cutCommentLinkText' ),
+				// 	$message_text
+				// );
 				# $message_text = preg_replace_callback( "/(<a[^>]*>)(.*?)(<\/a>)/i", 'cut_link_text', $message['message_text'] );
 
 				$sender = htmlspecialchars( $user->getFullURL() );

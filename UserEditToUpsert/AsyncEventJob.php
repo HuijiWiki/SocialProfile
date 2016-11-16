@@ -48,7 +48,7 @@ class AsyncEventJob extends Job {
 		global $wgHuijiPrefix, $wgRequest;
 		$pi = new HuijiPageInfo($title->getArticleID(), RequestContext::getMain());
 		$score = $pi->pageScore();
-		if ($score < 40 && $type != 'new'){
+		if ($score < 40 && $type == 'update'){ //Baidu restrict update quota
 			return;
 		}
 		$urls = array();

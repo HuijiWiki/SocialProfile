@@ -5,7 +5,7 @@ var UserBoard = {
 		if ( !perPage ) {
 			perPage = 25;
 		}
-		var message = $('#message').text()||$('#message').val(),
+		var message = $('.emoji-wysiwyg-editor').html(),
 			recipient = document.getElementById( 'user_name_to' ).value,
 			sender = document.getElementById( 'user_name_from' ).value;
 		if ( message && !UserBoard.posted ) {
