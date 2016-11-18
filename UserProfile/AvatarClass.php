@@ -28,11 +28,11 @@ class wAvatar {
 		global $wgUseOss, $wgOssEndpoint;
 		if ($wgUseOss){
             require_once "/var/www/html/Confidential.php";
-            $accessKeyId = Confidential::$aliyunKey;
-            $accessKeySecret = Confidential::$aliyunSecret;
-            $endpoint = $wgOssEndpoint;
+            // $accessKeyId = Confidential::$aliyunKey;
+            // $accessKeySecret = Confidential::$aliyunSecret;
+            // $endpoint = $wgOssEndpoint;
             try {
-                $this->ossClient = new Oss\OssClient($accessKeyId, $accessKeySecret, $endpoint);
+                $this->ossClient = OssFileBackend::getOssClient();
             } catch (Oss\OssException $e) {
                 wfErrorLog($e->getMessage(),'/var/log/mediawiki/SocialProfile.log');
             }

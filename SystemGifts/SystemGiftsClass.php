@@ -300,14 +300,14 @@ class SystemGifts {
 	// 	return $img . '?r=' . rand();
 	// }
 	static function getGiftImage( $id, $size ) {
-		global $wgUploadDirectory, $wgUseOss, $wgOssEndpoint;
+		global $wgUploadDirectory, $wgUseOss;
 		if($wgUseOss){
 			$logger = MediaWiki\Logger\LoggerFactory::getInstance( 'filesystem' );
-            $accessKeyId = Confidential::$aliyunKey;
-            $accessKeySecret = Confidential::$aliyunSecret;
-            $endpoint = $wgOssEndpoint;
+            // $accessKeyId = Confidential::$aliyunKey;
+            // $accessKeySecret = Confidential::$aliyunSecret;
+            // $endpoint = $wgOssEndpoint;
             try {
-                $ossClient = new OSS\OssClient($accessKeyId, $accessKeySecret, $endpoint);			
+                $ossClient = OssFileBackend::getOssClient();			
 	            $bucket = Gifts::GIFT_BUCKET;
 	            $avatar_filename = 'sg_'.$id .  '_' . $size  ;
 	            $jpgDoesExist = $ossClient->doesObjectExist($bucket, $avatar_filename . ".jpg");

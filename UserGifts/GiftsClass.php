@@ -102,15 +102,15 @@ class Gifts {
 	}
 
 	static function getGiftImage( $id, $size ) {
-		global $wgUploadDirectory, $wgUseOss, $wgOssEndpoint;
+		global $wgUploadDirectory, $wgUseOss;
 		if($wgUseOss){
 
 			$logger = MediaWiki\Logger\LoggerFactory::getInstance( 'filesystem' );
-            $accessKeyId = Confidential::$aliyunKey;
-            $accessKeySecret = Confidential::$aliyunSecret;
-            $endpoint = $wgOssEndpoint;
+            // $accessKeyId = Confidential::$aliyunKey;
+            // $accessKeySecret = Confidential::$aliyunSecret;
+            // $endpoint = $wgOssEndpoint;
             try {
-                $ossClient = new OSS\OssClient($accessKeyId, $accessKeySecret, $endpoint);
+                $ossClient = OssFileBackend::getOssClient();
 				
 	            $bucket = self::GIFT_BUCKET;
 	            $avatar_filename = $id .  '_' . $size  ;
