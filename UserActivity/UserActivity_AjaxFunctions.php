@@ -90,7 +90,7 @@ function wfUserActivityResponse( $username, $filter, $item_type, $limit, $earlie
 	 * Get all relationship activity
 	 */
 	$key = wfForeignMemcKey( 'huiji','','site_activity', $filter, $item_type, $fixedLimit, $username, $earlierThan );
-	//$data = $wgMemc->get($key);
+	$data = $wgMemc->get($key);
 	if ($data != ''){
 		$activity = $data;
 	} else {

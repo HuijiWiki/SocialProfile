@@ -36,7 +36,7 @@ class UserActivity2  {
 	private $cached_tables;
 
 	const EXTRACT_LENGTH = 500;
-	const PAGEIMAGE_WIDTH = 300;
+	const PAGEIMAGE_WIDTH = 120;
 
 	const REASON_USER_EDIT = 100;
 	const REASON_SITE_EDIT = 200;
@@ -208,7 +208,7 @@ class UserActivity2  {
 				[],
 				$ns, //NS
 				$this->scoreThreshold, 
-				wfTimestamp($this->earlierThan, TS_ISO_8601), 
+				wfTimestamp(TS_ISO_8601, $this->earlierThan), 
 				null 
 			);		
 			foreach ($siteFeed->message as $item){
@@ -216,7 +216,7 @@ class UserActivity2  {
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['reason'][self::REASON_USER_EDIT]++;
 				$this->items[] = array(
 					'feed' => $item,
-					'timestamp' => wfTimestamp($item->timestamp, TS_UNIX),
+					'timestamp' => wfTimestamp(TS_UNIX, $item->timestamp),
 				);
 			}	
 		} 
@@ -227,7 +227,7 @@ class UserActivity2  {
 				$where,
 				$ns, //NS
 				$this->scoreThreshold, 
-				wfTimestamp($this->earlierThan, TS_ISO_8601), 
+				wfTimestamp(TS_ISO_8601, $this->earlierThan), 
 				null 
 			);	
 			foreach ($userFeed->message as $item){
@@ -236,7 +236,7 @@ class UserActivity2  {
 				$this->items[]['feed'] = $item;
 				$this->items[] = array(
 					'feed' => $item,
-					'timestamp' => wfTimestamp($item->timestamp, TS_UNIX),
+					'timestamp' => wfTimestamp(TS_UNIX,$item->timestamp),
 				);
 			}	
 		}
@@ -440,7 +440,7 @@ class UserActivity2  {
 						$detailData['feed']->site->name,
 						$detailData['reason'][self::REASON_USER_EDIT]
 					)->parse();
-					$avatarUrl = HuijiUser::newFromName($userName)->getAvatar('l')->getAvatarHtml();
+					$avatarUrl = HuijiUser::newFromName($userName)->getAvatar('ml')->getAvatarHtml();
 				} else if ($detailData['reasno'][self::REASON_SITE_EDIT] > 0 ){
 					$reason = wfMessage(
 						'useractivity2-reason-site-edit',
@@ -453,19 +453,19 @@ class UserActivity2  {
 				}
 				$this->logger->debug('reason',['reason' => $reason]);
 
-				$timestamp = wfTimestamp($detailData['feed']->timestamp, TS_UNIX);
+				$timestamp = wfTimestamp(TS_UNIX, $detailData['feed']->timestamp);
 				break; //only process the first child
 			}
 			//Now it is time to format real html.
 			/* build html */
-			$avatarUrl = HuijiUser::newFromName($userName)->getAvatar('l')->getAvatarHtml();
+			$avatarUrl = HuijiUser::newFromName($userName)->getAvatar('ml')->getAvatarHtml();
 			$html = $this->templateParser->processTemplate(
 				'user-home-item2',
 				array(
 					'userAvatar' => $avatarUrl,
-					'reasno'  => $reason,
+					'reason'  => $reason,
 					'timestamp' => HuijiFunctions::getTimeAgo($timestamp),
-					'title' => Linker::LinkKnown($title),
+					'title' => Linker::LinkKnown($title, $title->getText()),
 					'image' => $image,
 					'description' => $extract,
 					'hasShowcase' => false,
@@ -500,7 +500,7 @@ class UserActivity2  {
 				__METHOD__
 			);
 			$file = false;
-			$imgTag = "<img src='//cdn.huijiwiki.com/$prefix/thumb.php?f=$name&width=$width' alt='$name'>";
+			$imgTag = "http://cdn.huijiwiki.com/$prefix/thumb.php?f=$name&width=$width";
 		} catch( Exception $e ){
 
 		}

@@ -129,3 +129,22 @@
         padding-right: 0;
     }
 }
+/* new feed */
+.hj-media-user.hj-media-title {
+	font-size: 18px;
+}
+.hj-media-body{
+	font-size: 14px;
+	position: absolute;
+    top: 0;
+    height: 200px;
+    overflow: hidden;
+}
+.hj-media-comment .pull-left{
+	background-size:cover;
+	height: 
+}
+.small-avatar{
+	width: 35px;
+	height: 35px;
+}
