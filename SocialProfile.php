@@ -127,6 +127,8 @@ $wgAutoloadClasses['SpecialNotifyUrl'] = __DIR__ . '/Donate/SpecialNotifyUrl.php
 $wgAutoloadClasses['HuijiForum'] = __DIR__.'/HuijiForum/HuijiForumClass.php';
 $wgAutoloadClasses['SpecialForumDiscussions'] = __DIR__.'/HuijiForum/SpecialForumDiscussions.php';
 $wgAutoloadClasses['AsyncEventJob'] = __DIR__.'/UserEditToUpsert/AsyncEventJob.php';
+$wgAutoloadClasses['UserActivity2'] = __DIR__.'/UserActivity/UserActivity2Class.php';
+$wgAutoloadClasses['FeedProvider'] = __DIR__.'/QueryInterface/FeedProvider.php';
 // $wgAutoloadClasses['SpecialDynamicLess'] = __DIR__ . '/CommonStyle/SpecialDynamicLess.php';
 // $wgAutoloadClasses['ApiCommonStyle'] = __DIR__ . '/CommonStyle/api/ApiCommonStyle.php';
 // New special pages

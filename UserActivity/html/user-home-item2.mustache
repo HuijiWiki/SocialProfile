@@ -1,0 +1,29 @@
+<div class="hj-media">
+	<div class="hj-media-avatar">
+		{{{userAvatar}}}
+	</div>
+	<div class="hj-media-body">
+		<div class="hj-media-user">
+			<span class="hidden-md hidden-lg">{{{userAvatar}}}</span>{{{reason}}}
+			<p class="time-ago pull-right hidden-sm hidden-xs">{{{timestamp}}}</p>
+		</div>
+		<div class="hj-media-user hj-media-title">
+			{{{title}}}
+		</div>
+		<div class="hj-media-comment">
+			<div class="hj-media">
+				<div class="hj-media-avatar">
+					{{{image}}}
+				</div>
+				<div class="hj-media-body">
+					{{{description}}}
+					{{#hasShowcase}}
+					<div class="user-home-item-showcase">
+						{{{showcase}}}
+					</div>
+					{{/hasShowcase}}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

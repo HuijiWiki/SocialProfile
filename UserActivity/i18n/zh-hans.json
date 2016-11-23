@@ -33,6 +33,10 @@
     "useractivity-user_site_follow":"$1{{PLURAL:$2|关注了|关注了$4个站点：<br />}}$6",
     "useractivity-friendsactivity-filter":"*edit|编辑|\n*vote|投票|\n*comment|评论|blah\n*gift-rec|礼物|blah\n*system_message|升级|blah\n*system_gift|成就|blah\n*user_message|消息|blah\n*domain_creation|wiki创建|blah\n*user_user_follow|用户关注|blah\n*user_site_follow|维基关注|blah\n*user_update_status|用户状态|blah\n*image_upload|图片上传|blah",
     "useractivity-filter":"过滤器",
-    "useractivity-image_upload":"$1{{PLURAL:$4|在$6上传了|在$6上传了$4个文件：}}<br /><div class='user-home-item-img-wrap'>$3</div>"
+    "useractivity-image_upload":"$1{{PLURAL:$4|在$6上传了|在$6上传了$4个文件：}}<br /><div class='user-home-item-img-wrap'>$3</div>",
+    "useractivity2-note-edit-morethan3":"[[User:$2|$2]]，[[User:$3|$3]]和[[User:$4|$4]]等$1位用户编辑了该页面。",
+    "useractivity2-note-edit-3":"[[User:$1|$1]]，[[User:$2|$2]]和[[User:$3|$3]]编辑了该页面",
+    "useractivity2-note-edit-2":"[[User:$1|$1]]和[[User:$2|$2]]编辑了该页面",
+    "useractivity2-note-edit-1":"[[User:$1|$1]]编辑了该页面"
 
 }

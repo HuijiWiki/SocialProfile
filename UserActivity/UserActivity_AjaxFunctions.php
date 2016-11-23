@@ -63,7 +63,11 @@ function wfUserActivityResponse( $username, $filter, $item_type, $limit, $earlie
 
 	// $rel = new UserActivity( $user->getName(), ( ( $rel_type == 1 ) ? ' friends' : 'foes' ), 50 );
 	$fixedLimit = $limit;
-	$rel = new UserActivity( $username, $filter , $fixedLimit, $earlierThan );
+	if ($filter == "ALL"){
+		$rel = new UserActivity2( $username, 'FOLLOWING' , $fixedLimit, $earlierThan );
+	} else {
+		$rel = new UserActivity( $username, $filter , $fixedLimit, $earlierThan );
+	}
 	if ($item_type != 'default'){
 		$rel->setActivityToggle( 'show_edits', $edits );
 		$rel->setActivityToggle( 'show_votes', $votes );
@@ -86,7 +90,7 @@ function wfUserActivityResponse( $username, $filter, $item_type, $limit, $earlie
 	 * Get all relationship activity
 	 */
 	$key = wfForeignMemcKey( 'huiji','','site_activity', $filter, $item_type, $fixedLimit, $username, $earlierThan );
-	$data = $wgMemc->get($key);
+	//$data = $wgMemc->get($key);
 	if ($data != ''){
 		$activity = $data;
 	} else {

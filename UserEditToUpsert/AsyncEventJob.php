@@ -1,4 +1,5 @@
 <?php
+use MediaWiki\MediaWikiServices;
 /**
  * A temporary fix. Needs clean up.
  */
@@ -187,6 +188,7 @@ class AsyncEventJob extends Job {
 		//category
 		$options = $new_content->getContentHandler()->makeParserOptions( 'canonical' );
 	    $output = $new_content->getParserOutput( $title, $rev->getId(), $options,true);
+	    $extract = new ExtractFormatter($output->getText(), true, MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'textextracts' ));
 	    $category = array_map( 'strval', array_keys( $output->getCategories() ) );
 
 	    $logger->debug('parser ends at '.time(), [$title, $rev]);
@@ -196,7 +198,7 @@ class AsyncEventJob extends Job {
 		$redirectPageTitle = $new_redirect != null ? $new_redirect->getText():null;
 		$post_data = array(
 			'timestamp' => $rev->getTimestamp(),
-			'content' => $output->getText(),
+			'content' => $extract->getText(),
 			'sitePrefix' => $wgHuijiPrefix,
 			'siteName' => $wgSitename,
 			'id' => $title->getArticleID(),
@@ -234,13 +236,14 @@ class AsyncEventJob extends Job {
 		//category
 		$logger->debug('parser begins at '.time(), [$title, $revision]);
 		$options = $new_content->getContentHandler()->makeParserOptions( 'canonical' );
-	       	$output = $new_content->getParserOutput( $title, $revision->getId(), $options,true);
-	       	$category = array_map( 'strval', array_keys( $output->getCategories() ) );
+	    $output = $new_content->getParserOutput( $title, $revision->getId(), $options,true);
+	    $extract = new ExtractFormatter($output->getText(), true, MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'textextracts' ));
+	    $category = array_map( 'strval', array_keys( $output->getCategories() ) );
 
 	    $logger->debug('parser ends at '.time(), [$title, $revision]);
 		$post_data = array(
 			'timestamp' => $revision->getTimestamp(),
-			'content' => $output->getText(),
+			'content' => $extract->getText(),
 			'sitePrefix' => $wgHuijiPrefix,
 			'siteName' => $wgSitename,
 			'id' => $title->getArticleID(),
