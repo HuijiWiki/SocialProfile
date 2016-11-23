@@ -130,7 +130,11 @@
     }
 }
 /* new feed */
-.useractivity2 .hj-media-user.hj-media-title {
+.useractivity2 .hj-media-user{
+	font-size: 14px;
+	color: #999;
+}
+.useractivity2 .hj-media-title {
 	font-size: 18px;
 }
 .useractivity2 .hj-media-body{

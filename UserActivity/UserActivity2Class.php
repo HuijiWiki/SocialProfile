@@ -431,6 +431,11 @@ class UserActivity2  {
 				$extract = $this->getExtract($title, self::EXTRACT_LENGTH);
 				$this->logger->debug('extract', ['extract' => $extract]);
 				$image = $this->getPageImage($detailData['feed']->site->prefix, $detailData['feed']->page->id, self::PAGEIMAGE_WIDTH);
+				if ($image != ''){
+					$hasImage = true;
+				} else {
+					$hasImage = false;
+				}
 				$this->logger->debug('image',['image' => $image]);
 
 				if ($detailData['reason'][self::REASON_USER_EDIT] > 0 ){
@@ -467,6 +472,7 @@ class UserActivity2  {
 					'timestamp' => HuijiFunctions::getTimeAgo($timestamp),
 					'title' => Linker::LinkKnown($title, $title->getText()),
 					'image' => $image,
+					'hasImage' => $hasImage,
 					'description' => $extract,
 					'hasShowcase' => false,
 				)
@@ -499,10 +505,13 @@ class UserActivity2  {
 			[ 'pp_page' => $id, 'pp_propname' => PageImages::PROP_NAME ],
 			__METHOD__
 		);
-		$file = false;
-		$imgTag = "http://cdn.huijiwiki.com/$prefix/thumb.php?f=$name&width=$width";
+		$imgUrl = '';
+		if ($name){
+			$imgUrl = "http://cdn.huijiwiki.com/$prefix/thumb.php?f=$name&width=$width";
+		}
+		
 
-		return $imgTag;
+		return $imgUrl;
 	}
 	/**
 	 * Compares the timestamps of two given objects to decide how to sort them.

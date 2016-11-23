@@ -37,6 +37,8 @@
     "useractivity2-note-edit-morethan3":"[[User:$2|$2]]，[[User:$3|$3]]和[[User:$4|$4]]等$1位用户编辑了该页面。",
     "useractivity2-note-edit-3":"[[User:$1|$1]]，[[User:$2|$2]]和[[User:$3|$3]]编辑了该页面",
     "useractivity2-note-edit-2":"[[User:$1|$1]]和[[User:$2|$2]]编辑了该页面",
-    "useractivity2-note-edit-1":"[[User:$1|$1]]编辑了该页面"
+    "useractivity2-note-edit-1":"[[User:$1|$1]]编辑了该页面",
+    "useractivity2-reason-user-edit":"[[User:$1|$1]]编辑了[[$2:|$3]]的$4个页面。",
+    "useractivity2-reason-site-edit":"[[$1:|$2]]中最新更新的页面"
 
 }
