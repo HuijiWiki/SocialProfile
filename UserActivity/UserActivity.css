@@ -145,7 +145,10 @@
 }
 .useractivity2 .hj-media-comment .pull-left{
 	background-size:cover;
-	height: 
+	height: 120px;
+	width: 120px;
+	margin-right: 10px;
+	margin-top: 10px;
 }
 .useractivity2 .small-avatar{
 	width: 35px;
