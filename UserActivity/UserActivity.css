@@ -139,7 +139,6 @@
 }
 .useractivity2 .content{
 	font-size: 14px;
-	position: absolute;
     top: 0;
     height: 195px;
     overflow: hidden;
@@ -151,4 +150,9 @@
 .useractivity2 .small-avatar{
 	width: 35px;
 	height: 35px;
+}
+@media screen and (max-width: 768px) {
+	.useractivity2 .hj-media-body{
+		margin:0px;
+	}
 }
