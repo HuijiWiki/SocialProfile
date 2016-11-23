@@ -137,11 +137,11 @@
 .useractivity2 .hj-media-title {
 	font-size: 18px;
 }
-.useractivity2 .hj-media-body{
+.useractivity2 .content{
 	font-size: 14px;
 	position: absolute;
     top: 0;
-    height: 200px;
+    height: 195px;
     overflow: hidden;
 }
 .useractivity2 .hj-media-comment .pull-left{
