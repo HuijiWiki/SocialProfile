@@ -208,7 +208,7 @@ class UserActivity2  {
 				[],
 				$ns, //NS
 				$this->scoreThreshold, 
-				wfTimestamp(TS_ISO_8601, $this->earlierThan), 
+				$this->earlierThan ? wfTimestamp(TS_ISO_8601, $this->earlierThan): null, 
 				null 
 			);		
 			foreach ($siteFeed->message as $item){
@@ -227,7 +227,7 @@ class UserActivity2  {
 				$where,
 				$ns, //NS
 				$this->scoreThreshold, 
-				wfTimestamp(TS_ISO_8601, $this->earlierThan), 
+				$this->earlierThan ? wfTimestamp(TS_ISO_8601, $this->earlierThan): null,
 				null 
 			);	
 			foreach ($userFeed->message as $item){
@@ -491,19 +491,16 @@ class UserActivity2  {
 	private function getPageImage($prefix, $id, $width){
 		global $wgThumbLimits;
 		$dbr = wfGetDB( DB_SLAVE );
-		try{
-			$dbr->tablePrefix(WikiSite::tableNameFromPrefix($prefix));
-			$dbr->selectDB('huiji_sites');
-			$name = $dbr->selectField( 'page_props',
-				'pp_value',
-				[ 'pp_page' => $id, 'pp_propname' => PageImages::PROP_NAME ],
-				__METHOD__
-			);
-			$file = false;
-			$imgTag = "http://cdn.huijiwiki.com/$prefix/thumb.php?f=$name&width=$width";
-		} catch( Exception $e ){
 
-		}
+		$dbr->tablePrefix(WikiSite::tableNameFromPrefix($prefix));
+		$dbr->selectDB('huiji_sites');
+		$name = $dbr->selectField( 'page_props',
+			'pp_value',
+			[ 'pp_page' => $id, 'pp_propname' => PageImages::PROP_NAME ],
+			__METHOD__
+		);
+		$file = false;
+		$imgTag = "http://cdn.huijiwiki.com/$prefix/thumb.php?f=$name&width=$width";
 
 		return $imgTag;
 	}
