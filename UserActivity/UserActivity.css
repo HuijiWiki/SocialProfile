@@ -130,9 +130,18 @@
     }
 }
 /* new feed */
+.user-home-activity{
+    padding-top:10px;
+    padding-bottom:10px
+
+}
 .useractivity2 .hj-user{
 	color: #999;
 }
+.useractivity2 .hj-user .reason{
+    margin-bottom:5px;
+}
+
 .useractivity2 .hj-user a, .useractivity2 .time-ago a{
 	color: #999
 }
@@ -142,6 +151,8 @@
 .useractivity2 .hj-media-title {
 	font-size: 18px;
 	font-weight: bold;
+	clear:both;
+
 }
 .useractivity2 .hj-media-comment{
 	font-size: 14px;
@@ -149,32 +160,37 @@
     height: 195px;
     overflow: hidden;
     text-align: justify;
+    margin-top:2px;
+    margin-bottom:5px;
+    line-height: initial;
 }
 .useractivity2 .hj-media-comment .pull-left{
 	background-size:cover;
 	height: 120px;
 	width: 120px;
 	margin-right: 10px;
-	margin-top: 10px;
 }
 .useractivity2 .small-avatar{
 	width: 35px;
 	height: 35px;
 	display: block;
-	margin-right: 5px;
+	margin-right: 10px;
+	float: left;
 }
 .useractivity2 .small-avatar img{
 	width: 35px;
 	height: 35px;
 	display: block;	
+
 }
 .useractivity2 .reason, .useractivity2 .time-ago{
 	line-height: 17.5px;
 	font-size: 12px;
 	color: #999;
+	margin-top:5px;
 }
 .useractivity2 .reason{
-	margin-bottom: 15px;
+	margin-bottom: 8px;
 }
 @media screen and (max-width: 767px) {
 	.useractivity2 .hj-media-body{
@@ -185,6 +201,13 @@
 	}
 	.useractivity2 .hj-media-avatar{
 		display: none;
+	}
+	.useractivity2 .reason{
+	    height:30px;
+		overflow:hidden;
+	}
+	.useractivity2 .hj-media-title{
+		margin-top: 10px;
 	}
 }
 @media screen and (min-width: 768px) {

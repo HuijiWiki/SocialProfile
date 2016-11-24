@@ -5,7 +5,7 @@ class UserActivity2  {
 	private $user_id;       # Text form (spaces not underscores) of the main part
 	private $user_name;		# Text form (spaces not underscores) of the main part
 	private $items;         # Text form (spaces not underscores) of the main part
-	private $scoreThreshold = 40;
+	private $scoreThreshold = 50;
 
 	private $show_following = false;
 	private $show_current_user = false;
