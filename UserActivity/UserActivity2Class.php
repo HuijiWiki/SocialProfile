@@ -207,15 +207,15 @@ class UserActivity2  {
 				$where,
 				[],
 				$this->scoreThreshold, 
-				$this->earlierThan ? wfTimestamp(TS_ISO_8601, $this->earlierThan - 28800 ): null, 
-				null 
+				null,
+				$this->earlierThan ? wfTimestamp(TS_ISO_8601 ): null
 			);		
 			foreach ($siteFeed->message as $item){
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['feed'] = $item;
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['reason'][self::REASON_USER_EDIT]++;
 				$this->items[] = array(
 					'feed' => $item,
-					'timestamp' => wfTimestamp(TS_UNIX, $item->timestamp) + 28800,
+					'timestamp' => wfTimestamp(TS_UNIX, $item->timestamp),
 				);
 			}	
 		} 
@@ -226,8 +226,8 @@ class UserActivity2  {
 				[],
 				[],
 				$this->scoreThreshold, 
-				$this->earlierThan ? wfTimestamp(TS_ISO_8601, $this->earlierThan - 28800 ): null,
-				null 
+				null, 
+				$this->earlierThan ? wfTimestamp(TS_ISO_8601, $this->earlierThan): null,
 			);	
 			foreach ($userFeed->message as $item){
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['feed'] = $item;
@@ -235,7 +235,7 @@ class UserActivity2  {
 				$this->items[]['feed'] = $item;
 				$this->items[] = array(
 					'feed' => $item,
-					'timestamp' => wfTimestamp(TS_UNIX,$item->timestamp)+ 28800,
+					'timestamp' => wfTimestamp(TS_UNIX,$item->timestamp),
 				);
 			}	
 		}
@@ -457,7 +457,7 @@ class UserActivity2  {
 				}
 				$this->logger->debug('reason',['reason' => $reason]);
 
-				$timestamp = wfTimestamp(TS_UNIX, $detailData['feed']->timestamp )+28800 ;
+				$timestamp = wfTimestamp(TS_UNIX, $detailData['feed']->timestamp ) ;
 				//Now it is time to format real html.
 				/* build html */
 				$html = $this->templateParser->processTemplate(
@@ -465,7 +465,7 @@ class UserActivity2  {
 					array(
 						'userAvatar' => $avatarUrl,
 						'reason'  => $reason,
-						'timestamp' => HuijiFunctions::getTimeAgo($timestamp),
+						'timestamp' => HuijiFunctions::getTimeAgo($timestamp+28800),
 						'title' => Linker::LinkKnown($title, $title->getText()),
 						'image' => $image,
 						'hasImage' => $hasImage,
@@ -486,7 +486,6 @@ class UserActivity2  {
 			//Now it is time to format real html.
 			/* build html */
 			// $avatarUrl = HuijiUser::newFromName($userName)->getAvatar('ml')->getAvatarHtml();
-
 			
 			
 		}

@@ -110,13 +110,6 @@ function wfUserActivityResponse( $username, $filter, $item_type, $limit, $earlie
 					$border_fix = ' border-fix';
 					$last = $item['timestamp'];
 				} 
-				/* There can be a very weird bug that leads to $item['data'] == 1 */
-				/* This is a temprary fix. */
-				if ($item['data'] == 1 ){
-					//wfDebug("feed error: type:".$item_type['type']."time:".$item['timestamp']);
-					continue;
-				}
-
 				// $typeIcon = UserActivity::getTypeIcon( $item['type'] );
 				// $output .= "<div class=\"user-home-activity{$border_fix}\">
 				// 	<img src=\"{$wgExtensionAssetsPath}/SocialProfile/images/" . $typeIcon . "\" alt=\"\" border=\"0\" />
