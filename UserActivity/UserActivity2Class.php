@@ -458,31 +458,32 @@ class UserActivity2  {
 				$this->logger->debug('reason',['reason' => $reason]);
 
 				$timestamp = wfTimestamp(TS_UNIX, $detailData['feed']->timestamp);
+				$html = $this->templateParser->processTemplate(
+					'user-home-item2',
+					array(
+						'userAvatar' => $avatarUrl,
+						'reason'  => $reason,
+						'timestamp' => HuijiFunctions::getTimeAgo($timestamp),
+						'title' => Linker::LinkKnown($title, $title->getText()),
+						'image' => $image,
+						'hasImage' => $hasImage,
+						'description' => $extract,
+						'hasShowcase' => false,
+						'editUrl' => $title->getFullURL(['veaction'=>'edit']),
+						'sourceUrl' => $title->getFullURL(['action' => 'edit']),
+					)
+				);
+				$this->activityLines[] = array(
+					'type' => $type,
+					'timestamp' => $timestamp,
+					'data' => $html
+				);
 				break;
 			}
 			//Now it is time to format real html.
 			/* build html */
 			// $avatarUrl = HuijiUser::newFromName($userName)->getAvatar('ml')->getAvatarHtml();
-			$html = $this->templateParser->processTemplate(
-				'user-home-item2',
-				array(
-					'userAvatar' => $avatarUrl,
-					'reason'  => $reason,
-					'timestamp' => HuijiFunctions::getTimeAgo($timestamp),
-					'title' => Linker::LinkKnown($title, $title->getText()),
-					'image' => $image,
-					'hasImage' => $hasImage,
-					'description' => $extract,
-					'hasShowcase' => false,
-					'editUrl' => $title->getFullURL(['veaction'=>'edit']),
-					'sourceUrl' => $title->getFullURL(['action' => 'edit']),
-				)
-			);
-			$this->activityLines[] = array(
-				'type' => $type,
-				'timestamp' => $timestamp,
-				'data' => $html
-			);
+
 			$this->logger->info('done', ['html'=>$html]);
 			
 		}
