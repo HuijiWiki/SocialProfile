@@ -514,6 +514,7 @@ class UserActivity2  {
 		if ( preg_match( $regexp, $text, $matches ) ) {
 			$text = $matches[0];
 		}
+		$text = str_replace("<br>", "", $text);
 		return $text;
 	}
 	// private function cacheKey( WikiPage $page, $introOnly ) {
