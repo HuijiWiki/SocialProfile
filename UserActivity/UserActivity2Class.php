@@ -423,7 +423,7 @@ class UserActivity2  {
 			// 	)->parse();
 			// }
 			// $this->logger->debug('note',['note'=>$note]);
-			foreach($pageData as $userName=>$detailData){
+			foreach($pageData as $userName => $detailData){
 
 				$title = Title::makeTitle($detailData['feed']->page->ns, $detailData['feed']->page->title, '', $detailData['feed']->site->prefix);
 				$this->logger->debug('title',['title' => $title]);
@@ -440,7 +440,8 @@ class UserActivity2  {
 				if ($detailData['reason'][self::REASON_USER_EDIT] > 0 ){
 					$reason = wfMessage(
 						'useractivity2-reason-user-edit',
-						$userName, $detailData['feed']->site->prefix,
+						$userName, 
+						$detailData['feed']->site->prefix,
 						$detailData['feed']->site->name,
 						$detailData['reason'][self::REASON_USER_EDIT]
 					)->parse();
@@ -448,41 +449,40 @@ class UserActivity2  {
 				} else if ($detailData['reason'][self::REASON_SITE_EDIT] > 0 ){
 					$reason = wfMessage(
 						'useractivity2-reason-site-edit',
-						$userName,
 						$detailData['feed']->site->prefix,
 						$detailData['feed']->site->name,
 						$detailData['reason'][self::REASON_SITE_EDIT]
 					)->parse();
-					$avatarUrl = WikiSite::newFromPrefix($detailData['feed']->site->prefix)->getAvatar('l')->getAvatarHtml();
+					$avatarUrl = WikiSite::newFromPrefix($detailData['feed']->site->prefix)->getAvatar('ml')->getAvatarHtml();
 				}
 				$this->logger->debug('reason',['reason' => $reason]);
 
 				$timestamp = wfTimestamp(TS_UNIX, $detailData['feed']->timestamp);
-				$html = $this->templateParser->processTemplate(
-					'user-home-item2',
-					array(
-						'userAvatar' => $avatarUrl,
-						'reason'  => $reason,
-						'timestamp' => HuijiFunctions::getTimeAgo($timestamp),
-						'title' => Linker::LinkKnown($title, $title->getText()),
-						'image' => $image,
-						'hasImage' => $hasImage,
-						'description' => $extract,
-						'hasShowcase' => false,
-						'editUrl' => $title->getFullURL(['veaction'=>'edit']),
-						'sourceUrl' => $title->getFullURL(['action' => 'edit']),
-					)
-				);
-				$this->activityLines[] = array(
-					'type' => $type,
-					'timestamp' => $timestamp,
-					'data' => $html
-				);
+				break;
 			}
 			//Now it is time to format real html.
 			/* build html */
 			// $avatarUrl = HuijiUser::newFromName($userName)->getAvatar('ml')->getAvatarHtml();
-
+			$html = $this->templateParser->processTemplate(
+				'user-home-item2',
+				array(
+					'userAvatar' => $avatarUrl,
+					'reason'  => $reason,
+					'timestamp' => HuijiFunctions::getTimeAgo($timestamp),
+					'title' => Linker::LinkKnown($title, $title->getText()),
+					'image' => $image,
+					'hasImage' => $hasImage,
+					'description' => $extract,
+					'hasShowcase' => false,
+					'editUrl' => $title->getFullURL(['veaction'=>'edit']),
+					'sourceUrl' => $title->getFullURL(['action' => 'edit']),
+				)
+			);
+			$this->activityLines[] = array(
+				'type' => $type,
+				'timestamp' => $timestamp,
+				'data' => $html
+			);
 			$this->logger->info('done', ['html'=>$html]);
 			
 		}
