@@ -5,7 +5,7 @@ class UserActivity2  {
 	private $user_id;       # Text form (spaces not underscores) of the main part
 	private $user_name;		# Text form (spaces not underscores) of the main part
 	private $items;         # Text form (spaces not underscores) of the main part
-	private $scoreThreshold = 50;
+	private $scoreThreshold = 40;
 
 	private $show_following = false;
 	private $show_current_user = false;
@@ -458,6 +458,8 @@ class UserActivity2  {
 				$this->logger->debug('reason',['reason' => $reason]);
 
 				$timestamp = wfTimestamp(TS_UNIX, $detailData['feed']->timestamp);
+				//Now it is time to format real html.
+				/* build html */
 				$html = $this->templateParser->processTemplate(
 					'user-home-item2',
 					array(
@@ -478,13 +480,14 @@ class UserActivity2  {
 					'timestamp' => $timestamp,
 					'data' => $html
 				);
+				$this->logger->info('done', ['html'=>$html, 'time'=>$timestamp]);
 				break;
 			}
 			//Now it is time to format real html.
 			/* build html */
 			// $avatarUrl = HuijiUser::newFromName($userName)->getAvatar('ml')->getAvatarHtml();
 
-			$this->logger->info('done', ['html'=>$html]);
+			
 			
 		}
 	}
