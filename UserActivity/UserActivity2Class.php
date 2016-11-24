@@ -207,7 +207,7 @@ class UserActivity2  {
 				$where,
 				[],
 				$this->scoreThreshold, 
-				$this->earlierThan ? wfTimestamp(TS_ISO_8601, $this->earlierThan): null, 
+				$this->earlierThan ? wfTimestamp(TS_ISO_8601, $this->earlierThan - 28800 ): null, 
 				null 
 			);		
 			foreach ($siteFeed->message as $item){
@@ -215,7 +215,7 @@ class UserActivity2  {
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['reason'][self::REASON_USER_EDIT]++;
 				$this->items[] = array(
 					'feed' => $item,
-					'timestamp' => wfTimestamp(TS_UNIX, $item->timestamp),
+					'timestamp' => wfTimestamp(TS_UNIX, $item->timestamp) + 28800,
 				);
 			}	
 		} 
@@ -226,7 +226,7 @@ class UserActivity2  {
 				[],
 				[],
 				$this->scoreThreshold, 
-				$this->earlierThan ? wfTimestamp(TS_ISO_8601, $this->earlierThan): null,
+				$this->earlierThan ? wfTimestamp(TS_ISO_8601, $this->earlierThan - 28800 ): null,
 				null 
 			);	
 			foreach ($userFeed->message as $item){
@@ -235,7 +235,7 @@ class UserActivity2  {
 				$this->items[]['feed'] = $item;
 				$this->items[] = array(
 					'feed' => $item,
-					'timestamp' => wfTimestamp(TS_UNIX,$item->timestamp),
+					'timestamp' => wfTimestamp(TS_UNIX,$item->timestamp)+ 28800,
 				);
 			}	
 		}
@@ -457,7 +457,7 @@ class UserActivity2  {
 				}
 				$this->logger->debug('reason',['reason' => $reason]);
 
-				$timestamp = wfTimestamp(TS_UNIX, $detailData['feed']->timestamp);
+				$timestamp = wfTimestamp(TS_UNIX, $detailData['feed']->timestamp )+28800 );
 				//Now it is time to format real html.
 				/* build html */
 				$html = $this->templateParser->processTemplate(
