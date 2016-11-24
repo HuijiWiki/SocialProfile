@@ -208,14 +208,14 @@ class UserActivity2  {
 				[],
 				$this->scoreThreshold, 
 				null,
-				$this->earlierThan ? wfTimestamp(TS_ISO_8601 ): null
+				$this->earlierThan ? date('Y-m-d\TH:i:s', $this->earlierThan + 28800 ): null
 			);		
 			foreach ($siteFeed->message as $item){
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['feed'] = $item;
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['reason'][self::REASON_USER_EDIT]++;
 				$this->items[] = array(
 					'feed' => $item,
-					'timestamp' => wfTimestamp(TS_UNIX, $item->timestamp),
+					'timestamp' => wfTimestamp(TS_UNIX, $item->timestamp) -28800,
 				);
 			}	
 		} 
@@ -227,7 +227,7 @@ class UserActivity2  {
 				[],
 				$this->scoreThreshold, 
 				null, 
-				$this->earlierThan ? wfTimestamp(TS_ISO_8601, $this->earlierThan): null
+				$this->earlierThan ? date('Y-m-d\TH:i:s', $this->earlierThan + 28800 ): null
 			);	
 			foreach ($userFeed->message as $item){
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['feed'] = $item;
@@ -235,7 +235,7 @@ class UserActivity2  {
 				$this->items[]['feed'] = $item;
 				$this->items[] = array(
 					'feed' => $item,
-					'timestamp' => wfTimestamp(TS_UNIX,$item->timestamp),
+					'timestamp' => wfTimestamp(TS_UNIX,$item->timestamp) -28800,
 				);
 			}	
 		}
@@ -457,7 +457,7 @@ class UserActivity2  {
 				}
 				$this->logger->debug('reason',['reason' => $reason]);
 
-				$timestamp = wfTimestamp(TS_UNIX, $detailData['feed']->timestamp ) ;
+				$timestamp = wfTimestamp(TS_UNIX, $detailData['feed']->timestamp ) -28800 ;
 				//Now it is time to format real html.
 				/* build html */
 				$html = $this->templateParser->processTemplate(
@@ -465,7 +465,7 @@ class UserActivity2  {
 					array(
 						'userAvatar' => $avatarUrl,
 						'reason'  => $reason,
-						'timestamp' => HuijiFunctions::getTimeAgo($timestamp+28800),
+						'timestamp' => HuijiFunctions::getTimeAgo($timestamp),
 						'title' => Linker::LinkKnown($title, $title->getText()),
 						'image' => $image,
 						'hasImage' => $hasImage,
