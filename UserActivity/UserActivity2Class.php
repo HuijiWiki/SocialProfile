@@ -457,7 +457,7 @@ class UserActivity2  {
 				}
 				$this->logger->debug('reason',['reason' => $reason]);
 
-				$timestamp = wfTimestamp(TS_UNIX, $detailData['feed']->timestamp )+28800 );
+				$timestamp = wfTimestamp(TS_UNIX, $detailData['feed']->timestamp )+28800 ;
 				//Now it is time to format real html.
 				/* build html */
 				$html = $this->templateParser->processTemplate(
