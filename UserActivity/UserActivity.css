@@ -130,11 +130,13 @@
     }
 }
 /* new feed */
-.useractivity2 .hf-user{
-	font-size: 14px;
+.useractivity2 .hj-user{
 	color: #999;
 }
 .useractivity2 .hj-user a{
+	color: #999
+}
+.useractivity2 .hj-user a:hover{
 	color: #999
 }
 .useractivity2 .hj-media-title {
@@ -146,6 +148,7 @@
     top: 0;
     height: 195px;
     overflow: hidden;
+    text-align: justify;
 }
 .useractivity2 .hj-media-comment .pull-left{
 	background-size:cover;

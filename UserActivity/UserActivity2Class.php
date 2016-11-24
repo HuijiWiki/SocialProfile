@@ -474,6 +474,8 @@ class UserActivity2  {
 					'hasImage' => $hasImage,
 					'description' => $extract,
 					'hasShowcase' => false,
+					'editUrl' => $title->getFullURL(['veaction'=>'edit']),
+					'sourceUrl' => $title->getFullURL(['action' => 'edit']),
 				)
 			);
 			$this->activityLines[] = array(
