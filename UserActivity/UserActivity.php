@@ -30,10 +30,10 @@ $wgExtensionCredits['specialpage'][] = array(
 
 // Set up the new special page
 $wgMessagesDirs['UserActivity'] = __DIR__ . '/i18n';
-// $wgAutoloadClasses['UserActivity'] = __DIR__ . '/UserActivityClass.php';
-// $wgAutoloadClasses['UserHome'] = __DIR__ . '/UserActivity.body.php';
+$wgAutoloadClasses['UserActivity'] = __DIR__ . '/UserActivityClass.php';
+$wgAutoloadClasses['UserHome'] = __DIR__ . '/UserActivity.body.php';
 $wgAutoloadClasses['UserActivity2'] = __DIR__.'/UserActivity/UserActivity2Class.php';
-// $wgSpecialPages['UserActivity'] = 'UserHome';
+$wgSpecialPages['UserActivity'] = 'UserHome';
 
 // Register the CSS with ResourceLoader
 $wgResourceModules['ext.socialprofile.useractivity.css'] = array(
