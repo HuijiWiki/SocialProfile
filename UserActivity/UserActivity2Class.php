@@ -445,7 +445,7 @@ class UserActivity2  {
 						$detailData['reason'][self::REASON_USER_EDIT]
 					)->parse();
 					$avatarUrl = HuijiUser::newFromName($userName)->getAvatar('ml')->getAvatarHtml();
-				} else if ($detailData['reasno'][self::REASON_SITE_EDIT] > 0 ){
+				} else if ($detailData['reason'][self::REASON_SITE_EDIT] > 0 ){
 					$reason = wfMessage(
 						'useractivity2-reason-site-edit',
 						$userName,
@@ -458,41 +458,48 @@ class UserActivity2  {
 				$this->logger->debug('reason',['reason' => $reason]);
 
 				$timestamp = wfTimestamp(TS_UNIX, $detailData['feed']->timestamp);
-				break; //only process the first child
+				$html = $this->templateParser->processTemplate(
+					'user-home-item2',
+					array(
+						'userAvatar' => $avatarUrl,
+						'reason'  => $reason,
+						'timestamp' => HuijiFunctions::getTimeAgo($timestamp),
+						'title' => Linker::LinkKnown($title, $title->getText()),
+						'image' => $image,
+						'hasImage' => $hasImage,
+						'description' => $extract,
+						'hasShowcase' => false,
+						'editUrl' => $title->getFullURL(['veaction'=>'edit']),
+						'sourceUrl' => $title->getFullURL(['action' => 'edit']),
+					)
+				);
+				$this->activityLines[] = array(
+					'type' => $type,
+					'timestamp' => $timestamp,
+					'data' => $html
+				);
 			}
 			//Now it is time to format real html.
 			/* build html */
-			$avatarUrl = HuijiUser::newFromName($userName)->getAvatar('ml')->getAvatarHtml();
-			$html = $this->templateParser->processTemplate(
-				'user-home-item2',
-				array(
-					'userAvatar' => $avatarUrl,
-					'reason'  => $reason,
-					'timestamp' => HuijiFunctions::getTimeAgo($timestamp),
-					'title' => Linker::LinkKnown($title, $title->getText()),
-					'image' => $image,
-					'hasImage' => $hasImage,
-					'description' => $extract,
-					'hasShowcase' => false,
-					'editUrl' => $title->getFullURL(['veaction'=>'edit']),
-					'sourceUrl' => $title->getFullURL(['action' => 'edit']),
-				)
-			);
-			$this->activityLines[] = array(
-				'type' => $type,
-				'timestamp' => $timestamp,
-				'data' => $html
-			);
+			// $avatarUrl = HuijiUser::newFromName($userName)->getAvatar('ml')->getAvatarHtml();
+
 			$this->logger->info('done', ['html'=>$html]);
 			
 		}
 	}
 	private function getExtract($title, $length){
 		global $wgParser;
+		$cache = wfGetCache(CACHE_ANYTHING);
+		$key = wfMemcKey('UserActivity2', 'getextract',$title->getFullText() );
+		$data = $cache->get($key);
+		if ($data != ''){
+			return $data;
+		}
 		$text = $wgParser->interwikiTransclude($title, 'render');
 		$extract = new TextExtracts\ExtractFormatter($text, false, MediaWiki\MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'textextracts' ));
 		$wikitext = $extract->getText();
 		$result = $this->getFirstSection($wikitext, false);
+		$cache->set($key, $result, 60*60*24);
 		return $result;
 	}
 	private function getFirstSection( $text, $plainText ) {
@@ -525,6 +532,12 @@ class UserActivity2  {
 	private function getPageImage($prefix, $id, $width){
 		global $wgThumbLimits;
 		$dbr = wfGetDB( DB_SLAVE );
+		$cache = wfGetCache( CACHE_ANYTHING );
+		$key = wfMemcKey('UserActivity2', 'getpageimage', $prefix, $id );
+		$data = $cache->get($key);
+		if ($data != ''){
+			return $data;
+		}
 
 		$dbr->tablePrefix(WikiSite::tableNameFromPrefix($prefix));
 		$dbr->selectDB('huiji_sites');
@@ -537,8 +550,7 @@ class UserActivity2  {
 		if ($name){
 			$imgUrl = "http://cdn.huijiwiki.com/$prefix/thumb.php?f=$name&width=$width";
 		}
-		
-
+		$cache->set($key, $imgUrl, 60*60*24);
 		return $imgUrl;
 	}
 	/**
