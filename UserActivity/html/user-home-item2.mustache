@@ -1,10 +1,10 @@
 <div class="hj-media useractivity2">
-	<div class="hj-media-avatar hidden-sm hidden-xs">
+	<div class="hj-media-avatar">
 		{{{userAvatar}}}
 	</div>
 	<div class="hj-media-body">
-		<div class="hj-media-user">
-			<div class="small-avatar hidden-md hidden-lg">{{{userAvatar}}}</div><div class="reason">{{{reason}}}</div>
+		<div class="hj-user">
+			<div class="small-avatar">{{{userAvatar}}}</div><div class="reason">{{{reason}}}</div>
 		</div>
 		<div class="hj-media-title">
 			{{{title}}}
@@ -15,15 +15,15 @@
 			<div class="pull-left" style="background-image:url('{{{image}}}')">		
 			</div>
 			{{/hasImage}}
-			<p class="content">
-				{{{description}}}
-			</p>
+			
+			{{{description}}}
+			
 			{{#hasShowcase}}
 			<div class="user-home-item-showcase">
 				{{{showcase}}}
 			</div>
 			{{/hasShowcase}}
-			<span class="time-ago pull-right hidden-sm hidden-xs">{{{timestamp}}}</span>
+			<span class="time-ago pull-right">{{{timestamp}}}</span>
 		</div>
 	</div>
 </div>

@@ -130,14 +130,18 @@
     }
 }
 /* new feed */
-.useractivity2 .hj-media-user{
+.useractivity2 .hf-user{
 	font-size: 14px;
 	color: #999;
 }
+.useractivity2 .hj-user a{
+	color: #999
+}
 .useractivity2 .hj-media-title {
 	font-size: 18px;
+	font-weight: bold;
 }
-.useractivity2 .content{
+.useractivity2 .hj-media-comment{
 	font-size: 14px;
     top: 0;
     height: 195px;
@@ -154,19 +158,34 @@
 	width: 35px;
 	height: 35px;
 	display: block;
+	margin-right: 5px;
 }
 .useractivity2 .small-avatar img{
 	width: 35px;
 	height: 35px;
 	display: block;	
 }
-.useractivity2 .reason{
-	display: inline-block;
+.useractivity2 .reason, .useractivity2 .time-ago{
 	line-height: 17.5px;
 	font-size: 12px;
+	margin-bottom: 15px;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
 	.useractivity2 .hj-media-body{
 		margin:0px;
+	}
+	.useractivity2 .small-avatar{
+		display: block;
+	}
+	.useractivity2 .hj-media-avatar{
+		display: none;
+	}
+}
+@media screen and (min-width: 768px) {
+	.useractivity2 .small-avatar{
+		display: none;
+	}
+	.useractivity2 .hj-media-avatar{
+		display: block;
 	}
 }
