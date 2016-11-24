@@ -1,4 +1,4 @@
-/* User Feed */
+/* User Feed 
 .user-home-feed {
 	width: 60%;
 	padding-top: 15px;
@@ -128,7 +128,7 @@
     .user-home-feed .user-home-item-body{
         padding-right: 0;
     }
-}
+}*/
 /* new feed */
 .user-home-activity{
     padding-top:10px;
@@ -162,7 +162,9 @@
     text-align: justify;
     margin-top:2px;
     margin-bottom:5px;
-    line-height: initial;
+}
+.useractivity2 .hj-media-comment p{
+	line-height: initial;
 }
 .useractivity2 .hj-media-comment .pull-left{
 	background-size:cover;

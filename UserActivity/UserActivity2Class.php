@@ -200,11 +200,11 @@ class UserActivity2  {
 		global $wgContentNamespaces;
 		$tables = $this->getTables();
 		$where = $this->where();
-		if (count($tables) > 0){
+		if (count($where) > 0){
 			$siteFeed = FeedProvider::getFeed(
 				'edit', 
-				$tables, 
-				[],
+				[], 
+				$where,
 				[],
 				$this->scoreThreshold, 
 				$this->earlierThan ? wfTimestamp(TS_ISO_8601, $this->earlierThan): null, 
@@ -219,11 +219,11 @@ class UserActivity2  {
 				);
 			}	
 		} 
-		if (count($where) > 0){
+		if (count($tables) > 0){
 			$userFeed = FeedProvider::getFeed(
 				'edit', 
-				[], 
-				$where,
+				$tables, 
+				[],
 				[],
 				$this->scoreThreshold, 
 				$this->earlierThan ? wfTimestamp(TS_ISO_8601, $this->earlierThan): null,
