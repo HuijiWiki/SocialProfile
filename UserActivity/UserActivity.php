@@ -32,7 +32,7 @@ $wgExtensionCredits['specialpage'][] = array(
 $wgMessagesDirs['UserActivity'] = __DIR__ . '/i18n';
 $wgAutoloadClasses['UserActivity'] = __DIR__ . '/UserActivityClass.php';
 $wgAutoloadClasses['UserHome'] = __DIR__ . '/UserActivity.body.php';
-$wgAutoloadClasses['UserActivity2'] = __DIR__.'/UserActivity/UserActivity2Class.php';
+$wgAutoloadClasses['UserActivity2'] = __DIR__.'/UserActivity2Class.php';
 $wgSpecialPages['UserActivity'] = 'UserHome';
 
 // Register the CSS with ResourceLoader
