@@ -227,7 +227,7 @@ class UserActivity2  {
 				[],
 				$this->scoreThreshold, 
 				null, 
-				$this->earlierThan ? wfTimestamp(TS_ISO_8601, $this->earlierThan): null,
+				$this->earlierThan ? wfTimestamp(TS_ISO_8601, $this->earlierThan): null
 			);	
 			foreach ($userFeed->message as $item){
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['feed'] = $item;
