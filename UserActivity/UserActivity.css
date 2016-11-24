@@ -153,6 +153,17 @@
 .useractivity2 .small-avatar{
 	width: 35px;
 	height: 35px;
+	display: block;
+}
+.useractivity2 .small-avatar img{
+	width: 35px;
+	height: 35px;
+	display: block;	
+}
+.useractivity2 .reason{
+	display: inline-block;
+	line-height: 17.5px;
+	font-size: 12px;
 }
 @media screen and (max-width: 768px) {
 	.useractivity2 .hj-media-body{

@@ -200,13 +200,12 @@ class UserActivity2  {
 		global $wgContentNamespaces;
 		$tables = $this->getTables();
 		$where = $this->where();
-		$ns = $wgContentNamespaces;
 		if (count($tables) > 0){
 			$siteFeed = FeedProvider::getFeed(
 				'edit', 
 				$tables, 
 				[],
-				$ns, //NS
+				[],
 				$this->scoreThreshold, 
 				$this->earlierThan ? wfTimestamp(TS_ISO_8601, $this->earlierThan): null, 
 				null 
@@ -225,7 +224,7 @@ class UserActivity2  {
 				'edit', 
 				[], 
 				$where,
-				$ns, //NS
+				[],
 				$this->scoreThreshold, 
 				$this->earlierThan ? wfTimestamp(TS_ISO_8601, $this->earlierThan): null,
 				null 
@@ -489,11 +488,38 @@ class UserActivity2  {
 	private function getExtract($title, $length){
 		global $wgParser;
 		$text = $wgParser->interwikiTransclude($title, 'render');
-		$extract = new TextExtracts\ExtractFormatter($text, true, MediaWiki\MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'textextracts' ));
-		$plainText = $extract->getText();
-		$result = TextExtracts\ExtractFormatter::getFirstChars( $plainText, $length );
+		$extract = new TextExtracts\ExtractFormatter($text, false, MediaWiki\MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'textextracts' ));
+		$wikitext = $extract->getText();
+		$result = $this->getFirstSection($wikitext, false);
 		return $result;
 	}
+	private function getFirstSection( $text, $plainText ) {
+		if ( $plainText ) {
+			$regexp = '/^(.*?)(?=' . TextExtracts\ExtractFormatter::SECTION_MARKER_START . ')/s';
+		} else {
+			$regexp = '/^(.*?)(?=<h[1-6]\b)/s';
+		}
+		if ( preg_match( $regexp, $text, $matches ) ) {
+			$text = $matches[0];
+		}
+		return $text;
+	}
+	// private function cacheKey( WikiPage $page, $introOnly ) {
+	// 	return wfMemcKey( 'textextracts', $page->getId(), $page->getTouched(),
+	// 		$page->getTitle()->getPageLanguage()->getPreferredVariant(),
+	// 		$this->params['plaintext'], $introOnly
+	// 	);
+	// }
+	// private function getFromCache( WikiPage $page, $introOnly ) {
+	// 	global $wgMemc;
+	// 	$key = $this->cacheKey( $page, $introOnly );
+	// 	return $wgMemc->get( $key );
+	// }
+	// private function setCache( WikiPage $page, $text ) {
+	// 	global $wgMemc;
+	// 	$key = $this->cacheKey( $page, $this->params['intro'] );
+	// 	$wgMemc->set( $key, $text );
+	// }
 	private function getPageImage($prefix, $id, $width){
 		global $wgThumbLimits;
 		$dbr = wfGetDB( DB_SLAVE );

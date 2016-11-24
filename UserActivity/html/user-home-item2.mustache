@@ -4,27 +4,26 @@
 	</div>
 	<div class="hj-media-body">
 		<div class="hj-media-user">
-			<span class="small-avatar hidden-md hidden-lg">{{{userAvatar}}}</span>{{{reason}}}
-			<span class="time-ago pull-right hidden-sm hidden-xs">{{{timestamp}}}</span>
+			<div class="small-avatar hidden-md hidden-lg">{{{userAvatar}}}</div><div class="reason">{{{reason}}}</div>
 		</div>
 		<div class="hj-media-title">
 			{{{title}}}
 		</div>
 		<div class="hj-media-comment">
-			<div class="hj-media">
-				{{#hasImage}}
-				<div class="pull-left" style="background-image:url('{{{image}}}')">		
-				</div>
-				{{/hasImage}}
-				<p class="content">
-					{{{description}}}
-				</p>
-				{{#hasShowcase}}
-				<div class="user-home-item-showcase">
-					{{{showcase}}}
-				</div>
-				{{/hasShowcase}}
+			
+			{{#hasImage}}
+			<div class="pull-left" style="background-image:url('{{{image}}}')">		
 			</div>
+			{{/hasImage}}
+			<p class="content">
+				{{{description}}}
+			</p>
+			{{#hasShowcase}}
+			<div class="user-home-item-showcase">
+				{{{showcase}}}
+			</div>
+			{{/hasShowcase}}
+			<span class="time-ago pull-right hidden-sm hidden-xs">{{{timestamp}}}</span>
 		</div>
 	</div>
 </div>
