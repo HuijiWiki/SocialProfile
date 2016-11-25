@@ -208,14 +208,14 @@ class UserActivity2  {
 				[],
 				$this->scoreThreshold, 
 				null,
-				$this->earlierThan ? date('Y-m-d\TH:i:s', $this->earlierThan + 28800 ): null
+				$this->earlierThan ? date('Y-m-d\TH:i:s', $this->earlierThan): null
 			);		
 			foreach ($siteFeed->message as $item){
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['feed'] = $item;
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['reason'][self::REASON_USER_EDIT]++;
 				$this->items[] = array(
 					'feed' => $item,
-					'timestamp' => wfTimestamp(TS_UNIX, $item->timestamp) -28800,
+					'timestamp' => wfTimestamp(TS_UNIX, $item->timestamp ) - 28800 ,
 				);
 			}	
 		} 
@@ -227,7 +227,7 @@ class UserActivity2  {
 				[],
 				$this->scoreThreshold, 
 				null, 
-				$this->earlierThan ? date('Y-m-d\TH:i:s', $this->earlierThan + 28800 ): null
+				$this->earlierThan ? date('Y-m-d\TH:i:s', $this->earlierThan ): null
 			);	
 			foreach ($userFeed->message as $item){
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['feed'] = $item;
@@ -235,7 +235,7 @@ class UserActivity2  {
 				$this->items[]['feed'] = $item;
 				$this->items[] = array(
 					'feed' => $item,
-					'timestamp' => wfTimestamp(TS_UNIX,$item->timestamp) -28800,
+					'timestamp' => wfTimestamp(TS_UNIX,$item->timestamp) - 28800,
 				);
 			}	
 		}
