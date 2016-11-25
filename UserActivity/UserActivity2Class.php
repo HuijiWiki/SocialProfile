@@ -117,21 +117,6 @@ class UserActivity2  {
 		if (!empty($this->cached_where)){
 			$userArray = $this->cached_where;
 		} else {
-			// if ( !empty( $this->rel_type ) ) {
-			// 	$users = $dbr->select(
-			// 		'user_relationship',
-			// 		'r_user_id_relation',
-			// 		array(
-			// 			'r_user_id' => $this->user_id,
-			// 			'r_type' => $this->rel_type
-			// 		),
-			// 		__METHOD__
-			// 	);			
-			// 	foreach ( $users as $user ) {
-			// 		$userArray[] = $user->r_user_id_relation;
-			// 	}
-			// }
-
 			if ( !empty( $this->show_current_user ) ) {
 				$userArray[] = $this->user_id;
 			}
@@ -190,14 +175,13 @@ class UserActivity2  {
 			foreach( $values as $value ){
 				$tables[] = $value->f_wiki_domain;
 			}				
-		} else {
+		} elseif ($this->show_all) {
 			$tables = Huiji::getInstance()->getSitePrefixes(false);	
 		}
 		$this->cached_tables = $tables;
 		return $tables;
 	}
 	private function setEdits(){
-		global $wgContentNamespaces;
 		$tables = $this->getTables();
 		$where = $this->where();
 		if (count($where) > 0){
@@ -214,6 +198,7 @@ class UserActivity2  {
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['feed'] = $item;
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['reason'][self::REASON_USER_EDIT]++;
 				$this->items[] = array(
+					'type' => 'page',
 					'feed' => $item,
 					'timestamp' => wfTimestamp(TS_UNIX, $item->timestamp ) - 28800 ,
 				);
@@ -232,8 +217,8 @@ class UserActivity2  {
 			foreach ($userFeed->message as $item){
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['feed'] = $item;
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['reason'][self::REASON_SITE_EDIT]++;
-				$this->items[]['feed'] = $item;
 				$this->items[] = array(
+					'type' => 'page',
 					'feed' => $item,
 					'timestamp' => wfTimestamp(TS_UNIX,$item->timestamp) - 28800,
 				);

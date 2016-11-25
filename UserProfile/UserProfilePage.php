@@ -1652,10 +1652,10 @@ class UserProfilePage extends Article {
 		$output = '';
 
 		$limit = 8;
-		$rel = new UserActivity( $user_name, 'user', $limit );
+		$rel = new UserActivity2( $user_name, 'user', $limit );
 		$rel->setActivityToggle( 'show_votes', 0 );
 		$rel->setActivityToggle( 'show_edits', 1 );
-		$rel->setActivityToggle( 'show_comments', 1);
+		$rel->setActivityToggle( 'show_comments', 0);
 		$rel->setActivityToggle( 'show_relationships', 0);
 		$rel->setActivityToggle( 'show_system_gifts', 0);
 		$rel->setActivityToggle( 'show_system_messages', 0);
@@ -1665,7 +1665,7 @@ class UserProfilePage extends Article {
 		$rel->setActivityToggle( 'show_user_update_status', 0);
 		$rel->setActivityToggle( 'show_gifts_sent', 0);
 		$rel->setActivityToggle( 'show_gifts_rec', 0);
-		$rel->setActivityToggle( 'show_domain_creations', 1);
+		$rel->setActivityToggle( 'show_domain_creations', 0);
 		$rel->setActivityToggle( 'show_image_uploads', 0);
 		/**
 		 * Get all relationship activity
@@ -1695,21 +1695,9 @@ class UserProfilePage extends Article {
 			}
 
 			foreach ( $activity as $item ) {
-				$user_gifts = new UserSystemGifts( $item['username'] );
 				$item_html = '';
-				$title = Title::makeTitle( $item['namespace'], $item['pagetitle'], '', $item['prefix'] );
-				$user_title = Title::makeTitle( NS_USER, $item['username'] );
-				$user_title_2 = Title::makeTitle( NS_USER, $item['comment'] );
-
-				if ( $user_title_2 ) {
-					$user_link_2 = '<a href="' . htmlspecialchars( $user_title_2->getFullURL() ) .
-						'" rel="nofollow">' . $item['comment'] . '</a>';
-				}
-
-				$comment_url = '';
-				if ( $item['type'] == 'comment' ) {
-					$comment_url = "#comment-{$item['id']}";
-				}
+				$title = Title::makeTitle( $item['feed']->page->ns, $item['feed']->page->title, '', $item['feed']->site->prefix );
+				//$user_title = Title::makeTitle( NS_USER, $item->user->name );
 
 				if($title->inNamespace( NS_TOPIC ) || strpos($title->getText(), 'Topic:') === 0){
 					if (strpos($title->getText(), 'Topic:') === 0){
@@ -1718,22 +1706,21 @@ class UserProfilePage extends Article {
 						$strid = $title->getText();
 					}
 					// wfDebug('Setting $UUID = '.$strid);
-					wfErrorLog($title->getFullURL(),'/var/log/mediawiki/SocialProfile.log');
 					$id = UUID::create(strtolower( $strid ));
 					$pc = PostCollection::newFromId($id);
 					$pcr = $pc->getRoot()->getLastRevision();
-					$topicDisplayText = Container::get( 'templating' )->getContent( $pcr, 'wikitext' );
+					// $topicDisplayText = Container::get( 'templating' )->getContent( $pcr, 'wikitext' );
 
 					// 1.27
-					// $topicDisplayText = Utils::htmlToPlaintext(
-					// 	Container::get( 'templating' )->getContent( $pcr, 'topic-title-html' )
-					// );
+					$topicDisplayText = Utils::htmlToPlaintext(
+						Container::get( 'templating' )->getContent( $pcr, 'topic-title-html' )
+					);
 					// $wgFlowDefaultWikiDb = $oldDB;
-					// Container::reset();
+					Container::reset();
 					$page_link = '<b><a href="' . htmlspecialchars( $title->getFullURL() ) . "\">".$topicDisplayText."</a></b>";
 				}else {
 					$page_link = '<b><a href="' . htmlspecialchars( $title->getFullURL() ) .
-						"{$comment_url}\">" . $title->getPrefixedText() . '</a></b> ';
+						"\">" . $title->getPrefixedText() . '</a></b> ';
 				}
 				$b = new UserBoard(); // Easier than porting the time-related functions here
 				$item_time = '<span class="item-small secondary">' .
@@ -1741,108 +1728,19 @@ class UserProfilePage extends Article {
 				'</span>';
 
 				if ( $x < $style_limit ) {
-					$item_html .= '<div class="activity-item">'.UserActivity::getTypeIcon( $item['type'] ) ;
+					$item_html .= '<div class="activity-item">'.UserActivity::getTypeIcon( 'edit' ) ;
 				} else {
-					$item_html .= '<div class="activity-item-bottom">'.UserActivity::getTypeIcon( $item['type'] ) ;
+					$item_html .= '<div class="activity-item-bottom">'.UserActivity::getTypeIcon( 'edit' ) ;
 				}
 
-				$viewGift = SpecialPage::getTitleFor( 'ViewGift' );
+				$item_html .= wfMessage( 'user-recent-activity-edit' )->escaped() . " {$page_link} {$item_time}";
 
-				switch( $item['type'] ) {
-					case 'edit':
-						$item_html .= wfMessage( 'user-recent-activity-edit' )->escaped() . " {$page_link} {$item_time}
-							<div class=\"item\">";
-						if ( $item['comment'] ) {
-							$item_html .= "\"{$item['comment']}\"";
-						}
-						$item_html .= '</div>';
-						break;
-					case 'vote':
-						$item_html .= wfMessage( 'user-recent-activity-vote' )->escaped() . " {$page_link} {$item_time}";
-						break;
-					case 'comment':
-						$item_html .= wfMessage( 'user-recent-activity-comment' )->escaped() . " {$page_link} {$item_time}
-							<div class=\"item\">
-								\"{$item['comment']}\"
-							</div>";
-						break;
-					case 'gift-sent':
-						$gift_image = "<img src=\"{$wgUploadPath}/awards/" .
-							Gifts::getGiftImageTag( $item['namespace'], 'm' ) .
-							'" border="0" alt="" />';
-						$item_html .= wfMessage( 'user-recent-activity-gift-sent' )->escaped() . " {$user_link_2} {$item_time}
-						<div class=\"item\">
-							<a href=\"" . htmlspecialchars( $viewGift->getFullURL( "gift_id={$item['id']}" ) ) . "\" rel=\"nofollow\">
-								{$gift_image}
-								{$item['pagetitle']}
-							</a>
-						</div>";
-						break;
-					case 'gift-rec':
-						$gift_image = Gifts::getGiftImageTag( $item['namespace'], 'm' );
-						$item_html .= wfMessage( 'user-recent-activity-gift-rec' )->escaped() . " {$user_link_2} {$item_time}</span>
-								<div class=\"item\">
-									<a href=\"" . htmlspecialchars( $viewGift->getFullURL( "gift_id={$item['id']}" ) ) . "\" rel=\"nofollow\">
-										{$gift_image}
-										{$item['pagetitle']}
-									</a>
-								</div>";
-						break;
-					case 'system_gift':
-						$gift_image = SystemGifts::getGiftImageTag( $item['namespace'], 'm' );
-						$viewSystemGift = SpecialPage::getTitleFor( 'ViewSystemGift' );
-						$sgift_id = $user_gifts->getGiftIdByGetId( $item['id'] );
-						$item_html .= wfMessage( 'user-recent-system-gift' )->escaped() . " {$item_time}
-								<div class=\"user-home-item-gift\">
-									<a href=\"" . htmlspecialchars( $viewSystemGift->getFullURL( "user={$item['username']}&gift_id={$sgift_id}" ) ) . "\" rel=\"nofollow\">
-										{$gift_image}
-										{$item['pagetitle']}
-									</a>
-								</div>";
-						break;
-					case 'friend':
-						$item_html .= wfMessage( 'user-recent-activity-friend' )->escaped() .
-							" <b>{$user_link_2}</b> {$item_time}";
-						break;
-					case 'foe':
-						$item_html .= wfMessage( 'user-recent-activity-foe' )->escaped() .
-							" <b>{$user_link_2}</b> {$item_time}";
-						break;
-					case 'system_message':
-						$item_html .= "{$item['comment']} {$item_time}";
-						break;
-					case 'user_message':
-						$item_html .= wfMessage( 'user-recent-activity-user-message' )->escaped() .
-							" <b><a href=\"" . UserBoard::getUserBoardURL( $user_title_2->getText() ) .
-								"\" rel=\"nofollow\">{$item['comment']}</a></b>  {$item_time}
-								<div class=\"item\">
-								\"{$item['namespace']}\"
-								</div>";
-						break;
-					case 'network_update':
-						$network_image = SportsTeams::getLogo( $item['sport_id'], $item['team_id'], 's' );
-						$item_html .= wfMessage( 'user-recent-activity-network-update' )->escaped() .
-								'<div class="item">
-									<a href="' . SportsTeams::getNetworkURL( $item['sport_id'], $item['team_id'] ) .
-									"\" rel=\"nofollow\">{$network_image} \"{$item['comment']}\"</a>
-								</div>";
-						break;
-					case 'domain_creation':
-						$domainLink = '<b><a href="' . htmlspecialchars( $title->getFullURL() ) .
-							"\">" . $item['domainname'] . '</a></b> ';
-						$item_html .= wfMessage( 'user-recent-activity-domain-creation' )->escaped() . "{$domainLink} {$item_time}".
-								'<div class="item">
-									<p>'.$item['comment']."</p>
-								</div>";
-						break;
-					}
+				$item_html .= '</div>';
 
-					$item_html .= '</div>';
-
-					if ( $x <= $limit ) {
-						$items_html_type['all'][] = $item_html;
-					}
-					$items_html_type[$item['type']][] = $item_html;
+				if ( $x <= $limit ) {
+					$items_html_type['all'][] = $item_html;
+				}
+				$items_html_type['edit'][] = $item_html;
 
 				$x++;
 			}
