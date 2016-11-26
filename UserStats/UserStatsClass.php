@@ -1151,12 +1151,12 @@ class UserStats {
 	                // $resdata['user_title'] = Title::makeTitle( NS_USER, $user['user_name'] );
 	                $avatar = new wAvatar( $user['user_id'], 'ml' );
 					$userPage = Title::makeTitle( NS_USER, $user['user_name'] );
-					$userPageURL = htmlspecialchars( $userPage->getFullURL() );
+					$userPageURL = htmlspecialchars( $userPage->getLinkURL() );
 	                $resdata['avatarImage'] = $avatar->getAvatarURL();
 	                $resdata['rank'] = $z;
 	                $resdata['user_name'] = $user['user_name'];
 	                $resdata['user_url'] = $userPageURL;
-					$resdata['user_points'] = $user['points']>=0?$user['points']:0;
+			$resdata['user_points'] = $user['points']>=0?$user['points']:0;
 	                $result[] = $resdata;
 	                $z++;
 	        }
