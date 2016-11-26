@@ -156,6 +156,7 @@ class UserActivity2  {
 	private function getTables(){
 		global $wgHuijiPrefix, $wgUser;
 		$dbr = wfGetDB( DB_SLAVE );
+		$tables = [];
 		if ( !empty($this->cached_tables) ){
 			return $this->cached_tables;
 		}
