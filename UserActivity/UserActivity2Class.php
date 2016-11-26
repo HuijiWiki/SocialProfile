@@ -194,7 +194,8 @@ class UserActivity2  {
 				$this->scoreThreshold, 
 				null,
 				$this->earlierThan ? date('Y-m-d\TH:i:s', $this->earlierThan): null
-			);		
+			);
+			if (isset($siteFeed->message))		
 			foreach ($siteFeed->message as $item){
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['feed'] = $item;
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['reason'][self::REASON_USER_EDIT]++;
@@ -215,6 +216,7 @@ class UserActivity2  {
 				null, 
 				$this->earlierThan ? date('Y-m-d\TH:i:s', $this->earlierThan ): null
 			);	
+			if ( isset($userFeed->message))
 			foreach ($userFeed->message as $item){
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['feed'] = $item;
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['reason'][self::REASON_SITE_EDIT]++;
@@ -423,7 +425,7 @@ class UserActivity2  {
 				}
 				$this->logger->debug('image',['image' => $image]);
 
-				if ($detailData['reason'][self::REASON_USER_EDIT] > 0 ){
+				if ( isset($detailData['reason'][self::REASON_USER_EDIT]) && $detailData['reason'][self::REASON_USER_EDIT] > 0 ){
 					$reason = wfMessage(
 						'useractivity2-reason-user-edit',
 						$userName, 
@@ -432,7 +434,7 @@ class UserActivity2  {
 						$detailData['reason'][self::REASON_USER_EDIT]
 					)->parse();
 					$avatarUrl = HuijiUser::newFromName($userName)->getAvatar('ml')->getAvatarHtml();
-				} else if ($detailData['reason'][self::REASON_SITE_EDIT] > 0 ){
+				} else if ( isset($detailData['reason'][self::REASON_SITE_EDIT]) && $detailData['reason'][self::REASON_SITE_EDIT] > 0 ){
 					$reason = wfMessage(
 						'useractivity2-reason-site-edit',
 						$detailData['feed']->site->prefix,
