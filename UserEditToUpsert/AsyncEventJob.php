@@ -188,7 +188,7 @@ class AsyncEventJob extends Job {
 		//category
 		$options = $new_content->getContentHandler()->makeParserOptions( 'canonical' );
 	    $output = $new_content->getParserOutput( $title, $rev->getId(), $options,true);
-	    $extract = new ExtractFormatter($output->getText(), true, MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'textextracts' ));
+	    $extract = new TextExtracts\ExtractFormatter($output->getText(), true, MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'textextracts' ));
 	    $category = array_map( 'strval', array_keys( $output->getCategories() ) );
 
 	    $logger->debug('parser ends at '.time(), [$title, $rev]);
