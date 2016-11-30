@@ -426,7 +426,7 @@ class UserProfilePage extends Article {
         $wgOut->addHTML('</div></div></div>');
     }
 		// Left side
-		$wgOut->addHTML( '<div class="row"><div id="user-page-left" class="col-md-6">' );
+		$wgOut->addHTML( '<div id="user-page-left" class="col-md-6">' );
 
 		if ( !wfRunHooks( 'UserProfileBeginLeft', array( &$this ) ) ) {
 			// wfDebug( __METHOD__ . ": UserProfileBeginLeft messed up profile!\n" );

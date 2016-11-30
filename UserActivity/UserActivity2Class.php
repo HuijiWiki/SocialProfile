@@ -443,6 +443,9 @@ class UserActivity2  {
 				$this->logger->debug('reason',['reason' => $reason]);
 
 				$timestamp = wfTimestamp(TS_UNIX, $detailData['feed']->timestamp ) -28800 ;
+				if (empty($extract) && !$hasImage && !$hasShowcase ){
+					$hasComment = false;
+				}
 				//Now it is time to format real html.
 				/* build html */
 				$html = $this->templateParser->processTemplate(
@@ -454,6 +457,7 @@ class UserActivity2  {
 						'title' => Linker::LinkKnown($title, $title->getText()),
 						'image' => $image,
 						'hasImage' => $hasImage,
+						'hasComment' => $hasComment,
 						'description' => $extract,
 						'hasShowcase' => false,
 						'editUrl' => $title->getFullURL(['veaction'=>'edit']),

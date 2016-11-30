@@ -9,6 +9,7 @@
 		<div class="hj-media-title">
 			{{{title}}}
 		</div>
+		{{#hasComment}}
 		<div class="hj-media-comment">
 			
 			{{#hasImage}}
@@ -23,8 +24,8 @@
 				{{{showcase}}}
 			</div>
 			{{/hasShowcase}}
-			
 		</div>
+		{{/hasComment}}
 		<span class="time-ago pull-right"><a href="{{{editUrl}}}">编辑</a> | <a href="{{{sourceUrl}}}">源代码</a> | {{{timestamp}}}前</span>
 	</div>
 </div>
