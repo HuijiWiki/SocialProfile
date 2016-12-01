@@ -448,6 +448,8 @@ class UserActivity2  {
 				$timestamp = wfTimestamp(TS_UNIX, $detailData['feed']->timestamp ) -28800 ;
 				if (empty($extract) && !$hasImage && !$hasShowcase ){
 					$hasComment = false;
+				} else {
+					$hasComment = true;
 				}
 				//Now it is time to format real html.
 				/* build html */
