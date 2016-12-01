@@ -68,7 +68,7 @@ class HuijiForum{
 			'lifetime' => self::$lifetime
 		));	
 		$userToken = self::curlPost('token', $userData);
-		$wgRequest->response()->setCookie( 'flarum_remember', $userToken->token?$userToken->token:'undefined',  time()+self::$lifetime, ['prefix' => ''] );
+		$wgRequest->response()->setCookie( 'flarum_remember', isset($userToken->token)?$userToken->token:'undefined',  time()+self::$lifetime, ['prefix' => ''] );
 		return true;
 	}
 	private static function curlPost($apiEndpoint, $dataString, $auth = null){

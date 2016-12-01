@@ -395,6 +395,22 @@ class SocialProfileHooks {
 		$config['analyzer']['near_match']['filter'][] = "pinyin_filter";
 
 	}
+	public static function registerParserHook( &$parser ){
+		$parser->setHook( 'trans', 'SocialProfileHooks::getTrans' );
+	}
+	public static function getTrans( $input, $args, $parser ){
+		$trans = new EntryTran($input);
+		if ( !isset($args['mode']) ){
+			$mode = EntryTran::MODE_HARD;
+		} else if ($args['mode'] == 'strict') {
+			$mode = EntryTran::MODE_SOFT;
+		} else if ($args['mode'] == 'loose'){
+			$mode = EntryTran::MODE_HARDEST;
+		} else {
+			$mode = EntryTran::MODE_HARD;
+		}
+		return $trans->getResult($mode);
+	}
 }
 class ThemeDesigner extends Article{
 	public function view(){
