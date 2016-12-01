@@ -71,7 +71,7 @@ class UserActivity2  {
 		}
 		if ( strtoupper( $filter ) == 'ALL' ) {
 			$this->show_all = true;
-			$this->scoreThreshold = 80;
+			$this->scoreThreshold = 60;
 		}
 		if ( strtoupper( $filter ) == 'FOLLOWING_SITES' ) {
 			$this->show_following_sites = true;
@@ -446,7 +446,7 @@ class UserActivity2  {
 				$this->logger->debug('reason',['reason' => $reason]);
 
 				$timestamp = wfTimestamp(TS_UNIX, $detailData['feed']->timestamp ) -28800 ;
-				if (empty($extract) && !$hasImage && !$hasShowcase ){
+				if (strlen($extract) < 15 && !$hasImage && !empty($hasShowcase) ){
 					$hasComment = false;
 				} else {
 					$hasComment = true;
