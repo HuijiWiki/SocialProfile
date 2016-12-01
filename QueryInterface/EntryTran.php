@@ -19,7 +19,7 @@ class EntryTran
 					return $target;
 				}
 				$res = json_decode(EntryTran::getEntry($this->foreign, 'en', $wgHuijiPrefix, 0, 2));
-				foreach($res->res->objects as $entry){
+				foreach($res->result->objects as $entry){
 					if ($entry != $this->foreign){
 						$target = $entry;
 					}
@@ -40,7 +40,7 @@ class EntryTran
 					return $target;
 				}
 				$res = json_decode(EntryTran::getEntry($this->foreign, 'en', $wgHuijiPrefix, 0, 2));
-				foreach($res->res->objects as $entry){
+				foreach($res->result->objects as $entry){
 					if ($entry != $this->foreign){
 						$target = $entry;
 					}
@@ -60,7 +60,7 @@ class EntryTran
 					return $target;
 				}
 				$res = json_decode(EntryTran::getEntry($this->foreign, 'en', $wgHuijiPrefix, 0, 2));
-				foreach($res->res->objects as $entry){
+				foreach($res->result->objects as $entry){
 					if ($entry != $this->foreign){
 						$target = $entry;
 					}
