@@ -12,10 +12,13 @@ class EntryTran
 	public function getResult($mode, $flag = '*'){
 		global $wgHuijiPrefix;
 		$target = '';
+		if ($this->foreign == ''){
+			return '';
+		}
 		switch ($mode) {
 			case self::MODE_HARDEST:
 				$target = $this->lookupUserTable();
-				if ($target != ''){
+				if ($target != $this->foreign){
 					return $target;
 				}
 				$res = json_decode(EntryTran::getEntry($this->foreign, 'en', $wgHuijiPrefix, 0, 2));
@@ -24,7 +27,7 @@ class EntryTran
 						$target = $entry;
 					}
 				}
-				if ($target != ''){
+				if ($target != $this->foreign){
 					return $target;
 				}
 				$target = $this->lookupDict($flag);
@@ -36,7 +39,7 @@ class EntryTran
 				break;
 			case self::MODE_HARD:
 				$target = $this->lookupUserTable();
-				if ($target != ''){
+				if ($target != $this->foreign){
 					return $target;
 				}
 				$res = json_decode(EntryTran::getEntry($this->foreign, 'en', $wgHuijiPrefix, 0, 2));
@@ -45,7 +48,7 @@ class EntryTran
 						$target = $entry;
 					}
 				}
-				if ($target != ''){
+				if ($target != $this->foreign){
 					return $target;
 				}
 				$target = $this->lookupDict($flag);
@@ -56,7 +59,7 @@ class EntryTran
 				break;
 			case self::MODE_SOFT:
 				$target = $this->lookupUserTable();
-				if ($target != ''){
+				if ($target != $this->foreign){
 					return $target;
 				}
 				$res = json_decode(EntryTran::getEntry($this->foreign, 'en', $wgHuijiPrefix, 0, 2));
@@ -119,27 +122,26 @@ class EntryTran
 	}
 	private function lookupUserTable(){		
 		$json = json_decode(wfMessage('huiji-translation-pairs')->plain());
-		$target = '';
+		$target = $this->foreign;
 		if (isset($json->version) && $json->version == 2){
 			foreach ($json->regex as $key => $value) {
-			 	$target = preg_replace($key, $value, $this->foreign);
-			} 
-			$foreign = $this->foreign;
-			$target = isset($json->link->foreign)
+			 	$target = preg_replace($key, $value, $target);
+			}
+			$target = isset($json->link->target)
 				?
-				$json->link->foreign
+				$json->link->target
 				:
 				$target;
-			$target = isset($json->plain->foreign)
+			$target = isset($json->plain->target)
 				?
-				$json->link->foreign
+				$json->link->target
 				:
 				$target;
 			return $target;
 		} else {
-			return isset($json->foreign)
+			return isset($json->target)
 				?
-				$json->foreign
+				$json->target
 				:
 				$target;
 		}		

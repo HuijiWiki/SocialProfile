@@ -446,7 +446,7 @@ class UserActivity2  {
 				$this->logger->debug('reason',['reason' => $reason]);
 
 				$timestamp = wfTimestamp(TS_UNIX, $detailData['feed']->timestamp ) -28800 ;
-				if (strlen($extract) < 15 && !$hasImage && !empty($hasShowcase) ){
+				if (strlen($extract) < 15 && !$hasImage && empty($hasShowcase) ){
 					$hasComment = false;
 				} else {
 					$hasComment = true;
