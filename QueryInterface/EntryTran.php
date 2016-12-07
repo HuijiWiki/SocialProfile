@@ -34,8 +34,11 @@ class EntryTran
 				if ($target != ''){
 					return $target;
 				}
-				$target = $this->lookupYoudao();
-				return $target;
+				if(strlen($string) == mb_strlen($string, 'utf-8')){
+					$target = $this->lookupYoudao();
+					return $target;					
+				}
+				return $this->foreign;
 				break;
 			case self::MODE_HARD:
 				$target = $this->lookupUserTable();
