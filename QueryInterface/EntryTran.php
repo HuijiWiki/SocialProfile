@@ -86,6 +86,9 @@ class EntryTran
 		}
 	}
 	private function lookupDict($flag){
+		global $wgDBprefix, $wgDBname;
+		$oldDBprefix = $wgDBprefix;
+		$oldDB = $wgDBname;
 		$dbr = wfGetDB(DB_SLAVE);
 		$dbr->tablePrefix('');
 		$dbr->selectDB('huiji_home');
@@ -110,6 +113,8 @@ class EntryTran
 			$res[] = implode("-", $small);
 			$small = [];
 		}
+		$dbr->tablePrefix($oldDBprefix);
+		$dbr->selectDB($oldDB);
 		return implode("·", $res);
 	}
 	private function lookupUserTable(){		
