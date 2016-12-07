@@ -112,6 +112,9 @@ class EntryTran
 					__METHOD__
 				);	
 				if ($temp == ''){
+
+                			$dbr->tablePrefix($oldDBprefix);
+                			$dbr->selectDB($oldDB);
 					return '';
 				}
 				$small[] = $temp;
