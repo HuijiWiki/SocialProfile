@@ -133,21 +133,21 @@ class EntryTran
 			foreach ($json->regex as $key => $value) {
 			 	$target = preg_replace($key, $value, $target);
 			}
-			$target = isset($json->link->target)
+			$target = isset($json->link["target"])
 				?
-				$json->link->target
+				$json->link["target"]
 				:
 				$target;
-			$target = isset($json->plain->target)
+			$target = isset($json->plain["target"])
 				?
-				$json->link->target
+				$json->link["target"]
 				:
 				$target;
 			return $target;
 		} else {
-			return isset($json->target)
+			return isset($json["target"])
 				?
-				$json->target
+				$json["target"]
 				:
 				$target;
 		}		
