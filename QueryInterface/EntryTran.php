@@ -133,7 +133,7 @@ class EntryTran
 			foreach ($json->regex as $key => $value) {
 			 	$target = preg_replace($key, $value, $target);
 			}
-			$target = isset($jsonlink[$target])
+			$target = isset($json["link"][$target])
 				?
 				$json["link"][$target]
 				:
