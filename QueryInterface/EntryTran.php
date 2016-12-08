@@ -127,20 +127,20 @@ class EntryTran
 		return implode("·", $res);
 	}
 	private function lookupUserTable(){		
-		$json = json_decode(wfMessage('huiji-translation-pairs')->plain());
+		$json = (array) json_decode(wfMessage('huiji-translation-pairs')->plain());
 		$target = $this->foreign;
-		if (isset($json->version) && $json->version == 2){
+		if (isset($json['version']) && $json['version'] == 2){
 			foreach ($json->regex as $key => $value) {
 			 	$target = preg_replace($key, $value, $target);
 			}
-			$target = isset($json->link["target"])
+			$target = isset($jsonlink[$target])
 				?
-				$json->link["target"]
+				$json["link"][$target]
 				:
 				$target;
-			$target = isset($json->plain["target"])
+			$target = isset($json["plain"][$target])
 				?
-				$json->link["target"]
+				$json["link"]["target"]
 				:
 				$target;
 			return $target;
