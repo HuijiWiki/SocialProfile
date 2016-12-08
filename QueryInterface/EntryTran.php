@@ -130,7 +130,7 @@ class EntryTran
 		$json = (array) json_decode(wfMessage('huiji-translation-pairs')->plain());
 		$target = $this->foreign;
 		if (isset($json['version']) && $json['version'] == 2){
-			foreach ($json->regex as $key => $value) {
+			foreach ($json["regex"] as $key => $value) {
 			 	$target = preg_replace($key, $value, $target);
 			}
 			$target = isset($json["link"][$target])
