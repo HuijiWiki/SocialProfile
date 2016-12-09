@@ -34,7 +34,7 @@ class EntryTran
 				if ($target != ''){
 					return $target;
 				}
-				if(strlen($string) == mb_strlen($string, 'utf-8')){
+				if(strlen($this->foreign) == mb_strlen($this->foreign, 'utf-8')){
 					$target = $this->lookupYoudao();
 					return $target;					
 				}
