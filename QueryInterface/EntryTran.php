@@ -85,8 +85,8 @@ class EntryTran
 	}
 	private function lookupYoudao(){
 		try{
-			$out = json_decode(Util::curl_get_youdao('huijidata', '587017573', str_replace('&amp;', 'and', urlencode($this->foreign))));
-			return $out->translation[0];
+			$out = json_decode(Util::curl_get_youdao('huijidata', '587017573', str_replace('&amp;', 'and', urlencode($this->foreign))), true);
+			return $out['translation'][0];
 		} catch(Exception $e){
 			return '';
 		}
