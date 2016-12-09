@@ -24,10 +24,10 @@ class EntryTran
 				$res = json_decode(EntryTran::getEntry($this->foreign, 'en', $wgHuijiPrefix, 0, 2));
 				foreach($res->result->objects as $entry){
 					if ($entry != $this->foreign){
-						$target = (string)$entry;
+						$target = (string)$entry->entry;
 					}
 				}
-				if ($target != $this->foreign){
+				if ($entry->entry != $this->foreign){
 					return $target;
 				}
 				$target = (string)$this->lookupDict($flag);
@@ -47,8 +47,8 @@ class EntryTran
 				}
 				$res = json_decode(EntryTran::getEntry($this->foreign, 'en', $wgHuijiPrefix, 0, 2));
 				foreach($res->result->objects as $entry){
-					if ($entry != $this->foreign){
-						$target = (string)$entry;
+					if ($entry->entry != $this->foreign){
+						$target = (string)$entry->entry;
 					}
 				}
 				if ($target != $this->foreign){
@@ -67,8 +67,8 @@ class EntryTran
 				}
 				$res = json_decode(EntryTran::getEntry($this->foreign, 'en', $wgHuijiPrefix, 0, 2));
 				foreach($res->result->objects as $entry){
-					if ($entry != $this->foreign){
-						$target = (string)$entry;
+					if ($entry->entry != $this->foreign){
+						$target = (string)$entry->entry;
 					}
 				}
 				if ($target != (string)$this->foreign){
