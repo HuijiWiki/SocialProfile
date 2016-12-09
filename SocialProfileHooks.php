@@ -399,7 +399,7 @@ class SocialProfileHooks {
 		$parser->setHook( 'trans', 'SocialProfileHooks::getTrans' );
 	}
 	public static function getTrans( $input, $args, $parser ){
-		$trans = new EntryTran($input);
+		$trans = new EntryTran((string)$input);
 		if ( !isset($args['mode']) ){
 			$mode = EntryTran::MODE_HARD;
 		} else if ($args['mode'] == 'strict') {

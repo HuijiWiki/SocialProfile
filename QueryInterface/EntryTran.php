@@ -24,13 +24,13 @@ class EntryTran
 				$res = json_decode(EntryTran::getEntry($this->foreign, 'en', $wgHuijiPrefix, 0, 2));
 				foreach($res->result->objects as $entry){
 					if ($entry != $this->foreign){
-						$target = $entry;
+						$target = (string)$entry;
 					}
 				}
 				if ($target != $this->foreign){
 					return $target;
 				}
-				$target = $this->lookupDict($flag);
+				$target = (string)$this->lookupDict($flag);
 				if ($target != ''){
 					return $target;
 				}
@@ -48,13 +48,13 @@ class EntryTran
 				$res = json_decode(EntryTran::getEntry($this->foreign, 'en', $wgHuijiPrefix, 0, 2));
 				foreach($res->result->objects as $entry){
 					if ($entry != $this->foreign){
-						$target = $entry;
+						$target = (string)$entry;
 					}
 				}
 				if ($target != $this->foreign){
 					return $target;
 				}
-				$target = $this->lookupDict($flag);
+				$target = (string)$this->lookupDict($flag);
 				if ($target != ''){
 					return $target;
 				}
@@ -68,10 +68,10 @@ class EntryTran
 				$res = json_decode(EntryTran::getEntry($this->foreign, 'en', $wgHuijiPrefix, 0, 2));
 				foreach($res->result->objects as $entry){
 					if ($entry != $this->foreign){
-						$target = $entry;
+						$target = (string)$entry;
 					}
 				}
-				if ($target != ''){
+				if ($target != (string)$this->foreign){
 					return $target;
 				}
 				return $this->foreign;
@@ -86,7 +86,12 @@ class EntryTran
 	private function lookupYoudao(){
 		try{
 			$out = json_decode(Util::curl_get_youdao('huijidata', '587017573', str_replace('&amp;', 'and', urlencode($this->foreign))), true);
-			return $out['translation'][0];
+			if(isset($out['translation']) && isset($out['translation'][0])){
+				return (string)$out['translation'][0];
+			} else {
+				return '';
+			}
+			
 		} catch(Exception $e){
 			return '';
 		}
@@ -113,8 +118,8 @@ class EntryTran
 				);	
 				if ($temp == ''){
 
-                			$dbr->tablePrefix($oldDBprefix);
-                			$dbr->selectDB($oldDB);
+                	$dbr->tablePrefix($oldDBprefix);
+                	$dbr->selectDB($oldDB);
 					return '';
 				}
 				$small[] = $temp;
