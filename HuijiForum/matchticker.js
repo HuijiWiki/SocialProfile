@@ -16,6 +16,37 @@ mw.matchticker = function ( option, callback ){
  		}
  		return res;
  	}
+ 	var getDownTime = function(dt) {  
+
+	    // 1.获取倒计时  
+
+	    var intervalMsec = dt - Date.now(); // 目的时间减去现在的时间，获取两者相差的毫秒数  
+
+	    var intervalSec = intervalMsec / 1000; // 转换成秒数  
+
+	    var day = parseInt(intervalSec / 3600 / 24); // 天数  
+
+	    var hour = parseInt((intervalSec - day * 24 * 3600) / 3600); // 小时  
+
+	    var min = parseInt((intervalSec - day * 24 * 3600 - hour * 3600) / 60); // 分钟  
+
+	    // 2.若相差的毫秒小于0 ,表示目的时间小于当前时间，这时的取的值都是负的：-X天-时-分，显示时，只显示天数前面为负的就行。  
+
+	    if (intervalMsec < 0) {  
+
+	        hour = 0 - hour;  
+
+	        min = 0 - min;  
+
+	    }  
+
+	    // 3.拼接字符串并返回  
+
+	    var rs = day + '天' + hour + '小时' + min + '分后';  
+
+	    return rs;  
+
+	} 
 	var countryToFlag = function(en){
 		var table = {
 			"China":"中国",
@@ -131,7 +162,7 @@ mw.matchticker = function ( option, callback ){
 						player2country: countryToFlag(data[i].away.country),
 						player2rank: data[i].away.rank?data[i].away.rank+"位":"暂无",
 						player2score: data[i].away.score || 0,
-						time: new Date(data[i].datetime*1000).toLocaleString(),
+						time: getDownTime(new Date(data[i].datetime*1000)),
 						type: data[i].rounds || "Best of 1",
 						matches: grabMatchTitle(data[i].url),
 						first: !!upcoming.length,
