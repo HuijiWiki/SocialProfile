@@ -165,7 +165,7 @@ mw.matchticker = function ( option, callback ){
 						time: getDownTime(new Date(data[i].datetime*1000)),
 						type: data[i].rounds || "Best of 1",
 						matches: grabMatchTitle(data[i].url),
-						first: !!upcoming.length,
+						first: true,
 						custom: getCustom(data[i])
 					});
 
