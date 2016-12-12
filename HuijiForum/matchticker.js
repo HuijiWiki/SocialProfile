@@ -3,6 +3,7 @@ mw.matchticker = function ( option, callback ){
 	var game = option.game || 'dota2';
 	var ul = option.upcoming || '100';
 	var fl = option.finished || '100';
+	var getCustom = option.custom || function(){return ''};
  	var myTemplate = mw.template.get('ext.socialprofile.matchticker', 'matchticker.mustache');
  	var grabMatchTitle = function(url){
  		var res = [];
@@ -115,11 +116,12 @@ mw.matchticker = function ( option, callback ){
 						player2score: data[i].away.score || 0,
 						time: new Date(data[i].datetime*1000).toLocaleString(),
 						type: data[i].rounds || "Best of 1",
-						matches: grabMatchTitle(data[i].url)
+						matches: grabMatchTitle(data[i].url),
+						custom: getCustom(data[i])
 					});
 				}
 				if (data[i].status=="Upcoming"){
-					if (ul >i){
+					if (upcoming.length >= ul){
 						continue;
 					}
 					upcoming.push({
@@ -133,12 +135,13 @@ mw.matchticker = function ( option, callback ){
 						player2score: data[i].away.score || 0,
 						time: new Date(data[i].datetime*1000).toLocaleString(),
 						type: data[i].rounds || "Best of 1",
-						matches: grabMatchTitle(data[i].url)
+						matches: grabMatchTitle(data[i].url),
+						custom: getCustom(data[i])
 					});
 
 				}
 				if (data[i].status=="Complete"){
-					if (fl >i){
+					if (finished.length >= fl){
 						continue;
 					}
 					finished.push({
@@ -152,7 +155,8 @@ mw.matchticker = function ( option, callback ){
 						player2score: data[i].away.score || 0,
 						time: new Date(data[i].datetime*1000).toLocaleString(),
 						type: data[i].rounds || "Best of 1",
-						matches: grabMatchTitle(data[i].url)
+						matches: grabMatchTitle(data[i].url),
+						custom: getCustom(data[i])
 					});
 				}
 
