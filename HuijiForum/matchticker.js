@@ -136,7 +136,7 @@ mw.matchticker = function ( option, callback ){
 						time: new Date(data[i].datetime*1000).toLocaleString(),
 						type: data[i].rounds || "Best of 1",
 						matches: grabMatchTitle(data[i].url),
-						first: i===0,
+						first: upcoming.length===0,
 						custom: getCustom(data[i])
 					});
 
