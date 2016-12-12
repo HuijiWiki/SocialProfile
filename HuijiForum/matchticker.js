@@ -8,11 +8,9 @@ mw.matchticker = function ( option, callback ){
  	var grabMatchTitle = function(url){
  		var res = [];
  		var match = url.match(/\/tournaments\/((?:\d+-[^\/]*?\/)+)matches\//);
- 		console.log(match);
  		var reg = /(?:\d+-([^\/]*?)\/)+?/g;
  		var match2 = reg.exec(match[1]);
  		while(match2 != null){
- 			console.log(match2);
  			res.push({matchtitle : match2[1]});
  			match2 = reg.exec(match[1]);
  		}
@@ -136,7 +134,7 @@ mw.matchticker = function ( option, callback ){
 						time: new Date(data[i].datetime*1000).toLocaleString(),
 						type: data[i].rounds || "Best of 1",
 						matches: grabMatchTitle(data[i].url),
-						first: upcoming.length===0,
+						first: !!upcoming.length,
 						custom: getCustom(data[i])
 					});
 
