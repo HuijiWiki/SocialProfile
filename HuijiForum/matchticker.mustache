@@ -1,0 +1,32 @@
+<div class="list-group">
+  {{#ongoing}}
+  <div class="list-group-item list-group-item-success">
+  <h4> {{Player1}} {{player1score}}:{{player2score}} {{Player2}} <small>进行中<small></h4>
+  <p class="muted small">
+  {{#matches}}
+  <span class="label label-primary">{{matchtitle}}</span>
+  {{/matches}}
+  {{Player1}}来自{{player1country}}，世界排名第{{player1rank}}。{{Player2}}来自{{player2country}}，目前世界排名{{player2rank}}。比赛规则采用{{type}}。</p>
+  </div>
+  {{/ongoing}}
+  {{#upcoming}}
+  <div class="list-group-item">
+  <h4>{{Player1}} vs {{Player2}} <small>{{time}}</small></h4>
+  <p class="muted small">
+  {{#matches}}
+  <span class="label label-primary">{{matchtitle}}</span>
+  {{/matches}}
+  {{Player1}}来自{{player1country}}，世界排名第{{player1rank}}。{{Player2}}来自{{player2country}}，世界排名第{{player2rank}}。比赛规则采用{{type}}。</p>
+  </div>
+  {{/upcoming}}
+  {{#finished}}
+  <div class="list-group-item">
+  <h4>{{Player1}} {{player1score}}:{{player2score}} {{Player2}} <small>已结束</small></h4>
+  <p class="muted small">
+  {{#matches}}
+  <span class="label label-primary">{{matchtitle}}</span>
+  {{/matches}}
+  {{Player1}}来自{{player1country}}，世界排名第{{player1rank}}。{{Player2}}来自{{player2country}}，世界排名{{player2rank}}。比赛规则采用{{type}}。</p>
+  </div>
+  {{/finished}}
+</div>

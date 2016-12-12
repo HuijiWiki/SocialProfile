@@ -89,11 +89,11 @@ class EntryTran
 			if(isset($out['translation']) && isset($out['translation'][0])){
 				return (string)$out['translation'][0];
 			} else {
-				return '';
+				return $this->foreign;
 			}
 			
 		} catch(Exception $e){
-			return '';
+			return $this->foreign;
 		}
 	}
 	private function lookupDict($flag){

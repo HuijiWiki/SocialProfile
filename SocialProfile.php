@@ -718,6 +718,17 @@ $wgResourceModules['ext.socialprofile.forumlist'] = array(
 	'remoteExtPath' => 'SocialProfile/HuijiForum',
 	'position' => 'bottom',	
 );
+$wgResourceModules['ext.socialprofile.matchticker'] = array(
+	'scripts' => array(
+			'matchticker.js',
+		),
+	'templates' => array(
+			'matchticker.mustache' => 'matchticker.mustache',
+		),
+	'localBasePath' => __DIR__ . '/HuijiForum',
+	'remoteExtPath' => 'SocialProfile/HuijiForum',
+	'position' => 'bottom',	
+);
 $wgResourceModules['ext.socialprofile.special.forumdiscussions'] = array(
 	'scripts' => array(
 			'special.forumdiscussions.js',
