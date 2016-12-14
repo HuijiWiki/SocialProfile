@@ -160,8 +160,8 @@ class RemoveMasterGift extends UnlistedSpecialPage {
 
 		$this->getOutput()->setPageTitle( $this->msg( 'g-remove-title', $gift['gift_name'] )->parse() );
 
-		$output = '<div class="back-links">
-			<a href="' . htmlspecialchars( SpecialPage::getTitleFor( 'GiftManager' )->getFullURL() ) . '">' .
+		$output = '<div class="back-links form-group">
+			<a class="btn btn-default" href="' . htmlspecialchars( SpecialPage::getTitleFor( 'GiftManager' )->getFullURL() ) . '">' .
 				$this->msg( 'g-viewgiftlist' )->plain() . '</a>
 		</div>
 		<form action="" method="post" enctype="multipart/form-data" name="form1">
@@ -174,8 +174,8 @@ class RemoveMasterGift extends UnlistedSpecialPage {
 			</div>
 			<div class="cleared"></div>
 			<div class="g-buttons">
-				<input type="button" class="site-button" value="' . $this->msg( 'g-remove' )->plain() . '" size="20" onclick="document.form1.submit()" />
-				<input type="button" class="site-button" value="' . $this->msg( 'g-cancel' )->plain() . '" size="20" onclick="history.go(-1)" />
+				<input type="button" class="btn btn-danger" value="' . $this->msg( 'g-remove' )->plain() . '" size="20" onclick="document.form1.submit()" />
+				<input type="button" class="btn btn-default" value="' . $this->msg( 'g-cancel' )->plain() . '" size="20" onclick="history.go(-1)" />
 			</div>
 		</form>';
 

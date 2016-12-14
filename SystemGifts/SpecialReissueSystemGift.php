@@ -35,8 +35,11 @@ class SpecialReissueSystemGift extends SpecialPage{
 
 		$output = "";
 		$output .= "<form method='post' action='/wiki/special:reissuesystemgift?method=add' >
-			成就ID：<input type='text' name='giftId' >
-			用户名：<input type='text' name='user' >
+			<div class='form-group'>
+			<label for='giftId'>成就ID：</label><input type='text' name='giftId' class='form-control'>
+			</div><div class='form-group'>
+			<label for='user'>用户名：</label><input type='text' name='user' class='form-control'>
+			</div>
 			<input class='mw-ui-button mw-ui-progressive' type='submit' value='添加'>
 			</form>";
 		$giftId = $request->getVal('giftId');

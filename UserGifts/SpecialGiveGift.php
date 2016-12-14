@@ -180,8 +180,8 @@ class GiveGift extends SpecialPage {
 							$output .= '</div>
 							<div class="cleared"></div>
 							<div class="g-buttons">
-								<input type="button" class="site-button" value="' . $this->msg( 'g-main-page' )->plain() . '" size="20" onclick="window.location=\'index.php?title=' . $this->msg( 'mainpage' )->inContentLanguage()->escaped() . '\'" />
-								<input type="button" class="site-button" value="' . $this->msg( 'g-your-profile' )->plain() . '" size="20" onclick="window.location=\'' . htmlspecialchars( $user->getUserPage()->getFullURL() ) . '\'" />
+								<input type="button" class="btn btn-success" value="' . $this->msg( 'g-main-page' )->plain() . '" size="20" onclick="window.location=\'index.php?title=' . $this->msg( 'mainpage' )->inContentLanguage()->escaped() . '\'" />
+								<input type="button" class="btn btn-default" value="' . $this->msg( 'g-your-profile' )->plain() . '" size="20" onclick="window.location=\'' . htmlspecialchars( $user->getUserPage()->getFullURL() ) . '\'" />
 							</div>';
 						}
 						
@@ -292,7 +292,7 @@ class GiveGift extends SpecialPage {
 			'<div class="g-message">' .
 				$this->msg( 'g-give-no-user-message' )->plain() .
 			'</div>
-			<div class="g-give-container">';
+			<div class="g-give-container well">';
 
 			// If friending is enabled, build a dropdown menu of the user's
 			// friends
@@ -348,10 +348,6 @@ class GiveGift extends SpecialPage {
 		}
 
 		$per_page = 24;
-		$per_row = $wgGiveGiftPerRow;
-		if ( !$per_row ) {
-			$per_row = 3;
-		}
 		//get user group
 		// $user_group = $wgUser->getGroups();
 		// if ( in_array( 'staff', $user_group ) ) {
@@ -400,31 +396,32 @@ class GiveGift extends SpecialPage {
 				$gift_image = 
 					Gifts::getGiftImageTag( $gift['id'], 'l' );
 				if ($res == true && $gift['repeat'] == 2) {
-					$gclass = 'g-give-all g-had-got';
+					$gclass = 'col-xs-12 col-sm-6 col-md-4 col-lg-3 g-had-got';
 					$warning = '不可重复获得';
 				}else if( $level->getLevelNumber() < 5 && $gift['gift_type'] == 3 ){
-					$gclass = 'g-give-all g-level-low';
+					$gclass = 'col-xs-12 col-sm-6 col-md-4 col-lg-3 g-level-low';
 					$warning = '至少达到5级';
 				}else{
-					$gclass = 'g-give-all';
+					$gclass = 'col-xs-12 col-sm-6 col-md-4 col-lg-3';
 					$warning = '';
 				}
-				$output .= "<div id=\"give_gift_{$gift['id']}\" class='".$gclass."'>
+				$output .= "<div id=\"give_gift_{$gift['id']}\" style=\"height:400px; margin-bottom:15px; text-overflow:hidden;\" class='".$gclass."'>
 					<div class=\"gift-warning\">".$warning."</div>
-					{$gift_image}
+					<div class=\"thumbnail\">{$gift_image}</div>
+					<div class=\"caption\">
 					<div class=\"g-title g-blue\">{$gift['gift_name']}</div>";
 
 				if ( $gift['gift_description'] ) {
 					$output .= "<div class=\"g-describe\">{$gift['gift_description']}</div>";
 				}
-				$output .= '<div class="cleared"></div>
+				$output .= '</div>
 				</div>';
-				if ( $x == count( $gifts ) || $x != 1 && $x % $per_row == 0 ) {
-					$output .= '<div class="cleared"></div>';
-				}
+				// if ( $x == count( $gifts ) || $x != 1 && $x % $per_row == 0 ) {
+				// 	$output .= '<div class="cleared"></div>';
+				// }
 				$x++;
 			}
-
+			$output .= '<div class="clearfix"></div>';
 			/**
 			 * Build next/prev nav
 			 */
@@ -501,8 +498,8 @@ class GiveGift extends SpecialPage {
 					<input type="hidden" name="gift_id" id="to_user_gift_id" value="0" />
 					<input type="hidden" name="user_name" id="gift-user-name" value="' . addslashes( $this->user_name_to ) . '" />
 					<input type="hidden" name="user_id" id="gift-user-id" value="' . User::idFromName($this->user_name_to) . '" />
-					<input type="button" id="send-gift-button" class="site-button" value="' . $this->msg( 'g-send-gift' )->plain() . '" size="20" />
-					<input type="button" class="site-button" value="' . $this->msg( 'g-cancel' )->plain() . '" size="20" onclick="history.go(-1)" />
+					<input type="button" id="send-gift-button" class="btn btn-success" value="' . $this->msg( 'g-send-gift' )->plain() . '" size="20" />
+					<input type="button" class="btn btn-default" value="' . $this->msg( 'g-cancel' )->plain() . '" size="20" onclick="history.go(-1)" />
 				</div>
 			</form>';
 		} else {

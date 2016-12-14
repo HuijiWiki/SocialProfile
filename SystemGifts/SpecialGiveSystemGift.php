@@ -50,17 +50,17 @@ class SpecialGiveSystemGift extends SpecialPage{
 	    
 		$giftList = UserSystemGifts::getDesignationGiftList();
 		if ( count($giftList) > 0 ) {
-			$output .= "<form method='get' action='/wiki/special:givesystemgift' >称号：<select name=\"designation\">";
+			$output .= "<form method='get' action='/wiki/special:givesystemgift'><div class='form-group'><label for='designation'>称号：</label><select name=\"designation\" class='form-control'>";
 			foreach ($giftList as $key => $value) {
 				$output .= '<option value ="'.$value['gift_id'].'">'.$value['designation'].'</option>';
 			}
-			$output .= "</select>";
-			$output .= "达成条件：
-						<input name='editNum' >
+			$output .= "</select></div>";
+			$output .= "<div class='form-group'><label for='editNum'>获得称号所需的编辑次数：</label>
+						<input name='editNum' class='form-control'></div>
 						<input class='mw-ui-button mw-ui-progressive' type='submit' value='发送'>
 						</form>";
 		}else {
-			$output .= '<h2>暂无成就称号</h2>';
+			$output .= '<p class="empty-message">请先在礼物管理器中创建一个带有称号的礼物</p>';
 		}
 		
 		if ( $desigGiftId != null && is_int($desigGiftId) ) {

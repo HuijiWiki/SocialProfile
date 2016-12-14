@@ -107,10 +107,10 @@ class GiftManager extends SpecialPage {
 				// "add a gift" link to them
 				if ( $this->canUserCreateGift() ) {
 					$out->addHTML(
-						'<div><b><a href="' .
+						'<div class="form-group"><a class="btn btn-primary" href="' .
 						htmlspecialchars( $this->getPageTitle()->getFullURL( 'method=edit' ) ) .
 						'">' . $this->msg( 'giftmanager-addgift' )->plain() .
-						'</a></b></div>'
+						'</a></div>'
 					);
 				}
 				$out->addHTML( $this->displayGiftList() );
@@ -228,7 +228,7 @@ class GiftManager extends SpecialPage {
 						$this->msg( 'delete' )->plain() . '</a>';
 				}
 
-				$output .= '<div class="Item">
+				$output .= '<div class="list-group-item">
 				<a href="' . htmlspecialchars( $this->getPageTitle()->getFullURL( "id={$gift['id']}" ) ) . '">' .
 					$gift['gift_name'] . '</a> ' .
 					$deleteLink . "</div>\n";
@@ -266,34 +266,34 @@ class GiftManager extends SpecialPage {
 		}
 
 		$form .= '<form action="" method="post" enctype="multipart/form-data" name="gift">';
-		$form .= '<table border="0" cellpadding="5" cellspacing="0" width="500">';
+		$form .= '<table class="table">';
 		$form .= '<tr>
-		<td width="200" class="view-form">' . $this->msg( 'g-gift-name' )->plain() . '</td>
-		<td width="695"><input type="text" size="45" class="createbox" name="gift_name" value="' .
+		<td class="view-form">' . $this->msg( 'g-gift-name' )->plain() . '</td>
+		<td><input type="text" size="45" class="createbox" name="gift_name" value="' .
 			( isset( $gift['gift_name'] ) ? $gift['gift_name'] : '' ) . '"/></td>
 		</tr>
 		<tr>
-		<td width="200" class="view-form" valign="top">' . $this->msg( 'giftmanager-description' )->plain() . '</td>
-		<td width="695"><textarea class="createbox" name="gift_description" rows="2" cols="30">' .
+		<td class="view-form" valign="top">' . $this->msg( 'giftmanager-description' )->plain() . '</td>
+		<td><textarea class="createbox" name="gift_description" rows="2" cols="30">' .
 			( isset( $gift['gift_description'] ) ? $gift['gift_description'] : '' ) . '</textarea></td>
 		</tr>
 		<tr>
-		<td width="200" class="view-form" valign="top">' . $this->msg('giftmanager-prefix')->plain() . '</td>
-		<td width="695"><input type="text" size="45" class="createbox" name="gift_prefix" value="' .
+		<td class="view-form" valign="top">' . $this->msg('giftmanager-prefix')->plain() . '</td>
+		<td><input type="text" size="45" class="createbox" name="gift_prefix" value="' .
 			( isset( $gift['gift_prefix'] ) ? $gift['gift_prefix'] : '' ) . '"/></td>
 		</tr>
 		</tr>
 		<tr>
-		<td width="200" class="view-form" valign="top">称号</td>
-		<td width="695"><input type="text" size="45" class="createbox" name="designation" value="' .
+		<td class="view-form" valign="top">称号</td>
+		<td><input type="text" size="45" class="createbox" name="designation" value="' .
 			( !empty( $gift['designation'] ) ? $gift['designation'] : '' ) . '"/></td>
 		</tr>
 		</tr>';
 		if ( $gift_id ) {
 			$creator = Title::makeTitle( NS_USER, $gift['creator_user_name'] );
 			$form .= '<tr>
-			<td class="view-form">&nbsp' .
-				$this->msg( 'g-created-by', $gift['creator_user_name'] )->parse() .
+			<td class="view-form">' .
+				$this->msg( 'g-created-by', $gift['creator_user_name'] )->text() .
 			'</td>
 			<td><a href="' . htmlspecialchars( $creator->getFullURL() ) . '">' .
 				$gift['creator_user_name'] . '</a></td>
@@ -340,7 +340,7 @@ class GiftManager extends SpecialPage {
 			$form .= '<tr>
 						<td class="view-form">' . $this->msg( 'giftmanager-group' )->plain() . '</td>
 						<td>
-						<select name="group">
+						<select class="form-control" name="group">
 							<option value="1"' . $staff . '>' .
 								$this->msg( 'giftmanager-staff' )->plain() .
 							'</option>
@@ -359,7 +359,7 @@ class GiftManager extends SpecialPage {
 					<tr>
 						<td class="view-form">'. $this->msg( 'giftmanager-repeat' )->plain() .'</td>
 						<td>
-						<select name="repeat">
+						<select class="form-control" name="repeat">
 							<option value="1"' . $repeat . '>是
 							</option>
 							<option value="2"' . $unrepeat . '>否
@@ -370,7 +370,7 @@ class GiftManager extends SpecialPage {
 					<tr>
 						<td class="view-form">'. wfMessage( 'giftmanager-type' )->plain() .'</td>
 						<td>
-						<select name="gift_type">
+						<select class="form-control" name="gift_type">
 							<option value="1"' . $usual . '>普通礼物
 							</option>
 							<option value="3"' . $invite_code . '>邀请码
@@ -387,10 +387,9 @@ class GiftManager extends SpecialPage {
 			$gml = SpecialPage::getTitleFor( 'GiftManagerLogo' );
 			$gift_image = Gifts::getGiftImageTag( $gift_id, 'l', array( "alt" => wfMessage( 'g-gift' )->plain()));
 			$form .= '<tr>
-			<td width="200" class="view-form" valign="top">' . wfMessage( 'giftmanager-giftimage' )->plain() . '</td>
-			<td width="695">' . $gift_image .
-			'<p>
-			<a href="' . htmlspecialchars( $gml->getFullURL( 'gift_id=' . $gift_id ) ) . '">' .
+			<td class="view-form" valign="top">' . wfMessage( 'giftmanager-giftimage' )->plain() . '</td>
+			<td>' . $gift_image .
+			'<a class="center-block" href="' . htmlspecialchars( $gml->getFullURL( 'gift_id=' . $gift_id ) ) . '">' .
 				wfMessage( 'giftmanager-image' )->plain() . '</a>
 			</td>
 			</tr>';
@@ -405,8 +404,8 @@ class GiftManager extends SpecialPage {
 		$form .= '<tr>
 			<td colspan="2">
 				<input type="hidden" name="id" value="' . ( isset( $gift['gift_id'] ) ? $gift['gift_id'] : '' ) . '" />
-				<input type="button" class="createbox" value="' . $button . '" size="20" onclick="document.gift.submit()" />
-				<input type="button" class="createbox" value="' . wfMessage( 'cancel' )->plain() . '" size="20" onclick="history.go(-1)" />
+				<input type="button" class="btn btn-success" value="' . $button . '" size="20" onclick="document.gift.submit()" />
+				<input type="button" class="btn btn-default" value="' . wfMessage( 'cancel' )->plain() . '" size="20" onclick="history.go(-1)" />
 			</td>
 		</tr>
 		</table>

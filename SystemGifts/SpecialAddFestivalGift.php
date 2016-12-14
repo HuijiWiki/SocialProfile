@@ -36,10 +36,15 @@ class SpecialAddFestivalGift extends SpecialPage{
 		 */
 		$output = "";
 		$output .= "<form method='post' action='/wiki/special:addfestivalgift?method=add' >
-			成就ID：<input type='text' name='giftId' >
-			达成次数：<input type='text' name='editnum' >
-			开始时间：<input type='date' name='starttime' >
-			结束时间：<input type='date' name='endtime' >
+			<div class=\"form-group\">
+			<label for='giftId'>成就ID：</label><input type='text' name='giftId' class='form-control' >
+			</div><div class=\"form-group\">
+			<label for='editnum'>所需编辑次数：</label><input type='text' name='editnum' class='form-control'>
+			</div><div class=\"form-group\">
+			<label for='starttime'>开始时间：</label><input type='date' name='starttime' class='form-control'>
+			</div><div class=\"form-group\">
+			<label for='endtime'>结束时间：</label><input type='date' name='endtime' class='form-control'>
+			</div>
 			<input class='mw-ui-button mw-ui-progressive' type='submit' value='添加'>
 			</form>";
 		$giftId = $request->getVal('giftId');
