@@ -3,7 +3,10 @@ mw.matchticker = function ( option, callback ){
 	var game = option.game || 'dota2';
 	var ul = option.upcoming || '100';
 	var fl = option.finished || '100';
-	var getCustom = option.custom || function(){return ''};
+	var getCustomPlayer1 = option.customPlayer1 || function(){return ''};
+	var getCustomPlayer2 = option.customPlayer2 || function(){return ''};
+	var getCustomMatchTitles = option.customMatchTitles || function(){return ''};
+	var getCustomText = option.customText || function(){return ''};
  	var myTemplate = mw.template.get('ext.socialprofile.matchticker', 'matchticker.mustache');
  	var grabMatchTitle = function(url){
  		var res = [];
@@ -135,18 +138,18 @@ mw.matchticker = function ( option, callback ){
 			for (var i in data){
 				if (data[i].status == "live"){
 					ongoing.push({
-						Player1: data[i].home.name,
+						Player1: getCustomPlayer1(data[i])||data[i].home.name,
 						player1country: countryToFlag(data[i].home.country),
 						player1rank: data[i].home.rank?data[i].home.rank+"位":"暂无",
 						player1score: data[i].home.score || 0,
-						Player2: data[i].away.name,
+						Player2: getCustomPlayer1(data[i])||data[i].away.name,
 						player2country: countryToFlag(data[i].away.country),
 						player2rank: data[i].away.rank?data[i].away.rank+"位":"暂无",
 						player2score: data[i].away.score || 0,
 						time: new Date(data[i].datetime*1000).toLocaleString(),
 						type: data[i].rounds || "Best of 1",
-						matches: grabMatchTitle(data[i].url),
-						custom: getCustom(data[i])
+						matches: getCustomMatchTitles(data[i]) || grabMatchTitle(data[i].url),
+						custom: getCustomText(data[i]) 
 					});
 				}
 				if (data[i].status=="Upcoming"){
@@ -154,19 +157,19 @@ mw.matchticker = function ( option, callback ){
 						continue;
 					}
 					upcoming.push({
-						Player1: data[i].home.name,
+						Player1: getCustomPlayer1(data[i])||data[i].home.name,
 						player1country: countryToFlag(data[i].home.country),
 						player1rank: data[i].home.rank?data[i].home.rank+"位":"暂无",
 						player1score: data[i].home.score || 0,
-						Player2: data[i].away.name,
+						Player2: getCustomPlayer2(data[i])||data[i].away.name,
 						player2country: countryToFlag(data[i].away.country),
 						player2rank: data[i].away.rank?data[i].away.rank+"位":"暂无",
 						player2score: data[i].away.score || 0,
 						time: new Date(data[i].datetime*1000).toLocaleString(),
 						type: data[i].rounds || "Best of 1",
-						matches: grabMatchTitle(data[i].url),
-						first: true,
-						custom: getCustom(data[i])
+						matches: getCustomMatchTitles(data[i]) || grabMatchTitle(data[i].url),
+						first: !getCustomText(data[i]),
+						custom: getCustomText(data[i])
 					});
 
 				}
@@ -175,18 +178,18 @@ mw.matchticker = function ( option, callback ){
 						continue;
 					}
 					finished.push({
-						Player1: data[i].home.name,
+						Player1: getCustomPlayer1(data[i]) || data[i].home.name,
 						player1country: countryToFlag(data[i].home.country),
 						player1rank: data[i].home.rank?data[i].home.rank+"位":"暂无",
 						player1score: data[i].home.score || 0,
-						Player2: data[i].away.name,
+						Player2: getCustomPlayer2(data[i]) || data[i].away.name,
 						player2country: countryToFlag(data[i].away.country),
 						player2rank: data[i].away.rank?data[i].away.rank+"位":"暂无",
 						player2score: data[i].away.score || 0,
 						time: new Date(data[i].datetime*1000).toLocaleString(),
 						type: data[i].rounds || "Best of 1",
-						matches: grabMatchTitle(data[i].url),
-						custom: getCustom(data[i])
+						matches: getCustomMatchTitles(data[i]) || grabMatchTitle(data[i].url),
+						custom: getCustomText(data[i])
 					});
 				}
 
