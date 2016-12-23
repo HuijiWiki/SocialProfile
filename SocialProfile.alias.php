@@ -548,3 +548,16 @@ $specialPageAliases['zh-hant'] = array(
 	'UploadAvatar' => array( '上載頭像' ),
 	'UserBoard' => array( '使用者理事會' ),
 );
+
+
+$magicWords = array();
+
+/** English
+ * @author Your Name (YourUserName)
+ */
+$magicWords['en'] = array(
+   'trans' => array( 0, 'trans' ),
+);
+$magicWords['zh-hans'] = array(
+   'trans' => array( 0, '翻译' ),
+);

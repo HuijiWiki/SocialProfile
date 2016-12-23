@@ -397,6 +397,7 @@ class SocialProfileHooks {
 	}
 	public static function registerParserHook( &$parser ){
 		$parser->setHook( 'trans', 'SocialProfileHooks::getTrans' );
+		$parser->setFunctionHook('trans', 'SocialProfileHooks::getTransFunction');
 	}
 	public static function getTrans( $input, $args, $parser ){
 		$trans = new EntryTran((string)$input);
@@ -409,7 +410,32 @@ class SocialProfileHooks {
 		} else {
 			$mode = EntryTran::MODE_HARD;
 		}
-		return $trans->getResult($mode);
+		return htmlspecialchars($trans->getResult($mode));
+	}
+	// public static function onRegisterMagicWords( &$magicWordsIds ) {
+	//    // Add the following to a wiki page to see how it works:
+	//    //  {{MYWORD}}
+	//    $magicWordsIds[] = 'trans';
+	//    return true;
+ //    }
+
+	// Render the output of {{#example:}}.
+	public static function getTransFunction( $parser, $param1 = '', $param2 = null ) {
+
+	  // The input parameters are wikitext with templates expanded.
+	  // The output should be wikitext too.
+		$trans = new EntryTran((string)$param1);
+		if ( !isset($param2) ){
+			$mode = EntryTran::MODE_HARD;
+		} else if ($param2 == 'strict') {
+			$mode = EntryTran::MODE_SOFT;
+		} else if ($param2 == 'loose'){
+			$mode = EntryTran::MODE_HARDEST;
+		} else {
+			$mode = EntryTran::MODE_HARD;
+		}
+		$output = htmlspecialchars($trans->getResult($mode));
+		return $parser->insertStripItem( $output, $parser->mStripState );
 	}
 }
 class ThemeDesigner extends Article{

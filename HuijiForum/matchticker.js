@@ -165,7 +165,7 @@ mw.matchticker = function ( option, callback ){
 						player2country: countryToFlag(data[i].away.country),
 						player2rank: data[i].away.rank?data[i].away.rank+"位":"暂无",
 						player2score: data[i].away.score || 0,
-						time: new Date(data[i].datetime*1000).toLocaleString(),
+						time: getDownTime(new Date(data[i].datetime*1000)),
 						type: data[i].rounds || "Best of 1",
 						matches: getCustomMatchTitles(data[i]) || grabMatchTitle(data[i].url),
 						first: !getCustomText(data[i]),
