@@ -435,7 +435,7 @@ class SocialProfileHooks {
 			$mode = EntryTran::MODE_HARD;
 		}
 		$output = htmlspecialchars($trans->getResult($mode));
-		return $parser->insertStripItem( $output, $parser->mStripState );
+		return array( $output, 'noparse' => false );
 	}
 }
 class ThemeDesigner extends Article{
