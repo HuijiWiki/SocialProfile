@@ -552,6 +552,7 @@ class UserActivity {
 			$sqls[] = $sql;
 		}
 		if (count($sqls) > 0){
+			$dbr->selectDB('huiji_sites');
 			$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
 
 			foreach ( $res as $row ) {
@@ -696,6 +697,7 @@ class UserActivity {
 			$sqls[] = $sql;
 		}
 		if (count($sqls) > 0){
+			$dbr->selectDB('huiji_sites');
 			$res = $dbr->query($dbr->unionQueries($sqls, true)." ORDER BY `item_date` DESC LIMIT $this->sql_depth OFFSET 0");
 
 			foreach ( $res as $row ) {
