@@ -242,7 +242,7 @@ class UserActivity {
 			}
 			if ( !empty( $this->hide_bot ) ){
 				for ( $i = 0; $i < count($userArray); $i++ ){
-					if (User::newFromId($userArray[$i])->isAllowed('bot')){
+					if (User::newFromId($userArray[$i])->isBot()){
 						unset($userArray[$i]);
 					};
 				}
@@ -254,7 +254,7 @@ class UserActivity {
 		}
 		$userIDs = implode( ',', $userArray );
 		if ( !empty( $userIDs ) ) {
-			$where[] = "{$field} IN ($userIDs)";
+			$where = [$field => $userArray];
 		}	
 		return $where;
 	}
@@ -290,24 +290,22 @@ class UserActivity {
 			}
 
 			$tableName = '`'.$DBprefix.'recentchanges'.'`';
-			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
+			$fieldName = 
 				array("UNIX_TIMESTAMP(CONVERT_TZ(rc_timestamp, '+00:00','+08:00' )) AS item_date", 'rc_title',
 					'rc_user', 'rc_user_text', 'rc_comment', 'rc_id', 'rc_minor',
 					'rc_new', 'rc_log_action', 'rc_namespace', $dbr->addQuotes($table).' AS prefix',
-					)
-				) 
-			);
+				);
 			if (count($where) > 0){
-				$conds = "WHERE ".$dbr->makeList( $where, LIST_AND );
+				$conds = $dbr->makeList( $where, LIST_AND );
 			} else {
 				$conds = '';
 			}
 			if ($this->earlierThan != null){
-				$having = "HAVING `item_date` < {$this->earlierThan}";
+				$having = array('HAVING'=>"`item_date` < {$this->earlierThan}");
 			} else {
 				$having = "";
 			}
-			$sql = "SELECT $fieldName FROM $tableName $conds $having";
+			$sql = $dbr->selectSQLText($tableName, $fieldName, $conds, __METHOD__, $having);
 			$sqls[] = $sql;
 
 		} 
@@ -519,38 +517,38 @@ class UserActivity {
 				$DBprefix = '';
 				//break;
 			} elseif ( $table == 'www'){
-				// $dbr->selectDB('huiji_home');
+				$dbr->selectDB('huiji_home');
+				$dbr->tablePrefix('');
 				// $DBprefix = '';
 				continue;
 			} else {
 				$dbr->selectDB('huiji_sites');
 				$DBprefix = WikiSite::tableNameFromPrefix($table);
+				$dbr->tablePrefix($DBprefix);
 			}		
-			$tableName = '`'.$DBprefix.'Vote'.'`';
+			$tableName = ['Vote', 'page'];
 			# Bail out if Vote table doesn't exist
 			// if ( !$dbr->tableExists( $tableName ) ) {
 			// 	return false;
 			// }
-			$joinTableName =  '`'.$DBprefix.'page'.'`';
-			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
+			$fieldName = 
 				array(
 					'UNIX_TIMESTAMP(vote_date) AS item_date',
 					'username', 'vote_page_id', 'vote_value','vote_id', 
 					'vote_user_id','page_title', 'page_namespace', $dbr->addQuotes($table).' AS prefix',
-					)
-				)
 			);	
 			if (count($where) > 0){
-				$conds = "WHERE ".$dbr->makeList( $where, LIST_AND );
+				$conds = $where;
 			} else {
 				$conds = '';
 			}
 			if ($this->earlierThan != null){
-				$having = "HAVING `item_date` < {$this->earlierThan}";
+				$having = array('HAVING'=>"`item_date` < {$this->earlierThan}");
 			} else {
-				$having = "";
+				$having = [];
 			}
-			$sql = "SELECT $fieldName FROM $tableName INNER JOIN $joinTableName ON vote_page_id = page_id $conds $having";
+			$join = ['page' => ["INNER JOIN", "vote_page_id=page_id"]];
+			$sql = $dbr->selectSQLText( $tableName, $fieldName, $conds,__METHOD__, $having, $join);
 			$sqls[] = $sql;
 		}
 		if (count($sqls) > 0){
@@ -666,34 +664,35 @@ class UserActivity {
 			} else {
 				$dbr->selectDB('huiji_sites');
 				$DBprefix = WikiSite::tableNameFromPrefix($table);
+				$dbr->tablePrefix($DBprefix);
 			}		
 
-			$tableName = '`'.$DBprefix.'poll_user_vote'.'`';
+			$tableName = ['poll_user_vote', 'poll_question', 'page'];
 			# Bail out if Vote table doesn't exist
 			// if ( !$dbr->tableExists( $tableName ) ) {
 			// 	return false;
 			// }
-			$joinTableName =  '`'.$DBprefix.'poll_question'.'`';
-			$joinTableName2 =  '`'.$DBprefix.'page'.'`';
-			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
+			$fieldName =
 				array(
 					'UNIX_TIMESTAMP(pv_date) AS item_date',
 					'pv_user_name', 'pv_user_id', 'pv_id', 'poll_text', 'poll_page_id',
 					'page_title', 'page_namespace', $dbr->addQuotes($table).' AS prefix',
-					)
-				)
 			);	
 			if (count($where) > 0){
-				$conds = "WHERE ".$dbr->makeList( $where, LIST_AND );
+				$conds = $where;
 			} else {
 				$conds = '';
 			}
 			if ($this->earlierThan != null){
-				$having = "HAVING `item_date` < {$this->earlierThan}";
+				$having = ["HAVING" =>"`item_date` < {$this->earlierThan}"];
 			} else {
 				$having = "";
 			}
-			$sql = "SELECT $fieldName FROM $tableName INNER JOIN $joinTableName ON pv_poll_id = poll_id INNER JOIN $joinTableName2 ON poll_page_id = page_id $conds $having";
+			$join = [
+				'poll_question' => ['INNER JOIN', 'pv_poll_id=poll_id'],
+				'page' => ['INNER JOIN', 'poll_page_id=page_id']
+			];
+			$sql = $dbr->selectSQLText($tableName, $fieldName, $conds, __METHOD__, $having, $join);
 			$sqls[] = $sql;
 		}
 		if (count($sqls) > 0){
