@@ -5,7 +5,7 @@ class FeedProvider
 
 	static function get($method,$data_string)
 	{
-		return Util::curl_get_json('huijidata.com','8080', 'events-statistics-rest', 'feeds', $method, $data_string);
+		return Util::curl_get_json('huijidata.com','8080', 'events-statistics-rest', 'records', $method, $data_string);
 	}
 	 
 	static function getFeed( $type, $sites = [],$users = [], $ns = [], $score = null, $from = null, $to = null, $size = 30 , $page = 0)
