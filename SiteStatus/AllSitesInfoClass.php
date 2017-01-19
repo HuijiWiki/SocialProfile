@@ -41,7 +41,7 @@ class AllSitesInfo{
 		$key = wfForeignMemcKey('huiji','', 'site_rank', 'all_site_rank', $prefix, $yesterday );
 		$allSiteRank = array();
 		if( $prefix == '' ){
-			$dbr = wfGetDB( DB_SLAVE );
+			$dbr = wfGetDB( DB_SLAVE, '', 'huiji' );
 			$res = $dbr->select(
 				'site_rank',
 				array(
@@ -71,7 +71,7 @@ class AllSitesInfo{
 			}
 			return $allSiteRank;
 		}else{
-			$dbr = wfGetDB( DB_SLAVE );
+			$dbr = wfGetDB( DB_SLAVE, '', 'huiji' );
 			$res = $dbr->select(
 				'site_rank',
 				array(
@@ -201,7 +201,7 @@ class AllSitesInfo{
 
 	//get site bset rank
 	static function getSiteBestRank( $prefix ){
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_SLAVE, '', 'huiji' );
 		$res = $dbr->select(
 			'site_best_rank',
 			array(

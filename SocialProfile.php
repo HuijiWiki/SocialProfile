@@ -364,6 +364,7 @@ $wgHooks['onUserLogoutComplete'][] = 'SocialProfileHooks::onUserLogoutComplete';
 $wgHooks['SpecialSearchResultsAppend'][] = 'SocialProfileHooks::onSpecialSearchResultsAppend';
 $wgHooks['CirrusSearchAnalysisConfig'][] = 'SocialProfileHooks::onCirrusSearchAnalysisConfig';
 $wgHooks['ParserFirstCallInit'][] = 'SocialProfileHooks::registerParserHook';
+$wgHooks['UploadVerifyFile'][]='SocialProfileHooks::onUploadVerifyFile';
 // ResourceLoader module definitions for certain components which do not have
 // their own loader file
 // General
@@ -583,16 +584,26 @@ $wgResourceModules['ext.socialprofile.siteactivity.js'] = array(
 $wgResourceModules['ext.socialprofile.admindashboard.css'] = array(
 	'styles' => array(
 					'timeline.css',
-        			'../../UserUploadAvatar/cropper.min.css',
-	    			'../../UserUploadAvatar/main.css'
 				),
-	'dependencies' => array(
-	                'skins.bootstrapmediawiki.top',
-	                ),
 	'localBasePath' => __DIR__ . '/AdminDashboard/css',
 	'remoteExtPath' => 'SocialProfile/AdminDashboard/css',
 	'position' => 'top' // just in case
 );
+
+$wgResourceModules['ext.socialprofile.cropper'] = array(
+	'styles' => array(
+			'cropper.min.css',
+			'main.css'
+	),
+	'scripts' => array(
+		'cropper.min.js',
+		'main.js'
+	),
+	'localBasePath' => __DIR__ . '/UserUploadAvatar',
+	'remoteExtPath' => 'SocialProfile/UserUploadAvatar',
+	'position' => 'bottom'
+);
+
 // AdminDashboard
 $wgResourceModules['ext.socialprofile.admindashboard.js'] = array(
 	'scripts' => array(
@@ -601,8 +612,6 @@ $wgResourceModules['ext.socialprofile.admindashboard.js'] = array(
 					// 'flot-data.js',
 					'morris-data.js',
 					'sb-admin-2.js',
-					'../../UserUploadAvatar/cropper.min.js',
-        			'../../UserUploadAvatar/main.js',
         			'admin.js'
 				),
 	'dependencies' => array(

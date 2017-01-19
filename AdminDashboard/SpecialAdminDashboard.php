@@ -31,7 +31,6 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		$this->setHeaders();
 
 		// Add CSS
-		//$out->addModules('ext.socialprofile.userprofile.css');	
 		$out->addModuleStyles(
     		array(
     			'ext.socialprofile.admindashboard.css',
@@ -40,6 +39,7 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
     	);
 		$out->addModules( 
 			array(
+				'ext.socialprofile.cropper',
 				'ext.socialprofile.admindashboard.js',
 				'ext.comments.js',
 				'skins.bootstrapmediawiki.emoji',
@@ -98,16 +98,17 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 		$freezeUsers = SpecialPage::getTitleFor( '解除封禁' )->getFullURL();
 		$replaceText = SpecialPage::getTitleFor( '替换文本' )->getFullURL();
 		$siteRankPage = SpecialPage::getTitleFor( 'SiteRank' )->getFullURL();
-		$allSpecial = SpecialPage::getTitleFor( '特殊页面' )->getFullURL();
-		$translatePairs = Message::newFromKey('huiji-translation-pairs')->getTitle()->getFullURL();
-		$licenses = Message::newFromKey('licenses')->getTitle()->getFullURL();
-		$changePageTitle = Message::newFromKey('Pagetitle')->getTitle()->getFullURL();
-		$changeMainpageTitle = Message::newFromKey('Pagetitle-view-mainpage')->getTitle()->getFullURL();
-		$noarticletext = Message::newFromKey('noarticletext')->getTitle()->getFullURL();
-		$quickInsert = Message::newFromKey('Edittools')->getTitle()->getFullURL();
-		$preload = Message::newFromKey('Preloads')->getTitle()->getFullURL();
+		$allSpecial = SpecialPage::getTitleFor( '特殊页面' )->getFullURL();	
+		$licenses = Message::newFromKey('licenses')->inContentLanguage()->getTitle()->getFullURL();
+		$changePageTitle = Message::newFromKey('Pagetitle')->inContentLanguage()->getTitle()->getFullURL();
+		$changeMainpageTitle = Message::newFromKey('Pagetitle-view-mainpage')->inContentLanguage()->getTitle()->getFullURL();
+		$noarticletext = Message::newFromKey('noarticletext')->inContentLanguage()->getTitle()->getFullURL();
+		$quickInsert = Message::newFromKey('Edittools')->inContentLanguage()->getTitle()->getFullURL();
+		$preload = Message::newFromKey('Preloads')->inContentLanguage()->getTitle()->getFullURL();
 		$siteAvatar = (new wSiteAvatar($wgHuijiPrefix, 'l'))->getAvatarHtml();
 		$token = $user->getEditToken();
+		$translatePairs = Message::newFromKey('huiji-translation-pairs')->inContentLanguage()->getTitle()->getFullURL();
+
 		if(is_null($newFollow)){
 			$newFollow = false;
 		}
@@ -336,11 +337,10 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 
         $inviteLink = SpecialPage::getTitleFor('InviteUser')->getFullURL(array('user' => $user->getName(), 'prefix' => $wgHuijiPrefix));
 
-
 		$output .= $templateParser->processTemplate(
 				    'admin_index',
 				    array(
-				    	// 'siteRank' => isset($rankInfo[0]['site_rank'])?$rankInfo[0]['site_rank']:'暂无',
+				    	'siteRank' => isset($rankInfo[0]['site_rank'])?$rankInfo[0]['site_rank']:'暂无',
 				    	'siteScore' => isset($rankInfo[0]['site_score'])?$rankInfo[0]['site_score']:'暂无',
 				        'yesterdayCount' => HuijiFunctions::format_nice_number(UserSiteFollow::getFollowerCountOneday( $wgHuijiPrefix, $yesterday )),
 				        // 'totalCount' => $stats['followers'],
@@ -385,9 +385,9 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				        'showBots' => $showBots,
 				        'inviteLink' => $inviteLink,
 
-
 				    )
 				);
+		// $output = "<h1>test</h1>";
 		$out->addHtml($output);
 	}
 }

@@ -264,6 +264,19 @@ class SocialProfileHooks {
 
 		// }
 	}
+	public static function onUploadVerifyFile( $upload, $mime, &$error ) { 
+
+	    // $localFile = $upload->getLocalFile();
+	    // $localFile->load( File::READ_LATEST );
+	    // $path = $upload->getTempPath();
+	    // $ext = pathinfo($path, PATHINFO_EXTENSION);
+	    // if ($upload->getSourceType() == 'url'){
+	    // 	exec('convert -comment "'.$path.'" '.$path." ".$path);
+	    // 	//exec('convert -resize 50% '.$path." ".$path);
+	    // }
+	    
+	   
+	}
 	/**
 	 * onUserGroupsChanged
 	 * when user's sysop right have been remove, delete cache

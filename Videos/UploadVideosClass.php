@@ -770,7 +770,6 @@ Class VideoTitle extends Title{
 	}
 	static function getVideoInfoByPrefixAndText( $prefix, $text ){
 		$DB = WikiSite::DbIdFromPrefix($prefix);
-		wfErrorLog($DB, '/var/log/mediawiki/SocialProfile.log');
 		$dbr = wfGetDB( DB_SLAVE, '', $DB );
 		$res = $dbr->select(
 					'page',

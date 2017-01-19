@@ -40,6 +40,8 @@ class UserActivity2  {
 
 	const REASON_USER_EDIT = 100;
 	const REASON_SITE_EDIT = 200;
+	const REASON_USER_VOTE = 300;
+	const REASON_SITE_VOTE = 300;
 	public function __construct( $username, $filter, $item_max, $earlierThan = null ) {
 		if ( $username ) {
 			//$title1 = Title::newFromDBkey( $username );
@@ -228,6 +230,53 @@ class UserActivity2  {
 			}	
 		}
 	}
+	private function setPolls(){
+		$tables = $this->getTables();
+		$where = $this->where();	
+		if (count($where) > 0){	
+			$siteFeed = FeedProvider::getFeed(
+				'poll', 
+				[], 
+				$where,
+				[],
+				null, 
+				null,
+				$this->earlierThan ? date('Y-m-d\TH:i:s', $this->earlierThan): null
+			);
+			if (isset($siteFeed->message))		
+			foreach ($siteFeed->message as $item){
+				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['feed'] = $item;
+				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['reason'][self::REASON_USER_VOTE]++;
+				$this->items[] = array(
+					'type' => 'page',
+					'feed' => $item,
+					'timestamp' => wfTimestamp(TS_UNIX, $item->timestamp ) - 28800 ,
+				);
+			}	
+		} 
+		if (count($tables) > 0){
+			$userFeed = FeedProvider::getFeed(
+				'poll', 
+				$tables, 
+				[],
+				[],
+				null, 
+				null, 
+				$this->earlierThan ? date('Y-m-d\TH:i:s', $this->earlierThan ): null
+			);	
+			if ( isset($userFeed->message))
+			foreach ($userFeed->message as $item){
+				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['feed'] = $item;
+				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['reason'][self::REASON_SITE_VOTE]++;
+				$this->items[] = array(
+					'type' => 'page',
+					'feed' => $item,
+					'timestamp' => wfTimestamp(TS_UNIX,$item->timestamp) - 28800,
+				);
+			}	
+		}
+	}
+	 
 	/**
 	 * Sets the value of class member variable $name to $value.
 	 */
