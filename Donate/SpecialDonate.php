@@ -59,7 +59,8 @@ class SpecialDonate extends SpecialPage{
                     "subject"   => $subject,
                     "total_fee" => $total_fee,
                     "body"  => $body,
-                    "_input_charset"    => trim(strtolower($alipay_config['input_charset']))
+                    "_input_charset"    => trim(strtolower($alipay_config['input_charset'])),
+                    "goods_type" => 0
                     //其他业务参数根据在线开发文档，添加参数.文档地址:https://doc.open.alipay.com/doc2/detail.htm?spm=a219a.7629140.0.0.kiX33I&treeId=62&articleId=103740&docType=1
                     //如"参数名"=>"参数值"goods_type
                     
@@ -76,30 +77,14 @@ class SpecialDonate extends SpecialPage{
         $currentDonate = array_sum($donateResult);
         $site = WikiSite::newFromPrefix($wgHuijiPrefix);
         $rating = $site->getRating();
-        switch ($rating) {
-            case 'A':
-                $goalDonate = 5000;
-                break;
-            case 'B':
-                $goalDonate = 1000;
-                break;
-            case 'C':
-                $goalDonate = 200;
-                break;
-            case 'D':
-                $goalDonate = 40;
-                break;
-            case 'E':
-                $goalDonate = 8;
-                break;
-            case 'NA':
-                $goalDonate = 200;
-                break;
-            default:
-                $goalDonate = 100;
-                break;
-        }
+        $goalDonate = $site->getDonationGoal($month);
         $siteAvatar = (new wSiteAvatar($wgHuijiPrefix, 'l'))->getAvatarHtml();
+        $lastGoal = $site->hasMetDonationGoal(date('Y-m', strtotime("last month")));
+        if ($lastGoal){
+            $lastMonth  = '已完成，广告君已隐身！';
+        } else {
+            $lastMonth = '未完成，没能去除广告>_<';
+        }
         $siteDescription = $site->getDescription();
         $userId = $wgUser->getId();
         if ( $userId == null ) {
@@ -109,7 +94,12 @@ class SpecialDonate extends SpecialPage{
             $type = 'checkbox';
             $display = '';
         }
-        $percentage = 100*$currentDonate/$goalDonate;
+        if ($currentDonate > $goalDonate){
+            $percentage = 100;
+        } else {
+            $percentage = 100*$currentDonate/$goalDonate;
+        }
+        
         //tradenumber
         $tradeNum = HuijiFunctions::getTradeNo('DS').'-'.$wgUser->getId();
         $siteName = $site->getName();
@@ -188,6 +178,7 @@ class SpecialDonate extends SpecialPage{
                                 'moreTotalLink' => $userTotalLink,
                                 'hiddenMonth' => $hiddenMonth,
                                 'hiddenTotal' => $hiddenTotal,
+                                'lastMonth' => $lastMonth
                             )
                     );
         $out->addHTML( $output );

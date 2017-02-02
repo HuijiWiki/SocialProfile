@@ -2002,6 +2002,7 @@ class UserActivity {
 	static function getTypeIcon( $type ) {
 		switch( $type ) {
 			case 'edit':
+			case 'page':
 				return '<i class="fa fa-pencil"></i>';
 			case 'vote':
 			case 'poll':

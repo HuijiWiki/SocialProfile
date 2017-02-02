@@ -47,7 +47,7 @@
 .site-info{
     padding-top: 10px;
 }
-.have-reached{
+.have-reached, .last-month{
 	font-size: 18px;
 }
 #points-level{

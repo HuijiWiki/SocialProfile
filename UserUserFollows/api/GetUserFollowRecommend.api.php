@@ -5,8 +5,7 @@ class GetUserFollowRecommend extends ApiBase {
     public function execute() {
         global $wgUser;
         if (
-            $wgUser->isBlocked() ||
-            !$wgUser->isAllowed( 'edit' ) ||
+            $wgUser->isBlocked()  ||
             wfReadOnly()
         ) {
             return true;

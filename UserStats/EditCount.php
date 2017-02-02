@@ -49,7 +49,7 @@ function incEditCount( $article, $revision, $baseRevId ) {
         if ( $today >= $value['startTime'] && $today <= $value['endTime'] ) {
             if (HuijiFunctions::addLock( 'USG-'.$value['giftId'].'-'.$wgUser->getId() , 1 )){				
 				$resCount = RecordStatistics2::getAllPageEditCountFromUserId( $wgUser->getId(), substr($value['startTime'],0,10), substr($value['endTime'],0,10) );
-				if ( $resCount->status == 'success' && $resCount->result == $value['editNum'] ) {
+				if ( $resCount->status == 'success' && $resCount->result >= $value['editNum'] ) {
 					$usg->sendSystemGift( $value['giftId'] );
 				}					
                 HuijiFunctions::releaseLock( 'USG-'.$value['giftId'].'-'.$wgUser->getId() );

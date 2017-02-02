@@ -1,14 +1,88 @@
-<div class="admin-setting-wrap">
+<div class="row">
     <span class="admin-setting-level">当前等级:{{siteLevel}}</span>
-    {{#settingRes}}
-    <div class="admin-setting-li">
-        <div class="setting-title">{{title}}</div>
-        <p class="setting-des">{{description}}</p>
-        <span class="setting-need-level">需要等级:{{level}}</span>
-        <div class="setting-toggle">
-        {{&value}}
-        <input class="setting-options" type="hidden" value="{{funName}}">
+    <div class="col-lg-6">
+    <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="glyphicon glyphicon-align-justify"></i> 基本功能
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+        
+        <div class="list-group">
+        {{#settingRes}}
+
+        <div class="admin-setting-li list-group-item">
+            <div class="setting-title">{{title}}</div>
+            <p class="setting-des">{{description}}</p>
+            <span class="setting-need-level">需要等级:{{level}}</span>
+            <div class="setting-toggle">
+            {{&value}}
+            <input class="setting-options" type="hidden" value="{{funName}}">
+            </div>
+        </div>
+        {{/settingRes}}
+        </div>
+                        </div>
+            </div>
+            <!-- /.panel-body -->
+    </div>
+        <!-- /.col-lg-8 -->
+    <div class="col-lg-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="glyphicon glyphicon-align-justify"></i> 进阶修正
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <!-- /.list-group -->
+                <div class="list-group">
+                    <a href="{{sendToAll}}" class="list-group-item">
+                        <h4 class="list-group-item-heading">群发消息</h4>
+                        <p class="list-group-item-text">向关注本站点的全部用户群发消息，迅速的将最新消息传播给本站的关注者。</p>
+                    </a>
+                {{#gtD}}
+                    <a href="{{replaceText}}" class="list-group-item">
+                        <h4 class="list-group-item-heading">替换文字</h4>
+                        <p class="list-group-item-text">批量将某个错误词汇替换为正确的词汇，支持正则表达式（需要机器人权限）。</p>
+                    </a>
+                    <a href="{{noarticletext}}" class="list-group-item">
+                        <h4 class="list-group-item-heading">修改404页面</h4>
+                        <p class="list-group-item-text">自定义本站404页面（即“词条不存在”的提示页）的内容，请使用wikitext编写。</p>
+                    </a>
+                {{/gtD}}
+                {{#gtC}}
+                    <a href="{{licenses}}" class="list-group-item">
+                        <h4 class="list-group-item-heading">修改预设版权协议</h4>
+                        <p class="list-group-item-text">修改图片上传时的预设协议选项</p>
+                    </a>
+                    <a href="{{preload}}" class="list-group-item">
+                        <h4 class="list-group-item-heading">修改预设模板</h4>
+                        <p class="list-group-item-text">修改左侧边栏创建按钮下拉菜单中提供的预设模板。</p>
+                    </a>  
+                {{/gtC}}                 
+                {{#gtB}}
+                    <a href="{{changeMainpageTitle}}" class="list-group-item">
+                        <h4 class="list-group-item-heading">修改主页标题</h4>
+                        <p class="list-group-item-text">修改浏览器标题栏显示的主页标题，以利于搜索引擎优化。</p>
+                    </a>  
+                    <a href="{{changePageTitle}}" class="list-group-item">
+                        <h4 class="list-group-item-heading">修改页面标题</h4>
+                        <p class="list-group-item-text">修改浏览器标题栏显示的页面标题，以利于搜索引擎优化。（使用$1代表文章真实标题）。</p>
+                    </a>  
+                {{/gtB}}
+                {{#gtA}}
+                    <a href="{{translatePairs}}" class="list-group-item">
+                        <h4 class="list-group-item-heading">添加自动翻译配对</h4>
+                        <p class="list-group-item-text">人工补充源代码编辑器的自动翻译功能的配对。数据格式必须为合法的JSON。</p>
+                    </a>
+                    <a href="{{quickInsert}}" class="list-group-item">
+                        <h4 class="list-group-item-heading">修改快速插入项</h4>
+                        <p class="list-group-item-text">修改源代码编辑器上方快速插入一栏的标签备选项。（利用&lt;charinsert&gt;标签)</p>
+                    </a>
+                {{/gtA}}
+                </div>
+            </div>
+            <!-- /.panel-body -->
         </div>
     </div>
-    {{/settingRes}}
 </div>

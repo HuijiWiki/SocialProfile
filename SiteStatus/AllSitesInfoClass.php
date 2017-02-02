@@ -320,14 +320,14 @@ class AllSitesInfo{
 			}
 			$dbr = wfGetDB( DB_SLAVE,$groups = array(),$wiki = $prefix );
 			$res = $dbr->select(
-				'image',
-				array( 'COUNT(img_name) AS count' ),
+				'site_stats',
+				array( 'ss_images' ),
 				array('1'),
 				__METHOD__
 			);
 			if($res){
 				foreach ($res as $value) {
-					$fileCount  = $fileCount + $value->count;
+					$fileCount  = $fileCount + $value->ss_images;
 				}
 			}
 		}
@@ -347,14 +347,14 @@ class AllSitesInfo{
 			}
 			$dbr = wfGetDB( DB_SLAVE,$groups = array(),$wiki = $prefix );
 			$res = $dbr->select(
-				'page',
-				array( 'COUNT(page_id) AS count' ),
+				'site_stats',
+				array( 'ss_total_pages' ),
 				array('1'),
 				__METHOD__
 			);
 			if($res){
 				foreach ($res as $value) {
-					$pageCount  = $pageCount + $value->count;
+					$pageCount  = $pageCount + $value->ss_total_pages;
 				}
 			}
 		}

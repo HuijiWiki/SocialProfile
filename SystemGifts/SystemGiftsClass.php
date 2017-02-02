@@ -34,7 +34,7 @@ class SystemGifts {
 		'节日' => 23,
 	);
 
-	private $repeatableGifts = array( 7, 12, 13, 15, 16, 17, 18, 19, 23 );
+	private $repeatableGifts = array( 7, 12, 13, 15, 16, 17, 18, 19 );
 
 	/**
 	 * Accessor for the private $categories variable; used by
@@ -501,6 +501,8 @@ class SystemGifts {
 			}else{
 				return false;
 			}
+		} else {
+			return false;
 		}
 
 	}
@@ -544,20 +546,35 @@ class SystemGifts {
 			array( 'ORDER BY' => 'addTime DESC' )
 		);
 		if( $res != false ){
-			$reslut = $fData = array();
+			$result = $fData = array();
 			foreach ($res as $value) {
 				$fData['startTime'] = $value->startTime;
 				$fData['endTime'] = $value->endTime;
 				$fData['giftId'] = $value->giftId;
 				$fData['editNum'] = $value->editNum;
 				$fData['addTime'] = $value->addTime;
-				$reslut[] = $fData;
+				$result[] = $fData;
 			}
 			$key = wfForeignMemcKey('huiji','', 'FestivalGiftInfo', 'all', 'festivalgiftlist' );
-			$wgMemc->set( $key, $reslut );
-			return $reslut;
+			$wgMemc->set( $key, $result );
+			return $result;
 		}
 
+	}
+	static function removeFestivalGift($id = null){
+		global $wgMemc;
+		$key = wfForeignMemcKey('huiji','', 'FestivalGiftInfo', 'all', 'festivalgiftlist' );
+		if ($id == null){
+
+			$wgMemc->delete($key);
+			$dbr = wfGetDB( DB_SLAVE );
+			$res = $dbr->delete(
+				'festival_gift',
+				array(),
+				__METHOD__
+			);
+			return $res;
+		}
 	}
 
 }

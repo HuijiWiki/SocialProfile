@@ -128,6 +128,7 @@ $wgAutoloadClasses['HuijiForum'] = __DIR__.'/HuijiForum/HuijiForumClass.php';
 $wgAutoloadClasses['SpecialForumDiscussions'] = __DIR__.'/HuijiForum/SpecialForumDiscussions.php';
 $wgAutoloadClasses['AsyncEventJob'] = __DIR__.'/UserEditToUpsert/AsyncEventJob.php';
 $wgAutoloadClasses['FeedProvider'] = __DIR__.'/QueryInterface/FeedProvider.php';
+$wgAutoloadClasses['StatProvider'] = __DIR__.'/QueryInterface/StatProvider.php';
 // $wgAutoloadClasses['SpecialDynamicLess'] = __DIR__ . '/CommonStyle/SpecialDynamicLess.php';
 // $wgAutoloadClasses['ApiCommonStyle'] = __DIR__ . '/CommonStyle/api/ApiCommonStyle.php';
 // New special pages

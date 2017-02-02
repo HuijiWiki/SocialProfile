@@ -38,7 +38,12 @@
     "useractivity2-note-edit-3":"[[User:$1|$1]]，[[User:$2|$2]]和[[User:$3|$3]]编辑了该页面",
     "useractivity2-note-edit-2":"[[User:$1|$1]]和[[User:$2|$2]]编辑了该页面",
     "useractivity2-note-edit-1":"[[User:$1|$1]]编辑了该页面",
-    "useractivity2-reason-user-edit":"[[User:$1|$1]]在[[$2:|$3]]上{{PLURAL:$4|更新了条目|$4次更新了条目}}。",
-    "useractivity2-reason-site-edit":"[[$1:|$2]]中最新更新的页面。"
-
+    "useractivity2-reason-user-edit":"[[User:$1|$1]]在[[$2:|$3]]上{{PLURAL:$4|更新了条目|反反复复的更新了条目}}。",
+    "useractivity2-reason-site-edit":"[[$1:|$2]]中最新更新的页面。",
+    "useractivity2-reason-user-vote":"{{PLURAL:$5|[[User:$1|$1]]在[[$3:|$4]]上将该条目评为$2星。|[[User:$1|$1]]在[[$3:|$4]]在一番思想斗争后打了一个分数。}}",
+    "useractivity2-reason-site-vote":"[[$2:|$3]]上获评$1星的页面。",
+    "useractivity2-reason-user-comment":"{{PLURAL:$5|$2 —— [[User:$1|$1]]在[[$3:|$4]]上吐槽道。|[[User:$1|$1]]在[[$3:|$4]]上进行了紧张而激烈的探讨。}}",
+    "useractivity2-reason-site-comment":"$1 —— [[$2:|$3]]上最新吐槽。",
+    "useractivity2-reason-user-poll":"[[User:$1|$1]]在[[$3:|$4]]上{{PLURAL:$5|参与了选择了|$5犹犹豫豫的投下了选项}}$2。",
+    "useractivity2-reason-site-poll":"[[$2:|$3]]上的最新热门投票。"
 }

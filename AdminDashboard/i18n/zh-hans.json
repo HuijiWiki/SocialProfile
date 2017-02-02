@@ -35,5 +35,5 @@
 	"enable-semantic-mediawiki":"开启Semantic MediaWiki",
 	"enable-semantic-mediawiki-description":"请不要开启此选项，除非您已充分了解Semantic MediaWiki及其操作方法。灰机Wiki对于Semantic MediaWiki的支持还处于试验阶段。",
 	"huiji-translation-pairs":"{}",
-	"licenses":"asdfasdf"
+	"action-admindashboard":"操作管理面板"
 }

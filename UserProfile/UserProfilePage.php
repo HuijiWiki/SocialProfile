@@ -1425,18 +1425,27 @@ class UserProfilePage extends Article {
 		$output = '';
 
 		$limit = 8;
-		$rel = new UserActivity( $user_name, 'USER', $limit );
-		$rel->setActivityToggle( 'show_votes', 1 );
-		$rel->setActivityToggle( 'show_polls', 1 );
-		$rel->setActivityToggle( 'show_gifts_sent', 1 );
-		$rel->setActivityToggle( 'show_edits', 0 );
-		$rel->setActivityToggle( 'show_comments', 0 );
-		$rel->setActivityToggle( 'show_domain_creations', 0);
-		$rel->setActivityToggle( 'show_image_uploads', 0);
+		$rel2 = new UserActivity2( $user_name, 'USER', $limit );
+		$rel1 = new UserActivity($user_name, 'USER', $limit);
+		$rel2->setActivityToggle( 'show_votes', 1 );
+		$rel2->setActivityToggle( 'show_polls', 1 );
+		$rel2->setActivityToggle( 'show_comments', 0 );
+		$rel2->setActivityToggle( 'show_edits', 0 );
+		$rel1->setActivityToggle( 'show_votes', 0 );
+		$rel1->setActivityToggle( 'show_polls', 0 );
+		$rel1->setActivityToggle( 'show_messages_sent', 1 );
+		$rel1->setActivityToggle( 'show_gifts_sent', 1 );
+		$rel1->setActivityToggle( 'show_edits', 0 );
+		$rel1->setActivityToggle( 'show_comments', 0 );
+		$rel1->setActivityToggle( 'show_domain_creations', 1);
+		$rel1->setActivityToggle( 'show_image_uploads', 0);
 		/**
 		 * Get all relationship activity
 		 */
-		$activity = $rel->getActivityList();
+		// print_r($rel2->getActivityList());
+		// die();
+		$activity = array_merge($rel1->getActivityList(), $rel2->getActivityList());
+		usort( $activity, array( 'UserActivity2', 'sortItems' ) );
 
 		if ( $activity ) {
 			$output .= '<div class="panel panel-primary darken no-border"><div class="user-section-heading panel-heading">
@@ -1460,28 +1469,36 @@ class UserProfilePage extends Article {
 				$style_limit = $limit;
 			}
 			foreach ( $activity as $item ) {
-				$user_gift = new UserSystemGifts( $item['username'] );
+				
 				$item_html = '';
 				if (array_key_exists('prefix', $item)){
 					$site_link = '<b><a href="' . HuijiPrefix::prefixToUrl($item['prefix']).'">'.HuijiPrefix::prefixToSiteName($item['prefix'])  . '</a></b> ';
 				} else {
 					$item['prefix'] = $wgHuijiPrefix;
 				}
-				if ($item['type'] == 'comment'){
-					$title = Title::makeTitle( $item['namespace'], $item['pagetitle'], "comment-".$item['id'], $item['prefix'] );
+				if ($item['type'] == 'vote' || $item['type'] == 'poll'){
+					$title = Title::makeTitle( $item['feed']->page->ns, $item['feed']->page->title, '', $item['feed']->site->prefix  );
 				} else {
 					$title = Title::makeTitle( $item['namespace'], $item['pagetitle'], '', $item['prefix'] );
 				}
-				$user_title = Title::makeTitle( NS_USER, $item['username'] );
-				$user_title_2 = Title::makeTitle( NS_USER, $item['comment'] );
-
-				if ($item['comment'] != ''){
-					$user_link_2 = Linker::linkKnown($user_title_2);
-				} else {
-					$user_link_2 = '';
+				if (array_key_exists('username', $item)){
+					$user_gift = new UserSystemGifts( $item['username'] );
+					$user_title = Title::makeTitle( NS_USER, $item['username'] );
 				}
-				if (is_numeric($item['comment']) ){
-					$value = $item['comment'].'星';
+				if (array_key_exists('comment', $item)){
+					$user_title_2 = Title::makeTitle( NS_USER, $item['comment'] );
+					if ($item['comment'] != ''){
+						$user_link_2 = Linker::linkKnown($user_title_2);
+					} else {
+						$user_link_2 = '';
+					}
+				}
+				
+				if ($item['type'] ==  'vote' ){
+					$value = '';
+					for ($i = 0; $i < $item['feed']->rate->value; $i++){
+						$value .= '<i class="fa fa-star" aria-hidden="true"></i>';
+					}
 				}
 
 				if($title->inNamespace( NS_TOPIC ) || strpos($title->getText(), 'Topic:') === 0){
@@ -1521,14 +1538,6 @@ class UserProfilePage extends Article {
 				$viewGift = SpecialPage::getTitleFor( 'ViewGift' );
 
 				switch( $item['type'] ) {
-					case 'edit':
-						$item_html .= wfMessage( 'user-recent-activity-edit' )->escaped() . " {$page_link} {$item_time}
-							<div class=\"item\">";
-						if ( $item['comment'] ) {
-							$item_html .= "\"{$item['comment']}\"";
-						}
-						$item_html .= '</div>';
-						break;
 					case 'vote':
 						$item_html .= wfMessage( 'user-recent-activity-vote' )->escaped() . " {$page_link} {$item_time}
 						<div class=\"item\">
@@ -1537,12 +1546,6 @@ class UserProfilePage extends Article {
 						break;
 					case 'poll':
 						$item_html .= wfMessage( 'user-recent-activity-poll' )->escaped() . "{$page_link} {$item_time}";
-						break;
-					case 'comment':
-						$item_html .= wfMessage( 'user-recent-activity-comment' )->escaped() . " {$page_link} {$item_time}
-							<div class=\"item\">
-								\"{$item['comment']}\"
-							</div>";
 						break;
 					case 'gift-sent':
 						$gift_image = Gifts::getGiftImageTag( $item['namespace'], 'm' );
@@ -1655,7 +1658,7 @@ class UserProfilePage extends Article {
 		$rel = new UserActivity2( $user_name, 'user', $limit );
 		$rel->setActivityToggle( 'show_votes', 0 );
 		$rel->setActivityToggle( 'show_edits', 1 );
-		$rel->setActivityToggle( 'show_comments', 0);
+		$rel->setActivityToggle( 'show_comments', 1);
 		$rel->setActivityToggle( 'show_relationships', 0);
 		$rel->setActivityToggle( 'show_system_gifts', 0);
 		$rel->setActivityToggle( 'show_system_messages', 0);
@@ -1728,12 +1731,18 @@ class UserProfilePage extends Article {
 				'</span>';
 
 				if ( $x < $style_limit ) {
-					$item_html .= '<div class="activity-item">'.UserActivity::getTypeIcon( 'edit' ) ;
+					$item_html .= '<div class="activity-item">'.UserActivity::getTypeIcon( $item['type'] ) ;
 				} else {
-					$item_html .= '<div class="activity-item-bottom">'.UserActivity::getTypeIcon( 'edit' ) ;
+					$item_html .= '<div class="activity-item-bottom">'.UserActivity::getTypeIcon( $item['type'] ) ;
 				}
 
-				$item_html .= wfMessage( 'user-recent-activity-edit' )->escaped() . " {$page_link} {$item_time}";
+				$item_html .= wfMessage( "user-recent-activity-{$item['type']}" )->escaped() . " {$page_link} {$item_time}";
+
+				if ($item['type'] ==  'comment'){
+					$item_html .= "<div class=\"item\">
+							\"{$item['feed']->comment->content}\"
+						</div>";
+				}
 
 				$item_html .= '</div>';
 

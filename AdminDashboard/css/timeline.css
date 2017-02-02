@@ -242,7 +242,6 @@ hr {
     position: relative;
     max-width: 500px;
     margin: 20px auto;
-
     padding: 10px 20px;
     border-radius: 3px;
 }
@@ -254,11 +253,13 @@ hr {
 .setting-title{
     padding: 0;
     font-size: 18px;
-    color: #347bff;
+    color: #000;
+    font-weight: bold;
     display: block;
 }
 .setting-des{
     margin-right: 80px;
+    color: #333;
 }
 .setting-need-level{
     color: #999;

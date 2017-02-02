@@ -27,6 +27,7 @@ class Util
 	}
 	static function curl_get_json($ip,$port, $serviceName, $target, $method, $data_string){
 		$url =  'http://'.$ip.':'.$port.'/'.$serviceName.'/webapi/'.$target.'/'.$method.'?'.$data_string;
+		//print_r($url);
 		$header = array(
 			'Content-Type: application/json',
 			'Content-Length: '.strlen($data_string),

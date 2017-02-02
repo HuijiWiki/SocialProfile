@@ -984,25 +984,9 @@ class UserStats {
 	}
 	public static function getSiteEditsCountDB( $user, $prefix ){
 		global $wgMemc,$isProduction;
-		$key = wfForeignMemcKey( 'huiji', '', 'revision', 'high_edit_site_followed', $user,$prefix );
-		if ($prefix != null) {
-			$prefix = WikiSite::DbIdFromPrefix($prefix);
-			$dbr = wfGetDB( DB_SLAVE,$groups = array(),$wiki = $prefix );
-		}else{
-			$dbr = wfGetDB( DB_SLAVE );
-		}
-		$res = $dbr->select(
-				'revision',
-				array('COUNT(*) AS ecount'),
-				array(
-					'rev_user_text' => $user->getName()
-				),
-				__METHOD__
-			);
-		foreach ($res as $value) {
-			$count = $value->ecount;
-		}
-		$wgMemc->set( $key, $count );
+		$key = wfForeignMemcKey( 'huiji', '', 'revision', 'high_edit_site_followed', $user, $prefix );
+		$count = StatProvider::getStatsPerUser('edit', $user->getId(), null, null, $prefix );
+		$wgMemc->set( $key, $count, 60 * 60 * 24 );
 		return $count;
 	}
 	/**

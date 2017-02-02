@@ -70,11 +70,17 @@ class SpecialAddFestivalGift extends SpecialPage{
 					$output .= "<script>alert('success');location.reload();</script>";
 				}elseif(  $giftId == null || $editNum == null || $startTime == null || $endTime == null ){
 					$output .= "<h1>填写不完整</h1>";
+				} else {
+					"<h1>重复录入或写入失败</h1>";
 				}
 			}else{
 				$output .= "<h1>输入有误</h1>";
 			}
 			
+		} 
+		if ($method == 'delete' ){
+			SystemGifts::removeFestivalGift( );
+			$output .= "<h1>已清除所有节日礼物</h1>";
 		}
 		$out->addHTML( $output );
 	}

@@ -144,7 +144,7 @@
 	"user-profile-picture-log-entry": "上传了新头像",
 	"user-profile-picture-log-delete-entry": "删除了$1的头像",
 	"right-avatarremove": "移除使用者的头像",
-	"user-recent-local-activity-title":"编辑活动",
+	"user-recent-local-activity-title":"页面贡献",
 	"user-recent-activity-follow":"关注了",
 	"user-recent-system-gift":"收到了一份成就",
 	"user-recent-activity-domain-creation":"创建了",

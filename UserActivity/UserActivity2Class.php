@@ -41,7 +41,13 @@ class UserActivity2  {
 	const REASON_USER_EDIT = 100;
 	const REASON_SITE_EDIT = 200;
 	const REASON_USER_VOTE = 300;
-	const REASON_SITE_VOTE = 300;
+	const REASON_SITE_VOTE = 400;
+	const REASON_USER_RATE = 500;
+	const REASON_SITE_RATE = 600;
+	const REASON_USER_COMMENT = 700;
+	const REASON_SITE_COMMENT = 800;
+	const REASON_USER_POLL = 900;
+	const REASON_SITE_POLL = 1000;
 	public function __construct( $username, $filter, $item_max, $earlierThan = null ) {
 		if ( $username ) {
 			//$title1 = Title::newFromDBkey( $username );
@@ -202,7 +208,7 @@ class UserActivity2  {
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['feed'] = $item;
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['reason'][self::REASON_USER_EDIT]++;
 				$this->items[] = array(
-					'type' => 'page',
+					'type' => 'edit',
 					'feed' => $item,
 					'timestamp' => wfTimestamp(TS_UNIX, $item->timestamp ) - 28800 ,
 				);
@@ -223,7 +229,7 @@ class UserActivity2  {
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['feed'] = $item;
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['reason'][self::REASON_SITE_EDIT]++;
 				$this->items[] = array(
-					'type' => 'page',
+					'type' => 'edit',
 					'feed' => $item,
 					'timestamp' => wfTimestamp(TS_UNIX,$item->timestamp) - 28800,
 				);
@@ -248,7 +254,7 @@ class UserActivity2  {
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['feed'] = $item;
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['reason'][self::REASON_USER_VOTE]++;
 				$this->items[] = array(
-					'type' => 'page',
+					'type' => 'poll',
 					'feed' => $item,
 					'timestamp' => wfTimestamp(TS_UNIX, $item->timestamp ) - 28800 ,
 				);
@@ -269,14 +275,105 @@ class UserActivity2  {
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['feed'] = $item;
 				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['reason'][self::REASON_SITE_VOTE]++;
 				$this->items[] = array(
-					'type' => 'page',
+					'type' => 'poll',
 					'feed' => $item,
 					'timestamp' => wfTimestamp(TS_UNIX,$item->timestamp) - 28800,
 				);
 			}	
 		}
 	}
-	 
+	private function setVotes(){
+		$tables = $this->getTables();
+		$where = $this->where();	
+		if (count($where) > 0){	
+			$siteFeed = FeedProvider::getFeed(
+				'rate', 
+				[], 
+				$where,
+				[],
+				$this->scoreThreshold,
+				null,
+				$this->earlierThan ? date('Y-m-d\TH:i:s', $this->earlierThan): null
+			);
+			if (isset($siteFeed->message))		
+			foreach ($siteFeed->message as $item){
+				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['feed'] = $item;
+				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['reason'][self::REASON_USER_RATE]++;
+				$this->items[] = array(
+					'type' => 'vote',
+					'feed' => $item,
+					'timestamp' => wfTimestamp(TS_UNIX, $item->timestamp ) - 28800 ,
+				);
+			}	
+		} 
+		if (count($tables) > 0){
+			$userFeed = FeedProvider::getFeed(
+				'vote', 
+				$tables, 
+				[],
+				[],
+				$this->scoreThreshold,
+				null, 
+				$this->earlierThan ? date('Y-m-d\TH:i:s', $this->earlierThan ): null
+			);	
+			if ( isset($userFeed->message))
+			foreach ($userFeed->message as $item){
+				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['feed'] = $item;
+				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['reason'][self::REASON_SITE_RATE]++;
+				$this->items[] = array(
+					'type' => 'vote',
+					'feed' => $item,
+					'timestamp' => wfTimestamp(TS_UNIX,$item->timestamp) - 28800,
+				);
+			}	
+		}
+	}	 
+	private function setComments(){
+		$tables = $this->getTables();
+		$where = $this->where();	
+		if (count($where) > 0){	
+			$siteFeed = FeedProvider::getFeed(
+				'comment', 
+				[], 
+				$where,
+				[],
+				$this->scoreThreshold,
+				null,
+				$this->earlierThan ? date('Y-m-d\TH:i:s', $this->earlierThan): null
+			);
+			if (isset($siteFeed->message))		
+			foreach ($siteFeed->message as $item){
+				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['feed'] = $item;
+				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['reason'][self::REASON_USER_COMMENT]++;
+				$this->items[] = array(
+					'type' => 'comment',
+					'feed' => $item,
+					'timestamp' => wfTimestamp(TS_UNIX, $item->timestamp ) - 28800 ,
+				);
+			}	
+		} 
+		if (count($tables) > 0){
+			$userFeed = FeedProvider::getFeed(
+				'comment', 
+				$tables, 
+				[],
+				[],
+				$this->scoreThreshold,
+				null, 
+				$this->earlierThan ? date('Y-m-d\TH:i:s', $this->earlierThan ): null
+			);	
+			if ( isset($userFeed->message))
+			foreach ($userFeed->message as $item){
+				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['feed'] = $item;
+				$this->items_grouped['page'][$item->site->prefix.":".$item->page->title][$item->user->name]['reason'][self::REASON_SITE_COMMENT]++;
+				$this->items[] = array(
+					'type' => 'comment',
+					'feed' => $item,
+					'timestamp' => wfTimestamp(TS_UNIX,$item->timestamp) - 28800,
+				);
+			}	
+		}
+	}	 
 	/**
 	 * Sets the value of class member variable $name to $value.
 	 */
@@ -398,6 +495,8 @@ class UserActivity2  {
 		}
 		if ( $this->items ) {
 			usort( $this->items, array( 'UserActivity2', 'sortItems' ) );
+		} else {
+			return [];
 		}
 		return $this->items;
 	}
@@ -491,7 +590,67 @@ class UserActivity2  {
 						$detailData['reason'][self::REASON_SITE_EDIT]
 					)->parse();
 					$avatarUrl = WikiSite::newFromPrefix($detailData['feed']->site->prefix)->getAvatar('ml')->getAvatarHtml();
+				} else if ( isset($detailData['reason'][self::REASON_USER_COMMENT]) && $detailData['reason'][self::REASON_USER_COMMENT] ){
+					$reason = wfMessage(
+						'useractivity2-reason-user-comment',
+						$userName,
+						$detailData['feed']->comment->content,
+						$detailData['feed']->site->prefix,
+						$detailData['feed']->site->name,
+						$detailData['reason'][self::REASON_USER_COMMENT]
+					)->parse();
+					$avatarUrl = HuijiUser::newFromName($userName)->getAvatar('ml')->getAvatarHtml();					
+				} else if (isset($detailData['reason'][self::REASON_SITE_COMMENT]) && $detailData['reason'][self::REASON_SITE_COMMENT]){
+					$reason = wfMessage(
+						'useractivity2-reason-site-comment',
+						$detailData['feed']->comment->content,
+						$detailData['feed']->site->prefix,
+						$detailData['feed']->site->name,
+						$detailData['reason'][self::REASON_SITE_COMMENT]
+					)->parse();
+					$avatarUrl = WikiSite::newFromPrefix($detailData['feed']->site->prefix)->getAvatar('ml')->getAvatarHtml();	
+				} else if (isset($detailData['reason'][self::REASON_USER_RATE]) && $detailData['reason'][self::REASON_USER_RATE]){
+					$reason = wfMessage(
+						'useractivity2-reason-user-rate',
+						$username,
+						$detailData['feed']->rate->value,
+						$detailData['feed']->site->prefix,
+						$detailData['feed']->site->name,
+						$detailData['reason'][self::REASON_SITE_RATE]
+					)->parse();
+					$avatarUrl = HuijiUser::newFromName($userName)->getAvatar('ml')->getAvatarHtml();	
+				} else if (isset($detailData['reason'][self::REASON_USER_RATE]) && $detailData['reason'][self::REASON_USER_RATE]){
+					$reason = wfMessage(
+						'useractivity2-reason-site-rate',
+						$detailData['feed']->rate->value,
+						$detailData['feed']->site->prefix,
+						$detailData['feed']->site->name,
+						$detailData['reason'][self::REASON_SITE_RATE]
+					)->parse();
+					$avatarUrl = WikiSite::newFromPrefix($detailData['feed']->site->prefix)->getAvatar('ml')->getAvatarHtml();					
 				}
+
+				if (isset($detailData['reason'][self::REASON_USER_POLL]) && $detailData['reason'][self::REASON_USER_POLL]){
+					$reason = wfMessage(
+						'useractivity2-reason-user-poll',
+						$username,
+						$this->getChoices($detailData['feed']->site->prefix, $detailData['feed']->comment->choice), //TODO:THIS is an array of choices id. should convert to readables.
+						$detailData['feed']->site->prefix,
+						$detailData['feed']->site->name,
+						$detailData['reason'][self::REASON_SITE_POLL]
+					)->parse();
+					$avatarUrl = HuijiUser::newFromName($userName)->getAvatar('ml')->getAvatarHtml();	
+				} elseif(isset($detailData['reason'][self::REASON_USER_POLL]) && $detailData['reason'][self::REASON_USER_RATE]) {
+					$reason = wfMessage(
+						'useractivity2-reason-site-poll',
+						$this->getChoices($detailData['feed']->site->prefix, $detailData['feed']->comment->choice), //TODO:THIS is an array of choices id. should convert to readables.
+						$detailData['feed']->site->prefix,
+						$detailData['feed']->site->name,
+						$detailData['reason'][self::REASON_SITE_POLL]
+					)->parse();
+					$avatarUrl = WikiSite::newFromPrefix($detailData['feed']->site->prefix)->getAvatar('ml')->getAvatarHtml();	
+				}
+
 				$this->logger->debug('reason',['reason' => $reason]);
 
 				$timestamp = wfTimestamp(TS_UNIX, $detailData['feed']->timestamp ) -28800 ;
@@ -533,6 +692,25 @@ class UserActivity2  {
 			
 		}
 	}
+	private function getChoices($prefix, $choices){
+		//read from external db
+		$out = [];
+		$dbName = WikiSite::DbIdFromPrefix($prefix);
+		$tableName = WikiSite::tableNameFromPrefix($prefix);
+		$dbr = wfGetDb(DB_SLAVE, '', $dbName);
+		$res = $dbr->select(
+			$tableName.'poll_choice',
+			'pc_text',
+			['pc_id' => $choices]
+
+		);
+		foreach ($res as $value) {
+			$out[] = $value->pc_text;
+		}
+		$str = explode('，', $out);
+		return $str;
+	}
+
 	private function getExtract($title, $length){
 		global $wgParser;
 		$cache = wfGetCache(CACHE_ANYTHING);
@@ -609,7 +787,7 @@ class UserActivity2  {
 	 * @return Integer: 0 if the timestamps are the same, -1 if $x's timestamp
 	 *                  is greater than $y's, else 1
 	 */
-	private static function sortItems( $x, $y ) {
+	public static function sortItems( $x, $y ) {
 		if (!isset($x['timestamp']) || !isset($y['timestamp'])){
 			return 0;
 		}

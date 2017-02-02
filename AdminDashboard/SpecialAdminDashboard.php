@@ -337,6 +337,31 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 
         $inviteLink = SpecialPage::getTitleFor('InviteUser')->getFullURL(array('user' => $user->getName(), 'prefix' => $wgHuijiPrefix));
 
+        $daysAgo = date("Y-m-d",strtotime("-31 day"));
+        $viewership = StatProvider::getTopPage('view', $daysAgo, $yesterday, $wgHuijiPrefix, 10);
+        foreach ($viewership as $rank => $value) {
+        	$t = Title::newFromID($value->page_id);
+        	if ($t == null){
+        		continue;
+        	}
+        	$mostViewed[] = [
+        		'page_url' => $t->getFullURL(),
+        		'page_name' => $t->getText(),
+        		'page_view' => $value->count,
+        	];
+        }
+        $editorship = StatProvider::getTopPage('edit', $daysAgo, $yesterday, $wgHuijiPrefix, 10);
+        foreach ($editorship as $rank => $value) {
+        	$t = Title::newFromID($value->page_id);
+        	if ($t == null){
+        		continue;
+        	}
+        	$mostEdited[] = [
+        		'page_url' => $t->getFullURL(),
+        		'page_name' => $t->getText(),
+        		'page_changes' => $value->count,
+        	];
+        }
 		$output .= $templateParser->processTemplate(
 				    'admin_index',
 				    array(
@@ -384,6 +409,8 @@ class SpecialAdminDashboard extends UnlistedSpecialPage {
 				        'comments' => $commentHtml,
 				        'showBots' => $showBots,
 				        'inviteLink' => $inviteLink,
+				        'mostViewed' => $mostViewed,
+				        'mostEdited' => $mostEdited,
 
 				    )
 				);
