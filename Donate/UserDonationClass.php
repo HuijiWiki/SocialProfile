@@ -38,7 +38,7 @@ class UserDonation{
 	 * @param  string $month      if null, get all month donation info
 	 * @return array
 	 */
-	static function getDonationInfoByPrefix( $sitePrefix, $month ){
+	static function getDonationInfoByPrefix( $sitePrefix, $month = '*' ){
 		global $wgMemc;
 		$where = array();
 		if ( $sitePrefix != null ) {
@@ -123,7 +123,7 @@ class UserDonation{
 	 * @param  string $month if month(ex:'2016-05') is null, get all sites donation total rank,else get one month rank
 	 * @return array
 	 */
-	static function getAllSiteDonationUserRank( $month ){
+	static function getAllSiteDonationUserRank( $month='*' ){
 		global $wgMemc;
 		$key = wfForeignMemcKey( 'huiji', '', 'all_site_user_donation_rank', '', $month );
 		$data = $wgMemc->get( $key );

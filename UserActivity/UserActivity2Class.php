@@ -79,6 +79,7 @@ class UserActivity2  {
 		}
 		if ( strtoupper( $filter ) == 'ALL' ) {
 			$this->show_all = true;
+			$this->show_following_sites = false;
 			$this->scoreThreshold = 60;
 		}
 		if ( strtoupper( $filter ) == 'FOLLOWING_SITES' ) {
@@ -171,7 +172,7 @@ class UserActivity2  {
 		if ( !empty($this->show_this_site) ){
 			$tables = array();
 			$tables[] = $wgHuijiPrefix;
-		} elseif ($this->show_following_sites){
+		} elseif ($this->show_following_sites && $this->user_id > 0){
 			$values = $dbr->select(
 				'user_site_follow',
 				'f_wiki_domain',

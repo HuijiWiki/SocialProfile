@@ -400,6 +400,7 @@ Class VideoTitle extends Title{
 	static private $titleCache = null;
 	const /* string */YOUKULINK = 'http://v.youku.com/v_show/id_';
 	const /* string */BILIBILI = 'http://www.bilibili.com/video/av';
+	const /* string */QQLINK = 'https://v.qq.com/x/page/';
 	function __construct(){
 		parent::__construct();
 	}
@@ -746,6 +747,8 @@ Class VideoTitle extends Title{
 			}else{
 				return self::BILIBILI.$this->getExternalId();
 			}
+		} elseif ($this->getVideoSource() == 'qq') {
+			return self::QQLINK.$this->getExternalId().'.html';
 		}
 	}
 	/**
@@ -917,6 +920,7 @@ class VideoRevision{
 	static private $titleCache = null;
 	const /* string */YOUKULINK = 'http://v.youku.com/v_show/id_';
 	const /* string */BILIBILI = 'http://www.bilibili.com/video/av';
+	const /* string */QQLINK = 'https://v.qq.com/x/page/';
 	private static function getTitleCache() {
         if ( self::$titleCache == null ) {
             self::$titleCache = new HashBagOStuff( [ 'maxKeys' => self::CACHE_MAX ] );
@@ -1063,6 +1067,8 @@ class VideoRevision{
 			}else{
 				return self::BILIBILI.$this->getExternalId();
 			}
+		} elseif ($this->getVideoSource() == 'qq') {
+			return self::QQLINK.$this->getExternalId().'.html';
 		}
 	}
 }

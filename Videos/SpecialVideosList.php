@@ -51,7 +51,7 @@ class SpecialVideosList extends SpecialPage{
       $clas = 'audio-list';
     }else{
       $target = SpecialPage::getTitleFor( 'Videoslist' );
-      $output .= '您的URL出错了，访问'.Linker::LinkKnown($target, '视频文件列表</a>', array(), array()).'or'.Linker::LinkKnown($target, '音频文件列表</a>', array(), array( 'type'=>1 )).'</div>';
+      $output .= '您的URL出错了，访问'.Linker::LinkKnown($target, '视频文件列表</a>', array(), array()).'或'.Linker::LinkKnown($target, '音频文件列表</a>', array(), array( 'type'=>1 )).'</div>';
       $out->addHTML( $output );
       return false;
     }

@@ -206,7 +206,6 @@ class SocialProfileHooks {
 	}
 
 	public static function onThumbnailBeforeProduceHTML( $handler, &$attribs, &$linkAttribs ){
-		$file = $handler->getFile();
 		$sha1 = $handler->getFile()->getSha1();
 		$vv = VideoRevision::newFromSha1( $sha1 );
 		if (!is_null($vv) && $vv->exists()){
@@ -250,7 +249,7 @@ class SocialProfileHooks {
 		if (VideoTitle::isVideoTitle($imagePage->getTitle())){
 			$vt = VideoTitle::newFromId($imagePage->getTitle()->getArticleId());
 			$source = $vt->getVideoSource();
-			$str = '本文件代表了一部来自'.$source.'的视频&nbsp;';
+			$str = '本文件代表了一部来自'.$source.'的多媒体文件&nbsp;';
 			$out->addJsConfigVars('wgVideoLink', $vt->getVideoLink());
 			$out->addJsConfigVars('wgVideoSource', $source);
 			$out->setSubtitle( $str );
