@@ -822,7 +822,7 @@ class UserActivity {
 			} else {
 				$having = "";
 			}
-			$sql = $dbr->selectSQLText($tableName, $fieldName, $conds, __METHOD__, $having, $join);
+			$sql = $dbr->selectSQLText($tableName, $fieldName, $conds, __METHOD__, $having);
 			//$sql = "SELECT $fieldName FROM $tableName $conds $having";
 			$sqls[] = $sql;
 
