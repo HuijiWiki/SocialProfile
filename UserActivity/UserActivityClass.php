@@ -929,7 +929,7 @@ class UserActivity {
 					'Comment_user_id', 'page_namespace', 'CommentID', $dbr->addQuotes($table).' AS prefix',
 			);
 			if (count($where) > 0){
-				$conds = $where
+				$conds = $where;
 			} else {
 				$conds = '';
 			}
