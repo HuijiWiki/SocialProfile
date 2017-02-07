@@ -273,18 +273,16 @@ class AllSitesInfo{
 
 	//get all site edit count
 	static function getAllSiteEditCount(){
-		global $isProduction, $wgLang;
+		global $wgLang;
 		$allSite = Huiji::getInstance()->getSitePrefixes();
 		$editCount = 0;
 		foreach ($allSite as $prefix) {
 			if ( !is_null($prefix) ) {
-				if (strpos($prefix, '-') >= 0)
-					continue;
 				$prefix = WikiSite::DbIdFromPrefix($prefix);
 			}else{
 				die( "error: empty $prefix;function:getAllSiteEditCount.\n" );
 			}
-			$dbr = wfGetDB( DB_SLAVE,$groups = array(),$wiki = $prefix );
+			$dbr = wfGetDB( DB_SLAVE,array(),$prefix );
 			$res = $dbr->select(
 				'site_stats',
 				array(
@@ -304,13 +302,11 @@ class AllSitesInfo{
 
 	//get upload files count
 	static function getAllUploadFileCount(){
-		global $isProduction, $wgLang;
+		global $wgLang;
 		$allSite = Huiji::getInstance()->getSitePrefixes();
 		$fileCount = 0;
 		foreach ($allSite as $prefix) {
 			if ( !is_null($prefix) ) {
-                                if (strpos($prefix, '-') >= 0) 
-                                        continue;
 				// if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
 				// 	$prefix = 'huiji_home';
 				// }elseif ( $isProduction == true ) {
@@ -322,7 +318,7 @@ class AllSitesInfo{
 			}else{
 				die( "error: empty $prefix;function:getAllUploadFileCount.\n" );
 			}
-			$dbr = wfGetDB( DB_SLAVE,$groups = array(),$wiki = $prefix );
+			$dbr = wfGetDB( DB_SLAVE, array(), $prefix );
 			$res = $dbr->select(
 				'site_stats',
 				array( 'ss_images' ),
@@ -340,13 +336,11 @@ class AllSitesInfo{
 
 	//get all page count
 	static function getAllPageCount(){
-		global $isProduction, $wgLang;
+		global $wgLang;
 		$allSite = Huiji::getInstance()->getSitePrefixes();
 		$pageCount = 0;
 		foreach ($allSite as $prefix) {
 			if ( !is_null($prefix) ) {
-                                if (strpos($prefix, '-') >= 0)
-                                        continue;
 				$prefix = WikiSite::DbIdFromPrefix($prefix);
 			}else{
 				die( "error: empty $prefix;function:getAllPageCount.\n" );
