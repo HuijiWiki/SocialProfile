@@ -797,19 +797,15 @@ class UserActivity {
 		$dbr->tablePrefix('');
 
 		foreach ($tables as $table){
-			if ( !$isProduction ){
-				$dbr->selectDB('huiji_'.str_replace('.', '_', $table));
+			if ( $table == 'www'){
+				$dbr->selectDB('huiji_home');
 				$DBprefix = '';
-				//break;
-			} elseif ( $table == 'www'){
-				// $dbr->selectDB('huiji_home');
-				// $DBprefix = '';
 				continue;
 			} else {
 				$dbr->selectDB('huiji_sites');
 				$DBprefix = WikiSite::tableNameFromPrefix($table);
 			}
-			$tableName = '`'.$DBprefix.'image'.'`';
+			$tableName = [$DBprefix.'image'];
 			$fieldName =  
 				array("UNIX_TIMESTAMP(CONVERT_TZ(img_timestamp, '+00:00','+08:00' )) AS item_date",
 					'img_user_text', 'img_name', 'img_description',
@@ -817,16 +813,17 @@ class UserActivity {
 				
 			);
 			if (count($where) > 0){
-				$conds = "WHERE ".$dbr->makeList( $where, LIST_AND );
+				$conds = $where;
 			} else {
 				$conds = '';
 			}
 			if ($this->earlierThan != null){
-				$having = "HAVING `item_date` < {$this->earlierThan}";
+				$having = ["HAVING" => "`item_date` < {$this->earlierThan}"];
 			} else {
 				$having = "";
 			}
-			$sql = "SELECT $fieldName FROM $tableName $conds $having";
+			$sql = $dbr->selectSQLText($tableName, $fieldName, $conds, __METHOD__, $having, $join);
+			//$sql = "SELECT $fieldName FROM $tableName $conds $having";
 			$sqls[] = $sql;
 
 		}
@@ -915,39 +912,37 @@ class UserActivity {
 		$dbr->tablePrefix('');
 
 		foreach ($tables as $table){
-			if ( !$isProduction ){
-				$dbr->selectDB('huiji_'.str_replace('.', '_', $table));
+			if ( $table == 'www'){
+				$dbr->selectDB('huiji_home');
 				$DBprefix = '';
-				//break;
-			} elseif ( $table == 'www'){
-				// $dbr->selectDB('huiji_home');
-				// $DBprefix = '';
 				continue;
 			} else {
 				$dbr->selectDB('huiji_sites');
 				$DBprefix = WikiSite::tableNameFromPrefix($table);
 			}
-			$tableName = '`'.$DBprefix.'Comments'.'`';
-			$joinTableName =  '`'.$DBprefix.'page'.'`';
-			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
+			$tableName = [$DBprefix.'Comments'];
+			$joinTableName =  [$DBprefix.'page'];
+			$fieldName = 
 				array(
 					'UNIX_TIMESTAMP(comment_date) AS item_date',
 					'Comment_Username', 'page_title', 'Comment_Text',
 					'Comment_user_id', 'page_namespace', 'CommentID', $dbr->addQuotes($table).' AS prefix',
-					)
-				)
 			);
 			if (count($where) > 0){
-				$conds = "WHERE ".$dbr->makeList( $where, LIST_AND );
+				$conds = $where
 			} else {
 				$conds = '';
 			}
 			if ($this->earlierThan != null){
-				$having = "HAVING `item_date` < {$this->earlierThan}";
+				$having = ["HAVING"=>"`item_date` < {$this->earlierThan}"];
 			} else {
 				$having = "";
 			}
-			$sql = "SELECT $fieldName FROM $tableName INNER JOIN $joinTableName ON comment_page_id = page_id $conds $having";
+			$join = [
+				$joinTableName => ['INNER JOIN', 'comment_page_id=page_id']
+			];
+			$sql = $dbr->selectSQLText($tableName, $fieldName, $conds, __METHOD__, $having, $join);
+			// $sql = "SELECT $fieldName FROM $tableName INNER JOIN $joinTableName ON comment_page_id = page_id $conds $having";
 			$sqls[] = $sql;
 		}
 		if (count($sqls) > 0){
