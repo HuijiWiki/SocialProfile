@@ -278,6 +278,8 @@ class AllSitesInfo{
 		$editCount = 0;
 		foreach ($allSite as $prefix) {
 			if ( !is_null($prefix) ) {
+				if ($prefix = 'games')
+					break;
 				$prefix = WikiSite::DbIdFromPrefix($prefix);
 			}else{
 				die( "error: empty $prefix;function:getAllSiteEditCount.\n" );
@@ -307,6 +309,8 @@ class AllSitesInfo{
 		$fileCount = 0;
 		foreach ($allSite as $prefix) {
 			if ( !is_null($prefix) ) {
+                                if ($prefix = 'games')
+                                        break;
 				// if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
 				// 	$prefix = 'huiji_home';
 				// }elseif ( $isProduction == true ) {
@@ -341,6 +345,8 @@ class AllSitesInfo{
 		$pageCount = 0;
 		foreach ($allSite as $prefix) {
 			if ( !is_null($prefix) ) {
+                                if ($prefix = 'games')
+                                        break;
 				$prefix = WikiSite::DbIdFromPrefix($prefix);
 			}else{
 				die( "error: empty $prefix;function:getAllPageCount.\n" );
