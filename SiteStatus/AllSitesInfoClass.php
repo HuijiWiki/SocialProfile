@@ -278,11 +278,12 @@ class AllSitesInfo{
 		$editCount = 0;
 		foreach ($allSite as $prefix) {
 			if ( !is_null($prefix) ) {
-				    if (strpos($prefix, '-') >= 0) {
-				    	//sites with - mess up db id;
-                        continue;
+                    if (strpos($prefix, '-') === false) {
+                        $prefix = WikiSite::DbIdFromPrefix($prefix);
                     }
-				$prefix = WikiSite::DbIdFromPrefix($prefix);
+                    else{
+                    	continue;
+                    }
 			}else{
 				die( "error: empty $prefix;function:getAllSiteEditCount.\n" );
 			}
@@ -311,8 +312,11 @@ class AllSitesInfo{
 		$fileCount = 0;
 		foreach ($allSite as $prefix) {
 			if ( !is_null($prefix) ) {
-                    if (strpos($prefix, '-') >= 0) {
-                         continue;
+                    if (strpos($prefix, '-') === false) {
+                        $prefix = WikiSite::DbIdFromPrefix($prefix);
+                    }
+                    else{
+                    	continue;
                     }
 				// if( $isProduction == true &&( $prefix == 'www' || $prefix == 'home') ){
 				// 	$prefix = 'huiji_home';
@@ -321,7 +325,7 @@ class AllSitesInfo{
 				// }else{
 				// 	$prefix = 'huiji_'.str_replace('.', '_', $prefix);
 				// }
-				$prefix = WikiSite::DbIdFromPrefix($prefix);
+				
 			}else{
 				die( "error: empty $prefix;function:getAllUploadFileCount.\n" );
 			}
@@ -348,10 +352,12 @@ class AllSitesInfo{
 		$pageCount = 0;
 		foreach ($allSite as $prefix) {
 			if ( !is_null($prefix) ) {
-                    if (strpos($prefix, '-') >= 0) {
-                         continue;
-                    }
-				$prefix = WikiSite::DbIdFromPrefix($prefix);
+                if (strpos($prefix, '-') === false) {
+                    $prefix = WikiSite::DbIdFromPrefix($prefix);
+                }
+                else{
+                	continue;
+                }
 			}else{
 				die( "error: empty $prefix;function:getAllPageCount.\n" );
 			}
