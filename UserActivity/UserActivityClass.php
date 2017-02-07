@@ -810,12 +810,11 @@ class UserActivity {
 				$DBprefix = WikiSite::tableNameFromPrefix($table);
 			}
 			$tableName = '`'.$DBprefix.'image'.'`';
-			$fieldName = implode( ',', $dbr->fieldNamesWithAlias( 
+			$fieldName =  
 				array("UNIX_TIMESTAMP(CONVERT_TZ(img_timestamp, '+00:00','+08:00' )) AS item_date",
 					'img_user_text', 'img_name', 'img_description',
 					'img_user', 'img_sha1', $dbr->addQuotes($table).' AS prefix',
-					)
-				) 
+				
 			);
 			if (count($where) > 0){
 				$conds = "WHERE ".$dbr->makeList( $where, LIST_AND );
