@@ -13,8 +13,12 @@ class UserStatus{
 	 */
 	public function __construct($aUser){
 		$this->user = $aUser;
-		$this->username = $aUser->getName();
-		$this->userid = $aUser->getId();
+		if ($aUser){
+			$this->username = $aUser->getName();
+			$this->userid = $aUser->getId();
+		}else{
+			return null;
+		}
 	}
 
 	public function getGender(){

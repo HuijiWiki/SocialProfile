@@ -380,6 +380,7 @@ class SocialProfileHooks {
 		return true;		
 	}
 	public static function onCirrusSearchAnalysisConfig( &$config ){
+		
 		$config['filter']['pinyin_filter'] = [
 			"type" => "pinyin",
 			"padding_char" => " ",
@@ -396,7 +397,7 @@ class SocialProfileHooks {
 		];
 		$pinyin_analyzer = [
 			"type" => "custom",
-			"filter" => "pinyin_filter",
+			"filter" => ["pinyin_filter"],
 			"tokenizer" => "ik_tokenizer",
 		];
 		$config['analyzer']['text'] = $pinyin_analyzer;
