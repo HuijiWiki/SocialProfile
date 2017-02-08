@@ -276,11 +276,7 @@ class UserActivity {
 		$dbr->tablePrefix('');
 
 		foreach ($tables as $table){
-			if ( !$isProduction ){
-				$dbr->selectDB('huiji_'.str_replace('.', '_', $table));
-				$DBprefix = '';
-				//break;
-			} elseif ( $table == 'www'){
+			if ( $table == 'www'){
 				// $dbr->selectDB('huiji_home');
 				// $DBprefix = '';
 				continue;
@@ -512,11 +508,7 @@ class UserActivity {
 		$sqls = array();
 
 		foreach ($tables as $table){
-			if ( !$isProduction ){
-				$dbr->selectDB('huiji_'.str_replace('.', '_', $table));
-				$DBprefix = '';
-				//break;
-			} elseif ( $table == 'www'){
+            if ( $table == 'www'){
 				$dbr->selectDB('huiji_home');
 				$dbr->tablePrefix('');
 				// $DBprefix = '';
@@ -654,11 +646,7 @@ class UserActivity {
 		$sqls = array();
 
 		foreach ($tables as $table){
-			if ( !$isProduction ){
-				$dbr->selectDB('huiji_'.str_replace('.', '_', $table));
-				$DBprefix = '';
-				//break;
-			} elseif ( $table == 'www'){
+			if ( $table == 'www'){
 				// $dbr->selectDB('huiji_home');
 				// $DBprefix = '';
 				continue;

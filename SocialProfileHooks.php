@@ -479,3 +479,8 @@ class ThemeDesigner extends Article{
 
 	}
 }
+class BetaFeatures {
+	public static function isFeatureEnabled($user, $feature){
+		return true;
+	}
+}

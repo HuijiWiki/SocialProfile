@@ -11,7 +11,7 @@ $wgHooks['ArticleRevisionUndeleted'][] = 'unDeleteEntryTran';
 $wgHooks['TitleMoveComplete'][] = 'moveEntryTran';
 
 function saveEntryTran($article, $user, $content, $summary, $isMinor, $isWatch, $section, $flags, $revision, $status, $baseRevId){
-	$params = ['entrytran_save', $article, $user, $content, $summary, $isMinor, $isWatch, $section, $flags, $revision, $status, $baseRevId];
+	$params = ['entrytran_save', $article->getId(), $user, $content, $summary, $isMinor, $isWatch, $section, $flags, $revision, $status, $baseRevId];
 	$jobs[] = new AsyncEventJob( $article->getTitle(), $params);
 	if ($article->getTitle()->isNewPage()){
 		$jobs[] = new AsyncEventJob( $article->getTitle(), ['baidu_push_new']);

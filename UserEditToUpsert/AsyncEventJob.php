@@ -19,7 +19,7 @@ class AsyncEventJob extends Job {
 		switch ($this->params[0]) {
 		 	case 'entrytran_save':
 				// Load data from $this->params and $this->title
-				list($type, $article, $user, $content, $summary, $isMinor, $isWatch, $section, $flags, $revision, $status, $baseRevId) = $this->params;
+				list($type, $articleId, $user, $content, $summary, $isMinor, $isWatch, $section, $flags, $revision, $status, $baseRevId) = $this->params;
 				return $this->saveEntryTran($article, $user, $content, $summary, $isMinor, $isWatch, $section, $flags, $revision, $status, $baseRevId);
 		 		break;
 		 	case 'entrytran_undelete':
@@ -75,8 +75,9 @@ class AsyncEventJob extends Job {
 		$logger = MediaWiki\Logger\LoggerFactory::getInstance( 'baidu' );
 		$logger->debug('BAIDU PUSH COMPLETE', ['result'  => $result, 'title' => $title->getPrefixedText() ]);
 	}
-	public function saveEntryTran($article, $user, $content, $summary, $isMinor, $isWatch, $section, $flags, $revision, $status, $baseRevId){
-	    if($article == null || $revision == null || $article->getTitle() == null) return true;
+	public function saveEntryTran($articleId, $user, $content, $summary, $isMinor, $isWatch, $section, $flags, $revision, $status, $baseRevId){
+	    if($articleId == null || $revision == null || $article->getTitle() == null) return true;
+	    $article = WikiPage::newFromID($articleId);
 	    
 		$logger = MediaWiki\Logger\LoggerFactory::getInstance( 'updateEntryTran' );
 	    $logger->debug( "parsing begins at ".time(), [$article, $content] );
