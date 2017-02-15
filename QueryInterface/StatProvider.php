@@ -21,7 +21,7 @@ class StatProvider
 		$res = json_decode(self::get($str, ''));
 		return $res->message;
 	}
-	static function getStatsPerUser($type, $userId, $fromDate = null, $toDate = null, $site = null, $category = null){
+	static function getStatsPerUser($type, $userId, $fromDate = null, $toDate = null, $site = null, $category = null, $ns = null){
 		$str="users/$userId/types/$type;";
 		if (!empty($fromDate)){
 			$str.="fromDate=$fromDate;";
@@ -35,8 +35,16 @@ class StatProvider
 		if (!empty($category)){
 			$str.="category=$category;";
 		}
+		if (!empty($ns)){
+			$str.="ns=$ns;";
+		}
 		$res = json_decode(self::get($str, ''));
-		return $res->message;
+		if ($res->message){
+			return $res->message;
+		} else {
+			return 0;
+		}
+		
 	}
 	static function getStatPerPage($type, $pageId, $fromDate = null, $toDate = null, $site){
 		$str="pages/$site-$pageId/types/$type;";

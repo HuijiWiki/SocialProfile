@@ -468,7 +468,7 @@ class UserBoard {
 						</div>
 						<div class=\"hj-media-body\">
 						".
-						Linker::link($user,$message['user_name_from'],array(),array(),array())."
+						Linker::linkKnown($user,$message['user_name_from'])."
 						 {$message_type_label}
 						<div class=\"user-board-message-time secondary\">" .
                             wfMessage( 'userboard_posted_ago', $this->getTimeAgo( $message['timestamp'] ) )->parse() .

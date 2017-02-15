@@ -33,12 +33,12 @@ function incEditCount( $article, $revision, $baseRevId ) {
 	}
     $usg = new UserSystemGifts( $wgUser->getName() );
     if (HuijiFunctions::addLock( 'USG-17-'.$wgUser->getId(), 1 ) ){
-    $dbr = wfGetDB( DB_SLAVE );
-    $num = SiteStats::edits();
-    $sg = SystemGifts::checkEditsCounts($num);  
-    if($sg){
-	$usg->sendSystemGift( 17 );
-    }
+	    $dbr = wfGetDB( DB_SLAVE );
+	    $num = SiteStats::edits();
+	    $sg = SystemGifts::checkEditsCounts($num);  
+	    if($sg){
+			$usg->sendSystemGift( 17 );
+	    }
         HuijiFunctions::releaseLock('USG-17-'.$wgUser->getId());
     }
 	//festival gift

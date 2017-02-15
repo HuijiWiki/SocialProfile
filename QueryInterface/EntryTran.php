@@ -97,12 +97,7 @@ class EntryTran
 		}
 	}
 	private function lookupDict($flag){
-		global $wgDBprefix, $wgDBname;
-		$oldDBprefix = $wgDBprefix;
-		$oldDB = $wgDBname;
-		$dbr = wfGetDB(DB_SLAVE);
-		$dbr->tablePrefix('');
-		$dbr->selectDB('huiji_home');
+		$dbr = wfGetDB(DB_SLAVE, array(), 'huiji_home');
 		$res = $small = [];
 		foreach (explode(' ', $this->foreign) as $key){
 			foreach(explode('-', $key) as $part){
@@ -127,8 +122,6 @@ class EntryTran
 			$res[] = implode("-", $small);
 			$small = [];
 		}
-		$dbr->tablePrefix($oldDBprefix);
-		$dbr->selectDB($oldDB);
 		return implode("·", $res);
 	}
 	private function lookupUserTable(){		
